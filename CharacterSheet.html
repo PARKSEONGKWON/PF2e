@@ -234,12 +234,10 @@ body{
 }
 .attr-box{
   background:var(--bg3);border:1px solid var(--border);border-radius:6px;
-  padding:8px 4px;text-align:center;cursor:pointer;transition:border-color .15s;
+  padding:8px 4px;text-align:center;transition:border-color .15s;
 }
-.attr-box:hover{border-color:var(--accent);}
 .attr-name{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;}
 .attr-score{font-size:22px;font-weight:700;color:var(--text);line-height:1.1;}
-.attr-box:hover .attr-score{color:var(--accent);}
 .attr-mod{font-size:11px;color:var(--accent);height:14px;}
 
 /* ══════════════════════════════════
@@ -758,6 +756,24 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
 }
+.growth-skill-select {
+  width:100%;
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  color:var(--text);
+  padding:4px 6px;
+  border-radius:4px;
+  font-size:11px;
+  margin-top:3px;
+}
+.growth-skill-select:focus { border-color:var(--accent); outline:none; }
+.growth-skill-select.filled { border-color:var(--accent); color:var(--accent); }
+.growth-skill-training-wrap {
+  padding:4px 10px 6px 12px;
+}
+.growth-skill-training-wrap .growth-slot-label {
+  margin-bottom:4px;
+}
 .growth-auto-feat{
   font-size:11px;color:var(--text2);padding:3px 10px 3px 12px;
   margin-bottom:4px;display:flex;align-items:center;gap:4px;
@@ -919,66 +935,48 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
   <!-- ═══ LEFT SIDEBAR: Build Plan ═══ -->
   <div id="sidebar">
+    <div id="growth-plan"></div>
+  </div><!-- /#sidebar -->
 
-    <!-- Ability Scores Summary (compact, always visible) -->
-    <div class="sidebar-section" style="padding:6px 8px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div class="sidebar-section-title" style="margin:0;padding:0;border:none;">능력치 Attributes</div>
-        <span style="font-size:9px;color:var(--text2);cursor:pointer;" onclick="openModal('boost')">부스트 배분 ▸</span>
-      </div>
+  <!-- ═══ CENTER: Stats + Skills (always visible on desktop) ═══ -->
+  <div id="center-col">
+
+    <!-- Ability Scores -->
+    <div class="box">
+      <div class="box-title">능력치 Attributes</div>
       <div class="attr-grid">
-        <div class="attr-box" onclick="openModal('boost')" style="padding:5px 2px;">
+        <div class="attr-box" style="padding:5px 2px;">
           <div class="attr-name">근력 STR</div>
           <div class="attr-score" id="mod-str" style="font-size:18px;">+0</div>
           <div class="attr-mod" id="partial-str" style="font-size:9px;"></div>
         </div>
-        <div class="attr-box" onclick="openModal('boost')" style="padding:5px 2px;">
+        <div class="attr-box" style="padding:5px 2px;">
           <div class="attr-name">민첩 DEX</div>
           <div class="attr-score" id="mod-dex" style="font-size:18px;">+0</div>
           <div class="attr-mod" id="partial-dex" style="font-size:9px;"></div>
         </div>
-        <div class="attr-box" onclick="openModal('boost')" style="padding:5px 2px;">
+        <div class="attr-box" style="padding:5px 2px;">
           <div class="attr-name">건강 CON</div>
           <div class="attr-score" id="mod-con" style="font-size:18px;">+0</div>
           <div class="attr-mod" id="partial-con" style="font-size:9px;"></div>
         </div>
-        <div class="attr-box" onclick="openModal('boost')" style="padding:5px 2px;">
+        <div class="attr-box" style="padding:5px 2px;">
           <div class="attr-name">지능 INT</div>
           <div class="attr-score" id="mod-int" style="font-size:18px;">+0</div>
           <div class="attr-mod" id="partial-int" style="font-size:9px;"></div>
         </div>
-        <div class="attr-box" onclick="openModal('boost')" style="padding:5px 2px;">
+        <div class="attr-box" style="padding:5px 2px;">
           <div class="attr-name">지혜 WIS</div>
           <div class="attr-score" id="mod-wis" style="font-size:18px;">+0</div>
           <div class="attr-mod" id="partial-wis" style="font-size:9px;"></div>
         </div>
-        <div class="attr-box" onclick="openModal('boost')" style="padding:5px 2px;">
+        <div class="attr-box" style="padding:5px 2px;">
           <div class="attr-name">매력 CHA</div>
           <div class="attr-score" id="mod-cha" style="font-size:18px;">+0</div>
           <div class="attr-mod" id="partial-cha" style="font-size:9px;"></div>
         </div>
       </div>
     </div>
-
-    <!-- Growth Plan (Level Progression) -->
-    <div id="growth-plan"></div>
-
-    <!-- Languages / Traits -->
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">언어 / 특성</div>
-      <textarea class="notes-area" id="f-languages" placeholder="언어, 특성 기록..." style="min-height:55px;" oninput="save()"></textarea>
-    </div>
-
-    <!-- Notes -->
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">메모</div>
-      <textarea class="notes-area" id="f-notes" placeholder="메모..." style="min-height:70px;" oninput="save()"></textarea>
-    </div>
-
-  </div><!-- /#sidebar -->
-
-  <!-- ═══ CENTER: Stats + Skills (always visible on desktop) ═══ -->
-  <div id="center-col">
 
     <!-- HP / AC / Speed -->
     <div class="box">
@@ -1094,6 +1092,18 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
     <div class="box">
       <div class="box-title">기술 Skills</div>
       <div id="skills-list"></div>
+    </div>
+
+    <!-- Languages / Traits -->
+    <div class="box">
+      <div class="box-title">언어 / 특성</div>
+      <textarea class="notes-area" id="f-languages" placeholder="언어, 특성 기록..." style="min-height:55px;" oninput="save()"></textarea>
+    </div>
+
+    <!-- Notes -->
+    <div class="box">
+      <div class="box-title">메모</div>
+      <textarea class="notes-area" id="f-notes" placeholder="메모..." style="min-height:70px;" oninput="save()"></textarea>
     </div>
 
   </div><!-- /#center-col -->
@@ -2739,6 +2749,25 @@ function renderGrowthPlan() {
           </div>
         </div>`;
       }
+
+      // Skill Training at level 1
+      const numSlots = state.trainableSkillSlots || 0;
+      if (numSlots > 0) {
+        const trainArr = (g.skillTraining || []);
+        for (let si = 0; si < numSlots; si++) {
+          const curVal = trainArr[si] || '';
+          const skObj = curVal ? SKILLS.find(s => s.id === curVal) : null;
+          const display = skObj ? `${skObj.name} (${skObj.en})` : null;
+          html += `<div class="growth-slot ${curVal ? 'filled' : ''}" onclick="growthPickSkillTraining(${si})">
+            <div class="growth-slot-icon">📖</div>
+            <div class="growth-slot-body">
+              <div class="growth-slot-label">기술 훈련 Skill Training ${si+1}/${numSlots}</div>
+              <div class="growth-slot-value">${display || '선택 안 됨'}</div>
+            </div>
+            ${curVal ? '<span class="spell-del" onclick="event.stopPropagation();growthClearSkillTraining('+si+');" style="color:var(--red);font-size:14px;padding:0 4px;cursor:pointer;">✕</span>' : ''}
+          </div>`;
+        }
+      }
     }
 
     // Ability Boosts
@@ -2755,11 +2784,19 @@ function renderGrowthPlan() {
       </div>`;
     }
 
-    // Skill Increase
+    // Skill Increase (levels 3,5,7,9,11,13,15,17,19)
     if (plan.skillIncrease) {
-      const siVal = g.skillIncrease || null;
-      html += growthSlotHTML(lv, 'skillIncrease', '📈', '기술 증가 Skill Increase',
-        siVal, `growthPickSkillIncrease(${lv})`);
+      const siVal = g.skillIncrease || '';
+      const skObj = siVal ? SKILLS.find(s => s.id === siVal) : null;
+      const display = skObj ? `${skObj.name} (${skObj.en})` : null;
+      html += `<div class="growth-slot ${siVal ? 'filled' : ''}" onclick="growthPickSkillIncrease(${lv})">
+        <div class="growth-slot-icon">📈</div>
+        <div class="growth-slot-body">
+          <div class="growth-slot-label">기술 증가 Skill Increase</div>
+          <div class="growth-slot-value">${display || '선택 안 됨'}</div>
+        </div>
+        ${siVal ? '<span class="spell-del" onclick="event.stopPropagation();growthClearSkillIncrease('+lv+');" style="color:var(--red);font-size:14px;padding:0 4px;cursor:pointer;">✕</span>' : ''}
+      </div>`;
     }
 
     // Ancestry Feat
@@ -2846,17 +2883,163 @@ function growthClearFeat(lv, key, featType) {
   save();
 }
 
-function growthPickSkillIncrease(lv) {
-  // Simple prompt for now — user types a skill name
-  const skills = ['곡예','비전','운동','제작','기만','외교','위협','학식',
-    '의학','자연','오컬티즘','공연','종교','사회','은밀','생존','도둑질'];
-  const current = (state.growth[lv] || {}).skillIncrease || '';
-  const choice = prompt('기술 증가 — 기술 이름을 입력하세요:\n(' + skills.join(', ') + ')\n\n현재: ' + (current || '없음'));
-  if (choice === null) return;
-  if (!state.growth[lv]) state.growth[lv] = {};
-  state.growth[lv].skillIncrease = choice.trim() || null;
+function getAvailableSkillsForTraining(slotIndex, trainArr) {
+  // Returns skill ids not yet selected in other training slots and not already trained
+  const usedIds = (trainArr || []).filter((v, i) => v && i !== slotIndex);
+  return SKILLS.filter(sk => {
+    if (usedIds.includes(sk.id)) return false;
+    // Check if already trained by class fixed skills (prof >= 2) but allow if it's the current slot's value
+    const el = document.getElementById('sk-prof-' + sk.id);
+    const rank = parseInt(el?.value || 0);
+    // If skill is trained and it's not because of this training slot, skip
+    if (rank >= 2) {
+      const trainArrCurrent = (state.growth[1] || {}).skillTraining || [];
+      if (trainArrCurrent[slotIndex] === sk.id) return true; // allow re-selecting current
+      if (trainArrCurrent.includes(sk.id)) return true; // allow if trained by this system
+      return false; // already trained by class/other means
+    }
+    return true;
+  }).map(sk => sk.id);
+}
+
+function getSkillsForIncrease(lv) {
+  // Returns skills that are at least trained (rank >= 2)
+  return SKILLS.filter(sk => {
+    const el = document.getElementById('sk-prof-' + sk.id);
+    const rank = parseInt(el?.value || 0);
+    return rank >= 2;
+  });
+}
+
+function getSkillRankLabel(skillId) {
+  const el = document.getElementById('sk-prof-' + skillId);
+  const rank = parseInt(el?.value || 0);
+  const labels = {0:'미숙련', 2:'숙련', 4:'전문가', 6:'달인', 8:'전설'};
+  return labels[rank] || '미숙련';
+}
+
+function growthSkillTrainingChanged(slotIndex, value) {
+  if (!state.growth[1]) state.growth[1] = {};
+  if (!state.growth[1].skillTraining) state.growth[1].skillTraining = [];
+  const oldVal = state.growth[1].skillTraining[slotIndex] || null;
+  // Un-train old skill if it was set (only if no other source trained it)
+  if (oldVal) {
+    const el = document.getElementById('sk-prof-' + oldVal);
+    if (el && el.value === '2') {
+      // Check if any other training slot or fixed class skill uses it
+      const otherSlots = (state.growth[1].skillTraining || []).filter((v, i) => v === oldVal && i !== slotIndex);
+      if (otherSlots.length === 0) {
+        el.value = '0';
+      }
+    }
+  }
+  state.growth[1].skillTraining[slotIndex] = value || null;
+  // Train new skill
+  if (value) {
+    const el = document.getElementById('sk-prof-' + value);
+    if (el && parseInt(el.value) < 2) el.value = '2';
+  }
+  recalcSkills();
   renderGrowthPlan();
   save();
+}
+
+function growthSkillIncreaseChanged(lv, value) {
+  if (!state.growth[lv]) state.growth[lv] = {};
+  const oldVal = state.growth[lv].skillIncrease || null;
+  // Revert old skill increase
+  if (oldVal) {
+    const el = document.getElementById('sk-prof-' + oldVal);
+    if (el) {
+      const curRank = parseInt(el.value || 0);
+      if (curRank >= 4) el.value = String(curRank - 2);
+    }
+  }
+  state.growth[lv].skillIncrease = value || null;
+  // Apply new skill increase (bump proficiency by one step)
+  if (value) {
+    const el = document.getElementById('sk-prof-' + value);
+    if (el) {
+      const curRank = parseInt(el.value || 0);
+      if (curRank < 8) el.value = String(curRank + 2);
+    }
+  }
+  recalcSkills();
+  renderGrowthPlan();
+  save();
+}
+
+// Skill Training modal pick (growth plan)
+let _skillPickMode = null; // 'training' or 'increase'
+let _skillPickSlotIndex = null;
+let _skillPickLevel = null;
+
+function growthPickSkillTraining(slotIndex) {
+  _skillPickMode = 'training';
+  _skillPickSlotIndex = slotIndex;
+  _skillPickLevel = 1;
+  const trainArr = state.growth[1]?.skillTraining || [];
+  const available = getAvailableSkillsForTraining(slotIndex, trainArr);
+  openSkillPickModal('기술 훈련 선택', available);
+}
+
+function growthClearSkillTraining(slotIndex) {
+  growthSkillTrainingChanged(slotIndex, '');
+}
+
+function growthPickSkillIncrease(lv) {
+  _skillPickMode = 'increase';
+  _skillPickLevel = lv;
+  const skills = getSkillsForIncrease(lv);
+  openSkillPickModal('기술 증가 선택', skills.map(s => s.id));
+}
+
+function growthClearSkillIncrease(lv) {
+  growthSkillIncreaseChanged(lv, '');
+}
+
+function openSkillPickModal(title, availableIds) {
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  document.getElementById('modal-title').textContent = title;
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; }
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+  modalType = 'skill-pick';
+  modalSelected = null;
+
+  const container = document.getElementById('modal-options');
+  const detail = document.getElementById('modal-detail');
+  container.innerHTML = '';
+  if (detail) detail.innerHTML = '<div class="modal-detail-empty">기술을 선택하세요.</div>';
+
+  SKILLS.forEach(sk => {
+    if (!availableIds.includes(sk.id)) return;
+    const rankLabel = getSkillRankLabel(sk.id);
+    const row = document.createElement('div');
+    row.className = 'opt-row';
+    row.innerHTML = `
+      <div class="opt-row-icon">📖</div>
+      <span class="opt-row-name">${sk.name} <span style="color:var(--text2);font-size:11px;">${sk.en}</span></span>
+      <span style="font-size:10px;color:var(--text2);margin-right:4px;">${rankLabel}</span>`;
+    row.onclick = () => {
+      document.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+      row.classList.add('selected');
+      // Immediately apply
+      if (_skillPickMode === 'training') {
+        growthSkillTrainingChanged(_skillPickSlotIndex, sk.id);
+      } else if (_skillPickMode === 'increase') {
+        growthSkillIncreaseChanged(_skillPickLevel, sk.id);
+      }
+      closeModal();
+    };
+    container.appendChild(row);
+  });
+  // Show list, hide detail on mobile
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
 }
 
 // ═══════════════════════════════════════════════
