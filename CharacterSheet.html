@@ -491,41 +491,75 @@ body{
 .action-req{font-size:10px;color:var(--text2);margin-top:3px;font-style:italic;}
 
 /* ══════════════════════════════════
-   MODAL
+   MODAL — Pathbuilder split-pane style
    ══════════════════════════════════ */
 .modal-overlay{position:fixed;inset:0;background:var(--modal-bg);z-index:1000;display:flex;align-items:center;justify-content:center;}
 .modal-overlay.hidden{display:none;}
 .modal{
-  background:var(--bg2);border:1px solid var(--accent);border-radius:8px;
-  width:680px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:8px;
+  width:95vw;max-width:1100px;height:85vh;display:flex;flex-direction:column;
 }
 .modal-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;border-bottom:1px solid var(--border);
-  background:var(--bg3);border-radius:8px 8px 0 0;
+  padding:10px 16px;border-bottom:1px solid var(--border);
+  background:var(--bg3);border-radius:8px 8px 0 0;flex-shrink:0;
 }
 .modal-header h2{color:var(--accent);font-size:15px;}
 .modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:0 4px;}
 .modal-close:hover{color:var(--accent);}
-.modal-body{overflow-y:auto;padding:12px;flex:1;}
+/* Split pane: list left + detail right */
+.modal-body{display:flex;flex:1;overflow:hidden;}
+.modal-list{width:420px;min-width:320px;overflow-y:auto;border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.modal-list-header{padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .modal-search{
   width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);
-  padding:7px 10px;border-radius:4px;font-size:13px;margin-bottom:10px;
+  padding:7px 10px;border-radius:4px;font-size:13px;margin-bottom:6px;
 }
 .modal-search:focus{outline:none;border-color:var(--accent);}
-.modal-filters{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+.modal-filters{display:flex;gap:6px;flex-wrap:wrap;}
 .modal-filters select{
   background:var(--bg3);border:1px solid var(--border2);color:var(--text);
   padding:4px 6px;border-radius:3px;font-size:12px;
 }
-.option-card{
-  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
-  padding:10px;margin-bottom:6px;cursor:pointer;transition:all .15s;
+.modal-list-items{overflow-y:auto;flex:1;}
+.modal-detail{flex:1;overflow-y:auto;padding:16px;background:var(--bg3);}
+.modal-detail-empty{color:var(--text2);text-align:center;padding:40px 16px;font-size:13px;}
+.modal-detail-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.modal-detail-en{font-size:12px;color:var(--text2);margin-bottom:10px;}
+.modal-detail-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;}
+.modal-detail-desc{font-size:13px;color:var(--text);line-height:1.7;}
+.modal-detail-desc strong{color:var(--accent);}
+/* List item row */
+.opt-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border);
+  transition:background .1s;
 }
-.option-card:hover{border-color:var(--accent);}
-.option-card.selected{border-color:var(--accent);background:var(--accent-bg);}
+.opt-row:hover{background:var(--bg4);}
+.opt-row.selected{background:var(--accent-bg);border-left:3px solid var(--accent);}
+.opt-row-icon{width:28px;height:28px;background:var(--bg4);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);flex-shrink:0;}
+.opt-row-name{flex:1;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.opt-row-actions{font-size:11px;color:var(--text2);margin-left:4px;}
+.opt-row-level{
+  width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.opt-row-level.r0{background:#555;} /* cantrip / level 0 */
+.opt-row-level.r1{background:var(--accent);}
+.opt-row-level.r2{background:#2980b9;}
+.opt-row-level.r3{background:#8e44ad;}
+.opt-row-level.r4{background:#c0392b;}
+.opt-row-level.r5{background:#16a085;}
+.opt-row-level.r6{background:#d35400;}
+.opt-row-level.r7{background:#2c3e50;}
+.opt-row-level.r8{background:#7f8c8d;}
+.opt-row-level.r9{background:#f39c12;}
+.opt-row-level.r10{background:#e74c3c;}
+/* Section header in list */
+.opt-section-header{padding:6px 12px;font-size:12px;font-weight:700;color:var(--accent);background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1;}
+/* Legacy compat */
+.option-card{display:none;} /* hidden, replaced by opt-row */
 .opt-name{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;}
-.opt-en{font-size:11px;color:var(--text2);margin-bottom:6px;}
 .opt-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
 .tag{background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 6px;font-size:10px;color:var(--text2);}
 .tag.hl{border-color:var(--accent);color:var(--accent);}
@@ -533,7 +567,19 @@ body{
 .modal-footer{
   padding:10px 16px;border-top:1px solid var(--border);
   display:flex;justify-content:flex-end;gap:8px;
-  background:var(--bg3);border-radius:0 0 8px 8px;
+  background:var(--bg3);border-radius:0 0 8px 8px;flex-shrink:0;
+}
+/* Mobile modal */
+@media(max-width:700px){
+  .modal{width:100vw;height:100vh;max-width:100vw;border-radius:0;}
+  .modal-list{width:100%;border-right:none;}
+  .modal-detail{display:none;}
+  .modal-body.detail-open .modal-list{display:none;}
+  .modal-body.detail-open .modal-detail{display:block;}
+  .modal-detail-back{display:block;margin-bottom:10px;color:var(--accent);cursor:pointer;font-size:13px;}
+}
+@media(min-width:701px){
+  .modal-detail-back{display:none;}
 }
 
 /* ══════════════════════════════════
@@ -1187,10 +1233,17 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <h2 id="modal-title">선택</h2>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <input class="modal-search" id="modal-search" placeholder="검색..." oninput="filterOptions()">
-      <div class="modal-filters" id="modal-filterbar"></div>
-      <div id="modal-options"></div>
+    <div class="modal-body" id="modal-body">
+      <div class="modal-list">
+        <div class="modal-list-header">
+          <input class="modal-search" id="modal-search" placeholder="검색..." oninput="filterOptions()">
+          <div class="modal-filters" id="modal-filterbar"></div>
+        </div>
+        <div class="modal-list-items" id="modal-options"></div>
+      </div>
+      <div class="modal-detail" id="modal-detail">
+        <div class="modal-detail-empty">항목을 선택하면 상세 정보가 표시됩니다.</div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-cancel" onclick="closeModal()">취소</button>
@@ -1832,7 +1885,10 @@ function showInfo(type, name) {
   if (confirmBtn) confirmBtn.style.display = 'none';
   document.getElementById('modal-title').textContent = type === 'spell' ? '주문 정보' : '재주 정보';
   modalType = 'info';
-  renderOptions([item]);
+  // Hide list, show detail only
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = 'none';
+  showItemDetail(item);
 }
 
 // ═══════════════════════════════════════════════
@@ -2719,87 +2775,143 @@ function filterWeapons() {
 
 function renderOptions(data) {
   const container = document.getElementById('modal-options');
+  const detail = document.getElementById('modal-detail');
   container.innerHTML = '';
+  if (detail) detail.innerHTML = '<div class="modal-detail-empty">항목을 선택하면 상세 정보가 표시됩니다.</div>';
+
   if (!data || !data.length) {
     container.innerHTML = '<div style="color:var(--text2);text-align:center;padding:20px;">결과 없음</div>';
     return;
   }
-  data.forEach(item => {
-    const div = document.createElement('div');
-    const isInfo = modalType === 'info';
-    div.className = 'option-card' + (!isInfo && (modalSelected?.id===item.id||modalSelected?.name_ko===item.name_ko)?' selected':'');
-    if (!isInfo) div.onclick = () => selectOption(item, div);
-    else div.style.cursor = 'default';
 
-    let tags = '';
-    let desc = item.desc||item.summary||'';
-    let nameKo = item.name||item.name_ko||'';
-    let nameEn = item.en||item.name_en||'';
+  // Group by rank/level for spells and feats
+  const isSpell = ['spell','info'].includes(modalType) || modalType?.startsWith?.('equip');
+  const isFeat = modalType === 'feat';
+  let grouped = null;
 
-    if (modalType==='class') {
-      tags = `<span class="tag hl">HP ${item.hp}+CON</span>
-              <span class="tag hl">${item.keyAttr}</span>
-              ${item.tradition?`<span class="tag">${item.tradition==='any'?'계열 선택':item.tradition} 주문</span>`:''}
-              <span class="tag">기술: ${item.skills}</span>`;
-    } else if (modalType==='ancestry') {
-      tags = `<span class="tag hl">HP ${item.hp}</span>
-              <span class="tag">${item.size} / ${item.speed}피트</span>
-              ${item.boosts.map(b=>`<span class="tag hl">${b}</span>`).join('')}
-              ${item.flaws.map(f=>`<span class="tag" style="color:var(--red-light);">결함: ${f}</span>`).join('')}
-              ${item.traits.map(t=>`<span class="tag">${t}</span>`).join('')}`;
-    } else if (modalType==='background') {
-      tags = `<span class="tag hl">속성: ${item.boosts}</span>
-              <span class="tag">기술: ${item.skills}</span>
-              <span class="tag">재주: ${item.feat}</span>`;
-    } else if (modalType==='feat' || (modalType==='info' && item.feat_level !== undefined)) {
-      tags = `<span class="tag hl">${item.feat_level}레벨</span>
-              <span class="tag">${item.category}</span>
-              ${(item.traits||[]).map(t=>traitTag(t)).join('')}
-              ${item.prerequisites?`<span class="tag" style="color:var(--gold);">선행: ${item.prerequisites}</span>`:''}`;
-    } else if (modalType==='spell' || (modalType==='info' && item.rank !== undefined)) {
-      const rankStr = item.is_cantrip?'캔트립':item.is_focus?'집중':`${item.rank}등급`;
-      tags = `<span class="tag hl">${rankStr}</span>
-              <span class="spell-actions">${item.actions||''}</span>
-              ${(item.traditions||[]).map(t=>traitTag(t)).join('')}
-              ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
-    } else if (modalType==='weapon' || modalType==='equip-weapon') {
-      tags = `<span class="tag hl">${item.damage||''}</span>
-              <span class="tag">${item.category||''}</span>
-              <span class="tag">부피: ${item.bulk||'-'}</span>
-              <span class="tag">가격: ${item.price||'-'}</span>
-              ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
-    } else if (modalType==='equip-armor') {
-      tags = `<span class="tag hl">AC+${item.ac_bonus||0}</span>
-              <span class="tag">${item.category||''}</span>
-              <span class="tag">가격: ${item.price||'-'}</span>
-              ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
-    } else if (modalType==='equip-gear') {
-      tags = `<span class="tag">가격: ${item.price||'-'}</span>
-              <span class="tag">부피: ${item.bulk||'-'}</span>`;
-    } else if (modalType==='subclass') {
-      tags = `<span class="tag hl">${item.subclass_type}</span>`;
-    } else if (modalType==='heritage') {
-      tags = `<span class="tag">${item.ancestry}</span>`;
-    } else if (modalType==='armor') {
-      tags = `<span class="tag hl">AC+${item.ac_bonus||0}</span>
-              <span class="tag">${item.category||''}</span>
-              ${item.dex_cap!==null?`<span class="tag">DEX상한: ${item.dex_cap}</span>`:''}
-              ${item.check_penalty?`<span class="tag" style="color:var(--red-light);">판정: ${item.check_penalty}</span>`:''}
-              <span class="tag">가격: ${item.price||'-'}</span>`;
+  if (modalType === 'spell') {
+    grouped = {};
+    data.forEach(item => {
+      const key = item.is_cantrip ? '캔트립' : item.is_focus ? '집중 주문' : `${item.rank}등급 주문`;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(item);
+    });
+  } else if (isFeat) {
+    grouped = {};
+    data.forEach(item => {
+      const key = `${item.feat_level}레벨`;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(item);
+    });
+  }
+
+  function renderItem(item) {
+    const row = document.createElement('div');
+    const nameKo = item.name || item.name_ko || '';
+    const nameEn = item.en || item.name_en || '';
+    const selected = modalSelected?.id === item.id || modalSelected?.name_ko === item.name_ko;
+    row.className = 'opt-row' + (selected ? ' selected' : '');
+
+    // Level/rank badge
+    let levelNum = 0;
+    let levelText = '';
+    if (item.feat_level !== undefined) { levelNum = item.feat_level; levelText = item.feat_level; }
+    else if (item.rank !== undefined) { levelNum = item.is_cantrip ? 0 : item.rank; levelText = item.is_cantrip ? 'C' : item.rank; }
+
+    // Action icons
+    let actionsHtml = '';
+    if (item.actions) {
+      const a = item.actions;
+      if (a.includes('1행동') || a === '1') actionsHtml = '◆';
+      else if (a.includes('2행동') || a === '2') actionsHtml = '◆◆';
+      else if (a.includes('3행동') || a === '3') actionsHtml = '◆◆◆';
+      else if (a.includes('반응')) actionsHtml = '↩';
+      else if (a.includes('자유')) actionsHtml = '⟡';
+      else actionsHtml = a;
     }
 
-    div.innerHTML = `
-      <div class="opt-name">${nameKo} <span style="font-size:11px;color:var(--text2);">${nameEn}</span></div>
-      <div class="opt-tags">${tags}</div>
-      <div class="opt-desc">${desc}</div>`;
-    container.appendChild(div);
-  });
+    const rClass = `r${Math.min(levelNum, 10)}`;
+    row.innerHTML = `
+      <div class="opt-row-icon">📄</div>
+      <span class="opt-row-name">${nameKo}</span>
+      ${actionsHtml ? `<span class="opt-row-actions">${actionsHtml}</span>` : ''}
+      ${levelText !== '' ? `<span class="opt-row-level ${rClass}">${levelText}</span>` : ''}`;
+
+    row.onclick = () => selectOption(item, row);
+    return row;
+  }
+
+  if (grouped) {
+    for (const [section, items] of Object.entries(grouped)) {
+      const header = document.createElement('div');
+      header.className = 'opt-section-header';
+      header.textContent = section;
+      container.appendChild(header);
+      items.forEach(item => container.appendChild(renderItem(item)));
+    }
+  } else {
+    data.forEach(item => container.appendChild(renderItem(item)));
+  }
 }
 
-function selectOption(item, div) {
-  document.querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
-  div.classList.add('selected');
+function selectOption(item, row) {
+  document.querySelectorAll('.opt-row').forEach(c => c.classList.remove('selected'));
+  if (row) row.classList.add('selected');
   modalSelected = item;
+  showItemDetail(item);
+  // Mobile: show detail pane
+  const body = document.getElementById('modal-body');
+  if (body && window.innerWidth <= 700) body.classList.add('detail-open');
+}
+
+function showItemDetail(item) {
+  const detail = document.getElementById('modal-detail');
+  if (!detail) return;
+
+  const nameKo = item.name || item.name_ko || '';
+  const nameEn = item.en || item.name_en || '';
+  const desc = item.desc || item.summary || '';
+
+  let tags = '';
+  if (item.feat_level !== undefined) {
+    tags = `<span class="tag hl">${item.feat_level}레벨</span>
+            <span class="tag">${item.category||''}</span>
+            ${(item.traits||[]).map(t=>traitTag(t)).join('')}
+            ${item.prerequisites?`<span class="tag" style="color:var(--accent);">선행: ${item.prerequisites}</span>`:''}`;
+  } else if (item.rank !== undefined) {
+    const rankStr = item.is_cantrip?'캔트립':item.is_focus?'집중':`${item.rank}등급`;
+    tags = `<span class="tag hl">${rankStr}</span>
+            <span class="spell-actions">${item.actions||''}</span>
+            ${(item.traditions||[]).map(t=>traitTag(t)).join('')}
+            ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+  } else if (item.damage !== undefined) {
+    tags = `<span class="tag hl">${item.damage||''}</span>
+            <span class="tag">${item.category||''}</span>
+            <span class="tag">가격: ${item.price||'-'}</span>
+            ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+  } else if (item.ac_bonus !== undefined) {
+    tags = `<span class="tag hl">AC+${item.ac_bonus}</span>
+            <span class="tag">${item.category||''}</span>
+            ${item.dex_cap!==null?`<span class="tag">DEX상한: ${item.dex_cap}</span>`:''}
+            <span class="tag">가격: ${item.price||'-'}</span>`;
+  } else if (item.hp !== undefined && item.keyAttr !== undefined) {
+    tags = `<span class="tag hl">HP ${item.hp}+CON</span>
+            <span class="tag hl">${item.keyAttr}</span>
+            ${item.tradition?`<span class="tag">${item.tradition} 주문</span>`:''}`;
+  } else if (item.boosts && item.flaws) {
+    tags = `<span class="tag hl">HP ${item.hp}</span>
+            <span class="tag">${item.size}/${item.speed}피트</span>
+            ${item.boosts.map(b=>`<span class="tag hl">${b}</span>`).join('')}`;
+  } else if (item.subclass_type) {
+    tags = `<span class="tag hl">${item.subclass_type}</span>`;
+  }
+
+  detail.innerHTML = `
+    <div class="modal-detail-back" onclick="document.getElementById('modal-body').classList.remove('detail-open')">← 목록으로</div>
+    <div class="modal-detail-title">${nameKo}</div>
+    <div class="modal-detail-en">${nameEn}</div>
+    <div class="modal-detail-tags">${tags}</div>
+    <div class="modal-detail-desc">${desc}</div>`;
 }
 
 function filterOptions() {
@@ -2881,6 +2993,14 @@ function closeModal() {
   modalSelected = null;
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = '';
+  // Restore list visibility (hidden by showInfo)
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = '';
+  // Mobile: reset detail-open
+  const body = document.getElementById('modal-body');
+  if (body) body.classList.remove('detail-open');
 }
 
 document.getElementById('modal-overlay').addEventListener('click', function(e) {
