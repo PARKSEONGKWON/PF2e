@@ -2594,9 +2594,10 @@ const GROWTH_TABLE = {
 
 function renderGrowthPlan() {
   const container = document.getElementById('growth-plan');
-  if (!container) return;
+  if (!container) { console.warn('growth-plan container not found'); return; }
   const curLevel = getLevel();
   let html = '';
+  try {
 
   for (let lv = 1; lv <= curLevel; lv++) {
     const plan = GROWTH_TABLE[lv];
@@ -2672,6 +2673,7 @@ function renderGrowthPlan() {
   // Also update the mobile growth panel
   const mobileContainer = document.getElementById('growth-plan-mobile');
   if (mobileContainer) mobileContainer.innerHTML = html;
+  } catch(e) { console.error('renderGrowthPlan error:', e); container.innerHTML = '<div style="color:red;padding:8px;">성장 플랜 렌더링 오류: '+e.message+'</div>'; }
 }
 
 function growthSlotHTML(lv, key, icon, label, value, onclickStr) {
