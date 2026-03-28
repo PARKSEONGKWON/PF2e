@@ -384,6 +384,77 @@ body{
 .weapon-prof-badge.legendary{background:#3a2a1a;color:#ffa726;border-color:#ffa726;}
 
 /* ══════════════════════════════════
+   DEFENSE PANEL
+   ══════════════════════════════════ */
+.armor-prof-bar{
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  padding:8px 10px;background:var(--bg2);
+  border-bottom:1px solid var(--border);
+}
+.armor-prof-item{
+  display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text2);
+}
+.armor-prof-item select{
+  background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:1px 3px;border-radius:3px;font-size:10px;cursor:pointer;width:42px;
+}
+.armor-prof-item select option{background:var(--bg2);}
+.ac-breakdown{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:6px 12px;background:var(--bg);font-size:11px;color:var(--text2);
+  border-bottom:1px solid var(--border);
+}
+.ac-breakdown .ac-part{
+  display:flex;align-items:center;gap:2px;
+}
+.ac-breakdown .ac-part-val{
+  color:var(--accent);font-weight:700;font-size:12px;
+}
+.ac-breakdown .ac-sep{color:var(--border2);}
+.defense-card{
+  border:1px solid var(--border);border-radius:6px;margin:8px 10px;
+  background:var(--bg3);overflow:hidden;transition:opacity .2s;
+}
+.defense-card.stowed{opacity:.45;border-style:dashed;}
+.defense-card-header{
+  display:flex;align-items:center;gap:4px;padding:4px 8px;
+  background:var(--bg4);border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.defense-card-body{padding:6px 10px;}
+.defense-card-name{
+  font-size:13px;font-weight:700;color:var(--text);
+  display:flex;align-items:center;gap:4px;
+  margin-bottom:2px;
+}
+.defense-card-stats{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  font-size:11px;color:var(--text2);
+}
+.defense-card-stats .stat-item{
+  display:flex;align-items:center;gap:3px;
+}
+.defense-card-stats .stat-val{color:var(--text);font-weight:600;}
+.defense-btn{
+  background:var(--bg2);border:1px solid var(--border2);color:var(--text2);
+  padding:2px 6px;border-radius:3px;cursor:pointer;font-size:10px;
+  transition:border-color .15s,color .15s;
+}
+.defense-btn:hover{border-color:var(--accent);color:var(--accent);}
+.defense-btn.danger:hover{border-color:var(--red);color:var(--red-light);}
+.defense-panel-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+}
+@media(max-width:600px){
+  .defense-panel-grid{grid-template-columns:1fr;}
+}
+.defense-panel-left{border-right:1px solid var(--border);}
+@media(max-width:600px){
+  .defense-panel-left{border-right:none;border-bottom:1px solid var(--border);}
+}
+.defense-conditions{padding:8px 10px;}
+
+/* ══════════════════════════════════
    WEAPON CARDS
    ══════════════════════════════════ */
 .weapon-card{
@@ -1190,43 +1261,87 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
     </div><!-- /#panel-weapons -->
 
     <!-- ── 방어 Defense ── -->
-    <div id="panel-defense" class="panel">
-      <div class="panel-grid-2">
-        <div>
-          <div class="box">
-            <div class="box-title">갑옷 Armor</div>
-            <div class="sidebar-row"><label>이름</label>
-              <input class="inline-edit" id="armor-name" placeholder="갑옷 없음" oninput="save()" style="flex:1;">
-              <button class="add-btn" onclick="openModal('armor')" style="width:auto;padding:2px 8px;margin:0 0 0 4px;font-size:10px;">DB</button>
-            </div>
-            <div class="sidebar-row"><label>AC 보너스</label><input class="inline-edit" id="armor-ac" type="number" value="0" style="width:36px;" oninput="recalcAC();save()"></div>
-            <div class="sidebar-row"><label>DEX 상한</label><input class="inline-edit" id="armor-dex" placeholder="-" style="width:36px;" oninput="recalcAC();save()"></div>
-            <div class="sidebar-row"><label>방어 숙련</label>
-              <select class="prof-sel" id="prof-ac2" onchange="syncArmorProf();recalcAC();save()">
-                <option value="0">미숙련</option><option value="2">숙련</option>
-                <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-              </select>
-            </div>
-          </div>
-          <div class="box">
-            <div class="box-title">방패 Shield</div>
-            <div class="sidebar-row"><label>이름</label><input class="inline-edit" id="shield-name" placeholder="방패 없음" oninput="save()" style="flex:1;"></div>
-            <div class="sidebar-row"><label>AC 보너스</label><input class="inline-edit" id="shield-ac" type="number" value="0" style="width:36px;" oninput="save()"></div>
-            <div class="sidebar-row"><label>경도 / HP</label>
-              <input class="inline-edit" id="shield-hard" type="number" value="0" style="width:36px;" oninput="save()">
-              <span style="color:var(--text2)"> / </span>
-              <input class="inline-edit" id="shield-hp" type="number" value="0" style="width:36px;" oninput="save()">
-            </div>
-          </div>
+    <div id="panel-defense" class="panel" style="padding:0;">
+      <!-- Hidden inputs for backward compatibility -->
+      <input type="hidden" id="armor-name" value="">
+      <input type="hidden" id="armor-ac" value="0">
+      <input type="hidden" id="armor-dex" value="">
+      <input type="hidden" id="armor-category" value="">
+      <input type="hidden" id="shield-name" value="">
+      <input type="hidden" id="shield-ac" value="0">
+      <input type="hidden" id="shield-hard" value="0">
+      <input type="hidden" id="shield-hp" value="0">
+      <select class="prof-sel" id="prof-ac2" style="display:none;">
+        <option value="0">미숙련</option><option value="2">숙련</option>
+        <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+      </select>
+
+      <!-- Armor Proficiency Bar -->
+      <div class="armor-prof-bar">
+        <div class="armor-prof-item">
+          <span class="weapon-prof-badge" id="badge-ap-light">U</span>
+          <span>경갑</span>
+          <select id="prof-armor-light" onchange="updateArmorProfBadge('light');recalcAC();save()">
+            <option value="0">미숙련</option><option value="2">숙련</option>
+            <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+          </select>
+        </div>
+        <div class="armor-prof-item">
+          <span class="weapon-prof-badge" id="badge-ap-medium">U</span>
+          <span>중갑</span>
+          <select id="prof-armor-medium" onchange="updateArmorProfBadge('medium');recalcAC();save()">
+            <option value="0">미숙련</option><option value="2">숙련</option>
+            <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+          </select>
+        </div>
+        <div class="armor-prof-item">
+          <span class="weapon-prof-badge" id="badge-ap-heavy">U</span>
+          <span>중갑(重)</span>
+          <select id="prof-armor-heavy" onchange="updateArmorProfBadge('heavy');recalcAC();save()">
+            <option value="0">미숙련</option><option value="2">숙련</option>
+            <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+          </select>
+        </div>
+        <div class="armor-prof-item">
+          <span class="weapon-prof-badge" id="badge-ap-unarmored">U</span>
+          <span>비장갑</span>
+          <select id="prof-armor-unarmored" onchange="updateArmorProfBadge('unarmored');recalcAC();save()">
+            <option value="0">미숙련</option><option value="2">숙련</option>
+            <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- AC Breakdown -->
+      <div class="ac-breakdown" id="ac-breakdown">
+        <span class="ac-part">Base <span class="ac-part-val" id="ac-base">10</span></span>
+        <span class="ac-sep">|</span>
+        <span class="ac-part">Item <span class="ac-part-val" id="ac-item-display">+0</span></span>
+        <span class="ac-sep">|</span>
+        <span class="ac-part">Dex <span class="ac-part-val" id="ac-dex-display">+0</span></span>
+        <span class="ac-sep">|</span>
+        <span class="ac-part">Proficiency <span class="ac-part-val" id="ac-prof-display">+0</span></span>
+      </div>
+
+      <div class="defense-panel-grid">
+        <div class="defense-panel-left">
+          <!-- Armor Card -->
+          <div class="defense-card" id="armor-card"></div>
+
+          <!-- Shield Card -->
+          <div class="defense-card" id="shield-card"></div>
         </div>
         <div>
-          <div class="box">
-            <div class="box-title">상태 이상 Conditions</div>
-            <div class="condition-grid" id="conditions-grid"></div>
-          </div>
-          <div class="box">
-            <div class="box-title">전투 메모</div>
-            <textarea class="notes-area" id="combat-notes" placeholder="전술, 특수 능력..." style="min-height:120px;" oninput="save()"></textarea>
+          <!-- Conditions -->
+          <div class="defense-conditions">
+            <div class="box">
+              <div class="box-title">상태 이상 Conditions</div>
+              <div class="condition-grid" id="conditions-grid"></div>
+            </div>
+            <div class="box">
+              <div class="box-title">전투 메모</div>
+              <textarea class="notes-area" id="combat-notes" placeholder="전술, 특수 능력..." style="min-height:120px;" oninput="save()"></textarea>
+            </div>
           </div>
         </div>
       </div>
@@ -2524,19 +2639,44 @@ function recalcAll() {
 }
 
 function recalcAC() {
-  const armorBonus = parseInt(document.getElementById('armor-ac')?.value||0);
+  const baseAc = parseInt(document.getElementById('armor-ac')?.value||0);
+  const potency = state.armorPotency || 0;
+  const armorBonus = baseAc + potency;
   const dexCap = document.getElementById('armor-dex')?.value;
   let dexMod = getMod('dex');
   if (dexCap && dexCap !== '-' && dexCap !== '') dexMod = Math.min(dexMod, parseInt(dexCap)||99);
-  const prof = getProfBonus('prof-ac');
-  const ac = 10 + dexMod + armorBonus + prof;
+
+  // Use armor-category-specific proficiency
+  const armorProfId = getArmorProfSelectId();
+  const armorProfRank = parseInt(document.getElementById(armorProfId)?.value||0);
+  const lv = getLevel();
+  const profBonus = armorProfRank > 0 ? (armorProfRank + lv) : 0;
+
+  // Sync prof-ac (sidebar) with current armor category prof
+  const profAc = document.getElementById('prof-ac');
+  if (profAc) profAc.value = armorProfRank;
+  const profAc2 = document.getElementById('prof-ac2');
+  if (profAc2) profAc2.value = armorProfRank;
+
+  const stowed = state.armorStowed || false;
+  const effectiveArmor = stowed ? 0 : armorBonus;
+  const effectiveDex = stowed ? getMod('dex') : dexMod;
+  const effectiveProf = stowed ? (parseInt(document.getElementById('prof-armor-unarmored')?.value||0) > 0 ? parseInt(document.getElementById('prof-armor-unarmored').value) + lv : 0) : profBonus;
+
+  const ac = 10 + effectiveDex + effectiveArmor + effectiveProf;
   document.getElementById('val-ac').textContent = ac;
-  // sync armor prof selects
-  const v = document.getElementById('prof-ac')?.value;
-  if (document.getElementById('prof-ac2')) document.getElementById('prof-ac2').value = v;
+
+  // Update AC breakdown display
+  const itemDisp = document.getElementById('ac-item-display');
+  if (itemDisp) itemDisp.textContent = '+' + effectiveArmor;
+  const dexDisp = document.getElementById('ac-dex-display');
+  if (dexDisp) dexDisp.textContent = (effectiveDex >= 0 ? '+' : '') + effectiveDex;
+  const profDisp = document.getElementById('ac-prof-display');
+  if (profDisp) profDisp.textContent = '+' + effectiveProf;
 }
 
 function syncArmorProf() {
+  // Legacy: sync from prof-ac2 to prof-ac
   const v = document.getElementById('prof-ac2')?.value;
   if (document.getElementById('prof-ac')) document.getElementById('prof-ac').value = v;
   recalcAC();
@@ -3073,6 +3213,201 @@ function initWeaponProfBadges() {
   ['simple','martial','advanced','unarmed'].forEach(c=>updateWeaponProfBadge(c));
 }
 
+// ── Armor proficiency badge helpers ──
+function updateArmorProfBadge(cat) {
+  const el = document.getElementById('badge-ap-'+cat);
+  if (!el) return;
+  const val = parseInt(document.getElementById('prof-armor-'+cat)?.value||0);
+  const map = {0:['U',''],2:['T','trained'],4:['E','expert'],6:['M','master'],8:['L','legendary']};
+  const [letter,cls] = map[val]||['U',''];
+  el.textContent = letter;
+  el.className = 'weapon-prof-badge' + (cls?' '+cls:'');
+}
+function initArmorProfBadges() {
+  ['light','medium','heavy','unarmored'].forEach(c=>updateArmorProfBadge(c));
+}
+
+// ── Armor category detection ──
+function getArmorCategory(name) {
+  if (!name || typeof ARMOR_DB === 'undefined') return 'unarmored';
+  const armor = ARMOR_DB.find(a => a.name_ko === name || a.name_en === name);
+  if (!armor) return 'unarmored';
+  const cat = armor.category || '';
+  if (cat.includes('경갑') || cat.toLowerCase().includes('light')) return 'light';
+  if (cat.includes('重甲') || cat.includes('중갑(重甲)')) return 'heavy';
+  if (cat.includes('중갑') || cat.toLowerCase().includes('medium')) return 'medium';
+  return 'unarmored';
+}
+
+function getArmorProfSelectId() {
+  const name = document.getElementById('armor-name')?.value || '';
+  const cat = getArmorCategory(name);
+  document.getElementById('armor-category').value = cat;
+  return 'prof-armor-' + cat;
+}
+
+// ── Render Armor Card ──
+function renderArmorCard() {
+  const card = document.getElementById('armor-card');
+  if (!card) return;
+  const name = document.getElementById('armor-name')?.value || '';
+  const ac = document.getElementById('armor-ac')?.value || '0';
+  const dex = document.getElementById('armor-dex')?.value || '-';
+  const cat = getArmorCategory(name);
+  const stowed = state.armorStowed || false;
+  const potency = state.armorPotency || 0;
+  const resilient = state.armorResilient || 0;
+
+  const profVal = parseInt(document.getElementById('prof-armor-'+cat)?.value||0);
+  const profMap = {0:['U',''],2:['T','trained'],4:['E','expert'],6:['M','master'],8:['L','legendary']};
+  const [profLetter,profCls] = profMap[profVal]||['U',''];
+
+  const runeNames = ['','강화 +1','강화 +2','강화 +3'];
+  const resNames = ['','탄력 (회피 +1)','상위 탄력 (+2)','최상 탄력 (+3)'];
+
+  card.className = 'defense-card' + (stowed ? ' stowed' : '');
+  card.innerHTML = `
+    <div class="defense-card-header">
+      <button class="defense-btn" onclick="openModal('armor')">변경</button>
+      <button class="defense-btn" onclick="showArmorRunePopup()">룬</button>
+      <button class="defense-btn" onclick="toggleArmorStow()">${stowed?'장착':'보관'}</button>
+      <span style="flex:1;"></span>
+      ${name ? `<button class="defense-btn danger" onclick="clearArmor()">해제</button>` : ''}
+    </div>
+    <div class="defense-card-body">
+      <div class="defense-card-name">
+        <span class="weapon-prof-badge ${profCls}" style="font-size:8px;width:14px;height:14px;">${profLetter}</span>
+        ${name || '갑옷 없음'}
+        ${potency > 0 ? `<span class="tag" style="font-size:9px;">+${potency}</span>` : ''}
+        ${resilient > 0 ? `<span class="tag" style="font-size:9px;">${resNames[resilient]||''}</span>` : ''}
+      </div>
+      <div class="defense-card-stats">
+        <span class="stat-item">🛡 Item Bonus <span class="stat-val">+${parseInt(ac)+(potency||0)}</span></span>
+        <span class="stat-item">⬆ Dex Cap <span class="stat-val">${dex==='-'||dex===''?'—':dex}</span></span>
+      </div>
+    </div>
+  `;
+}
+
+function clearArmor() {
+  document.getElementById('armor-name').value = '';
+  document.getElementById('armor-ac').value = 0;
+  document.getElementById('armor-dex').value = '-';
+  document.getElementById('armor-category').value = 'unarmored';
+  state.armorPotency = 0;
+  state.armorResilient = 0;
+  state.armorStowed = false;
+  renderArmorCard();
+  recalcAC();
+  save();
+}
+
+function toggleArmorStow() {
+  state.armorStowed = !state.armorStowed;
+  renderArmorCard();
+  recalcAC();
+  save();
+}
+
+function showArmorRunePopup() {
+  const potency = state.armorPotency || 0;
+  const resilient = state.armorResilient || 0;
+  const popup = document.createElement('div');
+  popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10001;background:var(--bg2);border:2px solid var(--accent);border-radius:8px;padding:16px;min-width:260px;';
+  popup.innerHTML = `
+    <div style="font-weight:700;color:var(--accent);margin-bottom:10px;">갑옷 룬 설정</div>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:11px;color:var(--text2);">강화 (Potency)</label><br>
+      <select id="rune-armor-potency" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:4px;border-radius:3px;width:100%;">
+        <option value="0" ${potency===0?'selected':''}>없음</option>
+        <option value="1" ${potency===1?'selected':''}>+1 강화</option>
+        <option value="2" ${potency===2?'selected':''}>+2 강화</option>
+        <option value="3" ${potency===3?'selected':''}>+3 강화</option>
+      </select>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:11px;color:var(--text2);">탄력 (Resilient)</label><br>
+      <select id="rune-armor-resilient" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:4px;border-radius:3px;width:100%;">
+        <option value="0" ${resilient===0?'selected':''}>없음</option>
+        <option value="1" ${resilient===1?'selected':''}>탄력 (+1)</option>
+        <option value="2" ${resilient===2?'selected':''}>상위 탄력 (+2)</option>
+        <option value="3" ${resilient===3?'selected':''}>최상 탄력 (+3)</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:6px;justify-content:flex-end;">
+      <button onclick="applyArmorRunes()" style="background:var(--accent);color:#fff;border:none;padding:5px 14px;border-radius:4px;cursor:pointer;">적용</button>
+      <button onclick="this.closest('div[style]').remove();document.getElementById('armor-rune-overlay')?.remove();" style="background:var(--bg4);color:var(--text2);border:1px solid var(--border2);padding:5px 14px;border-radius:4px;cursor:pointer;">취소</button>
+    </div>
+  `;
+  const overlay = document.createElement('div');
+  overlay.id = 'armor-rune-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:10000;';
+  overlay.onclick = () => { overlay.remove(); popup.remove(); };
+  document.body.appendChild(overlay);
+  document.body.appendChild(popup);
+}
+
+function applyArmorRunes() {
+  state.armorPotency = parseInt(document.getElementById('rune-armor-potency')?.value||0);
+  state.armorResilient = parseInt(document.getElementById('rune-armor-resilient')?.value||0);
+  document.getElementById('armor-rune-overlay')?.remove();
+  document.querySelector('div[style*="translate(-50%"]')?.remove();
+  renderArmorCard();
+  recalcAC();
+  save();
+}
+
+// ── Render Shield Card ──
+function renderShieldCard() {
+  const card = document.getElementById('shield-card');
+  if (!card) return;
+  const name = document.getElementById('shield-name')?.value || '';
+  const ac = document.getElementById('shield-ac')?.value || '0';
+  const hard = document.getElementById('shield-hard')?.value || '0';
+  const hp = document.getElementById('shield-hp')?.value || '0';
+  const bt = Math.floor(parseInt(hp)/2);
+  const stowed = state.shieldStowed || false;
+
+  card.className = 'defense-card' + (stowed ? ' stowed' : '');
+  card.innerHTML = `
+    <div class="defense-card-header">
+      <button class="defense-btn" onclick="openModal('shield')">변경</button>
+      ${name ? `<button class="defense-btn" onclick="showInfo('shield','${name.replace(/'/g,"\\'")}')">정보</button>` : ''}
+      ${name ? `<button class="defense-btn danger" onclick="clearShield()">제거</button>` : ''}
+      <button class="defense-btn" onclick="toggleShieldStow()">${stowed?'장착':'보관'}</button>
+    </div>
+    <div class="defense-card-body">
+      <div class="defense-card-name">${name || '방패 없음'}</div>
+      ${name ? `
+      <div class="defense-card-stats">
+        <span class="stat-item">🛡 Raised AC <span class="stat-val">+${ac}</span></span>
+        <span class="stat-item">⚒ Hardness <span class="stat-val">${hard}</span></span>
+        <span class="stat-item">❤ HP <span class="stat-val">${hp}</span> (BT ${bt})</span>
+      </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function clearShield() {
+  document.getElementById('shield-name').value = '';
+  document.getElementById('shield-ac').value = 0;
+  document.getElementById('shield-hard').value = 0;
+  document.getElementById('shield-hp').value = 0;
+  const hpCur = document.getElementById('shield-hp-cur');
+  if (hpCur) hpCur.value = 0;
+  state.shieldStowed = false;
+  renderShieldCard();
+  updateShieldGauge();
+  save();
+}
+
+function toggleShieldStow() {
+  state.shieldStowed = !state.shieldStowed;
+  renderShieldCard();
+  save();
+}
+
 // ── Weapon category mapping ──
 function getWeaponCategory(w) {
   // From DB data
@@ -3387,6 +3722,8 @@ function toggleEquip(i) {
     if (nameEl) nameEl.value = a.name_ko;
     if (acEl) acEl.value = a.ac_bonus||0;
     if (dexEl) dexEl.value = a.dex_cap!==null && a.dex_cap!==undefined ? a.dex_cap : '-';
+    state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
+    renderArmorCard();
     recalcAC();
   } else if (!item._equipped && item._type === 'weapon') {
     // 전투 탭에서 해당 무기 제거
@@ -3404,6 +3741,8 @@ function toggleEquip(i) {
     if (hardEl) hardEl.value = s.hardness||0;
     if (hpEl) hpEl.value = s.hp||0;
     if (hpCurEl) hpCurEl.value = s.hp||0;
+    state.shieldStowed = false;
+    renderShieldCard();
     updateShieldGauge();
   } else if (!item._equipped && item._type === 'armor') {
     const nameEl = document.getElementById('armor-name');
@@ -3412,6 +3751,8 @@ function toggleEquip(i) {
     if (nameEl) nameEl.value = '';
     if (acEl) acEl.value = 0;
     if (dexEl) dexEl.value = '-';
+    state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
+    renderArmorCard();
     recalcAC();
   } else if (!item._equipped && item._type === 'shield') {
     const nameEl = document.getElementById('shield-name');
@@ -3424,6 +3765,8 @@ function toggleEquip(i) {
     if (hardEl) hardEl.value = 0;
     if (hpEl) hpEl.value = 0;
     if (hpCurEl) hpCurEl.value = 0;
+    state.shieldStowed = false;
+    renderShieldCard();
     updateShieldGauge();
   }
 
@@ -3632,7 +3975,7 @@ function openModal(type, ctx) {
   const titles = {
     class:'클래스 선택', ancestry:'혈통 선택', background:'배경 선택',
     heritage:'유산 선택', subclass:'서브클래스 선택', feat:'재주 선택', spell:'주문 선택',
-    weapon:'무기 선택', armor:'방어구 선택',
+    weapon:'무기 선택', armor:'방어구 선택', shield:'방패 선택',
     'equip-weapon':'무기 추가 (인벤토리)', 'equip-armor':'방어구 추가 (인벤토리)', 'equip-shield':'방패 추가 (인벤토리)', 'equip-gear':'장비 추가 (인벤토리)'
   };
   document.getElementById('modal-title').textContent = titles[type]||type;
@@ -3666,7 +4009,7 @@ function getOptionsData(type) {
   if (type==='spell') return filterSpells();
   if (type==='weapon' || type==='equip-weapon') return filterWeapons();
   if (type==='armor' || type==='equip-armor') return typeof ARMOR_DB!=='undefined' ? ARMOR_DB : [];
-  if (type==='equip-shield') return typeof SHIELD_DB!=='undefined' ? SHIELD_DB : [];
+  if (type==='shield' || type==='equip-shield') return typeof SHIELD_DB!=='undefined' ? SHIELD_DB : [];
   if (type==='equip-gear') return typeof GEAR_DB!=='undefined' ? GEAR_DB : [];
   return [];
 }
@@ -4014,7 +4357,22 @@ function confirmModal() {
     if (nameEl) nameEl.value = a.name_ko;
     if (acEl) acEl.value = a.ac_bonus||0;
     if (dexEl) dexEl.value = a.dex_cap!==null && a.dex_cap!==undefined ? a.dex_cap : '-';
+    state.armorPotency = 0;
+    state.armorResilient = 0;
+    state.armorStowed = false;
+    renderArmorCard();
     recalcAC();
+  } else if (modalType==='shield') {
+    const s = modalSelected;
+    document.getElementById('shield-name').value = s.name_ko;
+    document.getElementById('shield-ac').value = s.ac_bonus||0;
+    document.getElementById('shield-hard').value = s.hardness||0;
+    document.getElementById('shield-hp').value = s.hp||0;
+    const hpCur = document.getElementById('shield-hp-cur');
+    if (hpCur) hpCur.value = s.hp||0;
+    state.shieldStowed = false;
+    renderShieldCard();
+    updateShieldGauge();
   } else if (modalType==='equip-weapon') {
     const w = modalSelected;
     addEquip({name: w.name_ko, qty:1, bulk: typeof w.bulk==='number'?w.bulk:(w.bulk==='L'?0.1:0), _type:'weapon', _data:w});
@@ -4121,6 +4479,39 @@ function applyClassDefaults(cls) {
     if (el) el.value = wp[c];
   });
   initWeaponProfBadges();
+
+  // Armor proficiencies based on class
+  const apDefaults = {
+    fighter:     {light:'2',medium:'2',heavy:'2',unarmored:'2'},
+    champion:    {light:'2',medium:'2',heavy:'2',unarmored:'2'},
+    ranger:      {light:'2',medium:'2',heavy:'0',unarmored:'2'},
+    barbarian:   {light:'2',medium:'2',heavy:'0',unarmored:'2'},
+    rogue:       {light:'2',medium:'0',heavy:'0',unarmored:'2'},
+    monk:        {light:'0',medium:'0',heavy:'0',unarmored:'4'},
+    swashbuckler:{light:'2',medium:'0',heavy:'0',unarmored:'2'},
+    investigator:{light:'2',medium:'0',heavy:'0',unarmored:'2'},
+    gunslinger:  {light:'2',medium:'2',heavy:'0',unarmored:'2'},
+    inventor:    {light:'2',medium:'2',heavy:'2',unarmored:'2'},
+    magus:       {light:'2',medium:'0',heavy:'0',unarmored:'2'},
+    thaumaturge: {light:'2',medium:'0',heavy:'0',unarmored:'2'},
+    bard:        {light:'2',medium:'0',heavy:'0',unarmored:'2'},
+    cleric:      {light:'2',medium:'2',heavy:'0',unarmored:'2'},
+    druid:       {light:'2',medium:'2',heavy:'0',unarmored:'2'},
+    oracle:      {light:'0',medium:'0',heavy:'0',unarmored:'2'},
+    psychic:     {light:'0',medium:'0',heavy:'0',unarmored:'2'},
+    sorcerer:    {light:'0',medium:'0',heavy:'0',unarmored:'2'},
+    summoner:    {light:'0',medium:'0',heavy:'0',unarmored:'2'},
+    witch:       {light:'0',medium:'0',heavy:'0',unarmored:'2'},
+    wizard:      {light:'0',medium:'0',heavy:'0',unarmored:'2'},
+    kineticist:  {light:'0',medium:'0',heavy:'0',unarmored:'2'},
+  };
+  const ap = apDefaults[clsId] || {light:'0',medium:'0',heavy:'0',unarmored:'2'};
+  ['light','medium','heavy','unarmored'].forEach(c => {
+    const el = document.getElementById('prof-armor-'+c);
+    if (el) el.value = ap[c];
+  });
+  initArmorProfBadges();
+  renderArmorCard();
 
   // Auto-set class key attribute boost
   const key = parseAttrKey(cls.keyAttr);
@@ -4408,6 +4799,10 @@ function collectData() {
       weaponMartial: document.getElementById('prof-weapon-martial')?.value,
       weaponAdvanced: document.getElementById('prof-weapon-advanced')?.value,
       weaponUnarmed: document.getElementById('prof-weapon-unarmed')?.value,
+      armorLight: document.getElementById('prof-armor-light')?.value,
+      armorMedium: document.getElementById('prof-armor-medium')?.value,
+      armorHeavy: document.getElementById('prof-armor-heavy')?.value,
+      armorUnarmored: document.getElementById('prof-armor-unarmored')?.value,
     },
     skillProfs: {}, loreNames: {},
     armor:  {name:document.getElementById('armor-name')?.value,  ac:document.getElementById('armor-ac')?.value,   dex:document.getElementById('armor-dex')?.value},
@@ -4427,6 +4822,10 @@ function collectData() {
     vision: state.vision || null,
     size: state.size || null,
     trainableSkillSlots: state.trainableSkillSlots || 0,
+    armorPotency: state.armorPotency || 0,
+    armorResilient: state.armorResilient || 0,
+    armorStowed: state.armorStowed || false,
+    shieldStowed: state.shieldStowed || false,
   };
   SKILLS.forEach(sk => {
     data.skillProfs[sk.id] = document.getElementById('sk-prof-'+sk.id)?.value;
@@ -4519,6 +4918,15 @@ function loadData(d) {
         }
       }
       initWeaponProfBadges();
+      // Armor proficiencies
+      const apMap = {armorLight:'light',armorMedium:'medium',armorHeavy:'heavy',armorUnarmored:'unarmored'};
+      for (const [key,cat] of Object.entries(apMap)) {
+        if (d.profs[key] !== undefined) {
+          const el = document.getElementById('prof-armor-'+cat);
+          if (el) el.value = d.profs[key];
+        }
+      }
+      initArmorProfBadges();
     }
     // Skills
     if (d.skillProfs) {
@@ -4546,6 +4954,13 @@ function loadData(d) {
         if (el && d.shield[k] !== undefined) el.value = d.shield[k];
       });
     }
+    // Armor/Shield state
+    if (d.armorPotency !== undefined) state.armorPotency = d.armorPotency;
+    if (d.armorResilient !== undefined) state.armorResilient = d.armorResilient;
+    if (d.armorStowed !== undefined) state.armorStowed = d.armorStowed;
+    if (d.shieldStowed !== undefined) state.shieldStowed = d.shieldStowed;
+    renderArmorCard();
+    renderShieldCard();
     // Spell
     if (d.spell) {
       ['tradition','type'].forEach(k => {
@@ -4694,6 +5109,9 @@ window.onload = function() {
     addWeapon({name:'비무장 공격', dmg:'1d4 B', traits:'비치명, 민첩, 기교, 비무장'});
   }
   initWeaponProfBadges();
+  initArmorProfBadges();
+  renderArmorCard();
+  renderShieldCard();
   addEquip({name:'모험가 꾸러미', qty:1, bulk:1});
   renderFeats();
   recalcAll();
