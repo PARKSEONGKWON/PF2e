@@ -24,712 +24,256 @@ const db = firebase.firestore();
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
 <style>
-/* ═══════════════════════════════════════════
-   PATHBUILDER2E STYLE — CSS CUSTOM PROPERTIES
-   ═══════════════════════════════════════════ */
+.boost-grid{display:grid;grid-template-columns:90px repeat(6,1fr);gap:3px;font-size:11px;margin-top:4px;}
+.boost-grid .bg-head{color:var(--gold);font-size:10px;text-align:center;padding:2px;}
+.boost-grid .bg-src{color:var(--text2);font-size:10px;display:flex;align-items:center;padding:2px 0;}
+.boost-cell{text-align:center;}
+.boost-cell input[type=checkbox]{width:14px;height:14px;accent-color:var(--gold);cursor:pointer;}
+.boost-cell input[type=checkbox]:disabled{accent-color:var(--red-light);cursor:default;}
+.flaw-cell input[type=checkbox]{accent-color:var(--red-light)!important;}
+.attr-score{font-size:26px;font-weight:bold;color:var(--gold-light);line-height:1.2;}
+.modal-filters{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+.modal-filters select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:4px 6px;border-radius:3px;font-size:12px;}
+.spell-actions{font-size:10px;color:var(--gold);margin-right:4px;}
+/* 상태이상 */
+.cond-chip{position:relative;}
+.cond-chip .cond-desc{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--bg4);border:1px solid var(--gold);border-radius:4px;padding:6px 8px;font-size:11px;color:var(--text);width:200px;z-index:200;line-height:1.5;white-space:normal;text-align:left;pointer-events:none;}
+.cond-chip:hover .cond-desc{display:block;}
+.cond-valued{display:flex;align-items:center;gap:2px;}
+.cond-num{background:var(--bg);border:none;color:var(--gold-light);font-size:12px;font-weight:bold;width:20px;text-align:center;outline:none;}
+.cond-btn{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:2px;cursor:pointer;font-size:11px;padding:0 3px;line-height:1.4;}
+.cond-btn:hover{border-color:var(--gold);color:var(--gold);}
+/* 부스트 모달 */
+.boost-section{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:8px;margin-bottom:8px;}
+.boost-section-title{font-size:11px;color:var(--gold);font-weight:bold;margin-bottom:6px;}
+.boost-section-desc{font-size:10px;color:var(--text2);margin-bottom:6px;}
+.boost-radio-group{display:flex;flex-wrap:wrap;gap:6px;}
+.boost-radio-group label{display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;padding:2px 6px;border:1px solid var(--border2);border-radius:3px;transition:all .15s;}
+.boost-radio-group label:hover{border-color:var(--gold);}
+.boost-radio-group label.selected{background:#2a1800;border-color:var(--gold);color:var(--gold-light);}
+.boost-radio-group label.fixed{background:var(--bg4);color:var(--text2);cursor:default;}
+.boost-radio-group label.flaw{background:#2a0808;border-color:var(--red-light);color:var(--red-light);}
+.boost-summary-bar{display:flex;gap:8px;padding:8px;background:var(--bg4);border-radius:4px;margin-bottom:8px;}
+.boost-summary-attr{text-align:center;flex:1;}
+.boost-summary-attr .bsa-name{font-size:9px;color:var(--text2);text-transform:uppercase;}
+.boost-summary-attr .bsa-val{font-size:18px;font-weight:bold;color:var(--gold-light);}
+.attr-box{cursor:pointer;}
+.attr-box:hover .attr-score{color:var(--gold);}
+/* 유산 */
+.heritage-chip{display:inline-block;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:2px 8px;font-size:11px;color:var(--text2);cursor:pointer;margin-top:2px;}
+.heritage-chip.filled{border-color:var(--gold);color:var(--gold-light);}
 :root {
-  --bg:       #1a2332;
-  --bg2:      #1e2a3a;
-  --bg3:      #243040;
-  --bg4:      #2a3a4e;
-  --bg5:      #304050;
-  --text:     #c8d0dc;
-  --text2:    #7a8a9e;
-  --border:   #2a3a4e;
-  --border2:  #3a4e65;
-  --accent:   #e67e22;
-  --accent2:  #f39c12;
-  --accent-bg:#2a1800;
-  --red:      #c0392b;
-  --red-bg:   #2a0808;
-  --green:    #1a6a3a;
-  --teal:     #1a3a3a;
-  --modal-bg: rgba(0,0,0,0.85);
-  /* legacy compat aliases */
-  --gold:       #e67e22;
-  --gold-light: #f0a050;
-  --red-light:  #e74c3c;
+  --red:#8b1a1a; --red-light:#c0392b; --gold:#c9a84c; --gold-light:#f0d080;
+  --bg:#1a1a1a; --bg2:#242424; --bg3:#2e2e2e; --bg4:#3a3a3a;
+  --text:#e8e0d0; --text2:#b0a890; --border:#4a4030; --border2:#5a5040;
+  --green:#2d6a2d; --blue:#1a3a5c; --modal-bg:rgba(0,0,0,0.85);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
-  font-size:13px;
-  min-height:100vh;
-}
+body{background:var(--bg);color:var(--text);font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:13px;min-height:100vh;}
 
-/* ══════════════════════════════════
-   AUTH / TOP BAR
-   ══════════════════════════════════ */
-#auth-bar{
-  position:sticky;top:0;z-index:9999;
-  background:#111820;
-  border-bottom:1px solid var(--border);
-  padding:7px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:12px;
-}
-#auth-bar .brand{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.5px;}
-#save-status{color:var(--text2);font-size:11px;margin-left:10px;}
-#slot-bar{
-  background:#111820;
-  border-bottom:1px solid var(--border);
-  padding:5px 16px;
-  font-size:12px;
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-}
-#slot-bar button{
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
-  padding:3px 10px;border-radius:3px;cursor:pointer;font-size:11px;
-}
-#slot-bar button:hover{border-color:var(--accent);color:var(--accent);}
-#slot-bar button.active-slot{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
-
-/* ══════════════════════════════════
-   MAIN HEADER (name/class bar)
-   ══════════════════════════════════ */
-#header{
-  background:#111820;
-  border-bottom:2px solid var(--accent);
-  padding:10px 16px;
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-}
-#header-title{
-  font-size:15px;font-weight:700;
-  color:var(--accent);white-space:nowrap;
-  display:flex;align-items:center;gap:8px;
-}
-#header-title small{font-size:10px;color:var(--text2);font-weight:normal;}
+/* ── HEADER ── */
+#header{background:linear-gradient(135deg,#1a0a0a 0%,#2a1010 50%,#1a0a0a 100%);border-bottom:2px solid var(--gold);padding:12px 16px;display:flex;align-items:center;gap:16px;}
+#header h1{font-size:18px;color:var(--gold-light);font-weight:bold;white-space:nowrap;}
+#header h1 small{font-size:11px;color:var(--text2);font-weight:normal;}
 .hdr-fields{display:flex;flex-wrap:wrap;gap:8px;flex:1;}
-.hdr-field{display:flex;flex-direction:column;gap:2px;min-width:80px;}
-.hdr-field label{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;}
-.hdr-field input{
-  background:transparent;border:none;border-bottom:1px solid var(--border2);
-  color:var(--text);padding:3px 4px;font-size:12px;outline:none;width:100px;
-}
-.hdr-field input:focus{border-bottom-color:var(--accent);}
-.hdr-field input[type=number]{width:50px;}
-.btn-select{
-  background:transparent;border:1px solid var(--border2);color:var(--text2);
-  padding:3px 8px;border-radius:4px;font-size:11px;cursor:pointer;
-  text-align:left;white-space:nowrap;
-}
-.btn-select:hover{border-color:var(--accent);color:var(--accent);}
-.btn-select.filled{border-color:var(--accent);color:var(--accent);}
-.heritage-chip{
-  display:inline-block;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:3px;padding:2px 8px;font-size:10px;color:var(--text2);cursor:pointer;margin-top:2px;
-}
-.heritage-chip.filled{border-color:var(--accent);color:var(--accent);}
-.hdr-actions{display:flex;gap:6px;margin-left:auto;flex-shrink:0;align-items:center;}
-.btn{padding:5px 12px;border-radius:4px;cursor:pointer;font-size:11px;border:1px solid;}
-.btn-confirm{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
-.btn-confirm:hover{background:#3a2200;}
-.btn-cancel{background:var(--bg3);border-color:var(--border2);color:var(--text2);}
-.btn-cancel:hover{border-color:var(--red);color:var(--red);}
+.hdr-field{display:flex;flex-direction:column;gap:2px;}
+.hdr-field label{font-size:10px;color:var(--text2);text-transform:uppercase;}
+.hdr-field input{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:4px 6px;border-radius:3px;font-size:12px;width:100px;}
+.hdr-field input:focus{outline:none;border-color:var(--gold);}
+.btn-select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:4px 8px;border-radius:3px;font-size:12px;cursor:pointer;text-align:left;min-width:100px;}
+.btn-select:hover{border-color:var(--gold);background:var(--bg4);}
+.btn-select.filled{border-color:var(--gold);color:var(--gold-light);}
+#level-input{width:48px;}
 
-/* ══════════════════════════════════
-   3-COLUMN LAYOUT
-   ══════════════════════════════════ */
-#app-layout{
-  display:grid;
-  grid-template-columns:270px 340px 1fr;
-  grid-template-rows:auto 1fr;
-  height:calc(100vh - 100px);
-  overflow:hidden;
-}
-/* sidebar */
-#sidebar{
-  grid-column:1;
-  grid-row:1/3;
-  background:var(--bg2);
-  border-right:1px solid var(--border);
-  overflow-y:auto;
-  padding:10px;
-}
-/* center column: stats + skills */
-#center-col{
-  grid-column:2;
-  grid-row:1/3;
-  background:var(--bg);
-  border-right:1px solid var(--border);
-  overflow-y:auto;
-  padding:10px;
-}
-/* right: tabs header */
-#right-tabs{
-  grid-column:3;
-  grid-row:1;
-  background:var(--bg2);
-  border-bottom:1px solid var(--border);
-}
-/* right: tab panels */
-#right-content{
-  grid-column:3;
-  grid-row:2;
-  overflow-y:auto;
-  background:var(--bg);
-  padding:12px;
-}
-
-/* ══════════════════════════════════
-   TAB BAR (right column)
-   ══════════════════════════════════ */
-#right-tabs{
-  display:flex;
-  overflow-x:auto;
-  white-space:nowrap;
-  scrollbar-width:none;
-}
-#right-tabs::-webkit-scrollbar{display:none;}
-.tab{
-  padding:9px 14px;
-  cursor:pointer;
-  color:var(--text2);
-  font-size:12px;
-  border-bottom:2px solid transparent;
-  transition:all .15s;
-  flex-shrink:0;
-}
+/* ── TABS ── */
+#tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);}
+.tab{padding:8px 16px;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;transition:all .2s;}
 .tab:hover{color:var(--text);background:var(--bg3);}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-/* mobile-only tabs hidden on desktop */
-.tab-mobile-only{display:none;}
+.tab.active{color:var(--gold-light);border-bottom-color:var(--gold);background:var(--bg3);}
 
-/* ══════════════════════════════════
-   PANELS (right content area)
-   ══════════════════════════════════ */
-.panel{display:none;}
-.panel.active{display:block;}
+/* ── PANELS ── */
+.panel{display:none;padding:12px;gap:12px;}
+.panel.active{display:grid;}
 
-/* ══════════════════════════════════
-   CARD / BOX
-   ══════════════════════════════════ */
-.box{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:10px;
-  margin-bottom:8px;
-}
-.box-title{
-  font-size:9px;
-  color:var(--accent);
-  text-transform:uppercase;
-  letter-spacing:1.2px;
-  margin-bottom:8px;
-  padding-bottom:5px;
-  border-bottom:1px solid var(--border);
-  font-weight:600;
-}
+/* ── BOXES ── */
+.box{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:8px;}
+.box-title{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.box-row{display:flex;gap:6px;align-items:center;margin-bottom:4px;}
+.box-row label{font-size:11px;color:var(--text2);min-width:60px;}
 
-/* ══════════════════════════════════
-   ATTRIBUTES (center col)
-   ══════════════════════════════════ */
-.attr-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:5px;
-}
-.attr-box{
-  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
-  padding:8px 4px;text-align:center;cursor:pointer;transition:border-color .15s;
-}
-.attr-box:hover{border-color:var(--accent);}
-.attr-name{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;}
-.attr-score{font-size:22px;font-weight:700;color:var(--text);line-height:1.1;}
-.attr-box:hover .attr-score{color:var(--accent);}
-.attr-mod{font-size:11px;color:var(--accent);height:14px;}
+/* ── ATTRIBUTES ── */
+#panel-main{grid-template-columns:220px 1fr 1fr;}
+.attr-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.attr-box{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:8px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.attr-box:hover{border-color:var(--gold);}
+.attr-name{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;}
+.attr-score{font-size:22px;font-weight:bold;color:var(--text);line-height:1.1;}
+.attr-mod{font-size:13px;color:var(--gold-light);}
+.attr-score-input{background:transparent;border:none;color:var(--text);font-size:22px;font-weight:bold;width:52px;text-align:center;outline:none;}
+.attr-score-input:focus{background:var(--bg4);border-radius:3px;}
 
-/* ══════════════════════════════════
-   STAT ROWS (saves, AC, etc.)
-   ══════════════════════════════════ */
-.stat-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+/* ── SAVES / DEFENSES ── */
+.stat-row{display:flex;align-items:center;margin-bottom:5px;gap:6px;}
 .stat-label{font-size:11px;color:var(--text2);flex:1;}
-.stat-val{
-  font-size:15px;font-weight:700;color:var(--text);
-  width:36px;text-align:center;
-}
-.prof-sel{
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
-  padding:2px 3px;border-radius:3px;font-size:10px;cursor:pointer;
-}
+.stat-val{font-size:16px;font-weight:bold;color:var(--gold-light);width:32px;text-align:center;}
+.prof-sel{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:2px 4px;border-radius:3px;font-size:10px;cursor:pointer;}
 .prof-sel option{background:var(--bg2);}
-.inline-edit{
-  background:transparent;border:none;border-bottom:1px solid var(--border2);
-  color:var(--text);outline:none;font-size:inherit;font-family:inherit;
-}
-.inline-edit:focus{border-bottom-color:var(--accent);}
+.hp-box{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+.hp-num{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:4px 8px;text-align:center;min-width:56px;}
+.hp-num input{background:transparent;border:none;color:var(--gold-light);font-size:18px;font-weight:bold;width:50px;text-align:center;outline:none;}
+.hp-label{font-size:10px;color:var(--text2);}
 
-/* ══════════════════════════════════
-   AC SHIELD BADGE
-   ══════════════════════════════════ */
-.ac-shield{
-  display:inline-flex;align-items:center;justify-content:center;
-  background:var(--accent);
-  color:#fff;
-  font-weight:700;
-  font-size:18px;
-  width:44px;height:50px;
-  clip-path:polygon(50% 0%,100% 15%,100% 70%,50% 100%,0% 70%,0% 15%);
-  flex-shrink:0;
-}
-.ac-wrap{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.ac-label{font-size:10px;color:var(--text2);}
-
-/* ══════════════════════════════════
-   HP BAR
-   ══════════════════════════════════ */
-/* Hero Points checkboxes */
-.hero-cb{cursor:pointer;font-size:18px;color:var(--text2);user-select:none;}
-.hero-cb input{display:none;}
-.hero-cb input:checked + *{color:var(--accent);}
-.hero-cb:has(input:checked){color:var(--accent);}
-/* HP Gauge */
-.hp-gauge-wrap{margin-bottom:4px;}
-.hp-gauge-bar{position:relative;background:#1a2a2a;border:1px solid var(--border);border-radius:6px;height:28px;overflow:hidden;}
-.hp-gauge-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#1a6040,#2d8a5e);border-radius:5px;transition:width .3s;}
-.hp-gauge-text{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;font-weight:700;color:#fff;gap:2px;}
-.hp-gauge-input{background:transparent;border:none;color:#fff;font-size:12px;font-weight:700;width:36px;text-align:center;outline:none;}
-.hp-gauge-input:focus{background:rgba(0,0,0,0.3);border-radius:3px;}
-/* Shield Gauge */
-.shield-gauge-wrap{margin-bottom:4px;}
-.shield-gauge-bar{position:relative;background:#1a2030;border:1px solid var(--border);border-radius:6px;height:22px;overflow:hidden;}
-.shield-gauge-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#4a3a1a,#8a6a2a);border-radius:5px;transition:width .3s;}
-
-.hp-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
-.hp-num{
-  background:var(--teal);border:1px solid var(--border2);border-radius:4px;
-  padding:4px 6px;text-align:center;min-width:52px;
-}
-.hp-num input{
-  background:transparent;border:none;color:#5dd;font-size:17px;font-weight:700;
-  width:46px;text-align:center;outline:none;
-}
-.hp-label{font-size:9px;color:var(--text2);text-transform:uppercase;}
-.hp-sep{font-size:16px;color:var(--text2);}
-
-/* ══════════════════════════════════
-   PROFICIENCY BADGES
-   ══════════════════════════════════ */
-.prof-badge{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:18px;height:18px;border-radius:50%;
-  font-size:9px;font-weight:700;flex-shrink:0;
-}
-.prof-badge.U{background:#3a3a3a;color:#888;border:1px solid #555;}
-.prof-badge.T{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent);}
-.prof-badge.E{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent);}
-.prof-badge.M{background:#1a1000;color:#f0a050;border:1px solid #f0a050;}
-.prof-badge.L{background:#0a0a20;color:#80a0ff;border:1px solid #80a0ff;}
-
-/* ══════════════════════════════════
-   SKILLS LIST (center col)
-   ══════════════════════════════════ */
-.skill-row{
-  display:flex;align-items:center;gap:5px;
-  padding:3px 4px;border-radius:4px;transition:background .1s;
-}
+/* ── SKILLS ── */
+.skill-row{display:flex;align-items:center;gap:4px;padding:2px 4px;border-radius:3px;transition:background .15s;}
 .skill-row:hover{background:var(--bg3);}
-.skill-gear{font-size:10px;color:var(--text2);width:14px;flex-shrink:0;}
-.skill-prof{
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
-  padding:1px 3px;border-radius:2px;font-size:10px;cursor:pointer;
-  min-width:30px;text-align:center;
-}
+.skill-prof{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:1px 3px;border-radius:2px;font-size:10px;cursor:pointer;min-width:32px;text-align:center;}
 .skill-prof option{background:var(--bg2);}
-.skill-attr{font-size:10px;color:var(--text2);width:26px;flex-shrink:0;}
-.skill-name{font-size:12px;flex:1;color:var(--text);}
-.skill-total{font-size:13px;font-weight:700;color:var(--accent);width:28px;text-align:right;}
+.skill-name{font-size:12px;flex:1;}
+.skill-attr{font-size:10px;color:var(--text2);width:28px;}
+.skill-total{font-size:13px;font-weight:bold;color:var(--gold-light);width:24px;text-align:right;}
+.skill-extra{font-size:10px;color:var(--text2);width:16px;text-align:center;cursor:pointer;}
 
-/* ══════════════════════════════════
-   SIDEBAR (left col)
-   ══════════════════════════════════ */
-.sidebar-section{
-  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
-  padding:8px;margin-bottom:8px;
-}
-.sidebar-section-title{
-  font-size:9px;color:var(--accent);text-transform:uppercase;
-  letter-spacing:1px;margin-bottom:6px;font-weight:600;
-}
-.sidebar-row{
-  display:flex;align-items:center;gap:6px;margin-bottom:5px;
-}
-.sidebar-row label{font-size:10px;color:var(--text2);min-width:44px;}
-
-/* ══════════════════════════════════
-   WEAPON ROWS
-   ══════════════════════════════════ */
-.weapon-row{
-  display:flex;gap:6px;align-items:center;padding:5px 6px;
-  border:1px solid var(--border);border-radius:4px;margin-bottom:4px;
-  background:var(--bg3);
-}
-.weapon-row input{
-  background:transparent;border:none;color:var(--text);outline:none;font-size:12px;
-}
+/* ── COMBAT PANEL ── */
+#panel-combat{grid-template-columns:1fr 1fr;}
+.weapon-row{display:flex;gap:6px;align-items:center;padding:4px;border:1px solid var(--border);border-radius:3px;margin-bottom:4px;background:var(--bg3);}
+.weapon-row input{background:transparent;border:none;color:var(--text);outline:none;font-size:12px;}
 .weapon-row input:focus{background:var(--bg4);border-radius:2px;padding:1px 3px;}
 .w-name{flex:2;min-width:80px;}
-.w-atk{width:40px;text-align:center;color:var(--accent);font-weight:700;}
+.w-atk{width:40px;text-align:center;color:var(--gold-light);font-weight:bold;}
 .w-dmg{width:70px;text-align:center;}
 .w-traits{flex:1;font-size:10px;color:var(--text2);}
 .w-traits-display{flex:1;display:flex;flex-wrap:wrap;gap:2px;align-items:center;}
-.add-btn{
-  background:var(--bg3);border:1px dashed var(--border2);color:var(--text2);
-  padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;width:100%;
-  margin-top:3px;
-}
-.add-btn:hover{border-color:var(--accent);color:var(--accent);}
+.add-btn{background:var(--bg3);border:1px dashed var(--border2);color:var(--text2);padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;width:100%;}
+.add-btn:hover{border-color:var(--gold);color:var(--gold-light);}
 
-/* ══════════════════════════════════
-   SPELLS
-   ══════════════════════════════════ */
+/* ── SPELLS PANEL ── */
+#panel-spells{grid-template-columns:1fr 1fr;}
 .spell-slot-table{width:100%;border-collapse:collapse;font-size:11px;}
-.spell-slot-table th{
-  background:var(--bg3);color:var(--accent);padding:3px 6px;
-  text-align:center;border:1px solid var(--border);
-}
+.spell-slot-table th{background:var(--bg4);color:var(--gold);padding:3px 6px;text-align:center;border:1px solid var(--border);}
 .spell-slot-table td{padding:3px 6px;border:1px solid var(--border);text-align:center;}
-.slot-check{width:14px;height:14px;cursor:pointer;accent-color:var(--red);}
-.spell-entry{display:flex;gap:6px;align-items:center;padding:3px 4px;border-radius:3px;margin-bottom:2px;cursor:pointer;}
+.slot-check{width:14px;height:14px;cursor:pointer;accent-color:var(--red-light);}
+.spell-entry{display:flex;gap:6px;align-items:center;padding:3px 4px;border-radius:3px;margin-bottom:2px;}
 .spell-entry:hover{background:var(--bg3);}
-.spell-entry:hover .spell-entry-name{color:var(--accent);}
-.spell-rank-badge{
-  background:var(--bg4);border:1px solid var(--border2);border-radius:3px;
-  padding:1px 4px;font-size:10px;color:var(--accent);min-width:20px;text-align:center;
-}
+.spell-rank-badge{background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 4px;font-size:10px;color:var(--gold);min-width:20px;text-align:center;}
 .spell-entry-name{flex:1;font-size:12px;}
-.spell-del{color:var(--red);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;}
-.spell-actions{font-size:10px;color:var(--accent);margin-right:4px;}
+.spell-del{color:var(--red-light);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;}
 
-/* ══════════════════════════════════
-   FEATS
-   ══════════════════════════════════ */
-.feat-entry{
-  padding:5px 8px;border:1px solid var(--border);border-radius:4px;
-  margin-bottom:4px;background:var(--bg3);
-}
-.feat-entry input{
-  background:transparent;border:none;color:var(--text);outline:none;font-size:12px;
-}
+/* ── FEATS PANEL ── */
+#panel-feats{grid-template-columns:1fr 1fr;}
+.feat-entry{padding:4px 6px;border:1px solid var(--border);border-radius:3px;margin-bottom:3px;background:var(--bg3);}
+.feat-entry input{background:transparent;border:none;color:var(--text);outline:none;font-size:12px;}
 .feat-entry input:focus{background:var(--bg4);padding:1px 3px;border-radius:2px;}
-.feat-entry-header{display:flex;align-items:center;gap:4px;margin-bottom:2px;}
-.feat-name-display{
-  flex:1;font-size:12px;color:var(--text);cursor:pointer;
-  padding:2px 3px;border-radius:2px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.feat-name-display:hover{color:var(--accent);background:var(--bg4);}
 .feat-src{font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px;}
 
-/* ══════════════════════════════════
-   EQUIPMENT
-   ══════════════════════════════════ */
-.equip-row{
-  display:flex;gap:6px;align-items:center;padding:3px 4px;
-  border-bottom:1px solid var(--border);font-size:12px;
-}
+/* ── EQUIPMENT PANEL ── */
+#panel-equip{grid-template-columns:1fr 200px;}
+.equip-row{display:flex;gap:6px;align-items:center;padding:3px 4px;border-bottom:1px solid var(--border);font-size:12px;}
 .equip-row input{background:transparent;border:none;color:var(--text);outline:none;font-size:12px;}
 .equip-btn{cursor:pointer;font-size:14px;color:var(--text2);width:20px;text-align:center;user-select:none;}
-.equip-btn:hover{color:var(--accent);}
-.equip-btn.equipped{color:var(--accent);}
+.equip-btn:hover{color:var(--gold);}
+.equip-btn.equipped{color:var(--gold-light);}
 .eq-name{flex:2;}
 .eq-bulk{width:30px;text-align:center;color:var(--text2);}
 .eq-qty{width:30px;text-align:center;}
 .currency-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
-.currency-box{
-  background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
-  padding:5px;text-align:center;
-}
-.currency-box label{font-size:10px;color:var(--accent);display:block;margin-bottom:2px;}
-.currency-box input{
-  background:transparent;border:none;color:var(--text);font-size:14px;
-  font-weight:700;width:50px;text-align:center;outline:none;
-}
+.currency-box{background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:4px;text-align:center;}
+.currency-box label{font-size:10px;color:var(--gold);display:block;}
+.currency-box input{background:transparent;border:none;color:var(--text);font-size:14px;font-weight:bold;width:50px;text-align:center;outline:none;}
 
-/* ══════════════════════════════════
-   NOTES / TEXTAREA
-   ══════════════════════════════════ */
-.notes-area{
-  background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
-  width:100%;min-height:70px;resize:vertical;color:var(--text);
-  padding:6px;font-size:12px;font-family:inherit;
-}
-.notes-area:focus{outline:none;border-color:var(--accent);}
+/* ── NOTES ── */
+.notes-area{background:var(--bg3);border:1px solid var(--border2);border-radius:3px;width:100%;min-height:80px;resize:vertical;color:var(--text);padding:6px;font-size:12px;font-family:inherit;}
+.notes-area:focus{outline:none;border-color:var(--gold);}
 
-/* ══════════════════════════════════
-   CONDITIONS
-   ══════════════════════════════════ */
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:var(--modal-bg);z-index:1000;display:flex;align-items:center;justify-content:center;}
+.modal-overlay.hidden{display:none;}
+.modal{background:var(--bg2);border:1px solid var(--gold);border-radius:6px;width:680px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#1a0808,#2a1010);}
+.modal-header h2{color:var(--gold-light);font-size:16px;}
+.modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:0 4px;}
+.modal-close:hover{color:var(--gold-light);}
+.modal-body{overflow-y:auto;padding:12px;flex:1;}
+.modal-search{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 10px;border-radius:3px;font-size:13px;margin-bottom:10px;}
+.modal-search:focus{outline:none;border-color:var(--gold);}
+.option-card{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:10px;margin-bottom:6px;cursor:pointer;transition:all .2s;}
+.option-card:hover{border-color:var(--gold);background:var(--bg4);}
+.option-card.selected{border-color:var(--gold-light);background:#2a200a;}
+.opt-name{font-size:14px;font-weight:bold;color:var(--gold-light);margin-bottom:4px;}
+.opt-en{font-size:11px;color:var(--text2);margin-bottom:6px;}
+.opt-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
+.tag{background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 6px;font-size:10px;color:var(--text2);}
+.tag.hl{border-color:var(--gold);color:var(--gold);}
+.opt-desc{font-size:11px;color:var(--text2);line-height:1.5;}
+.modal-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+.btn{padding:6px 16px;border-radius:3px;cursor:pointer;font-size:13px;border:1px solid;}
+.btn-cancel{background:var(--bg3);border-color:var(--border2);color:var(--text2);}
+.btn-cancel:hover{border-color:var(--red-light);color:var(--red-light);}
+.btn-confirm{background:#2a1000;border-color:var(--gold);color:var(--gold-light);}
+.btn-confirm:hover{background:#3a1800;}
+
+/* ── MISC ── */
+.save-status{position:fixed;bottom:12px;right:16px;font-size:11px;color:var(--text2);opacity:0;transition:opacity .5s;}
+.save-status.show{opacity:1;}
+hr.divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
+.inline-edit{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);outline:none;font-size:inherit;font-family:inherit;}
+.inline-edit:focus{border-bottom-color:var(--gold);}
 .condition-grid{display:flex;flex-wrap:wrap;gap:4px;}
-.cond-chip{
-  position:relative;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:12px;padding:2px 8px;font-size:11px;cursor:pointer;
-  transition:all .15s;
-}
-.cond-chip:hover{border-color:var(--red);}
-.cond-chip.active{background:var(--red-bg);border-color:var(--red);color:#fff;}
-.cond-chip .cond-desc{
-  display:none;position:absolute;bottom:calc(100% + 4px);left:50%;
-  transform:translateX(-50%);background:var(--bg2);border:1px solid var(--accent);
-  border-radius:4px;padding:6px 8px;font-size:11px;color:var(--text);
-  width:200px;z-index:200;line-height:1.5;white-space:normal;text-align:left;pointer-events:none;
-}
-.cond-chip:hover .cond-desc{display:block;}
-.cond-valued{display:flex;align-items:center;gap:2px;}
-.cond-num{background:var(--bg);border:none;color:var(--accent);font-size:12px;font-weight:700;width:20px;text-align:center;outline:none;}
-.cond-btn{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:2px;cursor:pointer;font-size:11px;padding:0 3px;line-height:1.4;}
-.cond-btn:hover{border-color:var(--accent);color:var(--accent);}
+.cond-chip{background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:2px 8px;font-size:11px;cursor:pointer;transition:all .2s;}
+.cond-chip:hover{border-color:var(--red-light);}
+.cond-chip.active{background:var(--red);border-color:var(--red-light);color:#fff;}
+.info-badge{display:inline-block;background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 5px;font-size:10px;color:var(--text2);margin:1px;}
+/* ── 특성 툴팁 ── */
+.trait-tag{position:relative;display:inline-block;background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 6px;font-size:10px;color:var(--text2);cursor:default;margin:1px;}
+.trait-tag:hover{border-color:var(--gold);color:var(--gold);}
+.trait-tag .trait-balloon{display:none;position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#1a1200;border:1px solid var(--gold);border-radius:4px;padding:6px 8px;font-size:11px;color:var(--text);width:180px;z-index:400;line-height:1.5;white-space:normal;text-align:left;pointer-events:none;}
+.trait-tag:hover .trait-balloon,.trait-tag.tip-open .trait-balloon{display:block;}
+.trait-tag .trait-balloon::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--gold);}
+.info-btn{color:var(--text2);cursor:pointer;font-size:10px;padding:1px 5px;user-select:none;flex-shrink:0;border:1px solid var(--border2);border-radius:3px;background:var(--bg4);}
+.info-btn:hover{color:var(--gold-light);border-color:var(--gold);}
+.spell-entry{cursor:pointer;}
+.spell-entry:hover .spell-entry-name{color:var(--gold-light);}
+.feat-entry-header{display:flex;align-items:center;gap:4px;margin-bottom:2px;}
+.feat-name-display{flex:1;font-size:12px;color:var(--text);cursor:pointer;padding:2px 3px;border-radius:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.feat-name-display:hover{color:var(--gold-light);background:var(--bg4);}
 
-/* ══════════════════════════════════
-   ACTIONS TAB
-   ══════════════════════════════════ */
-.action-filter-bar{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 8px;}
-.action-filter-bar button{
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
-  padding:3px 10px;border-radius:12px;font-size:11px;cursor:pointer;
-}
-.action-filter-bar button:hover{border-color:var(--accent);color:var(--accent);}
-.action-filter-bar button.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
-.action-group-title{
-  font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;
-  border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:6px;
-}
+/* ── 행동 탭 ── */
+#panel-actions{display:none;flex-direction:column;gap:10px;}
+#panel-actions.active{display:flex;}
+.action-filter-bar{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 6px;}
+.action-filter-bar button{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:3px 10px;border-radius:12px;font-size:11px;cursor:pointer;}
+.action-filter-bar button:hover{border-color:var(--gold);color:var(--gold-light);}
+.action-filter-bar button.active{background:#2a1800;border-color:var(--gold);color:var(--gold-light);}
+.action-group-title{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:6px;}
 .actions-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
-.action-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;}
+.action-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:8px 10px;}
 .action-card:hover{border-color:var(--border2);}
 .action-card-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.action-cost{font-size:13px;color:var(--accent);flex-shrink:0;min-width:20px;}
-.action-name-ko{font-size:13px;font-weight:700;color:var(--text);flex:1;}
+.action-cost{font-size:13px;color:var(--gold);flex-shrink:0;min-width:20px;}
+.action-name-ko{font-size:13px;font-weight:bold;color:var(--gold-light);flex:1;}
 .action-name-en{font-size:10px;color:var(--text2);}
 .action-traits{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:4px;}
 .action-summary{font-size:11px;color:var(--text2);line-height:1.5;}
 .action-req{font-size:10px;color:var(--text2);margin-top:3px;font-style:italic;}
-
-/* ══════════════════════════════════
-   MODAL — Pathbuilder split-pane style
-   ══════════════════════════════════ */
-.modal-overlay{position:fixed;inset:0;background:var(--modal-bg);z-index:1000;display:flex;align-items:center;justify-content:center;}
-.modal-overlay.hidden{display:none;}
-.modal{
-  background:var(--bg2);border:1px solid var(--border2);border-radius:8px;
-  width:95vw;max-width:1100px;height:85vh;display:flex;flex-direction:column;
-}
-.modal-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;border-bottom:1px solid var(--border);
-  background:var(--bg3);border-radius:8px 8px 0 0;flex-shrink:0;
-}
-.modal-header h2{color:var(--accent);font-size:15px;}
-.modal-close{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:0 4px;}
-.modal-close:hover{color:var(--accent);}
-/* Split pane: list left + detail right */
-.modal-body{display:flex;flex:1;overflow:hidden;}
-.modal-list{width:420px;min-width:320px;overflow-y:auto;border-right:1px solid var(--border);display:flex;flex-direction:column;}
-.modal-list-header{padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.modal-search{
-  width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);
-  padding:7px 10px;border-radius:4px;font-size:13px;margin-bottom:6px;
-}
-.modal-search:focus{outline:none;border-color:var(--accent);}
-.modal-filters{display:flex;gap:6px;flex-wrap:wrap;}
-.modal-filters select{
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text);
-  padding:4px 6px;border-radius:3px;font-size:12px;
-}
-.modal-list-items{overflow-y:auto;flex:1;}
-.modal-detail{flex:1;overflow-y:auto;padding:16px;background:var(--bg3);}
-.modal-detail-empty{color:var(--text2);text-align:center;padding:40px 16px;font-size:13px;}
-.modal-detail-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:2px;}
-.modal-detail-en{font-size:12px;color:var(--text2);margin-bottom:10px;}
-.modal-detail-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;}
-.modal-detail-desc{font-size:13px;color:var(--text);line-height:1.7;}
-.modal-detail-desc strong{color:var(--accent);}
-/* List item row */
-.opt-row{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border);
-  transition:background .1s;
-}
-.opt-row:hover{background:var(--bg4);}
-.opt-row.selected{background:var(--accent-bg);border-left:3px solid var(--accent);}
-.opt-row-icon{width:28px;height:28px;background:var(--bg4);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);flex-shrink:0;}
-.opt-row-name{flex:1;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.opt-row-actions{font-size:11px;color:var(--text2);margin-left:4px;}
-.opt-row-level{
-  width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
-}
-.opt-row-level.r0{background:#555;} /* cantrip / level 0 */
-.opt-row-level.r1{background:var(--accent);}
-.opt-row-level.r2{background:#2980b9;}
-.opt-row-level.r3{background:#8e44ad;}
-.opt-row-level.r4{background:#c0392b;}
-.opt-row-level.r5{background:#16a085;}
-.opt-row-level.r6{background:#d35400;}
-.opt-row-level.r7{background:#2c3e50;}
-.opt-row-level.r8{background:#7f8c8d;}
-.opt-row-level.r9{background:#f39c12;}
-.opt-row-level.r10{background:#e74c3c;}
-/* Section header in list */
-.opt-section-header{padding:6px 12px;font-size:12px;font-weight:700;color:var(--accent);background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1;}
-/* Legacy compat */
-.option-card{display:none;} /* hidden, replaced by opt-row */
-.opt-name{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;}
-.opt-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
-.tag{background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 6px;font-size:10px;color:var(--text2);}
-.tag.hl{border-color:var(--accent);color:var(--accent);}
-.opt-desc{font-size:11px;color:var(--text2);line-height:1.5;}
-.modal-footer{
-  padding:10px 16px;border-top:1px solid var(--border);
-  display:flex;justify-content:flex-end;gap:8px;
-  background:var(--bg3);border-radius:0 0 8px 8px;flex-shrink:0;
-}
-/* Mobile modal */
-@media(max-width:700px){
-  .modal{width:100vw;height:100vh;max-width:100vw;border-radius:0;}
-  .modal-list{width:100%;border-right:none;}
-  .modal-detail{display:none;}
-  .modal-body.detail-open .modal-list{display:none;}
-  .modal-body.detail-open .modal-detail{display:block;}
-  .modal-detail-back{display:block;margin-bottom:10px;color:var(--accent);cursor:pointer;font-size:13px;}
-}
-@media(min-width:701px){
-  .modal-detail-back{display:none;}
-}
-
-/* ══════════════════════════════════
-   TRAIT TOOLTIPS
-   ══════════════════════════════════ */
-.trait-tag{
-  position:relative;display:inline-block;background:var(--bg4);border:1px solid var(--border2);
-  border-radius:3px;padding:1px 6px;font-size:10px;color:var(--text2);cursor:default;margin:1px;
-}
-.trait-tag:hover{border-color:var(--accent);color:var(--accent);}
-.trait-tag .trait-balloon{
-  display:none;position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);
-  background:var(--bg2);border:1px solid var(--accent);border-radius:4px;
-  padding:6px 8px;font-size:11px;color:var(--text);width:180px;z-index:400;
-  line-height:1.5;white-space:normal;text-align:left;pointer-events:none;
-}
-.trait-tag:hover .trait-balloon,.trait-tag.tip-open .trait-balloon{display:block;}
-.trait-tag .trait-balloon::after{
-  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:var(--accent);
-}
-.info-btn{
-  color:var(--text2);cursor:pointer;font-size:10px;padding:1px 5px;
-  user-select:none;flex-shrink:0;border:1px solid var(--border2);border-radius:3px;
-  background:var(--bg4);
-}
-.info-btn:hover{color:var(--accent);border-color:var(--accent);}
-.info-badge{
-  display:inline-block;background:var(--bg4);border:1px solid var(--border2);
-  border-radius:3px;padding:1px 5px;font-size:10px;color:var(--text2);margin:1px;
-}
-hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
-
-/* ══════════════════════════════════
-   BOOST MODAL
-   ══════════════════════════════════ */
-.boost-section{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:8px;margin-bottom:8px;}
-.boost-section-title{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:6px;}
-.boost-section-desc{font-size:10px;color:var(--text2);margin-bottom:6px;}
-.boost-radio-group{display:flex;flex-wrap:wrap;gap:6px;}
-.boost-radio-group label{
-  display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;
-  padding:2px 8px;border:1px solid var(--border2);border-radius:3px;transition:all .15s;
-}
-.boost-radio-group label:hover{border-color:var(--accent);}
-.boost-radio-group label.selected{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
-.boost-radio-group label.fixed{background:var(--bg4);color:var(--text2);cursor:default;}
-.boost-radio-group label.flaw{background:var(--red-bg);border-color:var(--red);color:var(--red);}
-.boost-summary-bar{display:flex;gap:8px;padding:8px;background:var(--bg4);border-radius:4px;margin-bottom:8px;}
-.boost-summary-attr{text-align:center;flex:1;}
-.boost-summary-attr .bsa-name{font-size:9px;color:var(--text2);text-transform:uppercase;}
-.boost-summary-attr .bsa-val{font-size:18px;font-weight:700;color:var(--accent);}
-.boost-grid{display:grid;grid-template-columns:90px repeat(6,1fr);gap:3px;font-size:11px;margin-top:4px;}
-.boost-grid .bg-head{color:var(--accent);font-size:10px;text-align:center;padding:2px;}
-.boost-grid .bg-src{color:var(--text2);font-size:10px;display:flex;align-items:center;padding:2px 0;}
-.boost-cell{text-align:center;}
-.boost-cell input[type=checkbox]{width:14px;height:14px;accent-color:var(--accent);cursor:pointer;}
-.boost-cell input[type=checkbox]:disabled{accent-color:var(--red);cursor:default;}
-.flaw-cell input[type=checkbox]{accent-color:var(--red)!important;}
-
-/* ══════════════════════════════════
-   SAVE STATUS
-   ══════════════════════════════════ */
-.save-status-bar{
-  position:fixed;bottom:12px;right:16px;font-size:11px;color:var(--text2);
-  opacity:0;transition:opacity .5s;
-}
-.save-status-bar.show{opacity:1;}
-
-/* ══════════════════════════════════
-   HERO POINTS & MISC BADGES
-   ══════════════════════════════════ */
-.hero-pts-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
-.hero-dot{
-  width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);
-  background:transparent;display:inline-block;
-}
-.hero-dot.filled{background:var(--accent);}
-
-/* grid panels */
-.panel-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-
-/* ══════════════════════════════════
-   RESPONSIVE — MOBILE (≤900px)
-   ══════════════════════════════════ */
-@media (max-width:900px){
-  #app-layout{
-    grid-template-columns:1fr;
-    grid-template-rows:auto auto 1fr;
-    height:auto;
-    overflow:visible;
-  }
-  #sidebar{
-    grid-column:1;grid-row:auto;
-    border-right:none;border-bottom:1px solid var(--border);
-    display:none; /* hidden by default; shown via 성장 tab */
-    height:auto;
-    overflow-y:visible;
-  }
-  #sidebar.mobile-active{display:block;}
-  #center-col{
-    grid-column:1;grid-row:auto;
-    border-right:none;border-bottom:1px solid var(--border);
-    height:auto;overflow-y:visible;
-    display:none; /* hidden by default; shown via 정보 tab */
-  }
-  #center-col.mobile-active{display:block;}
-  #right-tabs{grid-column:1;grid-row:1;position:sticky;top:100px;z-index:100;}
-  #right-content{grid-column:1;grid-row:2;padding:8px;}
-  .tab-mobile-only{display:flex !important;}
-  .panel-grid-2{grid-template-columns:1fr;}
-}
 </style>
 </head>
 <body>
-
-<!-- ═══════════════ AUTH BAR ═══════════════ -->
-<div id="auth-bar">
-  <div style="display:flex;align-items:center;gap:8px;">
-    <span class="brand">⚔ PF2e 캐릭터 시트</span>
-    <span id="save-status"></span>
+<!-- Firebase Auth Bar -->
+<div id="auth-bar" style="position:sticky;top:0;z-index:9999;background:#1a1a2e;border-bottom:2px solid #333;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;font-family:'Noto Sans KR',sans-serif;font-size:13px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="color:#f5c518;font-weight:700;">PF2e 캐릭터 시트</span>
+    <span id="save-status" style="color:#666;font-size:11px;"></span>
   </div>
   <div id="auth-area">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
   </div>
 </div>
+<!-- Character Slot Selector (shown after login) -->
+<div id="slot-bar" style="display:none;background:#16213e;border-bottom:1px solid #333;padding:6px 16px;font-family:'Noto Sans KR',sans-serif;font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+</div>
 
-<!-- ═══════════════ SLOT BAR ═══════════════ -->
-<div id="slot-bar" style="display:none;"></div>
-
-<!-- ═══════════════ CHARACTER HEADER ═══════════════ -->
+<!-- ═══════════════ HEADER ═══════════════ -->
 <div id="header">
-  <div id="header-title">⚔ PF2e<br><small>Player Core KR</small></div>
+  <h1>⚔ PF2e<br><small>캐릭터 시트</small></h1>
   <div class="hdr-fields">
     <div class="hdr-field">
       <label>캐릭터 이름</label>
@@ -739,23 +283,23 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <label>플레이어</label>
       <input id="f-player" placeholder="플레이어..." oninput="save()">
     </div>
-    <div class="hdr-field" style="min-width:50px;">
+    <div class="hdr-field">
       <label>레벨</label>
-      <input id="f-level" type="number" min="1" max="20" value="1" oninput="onLevelChange()">
+      <input id="f-level" id="level-input" type="number" min="1" max="20" value="1" style="width:48px;" oninput="onLevelChange()">
     </div>
-    <div class="hdr-field" style="min-width:60px;">
-      <label>경험치 XP</label>
-      <input id="f-xp" type="number" min="0" value="0" oninput="save()">
+    <div class="hdr-field">
+      <label>경험치 (XP)</label>
+      <input id="f-xp" type="number" min="0" value="0" style="width:60px;" oninput="save()">
     </div>
     <div class="hdr-field">
       <label>클래스</label>
       <button class="btn-select" id="btn-class" onclick="openModal('class')">클래스 선택...</button>
-      <button class="heritage-chip" id="btn-subclass" onclick="openModal('subclass')" style="display:none;">서브클래스...</button>
+      <button class="heritage-chip" id="btn-subclass" onclick="openModal('subclass')" style="display:none;">서브클래스 선택...</button>
     </div>
     <div class="hdr-field">
       <label>혈통</label>
       <button class="btn-select" id="btn-ancestry" onclick="openModal('ancestry')">혈통 선택...</button>
-      <button class="heritage-chip" id="btn-heritage" onclick="openModal('heritage')">유산...</button>
+      <button class="heritage-chip" id="btn-heritage" onclick="openModal('heritage')">유산 선택...</button>
     </div>
     <div class="hdr-field">
       <label>배경</label>
@@ -766,139 +310,124 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <input id="f-deity" placeholder="신격..." oninput="save()">
     </div>
   </div>
-  <div class="hdr-actions">
-    <button class="btn btn-confirm" onclick="exportJSON()">⬇ JSON</button>
-    <label class="btn btn-cancel" style="cursor:pointer;text-align:center;">
-      ⬆ JSON
+  <div style="display:flex;flex-direction:column;gap:6px;margin-left:auto;flex-shrink:0;">
+    <button class="btn btn-confirm" style="font-size:11px;padding:5px 12px;" onclick="exportJSON()">⬇ JSON 내보내기</button>
+    <label class="btn btn-cancel" style="font-size:11px;padding:5px 12px;cursor:pointer;text-align:center;">
+      ⬆ JSON 불러오기
       <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)">
     </label>
   </div>
 </div>
 
-<!-- ═══════════════ 3-COLUMN APP LAYOUT ═══════════════ -->
-<div id="app-layout">
+<!-- ═══════════════ TABS ═══════════════ -->
+<div id="tabs">
+  <div class="tab active" onclick="switchTab('main')">캐릭터 정보</div>
+  <div class="tab" onclick="switchTab('combat')">전투</div>
+  <div class="tab" onclick="switchTab('spells')">주문</div>
+  <div class="tab" onclick="switchTab('feats')">재주</div>
+  <div class="tab" onclick="switchTab('equip')">장비</div>
+  <div class="tab" onclick="switchTab('actions')">행동</div>
+</div>
 
-  <!-- ═══ LEFT SIDEBAR: Build Plan ═══ -->
-  <div id="sidebar">
+<!-- ═══════════════ TAB: 캐릭터 정보 ═══════════════ -->
+<div id="panel-main" class="panel active" style="grid-template-columns:220px 240px 1fr;">
 
-    <!-- Ability Boosts (click to open modal) -->
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">능력치 Attributes</div>
-      <div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:6px;">클릭하여 부스트 배분</div>
+  <!-- COL 1: Attributes -->
+  <div>
+    <div class="box">
+      <div class="box-title">능력치 Attributes</div>
+      <div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:4px;">클릭하여 부스트 배분</div>
       <div class="attr-grid">
         <div class="attr-box" onclick="openModal('boost')">
           <div class="attr-name">근력 STR</div>
           <div class="attr-score" id="mod-str">+0</div>
-          <div class="attr-mod" id="partial-str"></div>
+          <div class="attr-mod" id="partial-str" style="font-size:9px;color:var(--gold);height:12px;"></div>
         </div>
         <div class="attr-box" onclick="openModal('boost')">
           <div class="attr-name">민첩 DEX</div>
           <div class="attr-score" id="mod-dex">+0</div>
-          <div class="attr-mod" id="partial-dex"></div>
+          <div class="attr-mod" id="partial-dex" style="font-size:9px;color:var(--gold);height:12px;"></div>
         </div>
         <div class="attr-box" onclick="openModal('boost')">
           <div class="attr-name">건강 CON</div>
           <div class="attr-score" id="mod-con">+0</div>
-          <div class="attr-mod" id="partial-con"></div>
+          <div class="attr-mod" id="partial-con" style="font-size:9px;color:var(--gold);height:12px;"></div>
         </div>
         <div class="attr-box" onclick="openModal('boost')">
           <div class="attr-name">지능 INT</div>
           <div class="attr-score" id="mod-int">+0</div>
-          <div class="attr-mod" id="partial-int"></div>
+          <div class="attr-mod" id="partial-int" style="font-size:9px;color:var(--gold);height:12px;"></div>
         </div>
         <div class="attr-box" onclick="openModal('boost')">
           <div class="attr-name">지혜 WIS</div>
           <div class="attr-score" id="mod-wis">+0</div>
-          <div class="attr-mod" id="partial-wis"></div>
+          <div class="attr-mod" id="partial-wis" style="font-size:9px;color:var(--gold);height:12px;"></div>
         </div>
         <div class="attr-box" onclick="openModal('boost')">
           <div class="attr-name">매력 CHA</div>
           <div class="attr-score" id="mod-cha">+0</div>
-          <div class="attr-mod" id="partial-cha"></div>
+          <div class="attr-mod" id="partial-cha" style="font-size:9px;color:var(--gold);height:12px;"></div>
         </div>
       </div>
     </div>
 
-    <!-- Languages / Traits -->
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">언어 / 특성</div>
-      <textarea class="notes-area" id="f-languages" placeholder="언어, 특성 기록..." style="min-height:55px;" oninput="save()"></textarea>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">언어 / 특성</div>
+      <textarea class="notes-area" id="f-languages" placeholder="언어, 특성 기록..." style="min-height:50px;" oninput="save()"></textarea>
     </div>
-
-    <!-- Notes -->
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">메모</div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">메모</div>
       <textarea class="notes-area" id="f-notes" placeholder="메모..." style="min-height:70px;" oninput="save()"></textarea>
     </div>
+  </div>
 
-  </div><!-- /#sidebar -->
-
-  <!-- ═══ CENTER: Stats + Skills (always visible on desktop) ═══ -->
-  <div id="center-col">
-
-    <!-- HP / AC / Speed -->
+  <!-- COL 2: Defenses + Saves + Perception -->
+  <div>
     <div class="box">
       <div class="box-title">생명력 / 방어 / 이동</div>
-
-      <!-- AC Shield -->
-      <div class="ac-wrap">
-        <div class="ac-shield" id="val-ac">10</div>
-        <div>
-          <div class="ac-label">방어도 (AC)</div>
-          <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
-            <select class="prof-sel" id="prof-ac" onchange="recalcAC();save()">
-              <option value="0">미숙련</option><option value="2">숙련</option>
-              <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-            </select>
-          </div>
+      <div class="hp-box">
+        <div class="hp-num">
+          <div class="hp-label">현재 HP</div>
+          <input id="hp-cur" type="number" value="0" oninput="save()">
+        </div>
+        <div style="font-size:18px;color:var(--text2);">/</div>
+        <div class="hp-num">
+          <div class="hp-label">최대 HP</div>
+          <input id="hp-max" type="number" value="0" oninput="save()">
+        </div>
+        <div class="hp-num">
+          <div class="hp-label">임시 HP</div>
+          <input id="hp-temp" type="number" value="0" oninput="save()">
         </div>
       </div>
-
-      <!-- HP Gauge -->
-      <div class="hp-gauge-wrap">
-        <div class="hp-gauge-bar">
-          <div class="hp-gauge-fill" id="hp-gauge-fill"></div>
-          <div class="hp-gauge-text">
-            HP <input id="hp-cur" type="number" value="0" oninput="updateHpGauge();save()" class="hp-gauge-input">
-            / <input id="hp-max" type="number" value="0" oninput="updateHpGauge();save()" class="hp-gauge-input">
-            <span style="margin-left:6px;font-size:10px;color:var(--text2);">임시</span>
-            <input id="hp-temp" type="number" value="0" oninput="save()" class="hp-gauge-input" style="width:28px;">
-          </div>
-        </div>
+      <div class="stat-row">
+        <span class="stat-label">방어도 (AC)</span>
+        <select class="prof-sel" id="prof-ac" onchange="recalcAC();save()">
+          <option value="0">미숙련</option><option value="2">숙련</option>
+          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+        </select>
+        <span class="stat-val" id="val-ac">10</span>
       </div>
-      <!-- Shield Hardness Gauge -->
-      <div class="shield-gauge-wrap" id="shield-gauge-wrap" style="display:none;">
-        <div class="shield-gauge-bar">
-          <div class="shield-gauge-fill" id="shield-gauge-fill"></div>
-          <div class="hp-gauge-text" style="font-size:11px;">
-            🛡 <span id="shield-gauge-label">방패</span>
-            HP <input id="shield-hp-cur" type="number" value="0" min="0" oninput="updateShieldGauge();save()" class="hp-gauge-input" style="width:28px;">
-            / <span id="shield-hp-max-display">0</span>
-          </div>
-        </div>
-      </div>
-
       <div class="stat-row">
         <span class="stat-label">이동 속도</span>
         <input class="inline-edit" id="speed" type="number" value="25" style="width:40px;" oninput="save()">
         <span style="font-size:11px;color:var(--text2);">피트</span>
       </div>
-      <div class="stat-row" style="flex-wrap:wrap;">
+      <div class="stat-row">
+        <span class="stat-label">빈사 (Dying)</span>
+        <span style="color:var(--text2);font-size:11px;">현재값:</span>
+        <input class="inline-edit" id="dying" type="number" value="0" min="0" max="4" style="width:30px;" oninput="save()">
+        <span style="color:var(--text2);font-size:11px;">/ 상처(Wounded):</span>
+        <input class="inline-edit" id="wounded" type="number" value="0" min="0" max="3" style="width:30px;" oninput="save()">
+      </div>
+      <div class="stat-row">
         <span class="stat-label">영웅 점수</span>
-        <label class="hero-cb"><input type="checkbox" id="hero-1" onchange="saveHeroPoints()">★</label>
-        <label class="hero-cb"><input type="checkbox" id="hero-2" onchange="saveHeroPoints()">★</label>
-        <label class="hero-cb"><input type="checkbox" id="hero-3" onchange="saveHeroPoints()">★</label>
-        <input type="hidden" id="hero-points" value="1">
-        <span style="font-size:10px;color:var(--text2);margin-left:8px;">빈사</span>
-        <input class="inline-edit" id="dying" type="number" value="0" min="0" max="4" style="width:28px;" oninput="save()">
-        <span style="font-size:10px;color:var(--text2);">부상</span>
-        <input class="inline-edit" id="wounded" type="number" value="0" min="0" max="3" style="width:28px;" oninput="save()">
+        <input class="inline-edit" id="hero-points" type="number" value="1" min="0" max="3" style="width:30px;" oninput="save()">
       </div>
     </div>
 
-    <!-- Saves + Perception + ClassDC -->
-    <div class="box">
-      <div class="box-title">내성 / 지각 / 클래스 DC</div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">내성 굴림 Saving Throws</div>
       <div class="stat-row">
         <span class="stat-label">인내 Fortitude</span>
         <select class="prof-sel" id="prof-fort" onchange="recalcSaves();save()">
@@ -933,10 +462,6 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <span class="stat-val" id="val-perc">+0</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">이니셔티브</span>
-        <span class="stat-val" id="val-init">+0</span>
-      </div>
-      <div class="stat-row">
         <span class="stat-label">클래스 DC</span>
         <select class="prof-sel" id="prof-classdc" onchange="recalcClassDC();save()">
           <option value="0">미숙련</option><option value="2">숙련</option>
@@ -945,332 +470,268 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <span class="stat-val" id="val-classdc">10</span>
       </div>
     </div>
+  </div>
 
-    <!-- Skills -->
+  <!-- COL 3: Skills -->
+  <div>
     <div class="box">
       <div class="box-title">기술 Skills</div>
       <div id="skills-list"></div>
     </div>
-
-  </div><!-- /#center-col -->
-
-  <!-- ═══ RIGHT: Tab bar + content ═══ -->
-
-  <!-- Tab bar -->
-  <div id="right-tabs">
-    <div class="tab active" onclick="switchTab('weapons',this)">무기</div>
-    <div class="tab" onclick="switchTab('defense',this)">방어</div>
-    <div class="tab" onclick="switchTab('spells',this)">주문</div>
-    <div class="tab" onclick="switchTab('equip',this)">장비</div>
-    <div class="tab" onclick="switchTab('feats',this)">재주</div>
-    <div class="tab" onclick="switchTab('actions',this)">행동</div>
-    <!-- mobile-only tabs -->
-    <div class="tab tab-mobile-only" onclick="switchTab('growth',this)">성장</div>
-    <div class="tab tab-mobile-only" onclick="switchTab('info',this)">정보</div>
   </div>
+</div>
 
-  <!-- Tab content panels -->
-  <div id="right-content">
-
-    <!-- ── 무기 Weapons ── -->
-    <div id="panel-weapons" class="panel active">
-      <div class="box">
-        <div class="box-title">공격 Strikes</div>
-        <div style="display:flex;gap:4px;padding:3px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);margin-bottom:4px;">
-          <span style="flex:2;">무기 이름</span>
-          <span style="width:40px;text-align:center;">명중</span>
-          <span style="width:70px;text-align:center;">피해</span>
-          <span style="flex:1;">특성/메모</span>
-          <span style="width:20px;"></span>
-        </div>
-        <div id="weapons-list"></div>
-        <button class="add-btn" onclick="openModal('weapon')">+ DB에서 선택</button>
-        <button class="add-btn" onclick="addWeapon()">+ 직접 입력</button>
+<!-- ═══════════════ TAB: 전투 ═══════════════ -->
+<div id="panel-combat" class="panel" style="grid-template-columns:1fr 1fr;">
+  <div>
+    <div class="box">
+      <div class="box-title">이니셔티브 Initiative</div>
+      <div class="stat-row">
+        <span class="stat-label">이니셔티브 (지각)</span>
+        <span class="stat-val" id="val-init">+0</span>
       </div>
-      <div class="box">
-        <div class="box-title">주문 공격 / 주문 DC</div>
-        <div class="stat-row">
-          <span class="stat-label">주문 공격 수정치</span>
-          <select class="prof-sel" id="prof-spatk" onchange="recalcSpellStats();save()">
-            <option value="0">미숙련</option><option value="2">숙련</option>
-            <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-          </select>
-          <span class="stat-val" id="val-spatk">+0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">주문 DC</span>
-          <span class="stat-val" id="val-spdc">10</span>
-        </div>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">공격 Strikes</div>
+      <div style="display:flex;gap:4px;padding:3px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);margin-bottom:4px;">
+        <span style="flex:2;">무기 이름</span>
+        <span style="width:40px;text-align:center;">명중</span>
+        <span style="width:70px;text-align:center;">피해</span>
+        <span style="flex:1;">특성/메모</span>
+        <span style="width:20px;"></span>
       </div>
-    </div><!-- /#panel-weapons -->
-
-    <!-- ── 방어 Defense ── -->
-    <div id="panel-defense" class="panel">
-      <div class="panel-grid-2">
-        <div>
-          <div class="box">
-            <div class="box-title">갑옷 Armor</div>
-            <div class="sidebar-row"><label>이름</label>
-              <input class="inline-edit" id="armor-name" placeholder="갑옷 없음" oninput="save()" style="flex:1;">
-              <button class="add-btn" onclick="openModal('armor')" style="width:auto;padding:2px 8px;margin:0 0 0 4px;font-size:10px;">DB</button>
-            </div>
-            <div class="sidebar-row"><label>AC 보너스</label><input class="inline-edit" id="armor-ac" type="number" value="0" style="width:36px;" oninput="recalcAC();save()"></div>
-            <div class="sidebar-row"><label>DEX 상한</label><input class="inline-edit" id="armor-dex" placeholder="-" style="width:36px;" oninput="recalcAC();save()"></div>
-            <div class="sidebar-row"><label>방어 숙련</label>
-              <select class="prof-sel" id="prof-ac2" onchange="syncArmorProf();recalcAC();save()">
-                <option value="0">미숙련</option><option value="2">숙련</option>
-                <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-              </select>
-            </div>
-          </div>
-          <div class="box">
-            <div class="box-title">방패 Shield</div>
-            <div class="sidebar-row"><label>이름</label><input class="inline-edit" id="shield-name" placeholder="방패 없음" oninput="save()" style="flex:1;"></div>
-            <div class="sidebar-row"><label>AC 보너스</label><input class="inline-edit" id="shield-ac" type="number" value="0" style="width:36px;" oninput="save()"></div>
-            <div class="sidebar-row"><label>경도 / HP</label>
-              <input class="inline-edit" id="shield-hard" type="number" value="0" style="width:36px;" oninput="save()">
-              <span style="color:var(--text2)"> / </span>
-              <input class="inline-edit" id="shield-hp" type="number" value="0" style="width:36px;" oninput="save()">
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="box">
-            <div class="box-title">상태 이상 Conditions</div>
-            <div class="condition-grid" id="conditions-grid"></div>
-          </div>
-          <div class="box">
-            <div class="box-title">전투 메모</div>
-            <textarea class="notes-area" id="combat-notes" placeholder="전술, 특수 능력..." style="min-height:120px;" oninput="save()"></textarea>
-          </div>
-        </div>
+      <div id="weapons-list"></div>
+      <button class="add-btn" onclick="openModal('weapon')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addWeapon()" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">갑옷 Armor</div>
+      <div class="box-row"><label>이름</label><input class="inline-edit" id="armor-name" placeholder="갑옷 없음" oninput="save()" style="flex:1;">
+        <button class="add-btn" onclick="openModal('armor')" style="width:auto;padding:2px 8px;margin-left:4px;font-size:10px;">DB</button>
       </div>
-    </div><!-- /#panel-defense -->
-
-    <!-- ── 주문 Spells ── -->
-    <div id="panel-spells" class="panel">
-      <div class="panel-grid-2">
-        <div>
-          <div class="box">
-            <div class="box-title">주문시전 정보</div>
-            <div class="sidebar-row"><label>주문 계열</label>
-              <select class="prof-sel" id="spell-tradition" onchange="save()" style="min-width:100px;">
-                <option value="">-</option>
-                <option value="arcane">신비 (Arcane)</option>
-                <option value="divine">신성 (Divine)</option>
-                <option value="occult">비의 (Occult)</option>
-                <option value="primal">원시 (Primal)</option>
-              </select>
-            </div>
-            <div class="sidebar-row"><label>시전 유형</label>
-              <select class="prof-sel" id="spell-type" onchange="save()" style="min-width:100px;">
-                <option value="">-</option>
-                <option value="prepared">준비형</option>
-                <option value="spontaneous">즉흥형</option>
-                <option value="focus">집중</option>
-              </select>
-            </div>
-            <div class="sidebar-row"><label>집중력 FP</label>
-              <input class="inline-edit" id="fp-cur" type="number" value="0" min="0" max="3" style="width:30px;" oninput="save()">
-              <span style="color:var(--text2);"> / </span>
-              <input class="inline-edit" id="fp-max" type="number" value="0" min="0" max="3" style="width:30px;" oninput="save()">
-            </div>
-          </div>
-          <div class="box">
-            <div class="box-title">캔트립 Cantrips</div>
-            <div id="spells-cantrip"></div>
-            <button class="add-btn" onclick="openModal('spell','cantrip')">+ DB에서 선택</button>
-            <button class="add-btn" onclick="addSpell(0)">+ 직접 입력</button>
-          </div>
-          <div class="box">
-            <div class="box-title">주문 슬롯 Spell Slots</div>
-            <table class="spell-slot-table" id="spell-slots-table">
-              <thead><tr><th>등급</th><th>슬롯 수</th><th>사용</th></tr></thead>
-              <tbody id="spell-slots-body"></tbody>
-            </table>
-          </div>
-        </div>
-        <div>
-          <div class="box">
-            <div class="box-title">알고 있는 주문 / 준비 주문</div>
-            <div style="display:flex;gap:4px;margin-bottom:6px;">
-              <select class="prof-sel" id="add-spell-rank" style="min-width:80px;">
-                <option value="1">1등급</option><option value="2">2등급</option><option value="3">3등급</option>
-                <option value="4">4등급</option><option value="5">5등급</option><option value="6">6등급</option>
-                <option value="7">7등급</option><option value="8">8등급</option><option value="9">9등급</option>
-                <option value="10">10등급</option>
-              </select>
-              <button class="add-btn" style="width:auto;padding:4px 10px;" onclick="addSpell(parseInt(document.getElementById('add-spell-rank').value))">+ 주문 추가</button>
-            </div>
-            <div id="spells-known"></div>
-            <button class="add-btn" onclick="openModal('spell','known')" style="margin-top:6px;">+ DB에서 선택</button>
-          </div>
-          <div class="box">
-            <div class="box-title">집중 주문 Focus Spells</div>
-            <div id="spells-focus"></div>
-            <button class="add-btn" onclick="openModal('spell','focus')">+ DB에서 선택</button>
-            <button class="add-btn" onclick="addFocusSpell()">+ 직접 입력</button>
-          </div>
-        </div>
+      <div class="box-row"><label>AC 보너스</label><input class="inline-edit" id="armor-ac" type="number" value="0" style="width:36px;" oninput="recalcAC();save()"></div>
+      <div class="box-row"><label>DEX 상한</label><input class="inline-edit" id="armor-dex" placeholder="-" style="width:36px;" oninput="recalcAC();save()"></div>
+      <div class="box-row"><label>방어 숙련</label>
+        <select class="prof-sel" id="prof-ac2" onchange="syncArmorProf();recalcAC();save()">
+          <option value="0">미숙련</option><option value="2">숙련</option>
+          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+        </select>
       </div>
-    </div><!-- /#panel-spells -->
-
-    <!-- ── 장비 Gear ── -->
-    <div id="panel-equip" class="panel">
-      <div class="panel-grid-2">
-        <div>
-          <div class="box">
-            <div class="box-title">착용 / 소지 아이템</div>
-            <div style="display:flex;gap:4px;padding:3px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);margin-bottom:4px;">
-              <span style="flex:3;">아이템 이름</span>
-              <span style="width:36px;text-align:center;">수량</span>
-              <span style="width:36px;text-align:center;">부피</span>
-              <span style="width:20px;"></span>
-            </div>
-            <div id="equip-list"></div>
-            <button class="add-btn" onclick="openModal('equip-weapon')">+ 무기 DB</button>
-            <button class="add-btn" onclick="openModal('equip-armor')">+ 방어구 DB</button>
-            <button class="add-btn" onclick="openModal('equip-gear')">+ 장비 DB</button>
-            <button class="add-btn" onclick="addEquip()">+ 직접 입력</button>
-          </div>
-        </div>
-        <div>
-          <div class="box">
-            <div class="box-title">화폐 Currency</div>
-            <div class="currency-grid">
-              <div class="currency-box"><label>금화 (GP)</label><input id="cur-gp" type="number" value="0" min="0" oninput="save()"></div>
-              <div class="currency-box"><label>은화 (SP)</label><input id="cur-sp" type="number" value="0" min="0" oninput="save()"></div>
-              <div class="currency-box"><label>동화 (CP)</label><input id="cur-cp" type="number" value="0" min="0" oninput="save()"></div>
-              <div class="currency-box"><label>백금 (PP)</label><input id="cur-pp" type="number" value="0" min="0" oninput="save()"></div>
-            </div>
-          </div>
-          <div class="box">
-            <div class="box-title">부피 합계 Bulk</div>
-            <div style="text-align:center;padding:10px 0;">
-              <span style="font-size:26px;font-weight:700;color:var(--accent);" id="bulk-total">0</span>
-              <span style="color:var(--text2);"> / </span>
-              <span style="font-size:18px;color:var(--text2);" id="bulk-max">5</span>
-            </div>
-            <div style="font-size:10px;color:var(--text2);text-align:center;">최대 부피 = 근력 수정치 + 5</div>
-          </div>
-          <div class="box">
-            <div class="box-title">장비 메모</div>
-            <textarea class="notes-area" id="equip-notes" placeholder="보관함, 특이사항..." style="min-height:90px;" oninput="save()"></textarea>
-          </div>
-        </div>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">방패 Shield</div>
+      <div class="box-row"><label>이름</label><input class="inline-edit" id="shield-name" placeholder="방패 없음" oninput="save()" style="flex:1;"></div>
+      <div class="box-row"><label>AC 보너스</label><input class="inline-edit" id="shield-ac" type="number" value="0" style="width:36px;" oninput="save()"></div>
+      <div class="box-row"><label>경도 / HP</label>
+        <input class="inline-edit" id="shield-hard" type="number" value="0" style="width:36px;" oninput="save()">
+        <span style="color:var(--text2)"> / </span>
+        <input class="inline-edit" id="shield-hp" type="number" value="0" style="width:36px;" oninput="save()">
       </div>
-    </div><!-- /#panel-equip -->
-
-    <!-- ── 재주 Feats ── -->
-    <div id="panel-feats" class="panel">
-      <div class="panel-grid-2">
-        <div>
-          <div class="box">
-            <div class="box-title">혈통 재주 Ancestry Feats</div>
-            <div id="feats-ancestry"></div>
-            <button class="add-btn" onclick="openModal('feat','ancestry')">+ DB에서 선택</button>
-            <button class="add-btn" onclick="addFeat('ancestry')">+ 직접 입력</button>
-          </div>
-          <div class="box">
-            <div class="box-title">클래스 재주 Class Feats</div>
-            <div id="feats-class"></div>
-            <button class="add-btn" onclick="openModal('feat','class')">+ DB에서 선택</button>
-            <button class="add-btn" onclick="addFeat('class')">+ 직접 입력</button>
-          </div>
-          <div class="box">
-            <div class="box-title">일반 재주 General Feats</div>
-            <div id="feats-general"></div>
-            <button class="add-btn" onclick="openModal('feat','general')">+ DB에서 선택</button>
-            <button class="add-btn" onclick="addFeat('general')">+ 직접 입력</button>
-          </div>
-        </div>
-        <div>
-          <div class="box">
-            <div class="box-title">기술 재주 Skill Feats</div>
-            <div id="feats-skill"></div>
-            <button class="add-btn" onclick="openModal('feat','skill')">+ DB에서 선택</button>
-            <button class="add-btn" onclick="addFeat('skill')">+ 직접 입력</button>
-          </div>
-          <div class="box">
-            <div class="box-title">원형 재주 Archetype Feats</div>
-            <div id="feats-archetype"></div>
-            <button class="add-btn" onclick="openModal('feat','archetype')">+ DB에서 선택</button>
-            <button class="add-btn" onclick="addFeat('archetype')">+ 직접 입력</button>
-          </div>
-          <div class="box">
-            <div class="box-title">기타 능력 Other Abilities</div>
-            <div id="feats-other"></div>
-            <button class="add-btn" onclick="addFeat('other')">+ 추가</button>
-          </div>
-        </div>
+    </div>
+  </div>
+  <div>
+    <div class="box">
+      <div class="box-title">주문 공격 / 주문 DC</div>
+      <div class="stat-row">
+        <span class="stat-label">주문 공격 수정치</span>
+        <select class="prof-sel" id="prof-spatk" onchange="recalcSpellStats();save()">
+          <option value="0">미숙련</option><option value="2">숙련</option>
+          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+        </select>
+        <span class="stat-val" id="val-spatk">+0</span>
       </div>
-    </div><!-- /#panel-feats -->
-
-    <!-- ── 행동 Actions ── -->
-    <div id="panel-actions" class="panel">
-      <div class="action-filter-bar" id="action-filter-bar">
-        <button class="active" data-filter="all" onclick="setActionFilter('all',this)">전체</button>
-        <button data-filter="basic" onclick="setActionFilter('basic',this)">기본 행동</button>
-        <button data-filter="skill" onclick="setActionFilter('skill',this)">기술 행동</button>
-        <button data-filter="feat" onclick="setActionFilter('feat',this)">재주 행동</button>
-        <button data-filter="reaction" onclick="setActionFilter('reaction',this)">반응</button>
+      <div class="stat-row">
+        <span class="stat-label">주문 DC</span>
+        <span class="stat-val" id="val-spdc">10</span>
       </div>
-      <div id="actions-content"></div>
-    </div><!-- /#panel-actions -->
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">상태 이상 Conditions</div>
+      <div class="condition-grid" id="conditions-grid"></div>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">전투 메모</div>
+      <textarea class="notes-area" id="combat-notes" placeholder="전술, 특수 능력..." style="min-height:120px;" oninput="save()"></textarea>
+    </div>
+  </div>
+</div>
 
-    <!-- ── 성장 Growth (mobile: sidebar content) ── -->
-    <div id="panel-growth" class="panel">
-      <div style="padding:4px 0 10px;font-size:11px;color:var(--text2);">능력치 부스트 및 빌드 정보 (데스크톱에서는 좌측 사이드바에 표시)</div>
-      <!-- mirror of sidebar content for mobile -->
-      <div class="box">
-        <div class="box-title">능력치 Attributes</div>
-        <div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:6px;">클릭하여 부스트 배분</div>
-        <div class="attr-grid">
-          <div class="attr-box" onclick="openModal('boost')"><div class="attr-name">근력 STR</div><div class="attr-score" id="mod-str-m">+0</div></div>
-          <div class="attr-box" onclick="openModal('boost')"><div class="attr-name">민첩 DEX</div><div class="attr-score" id="mod-dex-m">+0</div></div>
-          <div class="attr-box" onclick="openModal('boost')"><div class="attr-name">건강 CON</div><div class="attr-score" id="mod-con-m">+0</div></div>
-          <div class="attr-box" onclick="openModal('boost')"><div class="attr-name">지능 INT</div><div class="attr-score" id="mod-int-m">+0</div></div>
-          <div class="attr-box" onclick="openModal('boost')"><div class="attr-name">지혜 WIS</div><div class="attr-score" id="mod-wis-m">+0</div></div>
-          <div class="attr-box" onclick="openModal('boost')"><div class="attr-name">매력 CHA</div><div class="attr-score" id="mod-cha-m">+0</div></div>
-        </div>
+<!-- ═══════════════ TAB: 주문 ═══════════════ -->
+<div id="panel-spells" class="panel" style="grid-template-columns:1fr 1fr;">
+  <div>
+    <div class="box">
+      <div class="box-title">주문시전 정보</div>
+      <div class="box-row"><label>주문 계열</label>
+        <select class="prof-sel" id="spell-tradition" onchange="save()" style="min-width:90px;">
+          <option value="">-</option>
+          <option value="arcane">신비 (Arcane)</option>
+          <option value="divine">신성 (Divine)</option>
+          <option value="occult">비의 (Occult)</option>
+          <option value="primal">원시 (Primal)</option>
+        </select>
       </div>
-      <div class="box">
-        <div class="box-title">언어 / 특성</div>
-        <div style="font-size:12px;color:var(--text2);">좌측 사이드바의 언어/특성 필드를 참조하세요.</div>
+      <div class="box-row"><label>시전 유형</label>
+        <select class="prof-sel" id="spell-type" onchange="save()" style="min-width:90px;">
+          <option value="">-</option>
+          <option value="prepared">준비형</option>
+          <option value="spontaneous">즉흥형</option>
+          <option value="focus">집중</option>
+        </select>
       </div>
-    </div><!-- /#panel-growth -->
-
-    <!-- ── 정보 Info (mobile: center col content) ── -->
-    <div id="panel-info" class="panel">
-      <div style="padding:4px 0 10px;font-size:11px;color:var(--text2);">스탯 및 기술 (데스크톱에서는 중앙 열에 표시)</div>
-      <div class="box">
-        <div class="box-title">생명력 / 방어도</div>
-        <div style="font-size:12px;color:var(--text2);">중앙 패널의 HP / AC / 내성 굴림 / 기술 정보를 참조하세요.<br>데스크톱 모드에서는 항상 중앙 열에 표시됩니다.</div>
+      <div class="box-row"><label>집중력 (FP)</label>
+        <input class="inline-edit" id="fp-cur" type="number" value="0" min="0" max="3" style="width:30px;" oninput="save()">
+        <span style="color:var(--text2);"> / </span>
+        <input class="inline-edit" id="fp-max" type="number" value="0" min="0" max="3" style="width:30px;" oninput="save()">
       </div>
-    </div><!-- /#panel-info -->
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">캔트립 Cantrips</div>
+      <div id="spells-cantrip"></div>
+      <button class="add-btn" onclick="openModal('spell','cantrip')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addSpell(0)" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">주문 슬롯 Spell Slots</div>
+      <table class="spell-slot-table" id="spell-slots-table">
+        <thead><tr><th>등급</th><th>슬롯 수</th><th>사용</th></tr></thead>
+        <tbody id="spell-slots-body"></tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    <div class="box">
+      <div class="box-title">알고 있는 주문 / 준비 주문</div>
+      <div style="display:flex;gap:4px;margin-bottom:6px;">
+        <select class="prof-sel" id="add-spell-rank" style="min-width:80px;">
+          <option value="1">1등급</option><option value="2">2등급</option><option value="3">3등급</option>
+          <option value="4">4등급</option><option value="5">5등급</option><option value="6">6등급</option>
+          <option value="7">7등급</option><option value="8">8등급</option><option value="9">9등급</option>
+          <option value="10">10등급</option>
+        </select>
+        <button class="add-btn" style="width:auto;padding:4px 10px;" onclick="addSpell(parseInt(document.getElementById('add-spell-rank').value))">+ 주문 추가</button>
+      </div>
+      <div id="spells-known"></div>
+      <button class="add-btn" onclick="openModal('spell','known')" style="margin-top:6px;">+ DB에서 선택</button>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">집중 주문 Focus Spells</div>
+      <div id="spells-focus"></div>
+      <button class="add-btn" onclick="openModal('spell','focus')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addFocusSpell()" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+  </div>
+</div>
 
-  </div><!-- /#right-content -->
+<!-- ═══════════════ TAB: 재주 ═══════════════ -->
+<div id="panel-feats" class="panel" style="grid-template-columns:1fr 1fr;">
+  <div>
+    <div class="box">
+      <div class="box-title">혈통 재주 Ancestry Feats</div>
+      <div id="feats-ancestry"></div>
+      <button class="add-btn" onclick="openModal('feat','ancestry')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addFeat('ancestry')" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">클래스 재주 Class Feats</div>
+      <div id="feats-class"></div>
+      <button class="add-btn" onclick="openModal('feat','class')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addFeat('class')" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">일반 재주 General Feats</div>
+      <div id="feats-general"></div>
+      <button class="add-btn" onclick="openModal('feat','general')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addFeat('general')" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+  </div>
+  <div>
+    <div class="box">
+      <div class="box-title">기술 재주 Skill Feats</div>
+      <div id="feats-skill"></div>
+      <button class="add-btn" onclick="openModal('feat','skill')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addFeat('skill')" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">원형 재주 Archetype Feats</div>
+      <div id="feats-archetype"></div>
+      <button class="add-btn" onclick="openModal('feat','archetype')">+ DB에서 선택</button>
+      <button class="add-btn" onclick="addFeat('archetype')" style="margin-top:3px;">+ 직접 입력</button>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">기타 능력 Other Abilities</div>
+      <div id="feats-other"></div>
+      <button class="add-btn" onclick="addFeat('other')">+ 추가</button>
+    </div>
+  </div>
+</div>
 
-</div><!-- /#app-layout -->
+<!-- ═══════════════ TAB: 장비 ═══════════════ -->
+<div id="panel-equip" class="panel" style="grid-template-columns:1fr 180px;">
+  <div>
+    <div class="box">
+      <div class="box-title">착용 / 소지 아이템</div>
+      <div style="display:flex;gap:4px;padding:3px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);margin-bottom:4px;">
+        <span style="flex:3;">아이템 이름</span>
+        <span style="width:36px;text-align:center;">수량</span>
+        <span style="width:36px;text-align:center;">부피</span>
+        <span style="width:20px;"></span>
+      </div>
+      <div id="equip-list"></div>
+      <button class="add-btn" onclick="openModal('equip-weapon')">+ 무기 DB</button>
+      <button class="add-btn" style="margin-top:3px;" onclick="openModal('equip-armor')">+ 방어구 DB</button>
+      <button class="add-btn" style="margin-top:3px;" onclick="openModal('equip-gear')">+ 장비 DB</button>
+      <button class="add-btn" style="margin-top:3px;" onclick="addEquip()">+ 직접 입력</button>
+    </div>
+  </div>
+  <div>
+    <div class="box">
+      <div class="box-title">화폐 Currency</div>
+      <div class="currency-grid">
+        <div class="currency-box"><label>금화 (GP)</label><input id="cur-gp" type="number" value="0" min="0" oninput="save()"></div>
+        <div class="currency-box"><label>은화 (SP)</label><input id="cur-sp" type="number" value="0" min="0" oninput="save()"></div>
+        <div class="currency-box"><label>동화 (CP)</label><input id="cur-cp" type="number" value="0" min="0" oninput="save()"></div>
+        <div class="currency-box"><label>백금 (PP)</label><input id="cur-pp" type="number" value="0" min="0" oninput="save()"></div>
+      </div>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">부피 합계 Bulk</div>
+      <div style="text-align:center;padding:8px 0;">
+        <span style="font-size:24px;font-weight:bold;color:var(--gold-light);" id="bulk-total">0</span>
+        <span style="color:var(--text2);"> / </span>
+        <span style="font-size:18px;color:var(--text2);" id="bulk-max">5</span>
+      </div>
+      <div style="font-size:10px;color:var(--text2);text-align:center;">최대 부피 = 근력 수정치 + 5<br>(초과 시 과부하 상태)</div>
+    </div>
+    <div class="box" style="margin-top:8px;">
+      <div class="box-title">장비 메모</div>
+      <textarea class="notes-area" id="equip-notes" placeholder="보관함, 특이사항..." style="min-height:100px;" oninput="save()"></textarea>
+    </div>
+  </div>
+</div>
 
-<!-- ═══════════════ MODAL ═══════════════ -->
+<!-- ═══════════════ TAB: 행동 ═══════════════ -->
+<div id="panel-actions" class="panel" style="padding:12px;">
+  <div class="action-filter-bar" id="action-filter-bar">
+    <button class="active" data-filter="all" onclick="setActionFilter('all',this)">전체</button>
+    <button data-filter="basic" onclick="setActionFilter('basic',this)">기본 행동</button>
+    <button data-filter="skill" onclick="setActionFilter('skill',this)">기술 행동</button>
+    <button data-filter="feat" onclick="setActionFilter('feat',this)">재주 행동</button>
+    <button data-filter="reaction" onclick="setActionFilter('reaction',this)">반응</button>
+  </div>
+  <div id="actions-content"></div>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
 <div class="modal-overlay hidden" id="modal-overlay">
   <div class="modal">
     <div class="modal-header">
       <h2 id="modal-title">선택</h2>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body" id="modal-body">
-      <div class="modal-list">
-        <div class="modal-list-header">
-          <input class="modal-search" id="modal-search" placeholder="검색..." oninput="filterOptions()">
-          <div class="modal-filters" id="modal-filterbar"></div>
-        </div>
-        <div class="modal-list-items" id="modal-options"></div>
-      </div>
-      <div class="modal-detail" id="modal-detail">
-        <div class="modal-detail-empty">항목을 선택하면 상세 정보가 표시됩니다.</div>
-      </div>
+    <div class="modal-body">
+      <input class="modal-search" id="modal-search" placeholder="검색..." oninput="filterOptions()">
+      <div class="modal-filters" id="modal-filterbar"></div>
+      <div id="modal-options"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-cancel" onclick="closeModal()">취소</button>
@@ -1279,7 +740,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   </div>
 </div>
 
-<div class="save-status-bar" id="save-status-float">저장됨</div>
+<div class="save-status" id="save-status">저장됨</div>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -1345,7 +806,7 @@ const SUBCLASS_DB = [
   {id:'doctrine-cloistered', class_id:'cleric', subclass_type:'교리', name_ko:'수도원 성직자', name_en:'Cloistered Cleric',
    summary:'수도원에서 마법을 탐구하는 성직자. 신성 주문에 전문가(Expert) 시작. 대신 무기 훈련됨은 소수만 해당. 도메인 주문 1개 추가 습득.'},
   {id:'doctrine-warpriest',  class_id:'cleric', subclass_type:'교리', name_ko:'전투 사제',    name_en:'Warpriest',
-   summary:'전투에서 신의 뜻을 집행하는 성직자. 신격 무기에 훈련됨, 방어구 훈련됨 향상. 대신 주문 랭크 성장이 느림.'},
+   summary:'전투에서 신의 뜻을 집행하는 성직자. 신격 무기에 훈련됨, 방어구 훈련됨 향상. 대신 주문 등급 성장이 느림.'},
 
   // ── 드루이드 교단 ──
   {id:'order-animal', class_id:'druid', subclass_type:'교단', name_ko:'동물', name_en:'Animal',
@@ -1581,7 +1042,7 @@ const TRAIT_DB = {
   '죽음':'죽음(Necromancy) 마법 계열.',
   // 주문 특성
   '집중':'집중(Focus) 주문. 집중 포인트를 소비하여 시전.',
-  '캔트립':'캔트립. 주문 슬롯 없이 자유롭게 시전. 랭크 = ⌈레벨/2⌉.',
+  '캔트립':'캔트립. 주문 슬롯 없이 자유롭게 시전. 등급 = ⌈레벨/2⌉.',
   '지속':'시전자가 매 턴 지속(Sustained) 행동으로 유지해야 함.',
   '의식':'의식(Ritual) 주문. 전투 중 시전 불가. 특수 소재 필요.',
   '공포':'공포(Fear) 감정 효과. 공포 상태를 유발하거나 관련됨.',
@@ -1912,17 +1373,24 @@ function showInfo(type, name) {
   if (confirmBtn) confirmBtn.style.display = 'none';
   document.getElementById('modal-title').textContent = type === 'spell' ? '주문 정보' : '재주 정보';
   modalType = 'info';
-  // Hide list, show detail only
-  const listEl = document.querySelector('.modal-list');
-  if (listEl) listEl.style.display = 'none';
-  showItemDetail(item);
+  renderOptions([item]);
 }
 
 // ═══════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════
 
-// window.onload is defined below after all overrides
+window.onload = function() {
+  buildSkills();
+  buildConditions();
+  buildSpellSlots();
+  // 기본 항목 초기화 (JSON 불러오기 전까지 표시)
+  addWeapon({name:'비무장 공격', atk:'+0', dmg:'1d4', traits:'비치명, 민첩/근력'});
+  addEquip({name:'모험가 꾸러미', qty:1, bulk:1});
+  // 플레이스홀더 제거됨 — 유저가 직접 재주를 추가
+  renderFeats();
+  recalcAll();
+};
 
 function buildSkills() {
   const list = document.getElementById('skills-list');
@@ -2331,8 +1799,6 @@ function recalcAll() {
   recalcSkills();
   recalcBulk();
   updateHP();
-  updateHpGauge();
-  updateShieldGauge();
   // 행동 탭이 활성화된 경우에만 재렌더
   if (document.getElementById('panel-actions')?.classList.contains('active')) renderActions();
 }
@@ -2409,47 +1875,6 @@ function recalcSkill(id) {
   const total = getMod(sk.attr) + (rank>0?rank+lv:0);
   const el = document.getElementById('sk-val-'+id);
   if (el) el.textContent = fmtBonus(total);
-}
-
-function saveHeroPoints() {
-  const count = (document.getElementById('hero-1').checked?1:0) + (document.getElementById('hero-2').checked?1:0) + (document.getElementById('hero-3').checked?1:0);
-  document.getElementById('hero-points').value = count;
-  save();
-}
-function loadHeroPoints(val) {
-  const n = parseInt(val)||0;
-  document.getElementById('hero-1').checked = n >= 1;
-  document.getElementById('hero-2').checked = n >= 2;
-  document.getElementById('hero-3').checked = n >= 3;
-  document.getElementById('hero-points').value = n;
-}
-function updateHpGauge() {
-  const cur = parseInt(document.getElementById('hp-cur').value)||0;
-  const max = parseInt(document.getElementById('hp-max').value)||1;
-  const pct = Math.max(0, Math.min(100, (cur/max)*100));
-  const fill = document.getElementById('hp-gauge-fill');
-  if (fill) {
-    fill.style.width = pct + '%';
-    if (pct > 50) fill.style.background = 'linear-gradient(90deg,#1a6040,#2d8a5e)';
-    else if (pct > 25) fill.style.background = 'linear-gradient(90deg,#6a5a1a,#a08a20)';
-    else fill.style.background = 'linear-gradient(90deg,#6a1a1a,#a03030)';
-  }
-}
-function updateShieldGauge() {
-  const shieldHp = parseInt(document.getElementById('shield-hp')?.value)||0;
-  const shieldName = document.getElementById('shield-name')?.value||'';
-  const wrap = document.getElementById('shield-gauge-wrap');
-  if (!wrap) return;
-  if (shieldHp <= 0 && !shieldName) { wrap.style.display = 'none'; return; }
-  wrap.style.display = '';
-  const cur = parseInt(document.getElementById('shield-hp-cur')?.value)||0;
-  const pct = shieldHp > 0 ? Math.max(0, Math.min(100, (cur/shieldHp)*100)) : 0;
-  const fill = document.getElementById('shield-gauge-fill');
-  if (fill) fill.style.width = pct + '%';
-  const label = document.getElementById('shield-gauge-label');
-  if (label) label.textContent = shieldName || '방패';
-  const maxDisp = document.getElementById('shield-hp-max-display');
-  if (maxDisp) maxDisp.textContent = shieldHp;
 }
 
 function recalcBulk() {
@@ -2775,35 +2200,22 @@ function buildFeatFilters(ctx) {
 function buildSpellFilters() {
   const fbar = document.getElementById('modal-filterbar');
   if (!fbar) return;
-  // 시트의 전통 자동 감지
-  const classTrad = state.selectedClass?.tradition || '';
-  const maxRank = Math.min(10, Math.ceil(getLevel() / 2));
-
   fbar.innerHTML = `
     <select id="filter-spell-trad" onchange="renderOptions(getOptionsData('spell'))">
       <option value="">전체 계열</option>
-      <option value="arcane">비전</option><option value="divine">신성</option>
+      <option value="arcane">신비</option><option value="divine">신성</option>
       <option value="occult">비의</option><option value="primal">원시</option>
     </select>
     <select id="filter-spell-rank" onchange="renderOptions(getOptionsData('spell'))">
-      <option value="">전체 랭크</option>
-      ${[0,1,2,3,4,5,6,7,8,9,10].map(r=>`<option value="${r}">${r===0?'캔트립':'랭크 '+r}</option>`).join('')}
+      <option value="">전체 등급</option>
+      ${[0,1,2,3,4,5,6,7,8,9,10].map(r=>`<option value="${r}">${r===0?'캔트립':r+'등급'}</option>`).join('')}
     </select>
     <select id="filter-spell-type" onchange="renderOptions(getOptionsData('spell'))">
       <option value="">전체 유형</option>
       <option value="cantrip">캔트립</option>
       <option value="focus">집중</option>
       <option value="regular">일반</option>
-    </select>
-    <label style="font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px;">
-      <input type="checkbox" id="filter-spell-auto" checked onchange="renderOptions(getOptionsData('spell'))"> 내 시트 기준
-    </label>`;
-
-  // 자동 필터: 시트의 전통 선택
-  if (classTrad && classTrad !== 'any') {
-    const tradSel = document.getElementById('filter-spell-trad');
-    if (tradSel) tradSel.value = classTrad;
-  }
+    </select>`;
 }
 
 function buildWeaponFilters() {
@@ -2835,16 +2247,12 @@ function filterSpells() {
   const trad = document.getElementById('filter-spell-trad')?.value||'';
   const rank = document.getElementById('filter-spell-rank')?.value;
   const stype = document.getElementById('filter-spell-type')?.value||'';
-  const autoFilter = document.getElementById('filter-spell-auto')?.checked;
-  const maxRank = autoFilter ? Math.min(10, Math.ceil(getLevel() / 2)) : 99;
   return SPELL_DB.filter(sp => {
     if (trad && !sp.traditions?.includes(trad)) return false;
     if (rank!==undefined && rank!=='' && sp.rank!==parseInt(rank)) return false;
     if (stype==='cantrip' && !sp.is_cantrip) return false;
     if (stype==='focus' && !sp.is_focus) return false;
     if (stype==='regular' && (sp.is_cantrip||sp.is_focus)) return false;
-    // 내 시트 기준: 최대 랭크 제한
-    if (autoFilter && !sp.is_cantrip && !sp.is_focus && sp.rank > maxRank) return false;
     if (q && !sp.name_ko.includes(q) && !sp.name_en.toLowerCase().includes(q)) return false;
     return true;
   });
@@ -2862,143 +2270,87 @@ function filterWeapons() {
 
 function renderOptions(data) {
   const container = document.getElementById('modal-options');
-  const detail = document.getElementById('modal-detail');
   container.innerHTML = '';
-  if (detail) detail.innerHTML = '<div class="modal-detail-empty">항목을 선택하면 상세 정보가 표시됩니다.</div>';
-
   if (!data || !data.length) {
     container.innerHTML = '<div style="color:var(--text2);text-align:center;padding:20px;">결과 없음</div>';
     return;
   }
+  data.forEach(item => {
+    const div = document.createElement('div');
+    const isInfo = modalType === 'info';
+    div.className = 'option-card' + (!isInfo && (modalSelected?.id===item.id||modalSelected?.name_ko===item.name_ko)?' selected':'');
+    if (!isInfo) div.onclick = () => selectOption(item, div);
+    else div.style.cursor = 'default';
 
-  // Group by rank/level for spells and feats
-  const isSpell = ['spell','info'].includes(modalType) || modalType?.startsWith?.('equip');
-  const isFeat = modalType === 'feat';
-  let grouped = null;
+    let tags = '';
+    let desc = item.desc||item.summary||'';
+    let nameKo = item.name||item.name_ko||'';
+    let nameEn = item.en||item.name_en||'';
 
-  if (modalType === 'spell') {
-    grouped = {};
-    data.forEach(item => {
-      const key = item.is_cantrip ? '캔트립' : item.is_focus ? '집중 주문' : `랭크 ${item.rank} 주문`;
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(item);
-    });
-  } else if (isFeat) {
-    grouped = {};
-    data.forEach(item => {
-      const key = `${item.feat_level}레벨`;
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(item);
-    });
-  }
-
-  function renderItem(item) {
-    const row = document.createElement('div');
-    const nameKo = item.name || item.name_ko || '';
-    const nameEn = item.en || item.name_en || '';
-    const selected = modalSelected?.id === item.id || modalSelected?.name_ko === item.name_ko;
-    row.className = 'opt-row' + (selected ? ' selected' : '');
-
-    // Level/rank badge
-    let levelNum = 0;
-    let levelText = '';
-    if (item.feat_level !== undefined) { levelNum = item.feat_level; levelText = item.feat_level; }
-    else if (item.rank !== undefined) { levelNum = item.is_cantrip ? 0 : item.rank; levelText = item.is_cantrip ? 'C' : item.rank; }
-
-    // Action icons
-    let actionsHtml = '';
-    if (item.actions) {
-      const a = item.actions;
-      if (a.includes('1행동') || a === '1') actionsHtml = '◆';
-      else if (a.includes('2행동') || a === '2') actionsHtml = '◆◆';
-      else if (a.includes('3행동') || a === '3') actionsHtml = '◆◆◆';
-      else if (a.includes('반응')) actionsHtml = '↩';
-      else if (a.includes('자유')) actionsHtml = '⟡';
-      else actionsHtml = a;
+    if (modalType==='class') {
+      tags = `<span class="tag hl">HP ${item.hp}+CON</span>
+              <span class="tag hl">${item.keyAttr}</span>
+              ${item.tradition?`<span class="tag">${item.tradition==='any'?'계열 선택':item.tradition} 주문</span>`:''}
+              <span class="tag">기술: ${item.skills}</span>`;
+    } else if (modalType==='ancestry') {
+      tags = `<span class="tag hl">HP ${item.hp}</span>
+              <span class="tag">${item.size} / ${item.speed}피트</span>
+              ${item.boosts.map(b=>`<span class="tag hl">${b}</span>`).join('')}
+              ${item.flaws.map(f=>`<span class="tag" style="color:var(--red-light);">결함: ${f}</span>`).join('')}
+              ${item.traits.map(t=>`<span class="tag">${t}</span>`).join('')}`;
+    } else if (modalType==='background') {
+      tags = `<span class="tag hl">속성: ${item.boosts}</span>
+              <span class="tag">기술: ${item.skills}</span>
+              <span class="tag">재주: ${item.feat}</span>`;
+    } else if (modalType==='feat' || (modalType==='info' && item.feat_level !== undefined)) {
+      tags = `<span class="tag hl">${item.feat_level}레벨</span>
+              <span class="tag">${item.category}</span>
+              ${(item.traits||[]).map(t=>traitTag(t)).join('')}
+              ${item.prerequisites?`<span class="tag" style="color:var(--gold);">선행: ${item.prerequisites}</span>`:''}`;
+    } else if (modalType==='spell' || (modalType==='info' && item.rank !== undefined)) {
+      const rankStr = item.is_cantrip?'캔트립':item.is_focus?'집중':`${item.rank}등급`;
+      tags = `<span class="tag hl">${rankStr}</span>
+              <span class="spell-actions">${item.actions||''}</span>
+              ${(item.traditions||[]).map(t=>traitTag(t)).join('')}
+              ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    } else if (modalType==='weapon' || modalType==='equip-weapon') {
+      tags = `<span class="tag hl">${item.damage||''}</span>
+              <span class="tag">${item.category||''}</span>
+              <span class="tag">부피: ${item.bulk||'-'}</span>
+              <span class="tag">가격: ${item.price||'-'}</span>
+              ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    } else if (modalType==='equip-armor') {
+      tags = `<span class="tag hl">AC+${item.ac_bonus||0}</span>
+              <span class="tag">${item.category||''}</span>
+              <span class="tag">가격: ${item.price||'-'}</span>
+              ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    } else if (modalType==='equip-gear') {
+      tags = `<span class="tag">가격: ${item.price||'-'}</span>
+              <span class="tag">부피: ${item.bulk||'-'}</span>`;
+    } else if (modalType==='subclass') {
+      tags = `<span class="tag hl">${item.subclass_type}</span>`;
+    } else if (modalType==='heritage') {
+      tags = `<span class="tag">${item.ancestry}</span>`;
+    } else if (modalType==='armor') {
+      tags = `<span class="tag hl">AC+${item.ac_bonus||0}</span>
+              <span class="tag">${item.category||''}</span>
+              ${item.dex_cap!==null?`<span class="tag">DEX상한: ${item.dex_cap}</span>`:''}
+              ${item.check_penalty?`<span class="tag" style="color:var(--red-light);">판정: ${item.check_penalty}</span>`:''}
+              <span class="tag">가격: ${item.price||'-'}</span>`;
     }
 
-    const rClass = `r${Math.min(levelNum, 10)}`;
-    row.innerHTML = `
-      <div class="opt-row-icon">📄</div>
-      <span class="opt-row-name">${nameKo}</span>
-      ${actionsHtml ? `<span class="opt-row-actions">${actionsHtml}</span>` : ''}
-      ${levelText !== '' ? `<span class="opt-row-level ${rClass}">${levelText}</span>` : ''}`;
-
-    row.onclick = () => selectOption(item, row);
-    return row;
-  }
-
-  if (grouped) {
-    for (const [section, items] of Object.entries(grouped)) {
-      const header = document.createElement('div');
-      header.className = 'opt-section-header';
-      header.textContent = section;
-      container.appendChild(header);
-      items.forEach(item => container.appendChild(renderItem(item)));
-    }
-  } else {
-    data.forEach(item => container.appendChild(renderItem(item)));
-  }
+    div.innerHTML = `
+      <div class="opt-name">${nameKo} <span style="font-size:11px;color:var(--text2);">${nameEn}</span></div>
+      <div class="opt-tags">${tags}</div>
+      <div class="opt-desc">${desc}</div>`;
+    container.appendChild(div);
+  });
 }
 
-function selectOption(item, row) {
-  document.querySelectorAll('.opt-row').forEach(c => c.classList.remove('selected'));
-  if (row) row.classList.add('selected');
+function selectOption(item, div) {
+  document.querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
+  div.classList.add('selected');
   modalSelected = item;
-  showItemDetail(item);
-  // Mobile: show detail pane
-  const body = document.getElementById('modal-body');
-  if (body && window.innerWidth <= 700) body.classList.add('detail-open');
-}
-
-function showItemDetail(item) {
-  const detail = document.getElementById('modal-detail');
-  if (!detail) return;
-
-  const nameKo = item.name || item.name_ko || '';
-  const nameEn = item.en || item.name_en || '';
-  const desc = item.desc || item.summary || '';
-
-  let tags = '';
-  if (item.feat_level !== undefined) {
-    tags = `<span class="tag hl">${item.feat_level}레벨</span>
-            <span class="tag">${item.category||''}</span>
-            ${(item.traits||[]).map(t=>traitTag(t)).join('')}
-            ${item.prerequisites?`<span class="tag" style="color:var(--accent);">선행: ${item.prerequisites}</span>`:''}`;
-  } else if (item.rank !== undefined) {
-    const rankStr = item.is_cantrip?'캔트립':item.is_focus?'집중':`랭크 ${item.rank}`;
-    tags = `<span class="tag hl">${rankStr}</span>
-            <span class="spell-actions">${item.actions||''}</span>
-            ${(item.traditions||[]).map(t=>traitTag(t)).join('')}
-            ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
-  } else if (item.damage !== undefined) {
-    tags = `<span class="tag hl">${item.damage||''}</span>
-            <span class="tag">${item.category||''}</span>
-            <span class="tag">가격: ${item.price||'-'}</span>
-            ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
-  } else if (item.ac_bonus !== undefined) {
-    tags = `<span class="tag hl">AC+${item.ac_bonus}</span>
-            <span class="tag">${item.category||''}</span>
-            ${item.dex_cap!==null?`<span class="tag">DEX상한: ${item.dex_cap}</span>`:''}
-            <span class="tag">가격: ${item.price||'-'}</span>`;
-  } else if (item.hp !== undefined && item.keyAttr !== undefined) {
-    tags = `<span class="tag hl">HP ${item.hp}+CON</span>
-            <span class="tag hl">${item.keyAttr}</span>
-            ${item.tradition?`<span class="tag">${item.tradition} 주문</span>`:''}`;
-  } else if (item.boosts && item.flaws) {
-    tags = `<span class="tag hl">HP ${item.hp}</span>
-            <span class="tag">${item.size}/${item.speed}피트</span>
-            ${item.boosts.map(b=>`<span class="tag hl">${b}</span>`).join('')}`;
-  } else if (item.subclass_type) {
-    tags = `<span class="tag hl">${item.subclass_type}</span>`;
-  }
-
-  detail.innerHTML = `
-    <div class="modal-detail-back" onclick="document.getElementById('modal-body').classList.remove('detail-open')">← 목록으로</div>
-    <div class="modal-detail-title">${nameKo}</div>
-    <div class="modal-detail-en">${nameEn}</div>
-    <div class="modal-detail-tags">${tags}</div>
-    <div class="modal-detail-desc">${desc}</div>`;
 }
 
 function filterOptions() {
@@ -3080,14 +2432,6 @@ function closeModal() {
   modalSelected = null;
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = '';
-  // Restore list visibility (hidden by showInfo)
-  const listEl = document.querySelector('.modal-list');
-  if (listEl) listEl.style.display = '';
-  const searchEl = document.getElementById('modal-search');
-  if (searchEl) searchEl.style.display = '';
-  // Mobile: reset detail-open
-  const body = document.getElementById('modal-body');
-  if (body) body.classList.remove('detail-open');
 }
 
 document.getElementById('modal-overlay').addEventListener('click', function(e) {
@@ -3221,7 +2565,13 @@ function updateSpellSlotsForClass() {
 //  TAB NAVIGATION
 // ═══════════════════════════════════════════════
 
-// switchTab is overridden below with Pathbuilder layout support
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id)?.classList.add('active');
+  event.currentTarget?.classList.add('active');
+  if (id === 'actions') renderActions();
+}
 
 // ═══════════════════════════════════════════════
 //  ACTIONS TAB
@@ -3361,7 +2711,6 @@ function collectData() {
     dying: document.getElementById('dying')?.value,
     wounded: document.getElementById('wounded')?.value,
     heroPoints: document.getElementById('hero-points')?.value,
-    shieldHpCur: document.getElementById('shield-hp-cur')?.value,
     profs: {
       ac: document.getElementById('prof-ac')?.value,
       fort: document.getElementById('prof-fort')?.value,
@@ -3458,8 +2807,7 @@ function loadData(d) {
     }
     if (d.dying !== undefined) document.getElementById('dying').value = d.dying;
     if (d.wounded !== undefined) document.getElementById('wounded').value = d.wounded;
-    if (d.heroPoints !== undefined) { document.getElementById('hero-points').value = d.heroPoints; loadHeroPoints(d.heroPoints); }
-    if (d.shieldHpCur !== undefined && document.getElementById('shield-hp-cur')) document.getElementById('shield-hp-cur').value = d.shieldHpCur;
+    if (d.heroPoints !== undefined) document.getElementById('hero-points').value = d.heroPoints;
 
     // Profs
     if (d.profs) {
@@ -3583,57 +2931,8 @@ function loadData(d) {
   } catch(e) { console.warn('Load failed',e); }
 }
 
-// ── PATHBUILDER STYLE: switchTab override ──
-// Override original to handle new panel IDs + mobile sidebar/center
-function switchTab(id, el) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  if (el) el.classList.add('active');
-
-  // Mobile-only panels that mirror sidebar/center
-  if (id === 'growth') {
-    // show the growth panel; on mobile also show sidebar
-    document.getElementById('panel-growth')?.classList.add('active');
-    document.getElementById('sidebar')?.classList.add('mobile-active');
-    document.getElementById('center-col')?.classList.remove('mobile-active');
-  } else if (id === 'info') {
-    document.getElementById('panel-info')?.classList.add('active');
-    document.getElementById('center-col')?.classList.add('mobile-active');
-    document.getElementById('sidebar')?.classList.remove('mobile-active');
-  } else {
-    document.getElementById('panel-' + id)?.classList.add('active');
-    document.getElementById('sidebar')?.classList.remove('mobile-active');
-    document.getElementById('center-col')?.classList.remove('mobile-active');
-  }
-
-  if (id === 'actions') renderActions();
-}
-
-// Fix recalcAll to also update mobile mirror attribute displays
-const _origRecalcAll = recalcAll;
-recalcAll = function() {
-  _origRecalcAll();
-  // sync mobile mirror
-  ['str','dex','con','int','wis','cha'].forEach(a => {
-    const src = document.getElementById('mod-' + a);
-    const dst = document.getElementById('mod-' + a + '-m');
-    if (src && dst) dst.textContent = src.textContent;
-  });
-};
-
-// Re-init window.onload to use new tab
-window.onload = function() {
-  buildSkills();
-  buildConditions();
-  buildSpellSlots();
-  addWeapon({name:'비무장 공격', atk:'+0', dmg:'1d4', traits:'비치명, 민첩/근력'});
-  addEquip({name:'모험가 꾸러미', qty:1, bulk:1});
-  renderFeats();
-  recalcAll();
-};
 </script>
 
-<!-- Firebase Auth + Cloud Save -->
 <!-- Firebase Auth + Cloud Save -->
 <script>
 // ═══════════════════════════════════════════════
@@ -3710,7 +3009,7 @@ function loadFromCloud() {
   db.collection('users').doc(currentUser.uid).collection('characters').doc(currentSlot).get().then(function(doc) {
     if (doc.exists && doc.data().data) {
       var data = JSON.parse(doc.data().data);
-      loadData(data); recalcAll();
+      applyData(data);
       status.textContent = '✓ 불러오기 완료';
       status.style.color = '#27ae60';
     } else {

@@ -23,8 +23,8 @@ const SPELL_DB = [
 
   { name_ko: "마법 탐지", name_en: "Detect Magic", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["탐지", "조작"],
-    summary: "근처에 마법이 있는지 감지합니다. 발산 내에 마법의 존재를 느끼며, 마법의 위치가 아닌 존재만 알게 됩니다. 물체나 생물의 후속 탐지에는 더 구체적인 정보를 제공합니다.강화(3등급): 비일반 또는 희귀 마법 오라의 ...",
-    desc: "근처에 마법이 있는지 감지합니다. 발산 내에 마법의 존재를 느끼며, 마법의 위치가 아닌 존재만 알게 됩니다. 물체나 생물의 후속 탐지에는 더 구체적인 정보를 제공합니다.<br><strong>강화(3등급):</strong> 비일반 또는 희귀 마법 오라의 학파를 알 수 있습니다.<br><strong>강화(5등급):</strong> 감지 영역이 60피트로 증가합니다." },
+    summary: "근처에 마법이 있는지 감지합니다. 발산 내에 마법의 존재를 느끼며, 마법의 위치가 아닌 존재만 알게 됩니다. 물체나 생물의 후속 탐지에는 더 구체적인 정보를 제공합니다.강화(3랭크): 비일반 또는 희귀 마법 오라의 ...",
+    desc: "근처에 마법이 있는지 감지합니다. 발산 내에 마법의 존재를 느끼며, 마법의 위치가 아닌 존재만 알게 됩니다. 물체나 생물의 후속 탐지에는 더 구체적인 정보를 제공합니다.<br><strong>강화(3랭크):</strong> 비일반 또는 희귀 마법 오라의 학파를 알 수 있습니다.<br><strong>강화(5랭크):</strong> 감지 영역이 60피트로 증가합니다." },
 
   { name_ko: "비밀 간파", name_en: "Discern Secrets", rank: 1, is_cantrip: true, is_focus: false,
     traditions: [], actions: "1행동", traits: ["위치", "예언", "정신"],
@@ -53,8 +53,8 @@ const SPELL_DB = [
 
   { name_ko: "금지의 수호", name_en: "Forbidding Ward", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["조작"],
-    summary: "당신 주위에 수호 기호가 빛나며 아군을 보호합니다. 시전 시 30피트 이내의 적 1을 지정합니다. 대상 아군은 해당 적의 공격과 효과에 대해 AC와 내성 굴림에 +1 상태 보너스를 얻습니다.강화(6등급): 보너스가 ...",
-    desc: "당신 주위에 수호 기호가 빛나며 아군을 보호합니다. 시전 시 30피트 이내의 적 1을 지정합니다. 대상 아군은 해당 적의 공격과 효과에 대해 AC와 내성 굴림에 <strong>+1 상태 보너스</strong>를 얻습니다.<br><strong>강화(6등급):</strong> 보너스가 +2로 증가합니다." },
+    summary: "당신 주위에 수호 기호가 빛나며 아군을 보호합니다. 시전 시 30피트 이내의 적 1을 지정합니다. 대상 아군은 해당 적의 공격과 효과에 대해 AC와 내성 굴림에 +1 상태 보너스를 얻습니다.강화(6랭크): 보너스가 ...",
+    desc: "당신 주위에 수호 기호가 빛나며 아군을 보호합니다. 시전 시 30피트 이내의 적 1을 지정합니다. 대상 아군은 해당 적의 공격과 효과에 대해 AC와 내성 굴림에 <strong>+1 상태 보너스</strong>를 얻습니다.<br><strong>강화(6랭크):</strong> 보너스가 +2로 증가합니다." },
 
   { name_ko: "동상", name_en: "Frostbite", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["냉기", "조작"],
@@ -83,18 +83,18 @@ const SPELL_DB = [
 
   { name_ko: "길 알기", name_en: "Know the Way", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["divine", "occult", "primal"], actions: "2행동", traits: ["탐지", "조작"],
-    summary: "진북과 시전 시 선택한 다른 위치(이전에 방문한 곳)의 방향을 알게 됩니다. 나침반처럼 작동합니다.강화(3등급): 해당 위치까지의 대략적 거리도 알 수 있습니다.강화(7등급): 같은 차원에서 자동으로 해당 위치의 방...",
-    desc: "진북과 시전 시 선택한 다른 위치(이전에 방문한 곳)의 방향을 알게 됩니다. 나침반처럼 작동합니다.<br><strong>강화(3등급):</strong> 해당 위치까지의 대략적 거리도 알 수 있습니다.<br><strong>강화(7등급):</strong> 같은 차원에서 자동으로 해당 위치의 방향을 알 수 있습니다." },
+    summary: "진북과 시전 시 선택한 다른 위치(이전에 방문한 곳)의 방향을 알게 됩니다. 나침반처럼 작동합니다.강화(3랭크): 해당 위치까지의 대략적 거리도 알 수 있습니다.강화(7랭크): 같은 차원에서 자동으로 해당 위치의 방...",
+    desc: "진북과 시전 시 선택한 다른 위치(이전에 방문한 곳)의 방향을 알게 됩니다. 나침반처럼 작동합니다.<br><strong>강화(3랭크):</strong> 해당 위치까지의 대략적 거리도 알 수 있습니다.<br><strong>강화(7랭크):</strong> 같은 차원에서 자동으로 해당 위치의 방향을 알 수 있습니다." },
 
   { name_ko: "빛", name_en: "Light", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["빛", "조작"],
-    summary: "물체가 20피트 반경의 밝은 빛과 추가 20피트의 희미한 빛을 발합니다. 시전 시 빛의 색을 선택합니다. 생물이 들거나 착용하면 해당 물체를 가립니다.강화(4등급): 물체가 60피트 밝은 빛을 발합니다.",
-    desc: "물체가 <strong>20피트 반경의 밝은 빛</strong>과 추가 20피트의 희미한 빛을 발합니다. 시전 시 빛의 색을 선택합니다. 생물이 들거나 착용하면 해당 물체를 가립니다.<br><strong>강화(4등급):</strong> 물체가 60피트 밝은 빛을 발합니다." },
+    summary: "물체가 20피트 반경의 밝은 빛과 추가 20피트의 희미한 빛을 발합니다. 시전 시 빛의 색을 선택합니다. 생물이 들거나 착용하면 해당 물체를 가립니다.강화(4랭크): 물체가 60피트 밝은 빛을 발합니다.",
+    desc: "물체가 <strong>20피트 반경의 밝은 빛</strong>과 추가 20피트의 희미한 빛을 발합니다. 시전 시 빛의 색을 선택합니다. 생물이 들거나 착용하면 해당 물체를 가립니다.<br><strong>강화(4랭크):</strong> 물체가 60피트 밝은 빛을 발합니다." },
 
   { name_ko: "전언", name_en: "Message", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "1행동", traits: ["청각", "언어", "정신"],
-    summary: "사거리 내 생물에 속삭임 메시지를 전달합니다. 해당 생물만 들을 수 있으며, 속삭임으로 짧은 답변을 할 수 있습니다.강화(3등급): 사거리 500피트로 증가.",
-    desc: "사거리 내 생물에 속삭임 메시지를 전달합니다. 해당 생물만 들을 수 있으며, 속삭임으로 짧은 답변을 할 수 있습니다.<br><strong>강화(3등급):</strong> 사거리 500피트로 증가." },
+    summary: "사거리 내 생물에 속삭임 메시지를 전달합니다. 해당 생물만 들을 수 있으며, 속삭임으로 짧은 답변을 할 수 있습니다.강화(3랭크): 사거리 500피트로 증가.",
+    desc: "사거리 내 생물에 속삭임 메시지를 전달합니다. 해당 생물만 들을 수 있으며, 속삭임으로 짧은 답변을 할 수 있습니다.<br><strong>강화(3랭크):</strong> 사거리 500피트로 증가." },
 
   { name_ko: "운명 조정", name_en: "Nudge Fate", rank: 1, is_cantrip: true, is_focus: false,
     traditions: [], actions: "1행동", traits: ["위치", "예언"],
@@ -109,7 +109,7 @@ const SPELL_DB = [
   { name_ko: "방패", name_en: "Shield", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "1행동", traits: ["힘"],
     summary: "마법의 힘으로 된 방패를 만듭니다. 다음 턴 시작까지 AC에 +1 상황 보너스를 얻습니다. 방패 막기(Shield Block) 반응이 있으면, 이 마법 방패로도 사용할 수 있습니다. 경도 5이며, 이 방식으로 피해를...",
-    desc: "마법의 힘으로 된 방패를 만듭니다. 다음 턴 시작까지 AC에 <strong>+1 상황 보너스</strong>를 얻습니다. 방패 막기(Shield Block) 반응이 있으면, 이 마법 방패로도 사용할 수 있습니다. 경도 5이며, 이 방식으로 피해를 받으면 주문이 종료되고 <strong>10분간 방패를 다시 시전할 수 없습니다</strong>.<br><strong>강화(3등급):</strong> 경도 10.<br><strong>강화(5등급):</strong> 경도 15.<br><strong>강화(7등급):</strong> 경도 20.<br><strong>강화(9등급):</strong> 경도 25." },
+    desc: "마법의 힘으로 된 방패를 만듭니다. 다음 턴 시작까지 AC에 <strong>+1 상황 보너스</strong>를 얻습니다. 방패 막기(Shield Block) 반응이 있으면, 이 마법 방패로도 사용할 수 있습니다. 경도 5이며, 이 방식으로 피해를 받으면 주문이 종료되고 <strong>10분간 방패를 다시 시전할 수 없습니다</strong>.<br><strong>강화(3랭크):</strong> 경도 10.<br><strong>강화(5랭크):</strong> 경도 15.<br><strong>강화(7랭크):</strong> 경도 20.<br><strong>강화(9랭크):</strong> 경도 25." },
 
   { name_ko: "밤의 장막", name_en: "Shroud of Night", rank: 1, is_cantrip: true, is_focus: false,
     traditions: [], actions: "1행동", traits: ["어둠", "위치"],
@@ -118,8 +118,8 @@ const SPELL_DB = [
 
   { name_ko: "인장", name_en: "Sigil", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "작은 마법 표시를 남깁니다. 표시는 시각적으로 볼 수 있지만, 크기와 어두움 수준을 선택할 수 있어 실질적으로 보이지 않게 만들 수 있습니다. 마법 탐지로 감지됩니다. 주문을 해제하면 인장이 사라집니다.강화(3등급)...",
-    desc: "작은 마법 표시를 남깁니다. 표시는 시각적으로 볼 수 있지만, 크기와 어두움 수준을 선택할 수 있어 실질적으로 보이지 않게 만들 수 있습니다. 마법 탐지로 감지됩니다. 주문을 해제하면 인장이 사라집니다.<br><strong>강화(3등급):</strong> 인장에 짧은 메시지(최대 10단어)를 포함시킬 수 있습니다." },
+    summary: "작은 마법 표시를 남깁니다. 표시는 시각적으로 볼 수 있지만, 크기와 어두움 수준을 선택할 수 있어 실질적으로 보이지 않게 만들 수 있습니다. 마법 탐지로 감지됩니다. 주문을 해제하면 인장이 사라집니다.강화(3랭크)...",
+    desc: "작은 마법 표시를 남깁니다. 표시는 시각적으로 볼 수 있지만, 크기와 어두움 수준을 선택할 수 있어 실질적으로 보이지 않게 만들 수 있습니다. 마법 탐지로 감지됩니다. 주문을 해제하면 인장이 사라집니다.<br><strong>강화(3랭크):</strong> 인장에 짧은 메시지(최대 10단어)를 포함시킬 수 있습니다." },
 
   { name_ko: "안정", name_en: "Stabilize", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["divine", "primal"], actions: "2행동", traits: ["치유", "조작", "활력"],
@@ -133,18 +133,18 @@ const SPELL_DB = [
 
   { name_ko: "악기 소환", name_en: "Summon Instrument", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "3행동", traits: ["조작"],
-    summary: "당신만 연주할 수 있는 악기 하나를 손에 나타나게 합니다. 악기는 비마법적이며 가치가 없습니다. 해제하거나 놓으면 사라집니다.강화(5등급): 악기가 질적으로 뛰어나며 공연 판정에 +1 아이템 보너스.",
-    desc: "당신만 연주할 수 있는 악기 하나를 손에 나타나게 합니다. 악기는 비마법적이며 가치가 없습니다. 해제하거나 놓으면 사라집니다.<br><strong>강화(5등급):</strong> 악기가 질적으로 뛰어나며 공연 판정에 +1 아이템 보너스." },
+    summary: "당신만 연주할 수 있는 악기 하나를 손에 나타나게 합니다. 악기는 비마법적이며 가치가 없습니다. 해제하거나 놓으면 사라집니다.강화(5랭크): 악기가 질적으로 뛰어나며 공연 판정에 +1 아이템 보너스.",
+    desc: "당신만 연주할 수 있는 악기 하나를 손에 나타나게 합니다. 악기는 비마법적이며 가치가 없습니다. 해제하거나 놓으면 사라집니다.<br><strong>강화(5랭크):</strong> 악기가 질적으로 뛰어나며 공연 판정에 +1 아이템 보너스." },
 
   { name_ko: "덩굴 묶기", name_en: "Tangle Vine", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "식물"],
-    summary: "덩굴을 소환하여 적을 얽어맵니다. 대상이 반사 내성에 실패하면 5피트 끌려오고 다음 탈출할 때까지 이동 불가(immobilized). 대실패 시 넘어뜨려짐(prone)과 이동 불가.강화(2등급): 실패 시 대상이 방...",
-    desc: "덩굴을 소환하여 적을 얽어맵니다. 대상이 반사 내성에 실패하면 <strong>5피트 끌려오고</strong> 다음 탈출할 때까지 <strong>이동 불가(immobilized)</strong>. 대실패 시 <strong>넘어뜨려짐(prone)과 이동 불가</strong>.<br><strong>강화(2등급):</strong> 실패 시 대상이 방심(off-guard)도 됩니다.<br><strong>강화(4등급):</strong> 실패 시 대상이 10피트 끌려옵니다." },
+    summary: "덩굴을 소환하여 적을 얽어맵니다. 대상이 반사 내성에 실패하면 5피트 끌려오고 다음 탈출할 때까지 이동 불가(immobilized). 대실패 시 넘어뜨려짐(prone)과 이동 불가.강화(2랭크): 실패 시 대상이 방...",
+    desc: "덩굴을 소환하여 적을 얽어맵니다. 대상이 반사 내성에 실패하면 <strong>5피트 끌려오고</strong> 다음 탈출할 때까지 <strong>이동 불가(immobilized)</strong>. 대실패 시 <strong>넘어뜨려짐(prone)과 이동 불가</strong>.<br><strong>강화(2랭크):</strong> 실패 시 대상이 방심(off-guard)도 됩니다.<br><strong>강화(4랭크):</strong> 실패 시 대상이 10피트 끌려옵니다." },
 
   { name_ko: "염동 손", name_en: "Telekinetic Hand", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작"],
-    summary: "떠다니는 마법의 손으로 물체를 움직입니다. 유지 시 물체를 20피트 이동시킬 수 있습니다(어떤 방향이든). 물체를 공격에 사용할 수 없습니다.강화(3등급): 1 부피 이하의 물체를 움직일 수 있습니다.강화(5등급):...",
-    desc: "떠다니는 마법의 손으로 물체를 움직입니다. 유지 시 물체를 20피트 이동시킬 수 있습니다(어떤 방향이든). 물체를 공격에 사용할 수 없습니다.<br><strong>강화(3등급):</strong> 1 부피 이하의 물체를 움직일 수 있습니다.<br><strong>강화(5등급):</strong> 사거리 60피트, 1 부피까지.<br><strong>강화(7등급):</strong> 사거리 60피트, 2 부피까지." },
+    summary: "떠다니는 마법의 손으로 물체를 움직입니다. 유지 시 물체를 20피트 이동시킬 수 있습니다(어떤 방향이든). 물체를 공격에 사용할 수 없습니다.강화(3랭크): 1 부피 이하의 물체를 움직일 수 있습니다.강화(5랭크):...",
+    desc: "떠다니는 마법의 손으로 물체를 움직입니다. 유지 시 물체를 20피트 이동시킬 수 있습니다(어떤 방향이든). 물체를 공격에 사용할 수 없습니다.<br><strong>강화(3랭크):</strong> 1 부피 이하의 물체를 움직일 수 있습니다.<br><strong>강화(5랭크):</strong> 사거리 60피트, 1 부피까지.<br><strong>강화(7랭크):</strong> 사거리 60피트, 2 부피까지." },
 
   { name_ko: "염동 투사", name_en: "Telekinetic Projectile", rank: 1, is_cantrip: true, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작"],
@@ -167,7 +167,7 @@ const SPELL_DB = [
     desc: "자연 생물에게 간단한 메시지를 전달합니다. 복잡한 개념은 전달할 수 없지만, 기본적인 의도(위험, 안전, 먹이 등)를 전달할 수 있습니다." },
 
 
-  // ─── REGULAR SPELLS (1~10등급) ────────────────────────────
+  // ─── REGULAR SPELLS (1~10랭크) ────────────────────────────
 
   { name_ko: "공기 방울", name_en: "Air Bubble", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "primal"], actions: "반응", traits: ["조작"],
@@ -196,8 +196,8 @@ const SPELL_DB = [
 
   { name_ko: "매혹", name_en: "Charm", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult", "primal"], actions: "2행동", traits: ["감정", "무력화", "조작", "정신", "은밀"],
-    summary: "최근 위협/적대 시 의지에 +4 상황 보너스. 적대 행동 시 종료.대성공: 영향 없음+인지. 성공: 영향 없음. 실패: 태도 우호적, 적대 불가. 대실패: 태도 도움, 적대 불가.강화(4등급): 다음 일일 준비까지....",
-    desc: "최근 위협/적대 시 의지에 +4 상황 보너스. 적대 행동 시 종료.<br><strong>대성공:</strong> 영향 없음+인지. <strong>성공:</strong> 영향 없음. <strong>실패:</strong> 태도 우호적, 적대 불가. <strong>대실패:</strong> 태도 도움, 적대 불가.<br><strong>강화(4등급):</strong> 다음 일일 준비까지. <strong>강화(8등급):</strong> 준비까지+10 대상." },
+    summary: "최근 위협/적대 시 의지에 +4 상황 보너스. 적대 행동 시 종료.대성공: 영향 없음+인지. 성공: 영향 없음. 실패: 태도 우호적, 적대 불가. 대실패: 태도 도움, 적대 불가.강화(4랭크): 다음 일일 준비까지....",
+    desc: "최근 위협/적대 시 의지에 +4 상황 보너스. 적대 행동 시 종료.<br><strong>대성공:</strong> 영향 없음+인지. <strong>성공:</strong> 영향 없음. <strong>실패:</strong> 태도 우호적, 적대 불가. <strong>대실패:</strong> 태도 도움, 적대 불가.<br><strong>강화(4랭크):</strong> 다음 일일 준비까지. <strong>강화(8랭크):</strong> 준비까지+10 대상." },
 
   { name_ko: "음식 정화", name_en: "Cleanse Cuisine", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["divine", "primal"], actions: "2행동", traits: ["조작"],
@@ -206,8 +206,8 @@ const SPELL_DB = [
 
   { name_ko: "명령", name_en: "Command", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["청각", "언어", "조작", "정신"],
-    summary: "다가오기/도망치기/놓기/엎드리기/일어서기 중 하나를 명령. 의지 실패 시 다음 턴 첫 행동으로 수행.강화(5등급): 10 생물. 강화(6등급): 자유 행동 지정.",
-    desc: "다가오기/도망치기/놓기/엎드리기/일어서기 중 하나를 명령. 의지 실패 시 다음 턴 첫 행동으로 수행.<br><strong>강화(5등급):</strong> 10 생물. <strong>강화(6등급):</strong> 자유 행동 지정." },
+    summary: "다가오기/도망치기/놓기/엎드리기/일어서기 중 하나를 명령. 의지 실패 시 다음 턴 첫 행동으로 수행.강화(5랭크): 10 생물. 강화(6랭크): 자유 행동 지정.",
+    desc: "다가오기/도망치기/놓기/엎드리기/일어서기 중 하나를 명령. 의지 실패 시 다음 턴 첫 행동으로 수행.<br><strong>강화(5랭크):</strong> 10 생물. <strong>강화(6랭크):</strong> 자유 행동 지정." },
 
   { name_ko: "물 생성", name_en: "Create Water", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "primal"], actions: "2행동", traits: ["조작", "물"],
@@ -216,8 +216,8 @@ const SPELL_DB = [
 
   { name_ko: "독 감지", name_en: "Detect Poison", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["divine", "primal"], actions: "2행동", traits: ["비일반", "탐지", "조작"],
-    summary: "생물이 독성인지 또는 물체가 독인지/독이 묻었는지를 탐지합니다. 여러 종류의 독인지, 독의 유형은 알 수 없습니다. 납이나 알코올 같은 물질도 독이므로 다른 독을 가립니다.강화(2등급): 독의 수와 유형을 알 수 있...",
-    desc: "생물이 독성인지 또는 물체가 독인지/독이 묻었는지를 탐지합니다. 여러 종류의 독인지, 독의 유형은 알 수 없습니다. 납이나 알코올 같은 물질도 독이므로 다른 독을 가립니다.<br><strong>강화(2등급):</strong> 독의 수와 유형을 알 수 있습니다." },
+    summary: "생물이 독성인지 또는 물체가 독인지/독이 묻었는지를 탐지합니다. 여러 종류의 독인지, 독의 유형은 알 수 없습니다. 납이나 알코올 같은 물질도 독이므로 다른 독을 가립니다.강화(2랭크): 독의 수와 유형을 알 수 있...",
+    desc: "생물이 독성인지 또는 물체가 독인지/독이 묻었는지를 탐지합니다. 여러 종류의 독인지, 독의 유형은 알 수 없습니다. 납이나 알코올 같은 물질도 독이므로 다른 독을 가립니다.<br><strong>강화(2랭크):</strong> 독의 수와 유형을 알 수 있습니다." },
 
   { name_ko: "현란한 색채", name_en: "Dizzying Colors", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["무력화", "조작", "시각"],
@@ -231,8 +231,8 @@ const SPELL_DB = [
 
   { name_ko: "공포", name_en: "Fear", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["감정", "공포", "조작", "정신"],
-    summary: "생물을 겁먹게 합니다.대성공: 영향 없음. 성공: 공포(frightened) 1. 실패: 공포 2. 대실패: 공포 3 + 도주(fleeing) 1라운드.강화(3등급): 30피트 폭발 영역의 모든 생물 대상 가능.",
-    desc: "생물을 겁먹게 합니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> <strong>공포(frightened) 1</strong>. <strong>실패:</strong> <strong>공포 2</strong>. <strong>대실패:</strong> <strong>공포 3 + 도주(fleeing) 1라운드</strong>.<br><strong>강화(3등급):</strong> 30피트 폭발 영역의 모든 생물 대상 가능." },
+    summary: "생물을 겁먹게 합니다.대성공: 영향 없음. 성공: 공포(frightened) 1. 실패: 공포 2. 대실패: 공포 3 + 도주(fleeing) 1라운드.강화(3랭크): 30피트 폭발 영역의 모든 생물 대상 가능.",
+    desc: "생물을 겁먹게 합니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> <strong>공포(frightened) 1</strong>. <strong>실패:</strong> <strong>공포 2</strong>. <strong>대실패:</strong> <strong>공포 3 + 도주(fleeing) 1라운드</strong>.<br><strong>강화(3랭크):</strong> 30피트 폭발 영역의 모든 생물 대상 가능." },
 
   { name_ko: "순발력", name_en: "Fleet Step", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작"],
@@ -291,13 +291,13 @@ const SPELL_DB = [
 
   { name_ko: "환영 변장", name_en: "Illusory Disguise", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["환영", "조작", "시각"],
-    summary: "자신을 다른 생물처럼 보이게 합니다. 같은 체형의 생물로만 가능. 키/체중은 약간 변경 가능. 생물이 상호작용하면 지각 판정(주문 DC)으로 불신 가능.강화(2등급): 다른 체형 가능(극단적이지 않은). 강화(3등급...",
-    desc: "자신을 다른 생물처럼 보이게 합니다. 같은 체형의 생물로만 가능. 키/체중은 약간 변경 가능. 생물이 상호작용하면 지각 판정(주문 DC)으로 불신 가능.<br><strong>강화(2등급):</strong> 다른 체형 가능(극단적이지 않은). <strong>강화(3등급):</strong> 최대 10 동의 생물." },
+    summary: "자신을 다른 생물처럼 보이게 합니다. 같은 체형의 생물로만 가능. 키/체중은 약간 변경 가능. 생물이 상호작용하면 지각 판정(주문 DC)으로 불신 가능.강화(2랭크): 다른 체형 가능(극단적이지 않은). 강화(3랭크...",
+    desc: "자신을 다른 생물처럼 보이게 합니다. 같은 체형의 생물로만 가능. 키/체중은 약간 변경 가능. 생물이 상호작용하면 지각 판정(주문 DC)으로 불신 가능.<br><strong>강화(2랭크):</strong> 다른 체형 가능(극단적이지 않은). <strong>강화(3랭크):</strong> 최대 10 동의 생물." },
 
   { name_ko: "환영 물체", name_en: "Illusory Object", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["환영", "조작", "시각"],
-    summary: "물체의 설득력 있는 환영을 만듭니다. 생물이나 힘은 만들 수 없습니다. 모든 비시각 감각에는 환영이 아님이 드러납니다. 불신 시 흐릿해집니다.강화(2등급): 영역 40피트 정육면체. 강화(5등급): 영역 200피트까...",
-    desc: "물체의 설득력 있는 환영을 만듭니다. 생물이나 힘은 만들 수 없습니다. 모든 비시각 감각에는 환영이 아님이 드러납니다. 불신 시 흐릿해집니다.<br><strong>강화(2등급):</strong> 영역 40피트 정육면체. <strong>강화(5등급):</strong> 영역 200피트까지+소리 포함 가능." },
+    summary: "물체의 설득력 있는 환영을 만듭니다. 생물이나 힘은 만들 수 없습니다. 모든 비시각 감각에는 환영이 아님이 드러납니다. 불신 시 흐릿해집니다.강화(2랭크): 영역 40피트 정육면체. 강화(5랭크): 영역 200피트까...",
+    desc: "물체의 설득력 있는 환영을 만듭니다. 생물이나 힘은 만들 수 없습니다. 모든 비시각 감각에는 환영이 아님이 드러납니다. 불신 시 흐릿해집니다.<br><strong>강화(2랭크):</strong> 영역 40피트 정육면체. <strong>강화(5랭크):</strong> 영역 200피트까지+소리 포함 가능." },
 
   { name_ko: "활력 주입", name_en: "Infuse Vitality", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "2행동", traits: ["조작", "활력"],
@@ -307,22 +307,22 @@ const SPELL_DB = [
   { name_ko: "아이템 외관", name_en: "Item Facade", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["환영", "조작", "시각"],
     summary: "대상 아이템을 다른 아이템처럼 보이게 만듭니다. 아이템은 같은 부피(Bulk)를 가진 비마법 아이템의 외형을 취할 수 있지만, 실제보다 품질이 낮거나 더 낡은 것처럼 보입니다(또는 원한다면 부서지지 않을 것처럼 보이...",
-    desc: "대상 아이템을 다른 아이템처럼 보이게 만듭니다. 아이템은 같은 부피(Bulk)를 가진 비마법 아이템의 외형을 취할 수 있지만, 실제보다 품질이 낮거나 더 낡은 것처럼 보입니다(또는 원한다면 부서지지 않을 것처럼 보이게 할 수도 있습니다). 아이템과 상호작용하는 성공적인 조작(Interact) 행동 또는 탐색(Seek) 행동은 환영을 불신하기 위한 의지 내성 굴림을 허용합니다.<br><strong>강화(3등급):</strong> 아이템은 같은 유형의 다른 아이템처럼 보일 수 있습니다(예: 다른 종류의 음식, 또는 다른 종류의 목재). 또한 최대 1 부피만큼 더 무겁거나 가벼운 비마법 아이템처럼 보일 수도 있습니다." },
+    desc: "대상 아이템을 다른 아이템처럼 보이게 만듭니다. 아이템은 같은 부피(Bulk)를 가진 비마법 아이템의 외형을 취할 수 있지만, 실제보다 품질이 낮거나 더 낡은 것처럼 보입니다(또는 원한다면 부서지지 않을 것처럼 보이게 할 수도 있습니다). 아이템과 상호작용하는 성공적인 조작(Interact) 행동 또는 탐색(Seek) 행동은 환영을 불신하기 위한 의지 내성 굴림을 허용합니다.<br><strong>강화(3랭크):</strong> 아이템은 같은 유형의 다른 아이템처럼 보일 수 있습니다(예: 다른 종류의 음식, 또는 다른 종류의 목재). 또한 최대 1 부피만큼 더 무겁거나 가벼운 비마법 아이템처럼 보일 수도 있습니다." },
 
   { name_ko: "도약", name_en: "Jump", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "1행동", traits: ["조작"],
-    summary: "인상적인 도약을 합니다. 즉시 높이뛰기 또는 멀리뛰기를 합니다. 운동 판정 대신 주문 명중 굴림을 사용하며, 질주 없이 멀리뛰기가 가능합니다.강화(3등급): 최대 도약 거리 30피트.",
-    desc: "인상적인 도약을 합니다. 즉시 높이뛰기 또는 멀리뛰기를 합니다. 운동 판정 대신 <strong>주문 명중 굴림</strong>을 사용하며, 질주 없이 멀리뛰기가 가능합니다.<br><strong>강화(3등급):</strong> 최대 도약 거리 30피트." },
+    summary: "인상적인 도약을 합니다. 즉시 높이뛰기 또는 멀리뛰기를 합니다. 운동 판정 대신 주문 명중 굴림을 사용하며, 질주 없이 멀리뛰기가 가능합니다.강화(3랭크): 최대 도약 거리 30피트.",
+    desc: "인상적인 도약을 합니다. 즉시 높이뛰기 또는 멀리뛰기를 합니다. 운동 판정 대신 <strong>주문 명중 굴림</strong>을 사용하며, 질주 없이 멀리뛰기가 가능합니다.<br><strong>강화(3랭크):</strong> 최대 도약 거리 30피트." },
 
   { name_ko: "잠금", name_en: "Lock", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["조작"],
-    summary: "자물쇠를 훨씬 열기 어렵게 만듭니다. 도둑질 DC에 +4 상태 보너스를 추가합니다. 열쇠(knock) 주문은 잠금의 등급에 따라 상쇄를 시도합니다.",
-    desc: "자물쇠를 훨씬 열기 어렵게 만듭니다. 도둑질 DC에 <strong>+4 상태 보너스</strong>를 추가합니다. 열쇠(knock) 주문은 잠금의 등급에 따라 상쇄를 시도합니다." },
+    summary: "자물쇠를 훨씬 열기 어렵게 만듭니다. 도둑질 DC에 +4 상태 보너스를 추가합니다. 열쇠(knock) 주문은 잠금의 랭크에 따라 상쇄를 시도합니다.",
+    desc: "자물쇠를 훨씬 열기 어렵게 만듭니다. 도둑질 DC에 <strong>+4 상태 보너스</strong>를 추가합니다. 열쇠(knock) 주문은 잠금의 랭크에 따라 상쇄를 시도합니다." },
 
   { name_ko: "수선", name_en: "Mending", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "비마법 아이템 하나를 수리합니다. 아이템의 HP를 주문시전 판정 결과만큼 회복시킵니다. 파손(broken) 상태를 해제할 수 있습니다. 완전히 파괴된 아이템은 수리할 수 없습니다.강화(2등급): 마법 아이템도 수리 ...",
-    desc: "비마법 아이템 하나를 수리합니다. 아이템의 HP를 <strong>주문시전 판정 결과만큼</strong> 회복시킵니다. 파손(broken) 상태를 해제할 수 있습니다. 완전히 파괴된 아이템은 수리할 수 없습니다.<br><strong>강화(2등급):</strong> 마법 아이템도 수리 가능." },
+    summary: "비마법 아이템 하나를 수리합니다. 아이템의 HP를 주문시전 판정 결과만큼 회복시킵니다. 파손(broken) 상태를 해제할 수 있습니다. 완전히 파괴된 아이템은 수리할 수 없습니다.강화(2랭크): 마법 아이템도 수리 ...",
+    desc: "비마법 아이템 하나를 수리합니다. 아이템의 HP를 <strong>주문시전 판정 결과만큼</strong> 회복시킵니다. 파손(broken) 상태를 해제할 수 있습니다. 완전히 파괴된 아이템은 수리할 수 없습니다.<br><strong>강화(2랭크):</strong> 마법 아이템도 수리 가능." },
 
   { name_ko: "정신 연결", name_en: "Mindlink", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작", "정신"],
@@ -331,13 +331,13 @@ const SPELL_DB = [
 
   { name_ko: "신비 갑옷", name_en: "Mystic Armor", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "마법 갑옷으로 자신을 보호합니다. AC에 +1 아이템 보너스를 얻습니다. 갑옷을 착용하고 있으면 이 주문은 효과가 없습니다.강화(4등급): AC에 +2 아이템 보너스. 강화(6등급): +3. 강화(8등급): +4.",
-    desc: "마법 갑옷으로 자신을 보호합니다. AC에 <strong>+1 아이템 보너스</strong>를 얻습니다. 갑옷을 착용하고 있으면 이 주문은 효과가 없습니다.<br><strong>강화(4등급):</strong> AC에 +2 아이템 보너스. <strong>강화(6등급):</strong> +3. <strong>강화(8등급):</strong> +4." },
+    summary: "마법 갑옷으로 자신을 보호합니다. AC에 +1 아이템 보너스를 얻습니다. 갑옷을 착용하고 있으면 이 주문은 효과가 없습니다.강화(4랭크): AC에 +2 아이템 보너스. 강화(6랭크): +3. 강화(8랭크): +4.",
+    desc: "마법 갑옷으로 자신을 보호합니다. AC에 <strong>+1 아이템 보너스</strong>를 얻습니다. 갑옷을 착용하고 있으면 이 주문은 효과가 없습니다.<br><strong>강화(4랭크):</strong> AC에 +2 아이템 보너스. <strong>강화(6랭크):</strong> +3. <strong>강화(8랭크):</strong> +4." },
 
   { name_ko: "해충 형태", name_en: "Pest Form", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "위협적이지 않은 작은 동물로 변신합니다. 작은(Tiny) 크기의 고양이, 곤충, 쥐, 새 등. 전투 불가. 은신에 유용. 달리기 20피트 또는 비행 15피트.강화(4등급): 1시간. 강화(6등급): 24시간.",
-    desc: "위협적이지 않은 작은 동물로 변신합니다. 작은(Tiny) 크기의 고양이, 곤충, 쥐, 새 등. 전투 불가. 은신에 유용. 달리기 20피트 또는 비행 15피트.<br><strong>강화(4등급):</strong> 1시간. <strong>강화(6등급):</strong> 24시간." },
+    summary: "위협적이지 않은 작은 동물로 변신합니다. 작은(Tiny) 크기의 고양이, 곤충, 쥐, 새 등. 전투 불가. 은신에 유용. 달리기 20피트 또는 비행 15피트.강화(4랭크): 1시간. 강화(6랭크): 24시간.",
+    desc: "위협적이지 않은 작은 동물로 변신합니다. 작은(Tiny) 크기의 고양이, 곤충, 쥐, 새 등. 전투 불가. 은신에 유용. 달리기 20피트 또는 비행 15피트.<br><strong>강화(4랭크):</strong> 1시간. <strong>강화(6랭크):</strong> 24시간." },
 
   { name_ko: "반려 은닉", name_en: "Pet Cache", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
@@ -366,13 +366,13 @@ const SPELL_DB = [
 
   { name_ko: "문자 몸", name_en: "Runic Body", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "1행동", traits: ["조작"],
-    summary: "생물의 비무장 공격에 일시적으로 마법 룬을 적용합니다. 비무장 공격이 +1 무기 강화 룬이 새겨진 것처럼 +1 아이템 보너스를 얻습니다.강화(4등급): +1 타격 룬 + 속성 룬 1개 효과 추가. 강화(+2 이후):...",
-    desc: "생물의 비무장 공격에 일시적으로 마법 룬을 적용합니다. 비무장 공격이 +1 무기 강화 룬이 새겨진 것처럼 <strong>+1 아이템 보너스</strong>를 얻습니다.<br><strong>강화(4등급):</strong> +1 타격 룬 + 속성 룬 1개 효과 추가. <strong>강화(+2 이후):</strong> 속성 룬 추가." },
+    summary: "생물의 비무장 공격에 일시적으로 마법 룬을 적용합니다. 비무장 공격이 +1 무기 강화 룬이 새겨진 것처럼 +1 아이템 보너스를 얻습니다.강화(4랭크): +1 타격 룬 + 속성 룬 1개 효과 추가. 강화(+2 이후):...",
+    desc: "생물의 비무장 공격에 일시적으로 마법 룬을 적용합니다. 비무장 공격이 +1 무기 강화 룬이 새겨진 것처럼 <strong>+1 아이템 보너스</strong>를 얻습니다.<br><strong>강화(4랭크):</strong> +1 타격 룬 + 속성 룬 1개 효과 추가. <strong>강화(+2 이후):</strong> 속성 룬 추가." },
 
   { name_ko: "문자 무기", name_en: "Runic Weapon", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "1행동", traits: ["조작"],
-    summary: "무기에 일시적으로 마법 룬을 적용합니다. 무기가 +1 무기 강화 룬이 새겨진 것처럼 +1 아이템 보너스를 얻습니다. 이미 룬이 있으면 효과 없음.강화(4등급): +1 타격 룬 + 속성 룬 1개 추가.",
-    desc: "무기에 일시적으로 마법 룬을 적용합니다. 무기가 +1 무기 강화 룬이 새겨진 것처럼 <strong>+1 아이템 보너스</strong>를 얻습니다. 이미 룬이 있으면 효과 없음.<br><strong>강화(4등급):</strong> +1 타격 룬 + 속성 룬 1개 추가." },
+    summary: "무기에 일시적으로 마법 룬을 적용합니다. 무기가 +1 무기 강화 룬이 새겨진 것처럼 +1 아이템 보너스를 얻습니다. 이미 룬이 있으면 효과 없음.강화(4랭크): +1 타격 룬 + 속성 룬 1개 추가.",
+    desc: "무기에 일시적으로 마법 룬을 적용합니다. 무기가 +1 무기 강화 룬이 새겨진 것처럼 <strong>+1 아이템 보너스</strong>를 얻습니다. 이미 룬이 있으면 효과 없음.<br><strong>강화(4랭크):</strong> +1 타격 룬 + 속성 룬 1개 추가." },
 
   { name_ko: "성소", name_en: "Sanctuary", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["조작"],
@@ -387,7 +387,7 @@ const SPELL_DB = [
   { name_ko: "수면", name_en: "Sleep", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["무력화", "조작", "정신"],
     summary: "작은 영역의 생물을 잠재웁니다. 각 생물이 의지 내성 시도.대성공: 영향 없음. 성공: 1라운드 졸림(drowsy, -1 판정). 실패: 무의식(unconscious)으로 잠듬. 흔들거나 피해를 주면 깨어남. 대실패...",
-    desc: "작은 영역의 생물을 잠재웁니다. 각 생물이 의지 내성 시도.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 졸림(drowsy, -1 판정). <strong>실패:</strong> <strong>무의식(unconscious)</strong>으로 잠듬. 흔들거나 피해를 주면 깨어남. <strong>대실패:</strong> 무의식, 1라운드 동안 흔들거나 피해로 깨어나지 않음.<br><strong>강화(4등급):</strong> 영역 10피트 폭발." },
+    desc: "작은 영역의 생물을 잠재웁니다. 각 생물이 의지 내성 시도.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 졸림(drowsy, -1 판정). <strong>실패:</strong> <strong>무의식(unconscious)</strong>으로 잠듬. 흔들거나 피해를 주면 깨어남. <strong>대실패:</strong> 무의식, 1라운드 동안 흔들거나 피해로 깨어나지 않음.<br><strong>강화(4랭크):</strong> 영역 10피트 폭발." },
 
   { name_ko: "위로", name_en: "Soothe", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["감정", "치유", "조작", "정신"],
@@ -406,28 +406,28 @@ const SPELL_DB = [
 
   { name_ko: "동물 소환", name_en: "Summon Animal", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "3행동", traits: ["조작"],
-    summary: "당신을 위해 싸울 동물을 소환합니다. 주문 등급 -1 이하 레벨의 동물을 소환합니다. 소환된 동물은 하수인 특성을 얻습니다.강화(2등급): 주문 등급 이하 레벨. 이후 등급마다 더 강한 동물 소환 가능.",
-    desc: "당신을 위해 싸울 동물을 소환합니다. 주문 등급 -1 이하 레벨의 동물을 소환합니다. 소환된 동물은 하수인 특성을 얻습니다.<br><strong>강화(2등급):</strong> 주문 등급 이하 레벨. <strong>이후 등급마다 더 강한 동물 소환 가능.</strong>" },
+    summary: "당신을 위해 싸울 동물을 소환합니다. 주문 랭크 -1 이하 레벨의 동물을 소환합니다. 소환된 동물은 하수인 특성을 얻습니다.강화(2랭크): 주문 랭크 이하 레벨. 이후 랭크마다 더 강한 동물 소환 가능.",
+    desc: "당신을 위해 싸울 동물을 소환합니다. 주문 랭크 -1 이하 레벨의 동물을 소환합니다. 소환된 동물은 하수인 특성을 얻습니다.<br><strong>강화(2랭크):</strong> 주문 랭크 이하 레벨. <strong>이후 랭크마다 더 강한 동물 소환 가능.</strong>" },
 
   { name_ko: "구조물 소환", name_en: "Summon Construct", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane"], actions: "3행동", traits: ["조작"],
-    summary: "구조체를 소환합니다. 주문 등급 -1 이하 레벨.강화(2등급 이후): 더 강한 구조체.",
-    desc: "구조체를 소환합니다. 주문 등급 -1 이하 레벨.<br><strong>강화(2등급 이후):</strong> 더 강한 구조체." },
+    summary: "구조체를 소환합니다. 주문 랭크 -1 이하 레벨.강화(2랭크 이후): 더 강한 구조체.",
+    desc: "구조체를 소환합니다. 주문 랭크 -1 이하 레벨.<br><strong>강화(2랭크 이후):</strong> 더 강한 구조체." },
 
   { name_ko: "페이 소환", name_en: "Summon Fey", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["occult", "primal"], actions: "3행동", traits: ["조작"],
-    summary: "페이를 소환합니다. 주문 등급 -1 이하 레벨.",
-    desc: "페이를 소환합니다. 주문 등급 -1 이하 레벨." },
+    summary: "페이를 소환합니다. 주문 랭크 -1 이하 레벨.",
+    desc: "페이를 소환합니다. 주문 랭크 -1 이하 레벨." },
 
   { name_ko: "자연 식물 소환", name_en: "Summon Plant or Fungus", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "3행동", traits: ["조작"],
-    summary: "식물이나 균류 생물을 소환합니다. 주문 등급 -1 이하 레벨.",
-    desc: "식물이나 균류 생물을 소환합니다. 주문 등급 -1 이하 레벨." },
+    summary: "식물이나 균류 생물을 소환합니다. 주문 랭크 -1 이하 레벨.",
+    desc: "식물이나 균류 생물을 소환합니다. 주문 랭크 -1 이하 레벨." },
 
   { name_ko: "언데드 소환", name_en: "Summon Undead", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "3행동", traits: ["조작"],
-    summary: "언데드를 소환합니다. 주문 등급 -1 이하 레벨.",
-    desc: "언데드를 소환합니다. 주문 등급 -1 이하 레벨." },
+    summary: "언데드를 소환합니다. 주문 랭크 -1 이하 레벨.",
+    desc: "언데드를 소환합니다. 주문 랭크 -1 이하 레벨." },
 
   { name_ko: "확실한 타격", name_en: "Sure Strike", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "1행동", traits: [],
@@ -436,8 +436,8 @@ const SPELL_DB = [
 
   { name_ko: "순풍", name_en: "Tailwind", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["공기", "조작"],
-    summary: "바람이 대상을 밀어줍니다. 이동 속도에 +10피트 상태 보너스.강화(2등급): +15피트. 강화(3등급): +20피트.",
-    desc: "바람이 대상을 밀어줍니다. 이동 속도에 <strong>+10피트 상태 보너스</strong>.<br><strong>강화(2등급):</strong> +15피트. <strong>강화(3등급):</strong> +20피트." },
+    summary: "바람이 대상을 밀어줍니다. 이동 속도에 +10피트 상태 보너스.강화(2랭크): +15피트. 강화(3랭크): +20피트.",
+    desc: "바람이 대상을 밀어줍니다. 이동 속도에 <strong>+10피트 상태 보너스</strong>.<br><strong>강화(2랭크):</strong> +15피트. <strong>강화(3랭크):</strong> +20피트." },
 
   { name_ko: "뇌격", name_en: "Thunderstrike", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["전기", "조작", "음파"],
@@ -446,8 +446,8 @@ const SPELL_DB = [
 
   { name_ko: "복화술", name_en: "Ventriloquism", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["청각", "환영", "조작"],
-    summary: "목소리를 던집니다. 60피트 이내의 다른 위치에서 목소리가 나오는 것처럼 만듭니다. 지각 판정으로 불신 가능.강화(3등급): 사거리 500피트.",
-    desc: "목소리를 던집니다. 60피트 이내의 다른 위치에서 목소리가 나오는 것처럼 만듭니다. 지각 판정으로 불신 가능.<br><strong>강화(3등급):</strong> 사거리 500피트." },
+    summary: "목소리를 던집니다. 60피트 이내의 다른 위치에서 목소리가 나오는 것처럼 만듭니다. 지각 판정으로 불신 가능.강화(3랭크): 사거리 500피트.",
+    desc: "목소리를 던집니다. 60피트 이내의 다른 위치에서 목소리가 나오는 것처럼 만듭니다. 지각 판정으로 불신 가능.<br><strong>강화(3랭크):</strong> 사거리 500피트." },
 
   { name_ko: "산성 집게", name_en: "Acid Grip", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["산성", "조작"],
@@ -456,13 +456,13 @@ const SPELL_DB = [
 
   { name_ko: "동물 특성", name_en: "Animal Feature", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작", "변형"],
-    summary: "동물의 한 가지 특성을 자신에게 부여합니다. 다음 중 하나를 선택: 발톱(1d6 참격 비무장 공격), 수영 속도 20피트, 부정확 후각 30피트, 등반 속도 20피트.강화(4등급): 2가지 특성 선택 가능.",
-    desc: "동물의 한 가지 특성을 자신에게 부여합니다. 다음 중 하나를 선택: 발톱(1d6 참격 비무장 공격), 수영 속도 20피트, 부정확 후각 30피트, 등반 속도 20피트.<br><strong>강화(4등급):</strong> 2가지 특성 선택 가능." },
+    summary: "동물의 한 가지 특성을 자신에게 부여합니다. 다음 중 하나를 선택: 발톱(1d6 참격 비무장 공격), 수영 속도 20피트, 부정확 후각 30피트, 등반 속도 20피트.강화(4랭크): 2가지 특성 선택 가능.",
+    desc: "동물의 한 가지 특성을 자신에게 부여합니다. 다음 중 하나를 선택: 발톱(1d6 참격 비무장 공격), 수영 속도 20피트, 부정확 후각 30피트, 등반 속도 20피트.<br><strong>강화(4랭크):</strong> 2가지 특성 선택 가능." },
 
   { name_ko: "동물 형태", name_en: "Animal Form", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "동물 전투 형태로 변신. 중형(일부 대형), AC=16+레벨, 임시 HP 5. 곰, 황소, 고양이, 사슴, 개, 상어, 뱀 등 선택. 각 형태마다 고유 공격과 이동.강화(3등급): 공격 +14, 피해 +5. 강화(5...",
-    desc: "동물 전투 형태로 변신. 중형(일부 대형), AC=16+레벨, 임시 HP 5. 곰, 황소, 고양이, 사슴, 개, 상어, 뱀 등 선택. 각 형태마다 고유 공격과 이동.<br><strong>강화(3등급):</strong> 공격 +14, 피해 +5. <strong>강화(5등급):</strong> 거대, 도달 15피트." },
+    summary: "동물 전투 형태로 변신. 중형(일부 대형), AC=16+레벨, 임시 HP 5. 곰, 황소, 고양이, 사슴, 개, 상어, 뱀 등 선택. 각 형태마다 고유 공격과 이동.강화(3랭크): 공격 +14, 피해 +5. 강화(5...",
+    desc: "동물 전투 형태로 변신. 중형(일부 대형), AC=16+레벨, 임시 HP 5. 곰, 황소, 고양이, 사슴, 개, 상어, 뱀 등 선택. 각 형태마다 고유 공격과 이동.<br><strong>강화(3랭크):</strong> 공격 +14, 피해 +5. <strong>강화(5랭크):</strong> 거대, 도달 15피트." },
 
   { name_ko: "동물의 메신저", name_en: "Animal Messenger", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작"],
@@ -496,23 +496,23 @@ const SPELL_DB = [
 
   { name_ko: "고통 정화", name_en: "Cleanse Affliction", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult", "primal"], actions: "2행동", traits: ["치유", "조작"],
-    summary: "대상의 고통(저주/질병/독) 1개가 1단계 이상이면 단계 1 감소(같은 사례에 1회만).강화(3등급): 질병/독이면 상쇄 시도. 강화(4등급): 저주/질병/독 모두 상쇄 시도.",
-    desc: "대상의 고통(저주/질병/독) 1개가 1단계 이상이면 <strong>단계 1 감소</strong>(같은 사례에 1회만).<br><strong>강화(3등급):</strong> 질병/독이면 상쇄 시도. <strong>강화(4등급):</strong> 저주/질병/독 모두 상쇄 시도." },
+    summary: "대상의 고통(저주/질병/독) 1개가 1단계 이상이면 단계 1 감소(같은 사례에 1회만).강화(3랭크): 질병/독이면 상쇄 시도. 강화(4랭크): 저주/질병/독 모두 상쇄 시도.",
+    desc: "대상의 고통(저주/질병/독) 1개가 1단계 이상이면 <strong>단계 1 감소</strong>(같은 사례에 1회만).<br><strong>강화(3랭크):</strong> 질병/독이면 상쇄 시도. <strong>강화(4랭크):</strong> 저주/질병/독 모두 상쇄 시도." },
 
   { name_ko: "정신 정화", name_en: "Clear Mind", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult", "primal"], actions: "2행동", traits: ["치유", "조작", "정신"],
-    summary: "정신 오염을 몰아냅니다. 도주(fleeing), 공포(frightened), 멍청함(stupefied) 중 하나를 부여하는 효과에 상쇄를 시도합니다. 상쇄 실패해도 등급이 2 낮았으면 성공했을 경우, 다음 턴 시작까...",
-    desc: "정신 오염을 몰아냅니다. 도주(fleeing), 공포(frightened), 멍청함(stupefied) 중 하나를 부여하는 효과에 상쇄를 시도합니다. 상쇄 실패해도 등급이 2 낮았으면 성공했을 경우, 다음 턴 시작까지 효과를 억압합니다.<br><strong>강화(4등급):</strong> 혼란(confused), 지배(controlled) 추가. <strong>강화(6등급):</strong> 운명(doomed) 추가. <strong>강화(8등급):</strong> 멍해짐(stunned) 추가." },
+    summary: "정신 오염을 몰아냅니다. 도주(fleeing), 공포(frightened), 멍청함(stupefied) 중 하나를 부여하는 효과에 상쇄를 시도합니다. 상쇄 실패해도 랭크이 2 낮았으면 성공했을 경우, 다음 턴 시작까...",
+    desc: "정신 오염을 몰아냅니다. 도주(fleeing), 공포(frightened), 멍청함(stupefied) 중 하나를 부여하는 효과에 상쇄를 시도합니다. 상쇄 실패해도 랭크이 2 낮았으면 성공했을 경우, 다음 턴 시작까지 효과를 억압합니다.<br><strong>강화(4랭크):</strong> 혼란(confused), 지배(controlled) 추가. <strong>강화(6랭크):</strong> 운명(doomed) 추가. <strong>강화(8랭크):</strong> 멍해짐(stunned) 추가." },
 
   { name_ko: "어둠", name_en: "Darkness", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "3행동", traits: ["어둠", "조작"],
-    summary: "빛이 통과하거나 발산하지 못하는 어둠의 장막을 만듭니다. 영역 내 비마법 광원(횃불, 랜턴)은 빛을 발하지 않으며, 이 주문 등급 이하의 마법 빛도 억압됩니다. 빛이 통과하지 못하므로 영역 내 생물은 밖을 볼 수 없...",
-    desc: "빛이 통과하거나 발산하지 못하는 어둠의 장막을 만듭니다. 영역 내 비마법 광원(횃불, 랜턴)은 빛을 발하지 않으며, 이 주문 등급 이하의 마법 빛도 억압됩니다. 빛이 통과하지 못하므로 영역 내 생물은 밖을 볼 수 없고, 밖에서는 순수한 어둠의 구체로 보입니다.<br><strong>강화(4등급):</strong> 암시야(상위 암시야 제외)를 가진 생물도 어둠을 거의 꿰뚫어 보지 못합니다. 어둠을 통해 본 대상은 은폐로 취급." },
+    summary: "빛이 통과하거나 발산하지 못하는 어둠의 장막을 만듭니다. 영역 내 비마법 광원(횃불, 랜턴)은 빛을 발하지 않으며, 이 주문 랭크 이하의 마법 빛도 억압됩니다. 빛이 통과하지 못하므로 영역 내 생물은 밖을 볼 수 없...",
+    desc: "빛이 통과하거나 발산하지 못하는 어둠의 장막을 만듭니다. 영역 내 비마법 광원(횃불, 랜턴)은 빛을 발하지 않으며, 이 주문 랭크 이하의 마법 빛도 억압됩니다. 빛이 통과하지 못하므로 영역 내 생물은 밖을 볼 수 없고, 밖에서는 순수한 어둠의 구체로 보입니다.<br><strong>강화(4랭크):</strong> 암시야(상위 암시야 제외)를 가진 생물도 어둠을 거의 꿰뚫어 보지 못합니다. 어둠을 통해 본 대상은 은폐로 취급." },
 
   { name_ko: "암시야", name_en: "Darkvision", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "어둠에서 초자연적 시야를 부여합니다. 암시야(darkvision)를 얻습니다.강화(3등급): 사거리 접촉, 동의 생물 1 대상.강화(5등급): 사거리 접촉, 동의 생물 1, 지속 시간 다음 일일 준비까지.",
-    desc: "어둠에서 초자연적 시야를 부여합니다. <strong>암시야(darkvision)</strong>를 얻습니다.<br><strong>강화(3등급):</strong> 사거리 접촉, 동의 생물 1 대상.<br><strong>강화(5등급):</strong> 사거리 접촉, 동의 생물 1, 지속 시간 다음 일일 준비까지." },
+    summary: "어둠에서 초자연적 시야를 부여합니다. 암시야(darkvision)를 얻습니다.강화(3랭크): 사거리 접촉, 동의 생물 1 대상.강화(5랭크): 사거리 접촉, 동의 생물 1, 지속 시간 다음 일일 준비까지.",
+    desc: "어둠에서 초자연적 시야를 부여합니다. <strong>암시야(darkvision)</strong>를 얻습니다.<br><strong>강화(3랭크):</strong> 사거리 접촉, 동의 생물 1 대상.<br><strong>강화(5랭크):</strong> 사거리 접촉, 동의 생물 1, 지속 시간 다음 일일 준비까지." },
 
   { name_ko: "귀머거리", name_en: "Deafness", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
@@ -531,8 +531,8 @@ const SPELL_DB = [
 
   { name_ko: "확대", name_en: "Enlarge", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "대상이 한 크기 등급 증가합니다. 장비도 함께 커집니다. 커진 무기의 피해 주사위가 1 단계 증가합니다. 확장할 공간이 없으면 주문 실패.강화(4등급): 대상이 두 크기 등급 증가(최대 거대). 피해 주사위가 2 단...",
-    desc: "대상이 <strong>한 크기 등급 증가</strong>합니다. 장비도 함께 커집니다. 커진 무기의 피해 주사위가 1 단계 증가합니다. 확장할 공간이 없으면 주문 실패.<br><strong>강화(4등급):</strong> 대상이 두 크기 등급 증가(최대 거대). 피해 주사위가 2 단계 증가." },
+    summary: "대상이 한 크기 랭크 증가합니다. 장비도 함께 커집니다. 커진 무기의 피해 주사위가 1 단계 증가합니다. 확장할 공간이 없으면 주문 실패.강화(4랭크): 대상이 두 크기 랭크 증가(최대 거대). 피해 주사위가 2 단...",
+    desc: "대상이 <strong>한 크기 랭크 증가</strong>합니다. 장비도 함께 커집니다. 커진 무기의 피해 주사위가 1 단계 증가합니다. 확장할 공간이 없으면 주문 실패.<br><strong>강화(4랭크):</strong> 대상이 두 크기 랭크 증가(최대 거대). 피해 주사위가 2 단계 증가." },
 
   { name_ko: "방해 식물", name_en: "Entangling Flora", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "식물"],
@@ -541,8 +541,8 @@ const SPELL_DB = [
 
   { name_ko: "환경 내구", name_en: "Environmental Endurance", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "극심한 추위나 더위로부터 생물을 보호합니다. 대상은 심한(severe) 이하의 환경 온도 효과를 무시합니다.강화(3등급): 극심한(extreme) 온도까지 보호. 강화(5등급): 극한(incredible) 온도까지 ...",
-    desc: "극심한 추위나 더위로부터 생물을 보호합니다. 대상은 <strong>심한(severe)</strong> 이하의 환경 온도 효과를 무시합니다.<br><strong>강화(3등급):</strong> <strong>극심한(extreme)</strong> 온도까지 보호. <strong>강화(5등급):</strong> <strong>극한(incredible)</strong> 온도까지 보호." },
+    summary: "극심한 추위나 더위로부터 생물을 보호합니다. 대상은 심한(severe) 이하의 환경 온도 효과를 무시합니다.강화(3랭크): 극심한(extreme) 온도까지 보호. 강화(5랭크): 극한(incredible) 온도까지 ...",
+    desc: "극심한 추위나 더위로부터 생물을 보호합니다. 대상은 <strong>심한(severe)</strong> 이하의 환경 온도 효과를 무시합니다.<br><strong>강화(3랭크):</strong> <strong>극심한(extreme)</strong> 온도까지 보호. <strong>강화(5랭크):</strong> <strong>극한(incredible)</strong> 온도까지 보호." },
 
   { name_ko: "영원한 빛", name_en: "Everlight", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "3행동", traits: ["빛", "조작"],
@@ -561,8 +561,8 @@ const SPELL_DB = [
 
   { name_ko: "도마뱀붙이 손잡기", name_en: "Gecko Grip", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "생물의 손과 발 전체에 미세한 점착성 털이 돋아나, 거의 모든 표면에서 발판을 확보하게 해줍니다. 대상은 자신의 이동 속도와 동일한 등반 속도를 얻습니다.강화(5등급): 지속 시간이 1시간으로 늘어납니다.",
-    desc: "생물의 손과 발 전체에 미세한 점착성 털이 돋아나, 거의 모든 표면에서 발판을 확보하게 해줍니다. 대상은 자신의 이동 속도와 동일한 등반 속도를 얻습니다.<br><strong>강화(5등급):</strong> 지속 시간이 1시간으로 늘어납니다." },
+    summary: "생물의 손과 발 전체에 미세한 점착성 털이 돋아나, 거의 모든 표면에서 발판을 확보하게 해줍니다. 대상은 자신의 이동 속도와 동일한 등반 속도를 얻습니다.강화(5랭크): 지속 시간이 1시간으로 늘어납니다.",
+    desc: "생물의 손과 발 전체에 미세한 점착성 털이 돋아나, 거의 모든 표면에서 발판을 확보하게 해줍니다. 대상은 자신의 이동 속도와 동일한 등반 속도를 얻습니다.<br><strong>강화(5랭크):</strong> 지속 시간이 1시간으로 늘어납니다." },
 
   { name_ko: "유령 운반자", name_en: "Ghostly Carrier", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작"],
@@ -571,18 +571,18 @@ const SPELL_DB = [
 
   { name_ko: "인간형 형태", name_en: "Humanoid Form", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "인간형 생물의 형태를 취합니다. 중형 또는 소형 인간형의 외모로 변신합니다. 비전투적 변신이며, 공격/능력치는 변하지 않습니다. 불신 가능(지각 DC = 주문 DC).강화(3등급): 대형 인간형도 가능. 강화(5등급...",
-    desc: "인간형 생물의 형태를 취합니다. 중형 또는 소형 인간형의 외모로 변신합니다. 비전투적 변신이며, 공격/능력치는 변하지 않습니다. 불신 가능(지각 DC = 주문 DC).<br><strong>강화(3등급):</strong> 대형 인간형도 가능. <strong>강화(5등급):</strong> 비인간형 체형도 가능." },
+    summary: "인간형 생물의 형태를 취합니다. 중형 또는 소형 인간형의 외모로 변신합니다. 비전투적 변신이며, 공격/능력치는 변하지 않습니다. 불신 가능(지각 DC = 주문 DC).강화(3랭크): 대형 인간형도 가능. 강화(5랭크...",
+    desc: "인간형 생물의 형태를 취합니다. 중형 또는 소형 인간형의 외모로 변신합니다. 비전투적 변신이며, 공격/능력치는 변하지 않습니다. 불신 가능(지각 DC = 주문 DC).<br><strong>강화(3랭크):</strong> 대형 인간형도 가능. <strong>강화(5랭크):</strong> 비인간형 체형도 가능." },
 
   { name_ko: "환영 생물", name_en: "Illusory Creature", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["환영", "조작", "시각"],
-    summary: "생물의 설득력 있는 환영을 만듭니다. 중형 이하, 유지 시 최대 이동 속도 25피트로 이동 및 몸짓 가능. 상호작용하면 불신 가능(지각 판정 vs 주문 DC). 불신하지 않은 생물은 진짜로 인식.강화(5등급): 대형...",
-    desc: "생물의 설득력 있는 환영을 만듭니다. 중형 이하, 유지 시 최대 이동 속도 25피트로 이동 및 몸짓 가능. 상호작용하면 불신 가능(지각 판정 vs 주문 DC). 불신하지 않은 생물은 진짜로 인식.<br><strong>강화(5등급):</strong> 대형, 이동 속도 45피트. <strong>강화(8등급):</strong> 거대, 이동 속도 60피트." },
+    summary: "생물의 설득력 있는 환영을 만듭니다. 중형 이하, 유지 시 최대 이동 속도 25피트로 이동 및 몸짓 가능. 상호작용하면 불신 가능(지각 판정 vs 주문 DC). 불신하지 않은 생물은 진짜로 인식.강화(5랭크): 대형...",
+    desc: "생물의 설득력 있는 환영을 만듭니다. 중형 이하, 유지 시 최대 이동 속도 25피트로 이동 및 몸짓 가능. 상호작용하면 불신 가능(지각 판정 vs 주문 DC). 불신하지 않은 생물은 진짜로 인식.<br><strong>강화(5랭크):</strong> 대형, 이동 속도 45피트. <strong>강화(8랭크):</strong> 거대, 이동 속도 60피트." },
 
   { name_ko: "투명화", name_en: "Invisibility", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["환영", "조작"],
-    summary: "생물이 보이지 않게(invisible) 됩니다. 적대 행동(공격 등) 시 주문 종료.강화(4등급): 지속 시간 1분, 적대 행동 후에도 다음 턴 시작까지 유지.",
-    desc: "생물이 <strong>보이지 않게(invisible)</strong> 됩니다. 적대 행동(공격 등) 시 주문 종료.<br><strong>강화(4등급):</strong> 지속 시간 1분, 적대 행동 후에도 다음 턴 시작까지 유지." },
+    summary: "생물이 보이지 않게(invisible) 됩니다. 적대 행동(공격 등) 시 주문 종료.강화(4랭크): 지속 시간 1분, 적대 행동 후에도 다음 턴 시작까지 유지.",
+    desc: "생물이 <strong>보이지 않게(invisible)</strong> 됩니다. 적대 행동(공격 등) 시 주문 종료.<br><strong>강화(4랭크):</strong> 지속 시간 1분, 적대 행동 후에도 다음 턴 시작까지 유지." },
 
   { name_ko: "열쇠", name_en: "Knock", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작"],
@@ -596,8 +596,8 @@ const SPELL_DB = [
 
   { name_ko: "경이로운 탈것", name_en: "Marvelous Mount", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "환상적인 탈것을 소환합니다. 대형 생물로, 이동 속도 40피트. 탈것은 전투에 참여할 수 없으며, 피해를 받으면 즉시 사라집니다.강화(4등급): 비행 속도 40피트. 강화(6등급): 이동/비행 속도 80피트.",
-    desc: "환상적인 탈것을 소환합니다. 대형 생물로, 이동 속도 40피트. 탈것은 전투에 참여할 수 없으며, 피해를 받으면 즉시 사라집니다.<br><strong>강화(4등급):</strong> 비행 속도 40피트. <strong>강화(6등급):</strong> 이동/비행 속도 80피트." },
+    summary: "환상적인 탈것을 소환합니다. 대형 생물로, 이동 속도 40피트. 탈것은 전투에 참여할 수 없으며, 피해를 받으면 즉시 사라집니다.강화(4랭크): 비행 속도 40피트. 강화(6랭크): 이동/비행 속도 80피트.",
+    desc: "환상적인 탈것을 소환합니다. 대형 생물로, 이동 속도 40피트. 탈것은 전투에 참여할 수 없으며, 피해를 받으면 즉시 사라집니다.<br><strong>강화(4랭크):</strong> 비행 속도 40피트. <strong>강화(6랭크):</strong> 이동/비행 속도 80피트." },
 
   { name_ko: "안개", name_en: "Mist", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "3행동", traits: ["조작", "물"],
@@ -616,8 +616,8 @@ const SPELL_DB = [
 
   { name_ko: "편집증", name_en: "Paranoia", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["무력화", "조작", "정신"],
-    summary: "모든 사람이 위협이라고 믿게 합니다. 의지 실패 시 대상이 아군을 적으로 인식합니다. 아군의 치유/버프도 적대 행동으로 취급.강화(6등급): 최대 5 대상.",
-    desc: "모든 사람이 위협이라고 믿게 합니다. 의지 실패 시 대상이 아군을 적으로 인식합니다. 아군의 치유/버프도 적대 행동으로 취급.<br><strong>강화(6등급):</strong> 최대 5 대상." },
+    summary: "모든 사람이 위협이라고 믿게 합니다. 의지 실패 시 대상이 아군을 적으로 인식합니다. 아군의 치유/버프도 적대 행동으로 취급.강화(6랭크): 최대 5 대상.",
+    desc: "모든 사람이 위협이라고 믿게 합니다. 의지 실패 시 대상이 아군을 적으로 인식합니다. 아군의 치유/버프도 적대 행동으로 취급.<br><strong>강화(6랭크):</strong> 최대 5 대상." },
 
   { name_ko: "평화로운 안식", name_en: "Peaceful Rest", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
@@ -626,8 +626,8 @@ const SPELL_DB = [
 
   { name_ko: "에너지 저항", name_en: "Resist Energy", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "한 가지 에너지 유형의 피해로부터 생물을 보호합니다. 산성, 냉기, 전기, 화염, 음파 중 하나를 선택. 대상이 해당 유형에 저항 5를 얻습니다.강화(4등급): 저항 10, 지속 시간 1시간. 강화(7등급): 저항 ...",
-    desc: "한 가지 에너지 유형의 피해로부터 생물을 보호합니다. 산성, 냉기, 전기, 화염, 음파 중 하나를 선택. 대상이 해당 유형에 <strong>저항 5</strong>를 얻습니다.<br><strong>강화(4등급):</strong> 저항 10, 지속 시간 1시간. <strong>강화(7등급):</strong> 저항 15, 최대 8 대상." },
+    summary: "한 가지 에너지 유형의 피해로부터 생물을 보호합니다. 산성, 냉기, 전기, 화염, 음파 중 하나를 선택. 대상이 해당 유형에 저항 5를 얻습니다.강화(4랭크): 저항 10, 지속 시간 1시간. 강화(7랭크): 저항 ...",
+    desc: "한 가지 에너지 유형의 피해로부터 생물을 보호합니다. 산성, 냉기, 전기, 화염, 음파 중 하나를 선택. 대상이 해당 유형에 <strong>저항 5</strong>를 얻습니다.<br><strong>강화(4랭크):</strong> 저항 10, 지속 시간 1시간. <strong>강화(7랭크):</strong> 저항 15, 최대 8 대상." },
 
   { name_ko: "드러내는 빛", name_en: "Revealing Light", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["빛", "조작"],
@@ -636,8 +636,8 @@ const SPELL_DB = [
 
   { name_ko: "보이지 않는 것 보기", name_en: "See the Unseen", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["조작", "탐지"],
-    summary: "투명한 생물을 당신의 시야에 드러냅니다. 투명 생물이 숨겨짐(hidden)(미탐지가 아닌)으로 취급됩니다. 에테르 생물도 흐릿하게 볼 수 있습니다.강화(5등급): 투명 생물이 완전히 보임(관측 상태).",
-    desc: "투명한 생물을 당신의 시야에 드러냅니다. 투명 생물이 <strong>숨겨짐(hidden)</strong>(미탐지가 아닌)으로 취급됩니다. 에테르 생물도 흐릿하게 볼 수 있습니다.<br><strong>강화(5등급):</strong> 투명 생물이 완전히 보임(관측 상태)." },
+    summary: "투명한 생물을 당신의 시야에 드러냅니다. 투명 생물이 숨겨짐(hidden)(미탐지가 아닌)으로 취급됩니다. 에테르 생물도 흐릿하게 볼 수 있습니다.강화(5랭크): 투명 생물이 완전히 보임(관측 상태).",
+    desc: "투명한 생물을 당신의 시야에 드러냅니다. 투명 생물이 <strong>숨겨짐(hidden)</strong>(미탐지가 아닌)으로 취급됩니다. 에테르 생물도 흐릿하게 볼 수 있습니다.<br><strong>강화(5랭크):</strong> 투명 생물이 완전히 보임(관측 상태)." },
 
   { name_ko: "나무 형성", name_en: "Shape Wood", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "식물"],
@@ -656,13 +656,13 @@ const SPELL_DB = [
 
   { name_ko: "침묵", name_en: "Silence", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["환영", "조작"],
-    summary: "동의하는 생물에서 나오는 모든 소리를 음소거합니다. 대상은 시전에 필요한 발성, 청각 효과 사용 불가.강화(4등급): 15피트 발산 내 모든 소리를 차단하는 영역으로 변경.",
-    desc: "동의하는 생물에서 나오는 모든 소리를 음소거합니다. 대상은 시전에 필요한 발성, 청각 효과 사용 불가.<br><strong>강화(4등급):</strong> 15피트 발산 내 모든 소리를 차단하는 영역으로 변경." },
+    summary: "동의하는 생물에서 나오는 모든 소리를 음소거합니다. 대상은 시전에 필요한 발성, 청각 효과 사용 불가.강화(4랭크): 15피트 발산 내 모든 소리를 차단하는 영역으로 변경.",
+    desc: "동의하는 생물에서 나오는 모든 소리를 음소거합니다. 대상은 시전에 필요한 발성, 청각 효과 사용 불가.<br><strong>강화(4랭크):</strong> 15피트 발산 내 모든 소리를 차단하는 영역으로 변경." },
 
   { name_ko: "건전한 몸", name_en: "Sound Body", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult", "primal"], actions: "2행동", traits: ["치유", "조작"],
-    summary: "물리적 상태를 상쇄합니다. 눈멈(blinded), 눈부심(dazzled), 귀먹음(deafened), 쇠약(enfeebled), 구역질(sickened) 중 하나를 부여하는 효과에 상쇄를 시도합니다.강화(4등급): ...",
-    desc: "물리적 상태를 상쇄합니다. 눈멈(blinded), 눈부심(dazzled), 귀먹음(deafened), 쇠약(enfeebled), 구역질(sickened) 중 하나를 부여하는 효과에 상쇄를 시도합니다.<br><strong>강화(4등급):</strong> 서투름(clumsy), 배수(drained) 추가. <strong>강화(6등급):</strong> 느려짐(slowed) 추가." },
+    summary: "물리적 상태를 상쇄합니다. 눈멈(blinded), 눈부심(dazzled), 귀먹음(deafened), 쇠약(enfeebled), 구역질(sickened) 중 하나를 부여하는 효과에 상쇄를 시도합니다.강화(4랭크): ...",
+    desc: "물리적 상태를 상쇄합니다. 눈멈(blinded), 눈부심(dazzled), 귀먹음(deafened), 쇠약(enfeebled), 구역질(sickened) 중 하나를 부여하는 효과에 상쇄를 시도합니다.<br><strong>강화(4랭크):</strong> 서투름(clumsy), 배수(drained) 추가. <strong>강화(6랭크):</strong> 느려짐(slowed) 추가." },
 
   { name_ko: "동물과 대화", name_en: "Speak with Animals", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작"],
@@ -686,13 +686,13 @@ const SPELL_DB = [
 
   { name_ko: "정령 소환", name_en: "Summon Elemental", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "3행동", traits: ["조작"],
-    summary: "정령을 소환합니다. 주문 등급 -1 이하 레벨의 정령을 소환합니다.강화(3등급 이후): 더 강한 정령 소환 가능.",
-    desc: "정령을 소환합니다. 주문 등급 -1 이하 레벨의 정령을 소환합니다.<br><strong>강화(3등급 이후):</strong> 더 강한 정령 소환 가능." },
+    summary: "정령을 소환합니다. 주문 랭크 -1 이하 레벨의 정령을 소환합니다.강화(3랭크 이후): 더 강한 정령 소환 가능.",
+    desc: "정령을 소환합니다. 주문 랭크 -1 이하 레벨의 정령을 소환합니다.<br><strong>강화(3랭크 이후):</strong> 더 강한 정령 소환 가능." },
 
   { name_ko: "안정 발디딤", name_en: "Sure Footing", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult", "primal"], actions: "2행동", traits: ["치유", "조작"],
-    summary: "서투름(clumsy), 조이기(grabbed), 마비(paralyzed) 또는 관련 상태를 부여하는 효과에 상쇄를 시도합니다.강화(4등급): 이동 불가(immobilized), 억제(restrained) 추가. 강화...",
-    desc: "서투름(clumsy), 조이기(grabbed), 마비(paralyzed) 또는 관련 상태를 부여하는 효과에 상쇄를 시도합니다.<br><strong>강화(4등급):</strong> 이동 불가(immobilized), 억제(restrained) 추가. <strong>강화(6등급):</strong> 석화(petrified) 추가." },
+    summary: "서투름(clumsy), 조이기(grabbed), 마비(paralyzed) 또는 관련 상태를 부여하는 효과에 상쇄를 시도합니다.강화(4랭크): 이동 불가(immobilized), 억제(restrained) 추가. 강화...",
+    desc: "서투름(clumsy), 조이기(grabbed), 마비(paralyzed) 또는 관련 상태를 부여하는 효과에 상쇄를 시도합니다.<br><strong>강화(4랭크):</strong> 이동 불가(immobilized), 억제(restrained) 추가. <strong>강화(6랭크):</strong> 석화(petrified) 추가." },
 
   { name_ko: "염동 기동", name_en: "Telekinetic Maneuver", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작"],
@@ -701,18 +701,18 @@ const SPELL_DB = [
 
   { name_ko: "번역", name_en: "Translate", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "한 가지 언어에 대한 이해를 부여합니다. 시전 시 알고 있는 언어 1개를 선택하여 대상에게 해당 언어를 이해하고 읽을 수 있게 합니다. 말하기는 불가.강화(3등급): 대상이 해당 언어로 말하기도 가능. 강화(4등급)...",
-    desc: "한 가지 언어에 대한 이해를 부여합니다. 시전 시 알고 있는 언어 1개를 선택하여 대상에게 해당 언어를 이해하고 읽을 수 있게 합니다. 말하기는 불가.<br><strong>강화(3등급):</strong> 대상이 해당 언어로 말하기도 가능. <strong>강화(4등급):</strong> 최대 10 대상." },
+    summary: "한 가지 언어에 대한 이해를 부여합니다. 시전 시 알고 있는 언어 1개를 선택하여 대상에게 해당 언어를 이해하고 읽을 수 있게 합니다. 말하기는 불가.강화(3랭크): 대상이 해당 언어로 말하기도 가능. 강화(4랭크)...",
+    desc: "한 가지 언어에 대한 이해를 부여합니다. 시전 시 알고 있는 언어 1개를 선택하여 대상에게 해당 언어를 이해하고 읽을 수 있게 합니다. 말하기는 불가.<br><strong>강화(3랭크):</strong> 대상이 해당 언어로 말하기도 가능. <strong>강화(4랭크):</strong> 최대 10 대상." },
 
   { name_ko: "수중 호흡", name_en: "Water Breathing", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "생물이 물속에서 호흡할 수 있게 합니다.강화(3등급): 지속 시간 8시간. 강화(4등급): 다음 일일 준비까지.",
-    desc: "생물이 물속에서 호흡할 수 있게 합니다.<br><strong>강화(3등급):</strong> 지속 시간 8시간. <strong>강화(4등급):</strong> 다음 일일 준비까지." },
+    summary: "생물이 물속에서 호흡할 수 있게 합니다.강화(3랭크): 지속 시간 8시간. 강화(4랭크): 다음 일일 준비까지.",
+    desc: "생물이 물속에서 호흡할 수 있게 합니다.<br><strong>강화(3랭크):</strong> 지속 시간 8시간. <strong>강화(4랭크):</strong> 다음 일일 준비까지." },
 
   { name_ko: "수상 보행", name_en: "Water Walk", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "primal"], actions: "2행동", traits: ["조작", "물"],
-    summary: "대상이 물이나 다른 액체의 표면을 걸을 수 있습니다. 원하면 물속으로 들어갈 수 있지만, 그 경우 일반적으로 수영해야 합니다. 이 주문은 수중 호흡을 부여하지 않습니다.강화(4등급): 사거리 30피트, 지속 시간 1...",
-    desc: "대상이 물이나 다른 액체의 표면을 걸을 수 있습니다. 원하면 물속으로 들어갈 수 있지만, 그 경우 일반적으로 수영해야 합니다. 이 주문은 수중 호흡을 부여하지 않습니다.<br><strong>강화(4등급):</strong> 사거리 30피트, 지속 시간 1시간, 최대 10 생물 대상." },
+    summary: "대상이 물이나 다른 액체의 표면을 걸을 수 있습니다. 원하면 물속으로 들어갈 수 있지만, 그 경우 일반적으로 수영해야 합니다. 이 주문은 수중 호흡을 부여하지 않습니다.강화(4랭크): 사거리 30피트, 지속 시간 1...",
+    desc: "대상이 물이나 다른 액체의 표면을 걸을 수 있습니다. 원하면 물속으로 들어갈 수 있지만, 그 경우 일반적으로 수영해야 합니다. 이 주문은 수중 호흡을 부여하지 않습니다.<br><strong>강화(4랭크):</strong> 사거리 30피트, 지속 시간 1시간, 최대 10 생물 대상." },
 
   { name_ko: "수구", name_en: "Aqueous Orb", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "물"],
@@ -746,8 +746,8 @@ const SPELL_DB = [
 
   { name_ko: "꿈의 전언", name_en: "Dream Message", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "3행동", traits: ["조작", "정신"],
-    summary: "수면 중 꿈에 도착하는 메시지를 보냅니다. 대상이 잠들면 메시지를 꿈에서 받으며, 잠에서 깨어난 후 기억합니다. 대상이 깨어 있으면 메시지는 첫 번째 수면 중에 전달됩니다.강화(4등급): 대상 8명까지.",
-    desc: "수면 중 꿈에 도착하는 메시지를 보냅니다. 대상이 잠들면 메시지를 꿈에서 받으며, 잠에서 깨어난 후 기억합니다. 대상이 깨어 있으면 메시지는 첫 번째 수면 중에 전달됩니다.<br><strong>강화(4등급):</strong> 대상 8명까지." },
+    summary: "수면 중 꿈에 도착하는 메시지를 보냅니다. 대상이 잠들면 메시지를 꿈에서 받으며, 잠에서 깨어난 후 기억합니다. 대상이 깨어 있으면 메시지는 첫 번째 수면 중에 전달됩니다.강화(4랭크): 대상 8명까지.",
+    desc: "수면 중 꿈에 도착하는 메시지를 보냅니다. 대상이 잠들면 메시지를 꿈에서 받으며, 잠에서 깨어난 후 기억합니다. 대상이 깨어 있으면 메시지는 첫 번째 수면 중에 전달됩니다.<br><strong>강화(4랭크):</strong> 대상 8명까지." },
 
   { name_ko: "대지 속박", name_en: "Earthbind", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작"],
@@ -766,8 +766,8 @@ const SPELL_DB = [
 
   { name_ko: "지느러미", name_en: "Feet to Fins", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "변형"],
-    summary: "생물의 발을 지느러미로 변환합니다. 대상이 수영 속도 = 이동 속도를 얻지만, 지상 이동 속도가 5피트로 줄어듭니다.강화(6등급): 지상 이동 속도 유지하면서 수영 속도도 얻음.",
-    desc: "생물의 발을 지느러미로 변환합니다. 대상이 <strong>수영 속도 = 이동 속도</strong>를 얻지만, 지상 이동 속도가 <strong>5피트</strong>로 줄어듭니다.<br><strong>강화(6등급):</strong> 지상 이동 속도 유지하면서 수영 속도도 얻음." },
+    summary: "생물의 발을 지느러미로 변환합니다. 대상이 수영 속도 = 이동 속도를 얻지만, 지상 이동 속도가 5피트로 줄어듭니다.강화(6랭크): 지상 이동 속도 유지하면서 수영 속도도 얻음.",
+    desc: "생물의 발을 지느러미로 변환합니다. 대상이 <strong>수영 속도 = 이동 속도</strong>를 얻지만, 지상 이동 속도가 <strong>5피트</strong>로 줄어듭니다.<br><strong>강화(6랭크):</strong> 지상 이동 속도 유지하면서 수영 속도도 얻음." },
 
   { name_ko: "화염구", name_en: "Fireball", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["화염", "조작"],
@@ -782,12 +782,12 @@ const SPELL_DB = [
   { name_ko: "가속", name_en: "Haste", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult", "primal"], actions: "2행동", traits: ["조작"],
     summary: "생물의 속도를 높여 더 자주 공격하거나 이동할 수 있게 합니다. 대상이 가속(quickened) 상태가 되어 매 턴 추가 행동 1개를 얻으며, 이 행동은 보폭(Stride) 또는 타격(Strike)에만 사용 가능.강...",
-    desc: "생물의 속도를 높여 더 자주 공격하거나 이동할 수 있게 합니다. 대상이 <strong>가속(quickened)</strong> 상태가 되어 매 턴 <strong>추가 행동 1개</strong>를 얻으며, 이 행동은 <strong>보폭(Stride) 또는 타격(Strike)</strong>에만 사용 가능.<br><strong>강화(7등급):</strong> 최대 6 생물 대상." },
+    desc: "생물의 속도를 높여 더 자주 공격하거나 이동할 수 있게 합니다. 대상이 <strong>가속(quickened)</strong> 상태가 되어 매 턴 <strong>추가 행동 1개</strong>를 얻으며, 이 행동은 <strong>보폭(Stride) 또는 타격(Strike)</strong>에만 사용 가능.<br><strong>강화(7랭크):</strong> 최대 6 생물 대상." },
 
   { name_ko: "영웅심", name_en: "Heroism", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["조작"],
-    summary: "생물의 내면 영웅심을 북돋워 능력을 향상시킵니다. 대상이 명중 굴림, 지각, 기술 판정, 내성 굴림에 +1 상태 보너스를 얻습니다.강화(6등급): 보너스 +2. 강화(9등급): 보너스 +3.",
-    desc: "생물의 내면 영웅심을 북돋워 능력을 향상시킵니다. 대상이 명중 굴림, 지각, 기술 판정, 내성 굴림에 <strong>+1 상태 보너스</strong>를 얻습니다.<br><strong>강화(6등급):</strong> 보너스 +2. <strong>강화(9등급):</strong> 보너스 +3." },
+    summary: "생물의 내면 영웅심을 북돋워 능력을 향상시킵니다. 대상이 명중 굴림, 지각, 기술 판정, 내성 굴림에 +1 상태 보너스를 얻습니다.강화(6랭크): 보너스 +2. 강화(9랭크): 보너스 +3.",
+    desc: "생물의 내면 영웅심을 북돋워 능력을 향상시킵니다. 대상이 명중 굴림, 지각, 기술 판정, 내성 굴림에 <strong>+1 상태 보너스</strong>를 얻습니다.<br><strong>강화(6랭크):</strong> 보너스 +2. <strong>강화(9랭크):</strong> 보너스 +3." },
 
   { name_ko: "신성한 빛", name_en: "Holy Light", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["divine", "primal"], actions: "2행동", traits: ["공격", "화염", "신성(한)", "빛", "조작"],
@@ -806,8 +806,8 @@ const SPELL_DB = [
 
   { name_ko: "곤충 형태", name_en: "Insect Form", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "위험한 거대 곤충으로 변신합니다. 중형, AC=18+레벨, 임시 HP 10. 개미, 딱정벌레, 지네, 사마귀, 거미, 말벌 중 선택.강화(5등급): 대형, 비행 가능(일부 형태).",
-    desc: "위험한 거대 곤충으로 변신합니다. 중형, AC=18+레벨, 임시 HP 10. 개미, 딱정벌레, 지네, 사마귀, 거미, 말벌 중 선택.<br><strong>강화(5등급):</strong> 대형, 비행 가능(일부 형태)." },
+    summary: "위험한 거대 곤충으로 변신합니다. 중형, AC=18+레벨, 임시 HP 10. 개미, 딱정벌레, 지네, 사마귀, 거미, 말벌 중 선택.강화(5랭크): 대형, 비행 가능(일부 형태).",
+    desc: "위험한 거대 곤충으로 변신합니다. 중형, AC=18+레벨, 임시 HP 10. 개미, 딱정벌레, 지네, 사마귀, 거미, 말벌 중 선택.<br><strong>강화(5랭크):</strong> 대형, 비행 가능(일부 형태)." },
 
   { name_ko: "부양", name_en: "Levitate", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작"],
@@ -836,8 +836,8 @@ const SPELL_DB = [
 
   { name_ko: "독심술", name_en: "Mind Reading", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["비일반", "조작", "정신"],
-    summary: "생물의 표면 생각을 읽습니다. 의지 실패 시 현재 생각하고 있는 것을 알 수 있습니다. 유지 시 더 깊은 생각을 탐색할 수 있습니다(추가 의지 내성).강화(4등급): 대상이 인지하지 못함(은밀).",
-    desc: "생물의 표면 생각을 읽습니다. 의지 실패 시 현재 생각하고 있는 것을 알 수 있습니다. 유지 시 더 깊은 생각을 탐색할 수 있습니다(추가 의지 내성).<br><strong>강화(4등급):</strong> 대상이 인지하지 못함(은밀)." },
+    summary: "생물의 표면 생각을 읽습니다. 의지 실패 시 현재 생각하고 있는 것을 알 수 있습니다. 유지 시 더 깊은 생각을 탐색할 수 있습니다(추가 의지 내성).강화(4랭크): 대상이 인지하지 못함(은밀).",
+    desc: "생물의 표면 생각을 읽습니다. 의지 실패 시 현재 생각하고 있는 것을 알 수 있습니다. 유지 시 더 깊은 생각을 탐색할 수 있습니다(추가 의지 내성).<br><strong>강화(4랭크):</strong> 대상이 인지하지 못함(은밀)." },
 
   { name_ko: "돌과 하나", name_en: "One with Stone", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["대지", "조작"],
@@ -847,7 +847,7 @@ const SPELL_DB = [
   { name_ko: "마비", name_en: "Paralyze", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult", "primal"], actions: "2행동", traits: ["무력화", "조작", "정신"],
     summary: "생물을 제자리에 얼려 움직이지 못하게 합니다.대성공: 영향 없음. 성공: 1라운드 멍해짐(stunned) 1. 실패: 마비(paralyzed) 1분(매 턴 끝에 의지 내성으로 탈출 시도). 대실패: 마비 1분(마비를...",
-    desc: "생물을 제자리에 얼려 움직이지 못하게 합니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 멍해짐(stunned) 1. <strong>실패:</strong> <strong>마비(paralyzed) 1분</strong>(매 턴 끝에 의지 내성으로 탈출 시도). <strong>대실패:</strong> 마비 1분(마비를 풀 수 없음).<br><strong>강화(7등급):</strong> 최대 10 생물 대상." },
+    desc: "생물을 제자리에 얼려 움직이지 못하게 합니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 멍해짐(stunned) 1. <strong>실패:</strong> <strong>마비(paralyzed) 1분</strong>(매 턴 끝에 의지 내성으로 탈출 시도). <strong>대실패:</strong> 마비 1분(마비를 풀 수 없음).<br><strong>강화(7랭크):</strong> 최대 10 생물 대상." },
 
   { name_ko: "개인 눈보라", name_en: "Personal Blizzard", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["냉기", "조작"],
@@ -871,13 +871,13 @@ const SPELL_DB = [
 
   { name_ko: "느리게", name_en: "Slow", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "생물을 느리게 하여 행동을 줄입니다.대성공: 영향 없음. 성공: 1라운드 느려짐(slowed) 1. 실패: 1분간 느려짐 1. 대실패: 1분간 느려짐 2.강화(6등급): 최대 10 대상.",
-    desc: "생물을 느리게 하여 행동을 줄입니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 느려짐(slowed) 1. <strong>실패:</strong> 1분간 느려짐 1. <strong>대실패:</strong> 1분간 느려짐 2.<br><strong>강화(6등급):</strong> 최대 10 대상." },
+    summary: "생물을 느리게 하여 행동을 줄입니다.대성공: 영향 없음. 성공: 1라운드 느려짐(slowed) 1. 실패: 1분간 느려짐 1. 대실패: 1분간 느려짐 2.강화(6랭크): 최대 10 대상.",
+    desc: "생물을 느리게 하여 행동을 줄입니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 느려짐(slowed) 1. <strong>실패:</strong> 1분간 느려짐 1. <strong>대실패:</strong> 1분간 느려짐 2.<br><strong>강화(6랭크):</strong> 최대 10 대상." },
 
   { name_ko: "식물과 대화", name_en: "Speak with Plants", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult", "primal"], actions: "2행동", traits: ["조작", "식물"],
-    summary: "식물 및 식물 생물과 소통합니다. 식물은 제한적으로 지능이 있으며, 최근 환경 변화나 근처 생물에 대한 정보를 제공할 수 있습니다.강화(6등급): 식물이 당신을 위해 간단한 작업을 수행합니다.",
-    desc: "식물 및 식물 생물과 소통합니다. 식물은 제한적으로 지능이 있으며, 최근 환경 변화나 근처 생물에 대한 정보를 제공할 수 있습니다.<br><strong>강화(6등급):</strong> 식물이 당신을 위해 간단한 작업을 수행합니다." },
+    summary: "식물 및 식물 생물과 소통합니다. 식물은 제한적으로 지능이 있으며, 최근 환경 변화나 근처 생물에 대한 정보를 제공할 수 있습니다.강화(6랭크): 식물이 당신을 위해 간단한 작업을 수행합니다.",
+    desc: "식물 및 식물 생물과 소통합니다. 식물은 제한적으로 지능이 있으며, 최근 환경 변화나 근처 생물에 대한 정보를 제공할 수 있습니다.<br><strong>강화(6랭크):</strong> 식물이 당신을 위해 간단한 작업을 수행합니다." },
 
   { name_ko: "흡혈 잔치", name_en: "Vampiric Feast", rank: 3, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작", "공허"],
@@ -906,33 +906,33 @@ const SPELL_DB = [
 
   { name_ko: "공중 형태", name_en: "Aerial Form", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "날아다니는 전투 형태로 변신합니다. 중형, AC=18+레벨, 임시 HP 5, 비행 속도 다양. 박쥐, 새, 날벌레, 익룡 중 선택. 공격 수정치 +16, 피해 보너스 +5.강화(5등급): 대형, 더 높은 능력치. 강...",
-    desc: "날아다니는 전투 형태로 변신합니다. 중형, AC=18+레벨, 임시 HP 5, 비행 속도 다양. 박쥐, 새, 날벌레, 익룡 중 선택. 공격 수정치 +16, 피해 보너스 +5.<br><strong>강화(5등급):</strong> 대형, 더 높은 능력치. <strong>강화(6등급):</strong> 용 형태에 접근 가능." },
+    summary: "날아다니는 전투 형태로 변신합니다. 중형, AC=18+레벨, 임시 HP 5, 비행 속도 다양. 박쥐, 새, 날벌레, 익룡 중 선택. 공격 수정치 +16, 피해 보너스 +5.강화(5랭크): 대형, 더 높은 능력치. 강...",
+    desc: "날아다니는 전투 형태로 변신합니다. 중형, AC=18+레벨, 임시 HP 5, 비행 속도 다양. 박쥐, 새, 날벌레, 익룡 중 선택. 공격 수정치 +16, 피해 보너스 +5.<br><strong>강화(5랭크):</strong> 대형, 더 높은 능력치. <strong>강화(6랭크):</strong> 용 형태에 접근 가능." },
 
   { name_ko: "혼란", name_en: "Confusion", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["감정", "무력화", "조작", "정신"],
-    summary: "대성공: 영향 없음. 성공: 1라운드 혼란. 실패: 1분 혼란. 대실패: 1분 혼란(내성 탈출 불가).강화(8등급): 30피트 폭발로 모든 생물 대상.",
-    desc: "<strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 혼란. <strong>실패:</strong> 1분 혼란. <strong>대실패:</strong> 1분 혼란(내성 탈출 불가).<br><strong>강화(8등급):</strong> 30피트 폭발로 모든 생물 대상." },
+    summary: "대성공: 영향 없음. 성공: 1라운드 혼란. 실패: 1분 혼란. 대실패: 1분 혼란(내성 탈출 불가).강화(8랭크): 30피트 폭발로 모든 생물 대상.",
+    desc: "<strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 1라운드 혼란. <strong>실패:</strong> 1분 혼란. <strong>대실패:</strong> 1분 혼란(내성 탈출 불가).<br><strong>강화(8랭크):</strong> 30피트 폭발로 모든 생물 대상." },
 
   { name_ko: "창조", name_en: "Creation", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작"],
     summary: "마법 에너지에서 임시 물체를 만듭니다. 흙이나 식물 유래 물질(나무, 종이, 벽돌, 돌)이어야 하며 5 세제곱피트 이하. 복잡한 부품 불가, 비용 충족 불가, 귀중 재료 불가. 명백히 임시적이므로 진품으로 속일 수 ...",
-    desc: "마법 에너지에서 임시 물체를 만듭니다. 흙이나 식물 유래 물질(나무, 종이, 벽돌, 돌)이어야 하며 5 세제곱피트 이하. 복잡한 부품 불가, 비용 충족 불가, 귀중 재료 불가. 명백히 임시적이므로 진품으로 속일 수 없음.<br><strong>강화(5등급):</strong> 금속 물체 가능." },
+    desc: "마법 에너지에서 임시 물체를 만듭니다. 흙이나 식물 유래 물질(나무, 종이, 벽돌, 돌)이어야 하며 5 세제곱피트 이하. 복잡한 부품 불가, 비용 충족 불가, 귀중 재료 불가. 명백히 임시적이므로 진품으로 속일 수 없음.<br><strong>강화(5랭크):</strong> 금속 물체 가능." },
 
   { name_ko: "감시 탐지", name_en: "Detect Scrying", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["비일반", "탐지", "조작"],
-    summary: "미세한 오라를 읽어 영역 내 투시 효과의 존재를 탐지합니다. 감시 탐지가 투시 효과보다 높은 등급이면, 투시하는 생물의 모습을 힐끗 보고 대략적 거리와 방향을 알 수 있습니다.강화(6등급): 지속 시간 다음 일일 준...",
-    desc: "미세한 오라를 읽어 영역 내 투시 효과의 존재를 탐지합니다. 감시 탐지가 투시 효과보다 높은 등급이면, 투시하는 생물의 모습을 힐끗 보고 대략적 거리와 방향을 알 수 있습니다.<br><strong>강화(6등급):</strong> 지속 시간 다음 일일 준비까지." },
+    summary: "미세한 오라를 읽어 영역 내 투시 효과의 존재를 탐지합니다. 감시 탐지가 투시 효과보다 높은 랭크이면, 투시하는 생물의 모습을 힐끗 보고 대략적 거리와 방향을 알 수 있습니다.강화(6랭크): 지속 시간 다음 일일 준...",
+    desc: "미세한 오라를 읽어 영역 내 투시 효과의 존재를 탐지합니다. 감시 탐지가 투시 효과보다 높은 랭크이면, 투시하는 생물의 모습을 힐끗 보고 대략적 거리와 방향을 알 수 있습니다.<br><strong>강화(6랭크):</strong> 지속 시간 다음 일일 준비까지." },
 
   { name_ko: "공룡 형태", name_en: "Dinosaur Form", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작", "변이"],
     summary: "강력하고 무시무시한 공룡의 대형 동물 전투 형태로 변신합니다. AC=18+레벨, 임시 HP 15, 저광 시야, 부정확 후각 30피트. 공격 수정치 +16, 피해 보너스 +9. 안킬로사우루스, 브론토사우루스, 데이노니...",
-    desc: "강력하고 무시무시한 공룡의 대형 동물 전투 형태로 변신합니다. AC=18+레벨, 임시 HP 15, 저광 시야, 부정확 후각 30피트. 공격 수정치 +16, 피해 보너스 +9. 안킬로사우루스, 브론토사우루스, 데이노니쿠스, 스테고사우루스, 트리케라톱스, 티라노사우루스 중 선택. 각 형태마다 고유 공격과 이동 속도.<br><strong>강화(5등급):</strong> 거대, 도달 15피트, 임시 HP 20, 공격 +18, 피해 +6(2배 주사위).<br><strong>강화(7등급):</strong> 초대형(Gargantuan), 도달 20피트, AC=21+레벨, 임시 HP 25, 공격 +25, 피해 +15." },
+    desc: "강력하고 무시무시한 공룡의 대형 동물 전투 형태로 변신합니다. AC=18+레벨, 임시 HP 15, 저광 시야, 부정확 후각 30피트. 공격 수정치 +16, 피해 보너스 +9. 안킬로사우루스, 브론토사우루스, 데이노니쿠스, 스테고사우루스, 트리케라톱스, 티라노사우루스 중 선택. 각 형태마다 고유 공격과 이동 속도.<br><strong>강화(5랭크):</strong> 거대, 도달 15피트, 임시 HP 20, 공격 +18, 피해 +6(2배 주사위).<br><strong>강화(7랭크):</strong> 초대형(Gargantuan), 도달 20피트, AC=21+레벨, 임시 HP 25, 공격 +25, 피해 +15." },
 
   { name_ko: "해제 구체", name_en: "Dispelling Globe", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["비일반", "조작"],
-    summary: "구체에 들어오는 마법을 상쇄합니다. 주문 등급 이하의 마법 효과가 구체에 들어오면 자동으로 상쇄를 시도합니다. 더 높은 등급의 효과에는 영향을 주지 않습니다.",
-    desc: "구체에 들어오는 마법을 상쇄합니다. 주문 등급 이하의 마법 효과가 구체에 들어오면 자동으로 상쇄를 시도합니다. 더 높은 등급의 효과에는 영향을 주지 않습니다." },
+    summary: "구체에 들어오는 마법을 상쇄합니다. 주문 랭크 이하의 마법 효과가 구체에 들어오면 자동으로 상쇄를 시도합니다. 더 높은 랭크의 효과에는 영향을 주지 않습니다.",
+    desc: "구체에 들어오는 마법을 상쇄합니다. 주문 랭크 이하의 마법 효과가 구체에 들어오면 자동으로 상쇄를 시도합니다. 더 높은 랭크의 효과에는 영향을 주지 않습니다." },
 
   { name_ko: "신성한 분노", name_en: "Divine Wrath", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "2행동", traits: ["조작", "성별화", "영혼"],
@@ -946,13 +946,13 @@ const SPELL_DB = [
 
   { name_ko: "깜빡임", name_en: "Flicker", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작", "순간이동"],
-    summary: "불규칙하게 순간이동하며 대부분의 피해를 피합니다. 매 턴 시작 시 DC 11 단순 판정. 성공 시 해당 턴에 은폐(concealed) 상태이며, 에테르 차원과 물질 차원 사이를 깜빡입니다.강화(8등급): DC 6으로...",
-    desc: "불규칙하게 순간이동하며 대부분의 피해를 피합니다. 매 턴 시작 시 DC 11 단순 판정. 성공 시 해당 턴에 <strong>은폐(concealed)</strong> 상태이며, 에테르 차원과 물질 차원 사이를 깜빡입니다.<br><strong>강화(8등급):</strong> DC 6으로 줄어듦. 10피트까지 순간이동 가능." },
+    summary: "불규칙하게 순간이동하며 대부분의 피해를 피합니다. 매 턴 시작 시 DC 11 단순 판정. 성공 시 해당 턴에 은폐(concealed) 상태이며, 에테르 차원과 물질 차원 사이를 깜빡입니다.강화(8랭크): DC 6으로...",
+    desc: "불규칙하게 순간이동하며 대부분의 피해를 피합니다. 매 턴 시작 시 DC 11 단순 판정. 성공 시 해당 턴에 <strong>은폐(concealed)</strong> 상태이며, 에테르 차원과 물질 차원 사이를 깜빡입니다.<br><strong>강화(8랭크):</strong> DC 6으로 줄어듦. 10피트까지 순간이동 가능." },
 
   { name_ko: "비행", name_en: "Fly", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "대상에게 비행 속도 = 이동 속도 또는 20피트 중 높은 것을 부여합니다. 주문이 끝나면 떨어집니다.강화(7등급): 지속 시간 1시간.",
-    desc: "대상에게 <strong>비행 속도 = 이동 속도 또는 20피트 중 높은 것</strong>을 부여합니다. 주문이 끝나면 떨어집니다.<br><strong>강화(7등급):</strong> 지속 시간 1시간." },
+    summary: "대상에게 비행 속도 = 이동 속도 또는 20피트 중 높은 것을 부여합니다. 주문이 끝나면 떨어집니다.강화(7랭크): 지속 시간 1시간.",
+    desc: "대상에게 <strong>비행 속도 = 이동 속도 또는 20피트 중 높은 것</strong>을 부여합니다. 주문이 끝나면 떨어집니다.<br><strong>강화(7랭크):</strong> 지속 시간 1시간." },
 
   { name_ko: "달콤한 말", name_en: "Honeyed Words", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["조작", "정신"],
@@ -967,17 +967,17 @@ const SPELL_DB = [
   { name_ko: "경계의 문", name_en: "Liminal Doorway", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["비일반", "조작", "그림자", "순간이동"],
     summary: "두 장소를 연결하는 그림자 문을 만들어냅니다. 이 주문을 시전할 때 사거리 내의 목표 칸을 선택하여 먼 쪽 위치로 지정하고, 당신에게 인접한 출발 칸을 가까운 쪽 위치로 지정합니다. 당신과 동의하는 다른 생물들은 문...",
-    desc: "두 장소를 연결하는 그림자 문을 만들어냅니다. 이 주문을 시전할 때 사거리 내의 목표 칸을 선택하여 먼 쪽 위치로 지정하고, 당신에게 인접한 출발 칸을 가까운 쪽 위치로 지정합니다. 당신과 동의하는 다른 생물들은 문을 통과할 수 있으며, 이는 단 하나의 행동만 필요하고 걷기(Step)로 계산됩니다. 가까운 쪽으로 들어가면 먼 쪽으로 나오며, 먼 쪽으로 들어가면 가까운 쪽으로 나옵니다.<br><strong>강화(2등급):</strong> 지속 시간이 무제한이 되지만, 주문을 유지하기 위해 하루에 한 번 주문에 집중해야 합니다." },
+    desc: "두 장소를 연결하는 그림자 문을 만들어냅니다. 이 주문을 시전할 때 사거리 내의 목표 칸을 선택하여 먼 쪽 위치로 지정하고, 당신에게 인접한 출발 칸을 가까운 쪽 위치로 지정합니다. 당신과 동의하는 다른 생물들은 문을 통과할 수 있으며, 이는 단 하나의 행동만 필요하고 걷기(Step)로 계산됩니다. 가까운 쪽으로 들어가면 먼 쪽으로 나오며, 먼 쪽으로 들어가면 가까운 쪽으로 나옵니다.<br><strong>강화(2랭크):</strong> 지속 시간이 무제한이 되지만, 주문을 유지하기 위해 하루에 한 번 주문에 집중해야 합니다." },
 
   { name_ko: "신기루", name_en: "Mirage", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["비일반", "환영", "조작"],
-    summary: "자연 환경 하나를 다른 것으로 위장합니다. 숲을 사막으로, 들판을 늪으로 등. 환경의 물리적 특성은 변하지 않지만 외관이 변합니다. 지각 판정으로 불신 가능.강화(5등급): 영역 1마일 폭발.",
-    desc: "자연 환경 하나를 다른 것으로 위장합니다. 숲을 사막으로, 들판을 늪으로 등. 환경의 물리적 특성은 변하지 않지만 외관이 변합니다. 지각 판정으로 불신 가능.<br><strong>강화(5등급):</strong> 영역 1마일 폭발." },
+    summary: "자연 환경 하나를 다른 것으로 위장합니다. 숲을 사막으로, 들판을 늪으로 등. 환경의 물리적 특성은 변하지 않지만 외관이 변합니다. 지각 판정으로 불신 가능.강화(5랭크): 영역 1마일 폭발.",
+    desc: "자연 환경 하나를 다른 것으로 위장합니다. 숲을 사막으로, 들판을 늪으로 등. 환경의 물리적 특성은 변하지 않지만 외관이 변합니다. 지각 판정으로 불신 가능.<br><strong>강화(5랭크):</strong> 영역 1마일 폭발." },
 
   { name_ko: "산의 강인함", name_en: "Mountain Resilience", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "생물을 물리적 공격에 더 단단하게 합니다. 대상이 물리 피해에 저항 5를 얻습니다.강화(6등급): 저항 10. 강화(8등급): 저항 15.",
-    desc: "생물을 물리적 공격에 더 단단하게 합니다. 대상이 <strong>물리 피해에 저항 5</strong>를 얻습니다.<br><strong>강화(6등급):</strong> 저항 10. <strong>강화(8등급):</strong> 저항 15." },
+    summary: "생물을 물리적 공격에 더 단단하게 합니다. 대상이 물리 피해에 저항 5를 얻습니다.강화(6랭크): 저항 10. 강화(8랭크): 저항 15.",
+    desc: "생물을 물리적 공격에 더 단단하게 합니다. 대상이 <strong>물리 피해에 저항 5</strong>를 얻습니다.<br><strong>강화(6랭크):</strong> 저항 10. <strong>강화(8랭크):</strong> 저항 15." },
 
   { name_ko: "악몽", name_en: "Nightmare", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작", "정신"],
@@ -1006,8 +1006,8 @@ const SPELL_DB = [
 
   { name_ko: "기억 재작성", name_en: "Rewrite Memory", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["비일반", "조작", "정신"],
-    summary: "기억을 변경, 삭제, 또는 이식합니다. 의지 실패 시 대상의 최근 5분간 기억을 변경 가능.강화(6등급): 최근 1일까지. 강화(8등급): 어떤 기억이든.",
-    desc: "기억을 변경, 삭제, 또는 이식합니다. 의지 실패 시 대상의 최근 5분간 기억을 변경 가능.<br><strong>강화(6등급):</strong> 최근 1일까지. <strong>강화(8등급):</strong> 어떤 기억이든." },
+    summary: "기억을 변경, 삭제, 또는 이식합니다. 의지 실패 시 대상의 최근 5분간 기억을 변경 가능.강화(6랭크): 최근 1일까지. 강화(8랭크): 어떤 기억이든.",
+    desc: "기억을 변경, 삭제, 또는 이식합니다. 의지 실패 시 대상의 최근 5분간 기억을 변경 가능.<br><strong>강화(6랭크):</strong> 최근 1일까지. <strong>강화(8랭크):</strong> 어떤 기억이든." },
 
   { name_ko: "돌 형성", name_en: "Shape Stone", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["대지", "조작"],
@@ -1017,7 +1017,7 @@ const SPELL_DB = [
   { name_ko: "암시", name_en: "Suggestion", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["무력화", "언어", "조작", "정신"],
     summary: "생물이 따라야 하는 행동 방침을 암시합니다. 합리적으로 들리는 한 문장 암시. 의지 실패 시 암시를 따릅니다. 자해적이거나 당연히 거부할 암시는 자동 실패.대성공: 영향 없음, 암시 인지. 성공: 영향 없음. 실패:...",
-    desc: "생물이 따라야 하는 행동 방침을 암시합니다. 합리적으로 들리는 한 문장 암시. 의지 실패 시 암시를 따릅니다. 자해적이거나 당연히 거부할 암시는 자동 실패.<br><strong>대성공:</strong> 영향 없음, 암시 인지. <strong>성공:</strong> 영향 없음. <strong>실패:</strong> 암시를 따름(지속 시간: 활동 완료까지). <strong>대실패:</strong> 같지만 더 강한 암시도 따름.<br><strong>강화(8등급):</strong> 최대 10 대상." },
+    desc: "생물이 따라야 하는 행동 방침을 암시합니다. 합리적으로 들리는 한 문장 암시. 의지 실패 시 암시를 따릅니다. 자해적이거나 당연히 거부할 암시는 자동 실패.<br><strong>대성공:</strong> 영향 없음, 암시 인지. <strong>성공:</strong> 영향 없음. <strong>실패:</strong> 암시를 따름(지속 시간: 활동 완료까지). <strong>대실패:</strong> 같지만 더 강한 암시도 따름.<br><strong>강화(8랭크):</strong> 최대 10 대상." },
 
   { name_ko: "시체와 대화", name_en: "Talking Corpse", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["비일반", "조작"],
@@ -1026,13 +1026,13 @@ const SPELL_DB = [
 
   { name_ko: "텔레파시", name_en: "Telepathy", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["언어", "조작", "정신"],
-    summary: "30피트 이내의 모든 생물과 텔레파시로 소통합니다. 같은 언어를 공유하지 않아도 의미가 전달됩니다.강화(6등급): 120피트로 사거리 증가. 강화(8등급): 모든 거리(같은 차원 내).",
-    desc: "30피트 이내의 모든 생물과 텔레파시로 소통합니다. 같은 언어를 공유하지 않아도 의미가 전달됩니다.<br><strong>강화(6등급):</strong> 120피트로 사거리 증가. <strong>강화(8등급):</strong> 모든 거리(같은 차원 내)." },
+    summary: "30피트 이내의 모든 생물과 텔레파시로 소통합니다. 같은 언어를 공유하지 않아도 의미가 전달됩니다.강화(6랭크): 120피트로 사거리 증가. 강화(8랭크): 모든 거리(같은 차원 내).",
+    desc: "30피트 이내의 모든 생물과 텔레파시로 소통합니다. 같은 언어를 공유하지 않아도 의미가 전달됩니다.<br><strong>강화(6랭크):</strong> 120피트로 사거리 증가. <strong>강화(8랭크):</strong> 모든 거리(같은 차원 내)." },
 
   { name_ko: "순간이동", name_en: "Translocate", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작", "순간이동"],
-    summary: "중간 거리를 순간이동합니다. 최대 120피트까지 볼 수 있는 빈 칸으로 순간이동합니다.강화(5등급): 사거리 1마일(볼 수 있거나 명확히 지정 가능한 위치).",
-    desc: "중간 거리를 순간이동합니다. 최대 <strong>120피트</strong>까지 볼 수 있는 빈 칸으로 순간이동합니다.<br><strong>강화(5등급):</strong> 사거리 1마일(볼 수 있거나 명확히 지정 가능한 위치)." },
+    summary: "중간 거리를 순간이동합니다. 최대 120피트까지 볼 수 있는 빈 칸으로 순간이동합니다.강화(5랭크): 사거리 1마일(볼 수 있거나 명확히 지정 가능한 위치).",
+    desc: "중간 거리를 순간이동합니다. 최대 <strong>120피트</strong>까지 볼 수 있는 빈 칸으로 순간이동합니다.<br><strong>강화(5랭크):</strong> 사거리 1마일(볼 수 있거나 명확히 지정 가능한 위치)." },
 
   { name_ko: "자유 이동", name_en: "Unfettered Movement", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
@@ -1051,8 +1051,8 @@ const SPELL_DB = [
 
   { name_ko: "활력 등대", name_en: "Vital Beacon", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "2행동", traits: ["치유", "조작", "활력"],
-    summary: "활력을 발산하여 당신을 접촉하는 생물을 치유합니다. 지속 시간 동안 누군가 당신에게 접촉 치유 주문을 시전하면 추가로 주문 등급 d10 HP를 회복합니다.",
-    desc: "활력을 발산하여 당신을 접촉하는 생물을 치유합니다. 지속 시간 동안 누군가 당신에게 접촉 치유 주문을 시전하면 추가로 <strong>주문 등급 d10 HP</strong>를 회복합니다." },
+    summary: "활력을 발산하여 당신을 접촉하는 생물을 치유합니다. 지속 시간 동안 누군가 당신에게 접촉 치유 주문을 시전하면 추가로 주문 랭크 d10 HP를 회복합니다.",
+    desc: "활력을 발산하여 당신을 접촉하는 생물을 치유합니다. 지속 시간 동안 누군가 당신에게 접촉 치유 주문을 시전하면 추가로 <strong>주문 랭크 d10 HP</strong>를 회복합니다." },
 
   { name_ko: "화염 벽", name_en: "Wall of Fire", rank: 4, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "3행동", traits: ["화염", "조작"],
@@ -1067,7 +1067,7 @@ const SPELL_DB = [
   { name_ko: "추방", name_en: "Banishment", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["무력화", "조작"],
     summary: "대상을 고향 차원으로 돌려보냅니다. 추가 행동+비용(저주받은 물체)으로 내성에 -2. 자신의 고향 차원에서만 시전 가능.대성공: 저항, 시전자 멍해짐 1. 성공: 저항. 실패: 추방. 대실패: 추방+1주 복귀 불가....",
-    desc: "대상을 고향 차원으로 돌려보냅니다. 추가 행동+비용(저주받은 물체)으로 내성에 -2. 자신의 고향 차원에서만 시전 가능.<br><strong>대성공:</strong> 저항, 시전자 멍해짐 1. <strong>성공:</strong> 저항. <strong>실패:</strong> 추방. <strong>대실패:</strong> 추방+1주 복귀 불가.<br><strong>강화(9등급):</strong> 최대 10 생물 대상." },
+    desc: "대상을 고향 차원으로 돌려보냅니다. 추가 행동+비용(저주받은 물체)으로 내성에 -2. 자신의 고향 차원에서만 시전 가능.<br><strong>대성공:</strong> 저항, 시전자 멍해짐 1. <strong>성공:</strong> 저항. <strong>실패:</strong> 추방. <strong>대실패:</strong> 추방+1주 복귀 불가.<br><strong>강화(9랭크):</strong> 최대 10 생물 대상." },
 
   { name_ko: "생명의 숨결", name_en: "Breath of Life", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "반응", traits: ["치유", "조작", "활력"],
@@ -1096,8 +1096,8 @@ const SPELL_DB = [
 
   { name_ko: "정령 형태", name_en: "Elemental Form", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "정령 전투 형태로 변신합니다. 중형, AC=19+레벨, 임시 HP 10. 공기/대지/화염/물 정령 중 선택하여 각각 다른 이동 속도, 공격, 특수 능력을 얻습니다.강화(6등급): 대형, 더 높은 능력치.강화(7등급)...",
-    desc: "정령 전투 형태로 변신합니다. 중형, AC=19+레벨, 임시 HP 10. 공기/대지/화염/물 정령 중 선택하여 각각 다른 이동 속도, 공격, 특수 능력을 얻습니다.<br><strong>강화(6등급):</strong> 대형, 더 높은 능력치.<br><strong>강화(7등급):</strong> 거대, 더 높은 능력치." },
+    summary: "정령 전투 형태로 변신합니다. 중형, AC=19+레벨, 임시 HP 10. 공기/대지/화염/물 정령 중 선택하여 각각 다른 이동 속도, 공격, 특수 능력을 얻습니다.강화(6랭크): 대형, 더 높은 능력치.강화(7랭크)...",
+    desc: "정령 전투 형태로 변신합니다. 중형, AC=19+레벨, 임시 HP 10. 공기/대지/화염/물 정령 중 선택하여 각각 다른 이동 속도, 공격, 특수 능력을 얻습니다.<br><strong>강화(6랭크):</strong> 대형, 더 높은 능력치.<br><strong>강화(7랭크):</strong> 거대, 더 높은 능력치." },
 
   { name_ko: "거짓 시야", name_en: "False Vision", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["비일반", "환영", "조작"],
@@ -1107,7 +1107,7 @@ const SPELL_DB = [
   { name_ko: "환각", name_en: "Hallucination", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["무력화", "환영", "조작", "정신"],
     summary: "대상이 어떤 것을 다른 것으로 믿게 하거나, 없는 것을 인지하게 하거나, 있는 것을 인지하지 못하게 합니다. 의지 실패 시 당신이 선택한 환각을 경험합니다. 매 턴 환각에 관여할 때 의지 내성으로 불신 시도 가능.강...",
-    desc: "대상이 어떤 것을 다른 것으로 믿게 하거나, 없는 것을 인지하게 하거나, 있는 것을 인지하지 못하게 합니다. 의지 실패 시 당신이 선택한 환각을 경험합니다. 매 턴 환각에 관여할 때 의지 내성으로 불신 시도 가능.<br><strong>강화(6등급):</strong> 2 대상. <strong>강화(8등급):</strong> 영역 30피트 폭발." },
+    desc: "대상이 어떤 것을 다른 것으로 믿게 하거나, 없는 것을 인지하게 하거나, 있는 것을 인지하지 못하게 합니다. 의지 실패 시 당신이 선택한 환각을 경험합니다. 매 턴 환각에 관여할 때 의지 내성으로 불신 시도 가능.<br><strong>강화(6랭크):</strong> 2 대상. <strong>강화(8랭크):</strong> 영역 30피트 폭발." },
 
   { name_ko: "울부짖는 눈보라", name_en: "Howling Blizzard", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["냉기", "조작"],
@@ -1116,8 +1116,8 @@ const SPELL_DB = [
 
   { name_ko: "환영 풍경", name_en: "Illusory Scene", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["환영", "조작"],
-    summary: "여러 생물과 물체를 포함하는 상상의 장면을 만듭니다. 생물들은 단순한 행동(걸기, 말하기 등)을 할 수 있지만 전투 등 복잡한 상호작용은 불가. 불신 시 흐릿해집니다.강화(6등급): 지속 시간 24시간. 강화(8등급...",
-    desc: "여러 생물과 물체를 포함하는 상상의 장면을 만듭니다. 생물들은 단순한 행동(걸기, 말하기 등)을 할 수 있지만 전투 등 복잡한 상호작용은 불가. 불신 시 흐릿해집니다.<br><strong>강화(6등급):</strong> 지속 시간 24시간. <strong>강화(8등급):</strong> 지속 시간 무제한." },
+    summary: "여러 생물과 물체를 포함하는 상상의 장면을 만듭니다. 생물들은 단순한 행동(걸기, 말하기 등)을 할 수 있지만 전투 등 복잡한 상호작용은 불가. 불신 시 흐릿해집니다.강화(6랭크): 지속 시간 24시간. 강화(8랭크...",
+    desc: "여러 생물과 물체를 포함하는 상상의 장면을 만듭니다. 생물들은 단순한 행동(걸기, 말하기 등)을 할 수 있지만 전투 등 복잡한 상호작용은 불가. 불신 시 흐릿해집니다.<br><strong>강화(6랭크):</strong> 지속 시간 24시간. <strong>강화(8랭크):</strong> 지속 시간 무제한." },
 
   { name_ko: "꿰뚫는 말뚝", name_en: "Impaling Spike", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작"],
@@ -1131,8 +1131,8 @@ const SPELL_DB = [
 
   { name_ko: "마법 통로", name_en: "Magic Passage", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane"], actions: "2행동", traits: ["비일반", "조작"],
-    summary: "표면을 통과하는 임시 통로를 엽니다. 10피트 깊이×5피트 너비×10피트 높이. 통로를 만든 사람만 볼 수 있으며, 다른 이에게는 보이지 않음. 당신과 지정한 생물만 통과 가능.강화(7등급): 20피트 깊이.",
-    desc: "표면을 통과하는 임시 통로를 엽니다. 10피트 깊이×5피트 너비×10피트 높이. 통로를 만든 사람만 볼 수 있으며, 다른 이에게는 보이지 않음. 당신과 지정한 생물만 통과 가능.<br><strong>강화(7등급):</strong> 20피트 깊이." },
+    summary: "표면을 통과하는 임시 통로를 엽니다. 10피트 깊이×5피트 너비×10피트 높이. 통로를 만든 사람만 볼 수 있으며, 다른 이에게는 보이지 않음. 당신과 지정한 생물만 통과 가능.강화(7랭크): 20피트 깊이.",
+    desc: "표면을 통과하는 임시 통로를 엽니다. 10피트 깊이×5피트 너비×10피트 높이. 통로를 만든 사람만 볼 수 있으며, 다른 이에게는 보이지 않음. 당신과 지정한 생물만 통과 가능.<br><strong>강화(7랭크):</strong> 20피트 깊이." },
 
   { name_ko: "선원의 저주", name_en: "Mariner's Curse", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult", "primal"], actions: "2행동", traits: ["저주", "조작"],
@@ -1146,13 +1146,13 @@ const SPELL_DB = [
 
   { name_ko: "차원 하인", name_en: "Planar Servitor", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "3행동", traits: ["조작"],
-    summary: "차원에서 하인을 소환합니다. 천상, 마귀, 또는 감시자를 소환하며, 주문 등급에 따라 레벨이 결정됩니다. 소환된 생물은 하수인 특성을 가집니다.",
-    desc: "차원에서 하인을 소환합니다. 천상, 마귀, 또는 감시자를 소환하며, 주문 등급에 따라 레벨이 결정됩니다. 소환된 생물은 하수인 특성을 가집니다." },
+    summary: "차원에서 하인을 소환합니다. 천상, 마귀, 또는 감시자를 소환하며, 주문 랭크에 따라 레벨이 결정됩니다. 소환된 생물은 하수인 특성을 가집니다.",
+    desc: "차원에서 하인을 소환합니다. 천상, 마귀, 또는 감시자를 소환하며, 주문 랭크에 따라 레벨이 결정됩니다. 소환된 생물은 하수인 특성을 가집니다." },
 
   { name_ko: "식물 형태", name_en: "Plant Form", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작", "식물", "변이"],
-    summary: "거대 식물 전투 형태로 변신. 대형, AC=19+레벨, 임시 HP 12. 플라이트랩, 셤블러, 트렌트 등 선택. 각 형태마다 고유 공격.강화(6등급): 거대, 도달 15피트.",
-    desc: "거대 식물 전투 형태로 변신. 대형, AC=19+레벨, 임시 HP 12. 플라이트랩, 셤블러, 트렌트 등 선택. 각 형태마다 고유 공격.<br><strong>강화(6등급):</strong> 거대, 도달 15피트." },
+    summary: "거대 식물 전투 형태로 변신. 대형, AC=19+레벨, 임시 HP 12. 플라이트랩, 셤블러, 트렌트 등 선택. 각 형태마다 고유 공격.강화(6랭크): 거대, 도달 15피트.",
+    desc: "거대 식물 전투 형태로 변신. 대형, AC=19+레벨, 임시 HP 12. 플라이트랩, 셤블러, 트렌트 등 선택. 각 형태마다 고유 공격.<br><strong>강화(6랭크):</strong> 거대, 도달 15피트." },
 
   { name_ko: "회복의 순간", name_en: "Restorative Moment", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["치유", "조작"],
@@ -1196,33 +1196,33 @@ const SPELL_DB = [
 
   { name_ko: "천상 소환", name_en: "Summon Celestial", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "3행동", traits: ["조작"],
-    summary: "당신을 위해 싸울 천상 생물을 소환합니다. 주문 등급 -1 이하 레벨의 천상 소환.강화(6등급 이후): 더 강한 천상 소환.",
-    desc: "당신을 위해 싸울 천상 생물을 소환합니다. 주문 등급 -1 이하 레벨의 천상 소환.<br><strong>강화(6등급 이후):</strong> 더 강한 천상 소환." },
+    summary: "당신을 위해 싸울 천상 생물을 소환합니다. 주문 랭크 -1 이하 레벨의 천상 소환.강화(6랭크 이후): 더 강한 천상 소환.",
+    desc: "당신을 위해 싸울 천상 생물을 소환합니다. 주문 랭크 -1 이하 레벨의 천상 소환.<br><strong>강화(6랭크 이후):</strong> 더 강한 천상 소환." },
 
   { name_ko: "용 소환", name_en: "Summon Dragon", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "3행동", traits: ["조작"],
-    summary: "당신을 위해 싸울 용을 소환합니다. 주문 등급 -1 이하 레벨의 용을 소환합니다.강화(6등급 이후): 더 강한 용 소환 가능.",
-    desc: "당신을 위해 싸울 용을 소환합니다. 주문 등급 -1 이하 레벨의 용을 소환합니다.<br><strong>강화(6등급 이후):</strong> 더 강한 용 소환 가능." },
+    summary: "당신을 위해 싸울 용을 소환합니다. 주문 랭크 -1 이하 레벨의 용을 소환합니다.강화(6랭크 이후): 더 강한 용 소환 가능.",
+    desc: "당신을 위해 싸울 용을 소환합니다. 주문 랭크 -1 이하 레벨의 용을 소환합니다.<br><strong>강화(6랭크 이후):</strong> 더 강한 용 소환 가능." },
 
   { name_ko: "실체 소환", name_en: "Summon Entity", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "3행동", traits: ["조작"],
-    summary: "기형체(aberration)를 소환합니다. 주문 등급 -1 이하 레벨.",
-    desc: "기형체(aberration)를 소환합니다. 주문 등급 -1 이하 레벨." },
+    summary: "기형체(aberration)를 소환합니다. 주문 랭크 -1 이하 레벨.",
+    desc: "기형체(aberration)를 소환합니다. 주문 랭크 -1 이하 레벨." },
 
   { name_ko: "마귀 소환", name_en: "Summon Fiend", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "3행동", traits: ["조작"],
-    summary: "마귀를 소환합니다. 주문 등급 -1 이하 레벨.",
-    desc: "마귀를 소환합니다. 주문 등급 -1 이하 레벨." },
+    summary: "마귀를 소환합니다. 주문 랭크 -1 이하 레벨.",
+    desc: "마귀를 소환합니다. 주문 랭크 -1 이하 레벨." },
 
   { name_ko: "거인 소환", name_en: "Summon Giant", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "3행동", traits: ["조작"],
-    summary: "거인을 소환합니다. 주문 등급 -1 이하 레벨의 거인.",
-    desc: "거인을 소환합니다. 주문 등급 -1 이하 레벨의 거인." },
+    summary: "거인을 소환합니다. 주문 랭크 -1 이하 레벨의 거인.",
+    desc: "거인을 소환합니다. 주문 랭크 -1 이하 레벨의 거인." },
 
   { name_ko: "감시자 소환", name_en: "Summon Monitor", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "3행동", traits: ["조작"],
-    summary: "차원 감시자를 소환합니다. 주문 등급 -1 이하 레벨.",
-    desc: "차원 감시자를 소환합니다. 주문 등급 -1 이하 레벨." },
+    summary: "차원 감시자를 소환합니다. 주문 랭크 -1 이하 레벨.",
+    desc: "차원 감시자를 소환합니다. 주문 랭크 -1 이하 레벨." },
 
   { name_ko: "시냅스 파동", name_en: "Synaptic Pulse", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["무력화", "조작", "정신"],
@@ -1246,8 +1246,8 @@ const SPELL_DB = [
 
   { name_ko: "만능 언어", name_en: "Truespeech", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["비일반", "조작"],
-    summary: "생물이 모든 언어를 이해하고 말할 수 있게 합니다.강화(7등급): 지속 시간 8시간. 강화(9등급): 다음 일일 준비까지.",
-    desc: "생물이 모든 언어를 이해하고 말할 수 있게 합니다.<br><strong>강화(7등급):</strong> 지속 시간 8시간. <strong>강화(9등급):</strong> 다음 일일 준비까지." },
+    summary: "생물이 모든 언어를 이해하고 말할 수 있게 합니다.강화(7랭크): 지속 시간 8시간. 강화(9랭크): 다음 일일 준비까지.",
+    desc: "생물이 모든 언어를 이해하고 말할 수 있게 합니다.<br><strong>강화(7랭크):</strong> 지속 시간 8시간. <strong>강화(9랭크):</strong> 다음 일일 준비까지." },
 
   { name_ko: "그림자 여행", name_en: "Umbral Journey", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["비일반", "조작", "그림자", "순간이동"],
@@ -1292,17 +1292,17 @@ const SPELL_DB = [
   { name_ko: "지배", name_en: "Dominate", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["비일반", "무력화", "조작", "정신"],
     summary: "대상이 당신의 명령에 복종해야 합니다. 의지 내성 실패 시 시전 시 한 문장 명령을 따릅니다. 적대 행동은 거부할 수 있습니다. 명령이 완전히 대상의 성격에 반하면 자동 종료. 유지하여 새 명령 가능.대성공: 영향 ...",
-    desc: "대상이 당신의 명령에 복종해야 합니다. 의지 내성 실패 시 시전 시 한 문장 명령을 따릅니다. 적대 행동은 거부할 수 있습니다. 명령이 완전히 대상의 성격에 반하면 자동 종료. 유지하여 새 명령 가능.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 영향 없음, 지배 시도를 인지. <strong>실패:</strong> 지배됨. <strong>대실패:</strong> 지배됨, 지배 시도를 인지하지 못함.<br><strong>강화(10등급):</strong> 지속 시간 무제한, 생물이 초기 내성을 굴리지 않음." },
+    desc: "대상이 당신의 명령에 복종해야 합니다. 의지 내성 실패 시 시전 시 한 문장 명령을 따릅니다. 적대 행동은 거부할 수 있습니다. 명령이 완전히 대상의 성격에 반하면 자동 종료. 유지하여 새 명령 가능.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 영향 없음, 지배 시도를 인지. <strong>실패:</strong> 지배됨. <strong>대실패:</strong> 지배됨, 지배 시도를 인지하지 못함.<br><strong>강화(10랭크):</strong> 지속 시간 무제한, 생물이 초기 내성을 굴리지 않음." },
 
   { name_ko: "용 형태", name_en: "Dragon Form", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "primal"], actions: "2행동", traits: ["조작", "변이"],
     summary: "전투 형태로 용으로 변신합니다. 대형, AC = 18+레벨, 임시 HP 10, 암시야, 비행 100피트 등. 공격 수정치 +22, 브레스 웨폰 사용 가능. 용 유형(검은/파란/녹색/붉은/하얀/놋쇠/청동/금/은/구리)...",
-    desc: "전투 형태로 용으로 변신합니다. 대형, AC = 18+레벨, 임시 HP 10, 암시야, 비행 100피트 등. 공격 수정치 +22, 브레스 웨폰 사용 가능. 용 유형(검은/파란/녹색/붉은/하얀/놋쇠/청동/금/은/구리) 선택 시 각각 다른 공격/브레스 피해 유형.<br><strong>강화(8등급):</strong> 거대 크기, 도달 20피트, AC=21+레벨, 임시 HP 20, 공격 수정치 +28, 피해 보너스 +12." },
+    desc: "전투 형태로 용으로 변신합니다. 대형, AC = 18+레벨, 임시 HP 10, 암시야, 비행 100피트 등. 공격 수정치 +22, 브레스 웨폰 사용 가능. 용 유형(검은/파란/녹색/붉은/하얀/놋쇠/청동/금/은/구리) 선택 시 각각 다른 공격/브레스 피해 유형.<br><strong>강화(8랭크):</strong> 거대 크기, 도달 20피트, AC=21+레벨, 임시 HP 20, 공격 수정치 +28, 피해 보너스 +12." },
 
   { name_ko: "생명의 장", name_en: "Field of Life", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["divine", "primal"], actions: "2행동", traits: ["치유", "조작", "활력"],
-    summary: "활력 에너지 장을 만들어 영역 내에 머무는 생물을 치유합니다. 처음 생성 시 영역 내 살아있는 아군이 1d8 HP 회복. 유지 시마다 추가 1d8 회복. 영역 내 언데드는 턴 시작 시 1d8 활력 피해.강화(8등급)...",
-    desc: "활력 에너지 장을 만들어 영역 내에 머무는 생물을 치유합니다. 처음 생성 시 영역 내 살아있는 아군이 <strong>1d8 HP 회복</strong>. 유지 시마다 추가 1d8 회복. 영역 내 언데드는 턴 시작 시 1d8 활력 피해.<br><strong>강화(8등급):</strong> 치유/피해 2d8. <strong>강화(9등급):</strong> 3d8." },
+    summary: "활력 에너지 장을 만들어 영역 내에 머무는 생물을 치유합니다. 처음 생성 시 영역 내 살아있는 아군이 1d8 HP 회복. 유지 시마다 추가 1d8 회복. 영역 내 언데드는 턴 시작 시 1d8 활력 피해.강화(8랭크)...",
+    desc: "활력 에너지 장을 만들어 영역 내에 머무는 생물을 치유합니다. 처음 생성 시 영역 내 살아있는 아군이 <strong>1d8 HP 회복</strong>. 유지 시마다 추가 1d8 회복. 영역 내 언데드는 턴 시작 시 1d8 활력 피해.<br><strong>강화(8랭크):</strong> 치유/피해 2d8. <strong>강화(9랭크):</strong> 3d8." },
 
   { name_ko: "오도", name_en: "Mislead", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["arcane"], actions: "2행동", traits: ["환영", "조작"],
@@ -1326,8 +1326,8 @@ const SPELL_DB = [
 
   { name_ko: "부활", name_en: "Raise Dead", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "2행동", traits: ["비일반", "치유", "조작", "활력"],
-    summary: "죽은 생물을 삶으로 돌려보냅니다. 1 HP로 부활합니다. 대상에 부활 병(resurrection sickness)이 부여되어(일정 기간 페널티). 의지가 없거나 영혼이 자유롭지 않은 생물은 부활 불가.강화(7등급):...",
-    desc: "죽은 생물을 삶으로 돌려보냅니다. <strong>1 HP</strong>로 부활합니다. 대상에 <strong>부활 병(resurrection sickness)</strong>이 부여되어(일정 기간 페널티). 의지가 없거나 영혼이 자유롭지 않은 생물은 부활 불가.<br><strong>강화(7등급):</strong> 최대 15레벨, 비용 200gp. <strong>강화(8등급):</strong> 최대 17레벨, 비용 1,000gp. <strong>강화(9등급):</strong> 최대 19레벨, 비용 5,000gp, 최대 1주 사망." },
+    summary: "죽은 생물을 삶으로 돌려보냅니다. 1 HP로 부활합니다. 대상에 부활 병(resurrection sickness)이 부여되어(일정 기간 페널티). 의지가 없거나 영혼이 자유롭지 않은 생물은 부활 불가.강화(7랭크):...",
+    desc: "죽은 생물을 삶으로 돌려보냅니다. <strong>1 HP</strong>로 부활합니다. 대상에 <strong>부활 병(resurrection sickness)</strong>이 부여되어(일정 기간 페널티). 의지가 없거나 영혼이 자유롭지 않은 생물은 부활 불가.<br><strong>강화(7랭크):</strong> 최대 15레벨, 비용 200gp. <strong>강화(8랭크):</strong> 최대 17레벨, 비용 1,000gp. <strong>강화(9랭크):</strong> 최대 19레벨, 비용 5,000gp, 최대 1주 사망." },
 
   { name_ko: "반발", name_en: "Repulsion", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["조작", "정신"],
@@ -1356,8 +1356,8 @@ const SPELL_DB = [
 
   { name_ko: "순간이동", name_en: "Teleport", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["비일반", "조작", "순간이동"],
-    summary: "당신과 동의하는 생물들을 먼 거리로 순간이동합니다. 정밀도는 목적지에 대한 친숙도에 따라 다릅니다. 잘 아는 곳은 정확히, 한 번 본 곳은 약간의 오차, 설명만 들은 곳은 크게 빗나갈 수 있습니다.강화(7등급): 같...",
-    desc: "당신과 동의하는 생물들을 먼 거리로 순간이동합니다. 정밀도는 목적지에 대한 친숙도에 따라 다릅니다. 잘 아는 곳은 정확히, 한 번 본 곳은 약간의 오차, 설명만 들은 곳은 크게 빗나갈 수 있습니다.<br><strong>강화(7등급):</strong> 같은 대륙 내 어디든. <strong>강화(8등급):</strong> 같은 행성 내 어디든. <strong>강화(9등급):</strong> 같은 차원 내 어디든+대상 8명까지." },
+    summary: "당신과 동의하는 생물들을 먼 거리로 순간이동합니다. 정밀도는 목적지에 대한 친숙도에 따라 다릅니다. 잘 아는 곳은 정확히, 한 번 본 곳은 약간의 오차, 설명만 들은 곳은 크게 빗나갈 수 있습니다.강화(7랭크): 같...",
+    desc: "당신과 동의하는 생물들을 먼 거리로 순간이동합니다. 정밀도는 목적지에 대한 친숙도에 따라 다릅니다. 잘 아는 곳은 정확히, 한 번 본 곳은 약간의 오차, 설명만 들은 곳은 크게 빗나갈 수 있습니다.<br><strong>강화(7랭크):</strong> 같은 대륙 내 어디든. <strong>강화(8랭크):</strong> 같은 행성 내 어디든. <strong>강화(9랭크):</strong> 같은 차원 내 어디든+대상 8명까지." },
 
   { name_ko: "계절의 나무", name_en: "Tree of Seasons", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "3행동", traits: ["조작", "식물"],
@@ -1382,7 +1382,7 @@ const SPELL_DB = [
   { name_ko: "힘의 벽", name_en: "Wall of Force", rank: 6, is_cantrip: false, is_focus: false,
     traditions: ["arcane"], actions: "3행동", traits: ["힘", "조작"],
     summary: "보이지 않고 내구적인 마법 힘의 평면을 만듭니다. 50피트×20피트의 벽. 물리적이거나 에테르적으로 통과 불가. 상쇄하거나 분해(disintegrate)로만 파괴 가능. AC 10, 경도 30, HP 120.강화(7...",
-    desc: "보이지 않고 내구적인 마법 힘의 평면을 만듭니다. 50피트×20피트의 벽. 물리적이거나 에테르적으로 통과 불가. 상쇄하거나 분해(disintegrate)로만 파괴 가능. AC 10, 경도 30, HP 120.<br><strong>강화(7등급):</strong> 100피트×25피트. <strong>강화(9등급):</strong> 100피트×25피트, 지속 10분." },
+    desc: "보이지 않고 내구적인 마법 힘의 평면을 만듭니다. 50피트×20피트의 벽. 물리적이거나 에테르적으로 통과 불가. 상쇄하거나 분해(disintegrate)로만 파괴 가능. AC 10, 경도 30, HP 120.<br><strong>강화(7랭크):</strong> 100피트×25피트. <strong>강화(9랭크):</strong> 100피트×25피트, 지속 10분." },
 
   { name_ko: "집단 기억", name_en: "Collective Memories", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["조작", "정신"],
@@ -1396,8 +1396,8 @@ const SPELL_DB = [
 
   { name_ko: "적 복제", name_en: "Duplicate Foe", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "3행동", traits: ["조작"],
-    summary: "적의 임시 복제본을 만들어 당신을 위해 싸우게 합니다. 인내 실패 시 복제본 생성. 복제본은 원본의 공격과 이동을 가지지만 HP가 낮고 주문 시전 불가. 하수인 특성.강화(9등급): 복제본의 HP와 지속 시간 증가.",
-    desc: "적의 임시 복제본을 만들어 당신을 위해 싸우게 합니다. 인내 실패 시 복제본 생성. 복제본은 원본의 공격과 이동을 가지지만 HP가 낮고 주문 시전 불가. 하수인 특성.<br><strong>강화(9등급):</strong> 복제본의 HP와 지속 시간 증가." },
+    summary: "적의 임시 복제본을 만들어 당신을 위해 싸우게 합니다. 인내 실패 시 복제본 생성. 복제본은 원본의 공격과 이동을 가지지만 HP가 낮고 주문 시전 불가. 하수인 특성.강화(9랭크): 복제본의 HP와 지속 시간 증가.",
+    desc: "적의 임시 복제본을 만들어 당신을 위해 싸우게 합니다. 인내 실패 시 복제본 생성. 복제본은 원본의 공격과 이동을 가지지만 HP가 낮고 주문 시전 불가. 하수인 특성.<br><strong>강화(9랭크):</strong> 복제본의 HP와 지속 시간 증가." },
 
   { name_ko: "일식 폭발", name_en: "Eclipse Burst", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["냉기", "어둠", "조작"],
@@ -1406,28 +1406,28 @@ const SPELL_DB = [
 
   { name_ko: "에너지 방벽", name_en: "Energy Aegis", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "생물이 산성, 냉기, 전기, 화염, 힘, 음파, 활력, 공허 피해에 저항 5를 얻습니다.강화(9등급): 저항 10.",
-    desc: "생물이 산성, 냉기, 전기, 화염, 힘, 음파, 활력, 공허 피해에 <strong>저항 5</strong>를 얻습니다.<br><strong>강화(9등급):</strong> 저항 10." },
+    summary: "생물이 산성, 냉기, 전기, 화염, 힘, 음파, 활력, 공허 피해에 저항 5를 얻습니다.강화(9랭크): 저항 10.",
+    desc: "생물이 산성, 냉기, 전기, 화염, 힘, 음파, 활력, 공허 피해에 <strong>저항 5</strong>를 얻습니다.<br><strong>강화(9랭크):</strong> 저항 10." },
 
   { name_ko: "처형", name_en: "Execute", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["조작", "공허", "활력"],
-    summary: "살아있는 생물을 죽음으로, 언데드를 파괴로 끌어당깁니다. 대상의 남은 HP에 따라 피해가 결정됩니다. 최대 HP의 절반 이하일 때 즉사 가능(인내 대실패 시).강화(8등급): 2 대상. 강화(9등급): 3 대상.",
-    desc: "살아있는 생물을 죽음으로, 언데드를 파괴로 끌어당깁니다. 대상의 남은 HP에 따라 피해가 결정됩니다. 최대 HP의 절반 이하일 때 즉사 가능(인내 대실패 시).<br><strong>강화(8등급):</strong> 2 대상. <strong>강화(9등급):</strong> 3 대상." },
+    summary: "살아있는 생물을 죽음으로, 언데드를 파괴로 끌어당깁니다. 대상의 남은 HP에 따라 피해가 결정됩니다. 최대 HP의 절반 이하일 때 즉사 가능(인내 대실패 시).강화(8랭크): 2 대상. 강화(9랭크): 3 대상.",
+    desc: "살아있는 생물을 죽음으로, 언데드를 파괴로 끌어당깁니다. 대상의 남은 HP에 따라 피해가 결정됩니다. 최대 HP의 절반 이하일 때 즉사 가능(인내 대실패 시).<br><strong>강화(8랭크):</strong> 2 대상. <strong>강화(9랭크):</strong> 3 대상." },
 
   { name_ko: "불꽃 몸", name_en: "Fiery Body", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["화염", "조작", "변이"],
     summary: "몸을 살아있는 불꽃으로 변합니다. 화염 면역, 냉기 약점 5. 비행 속도 40피트. 근접 접촉 시 3d6 화염 피해. 비무장 공격에 2d6 화염 피해 추가. 화염 주문의 피해 주사위 1개마다 +1 추가 피해.강화(9...",
-    desc: "몸을 살아있는 불꽃으로 변합니다. <strong>화염 면역, 냉기 약점 5</strong>. 비행 속도 40피트. 근접 접촉 시 <strong>3d6 화염 피해</strong>. 비무장 공격에 2d6 화염 피해 추가. 화염 주문의 피해 주사위 1개마다 +1 추가 피해.<br><strong>강화(9등급):</strong> 냉기 약점 0, 비행 속도 60피트, 접촉 피해 4d6." },
+    desc: "몸을 살아있는 불꽃으로 변합니다. <strong>화염 면역, 냉기 약점 5</strong>. 비행 속도 40피트. 근접 접촉 시 <strong>3d6 화염 피해</strong>. 비무장 공격에 2d6 화염 피해 추가. 화염 주문의 피해 주사위 1개마다 +1 추가 피해.<br><strong>강화(9랭크):</strong> 냉기 약점 0, 비행 속도 60피트, 접촉 피해 4d6." },
 
   { name_ko: "차원 간 순간이동", name_en: "Interplanar Teleport", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["비일반", "조작", "순간이동"],
     summary: "당신과 대상들을 당신이 선택한 다른 차원으로 순간이동시킵니다. 목적지 차원에 대한 정보를 가지고 있어야 하며, 일반적으로 직접 방문한 경험이 있거나, 차원의 특성을 자세히 연구했거나, 신뢰할 수 있는 출처로부터 구체...",
-    desc: "당신과 대상들을 당신이 선택한 다른 차원으로 순간이동시킵니다. 목적지 차원에 대한 정보를 가지고 있어야 하며, 일반적으로 직접 방문한 경험이 있거나, 차원의 특성을 자세히 연구했거나, 신뢰할 수 있는 출처로부터 구체적인 지식을 얻은 경우에 해당합니다. 목적지를 연구하지 않았거나 이 지식을 갖추지 못한 동의하는 생물은 시전 도중 당신과 물리적으로 접촉하고 있어야 합니다. 도착지는 그 차원 어딘가(특정 지점이 아님), 또는 당신이 알고 있는 특정 장소—예를 들어 포탈이나 이전에 방문한 위치—와 연관된 차원 내 지점이 됩니다.<br><strong>강화(9등급):</strong> 동의하는 생물을 최대 100명까지 데려갈 수 있습니다." },
+    desc: "당신과 대상들을 당신이 선택한 다른 차원으로 순간이동시킵니다. 목적지 차원에 대한 정보를 가지고 있어야 하며, 일반적으로 직접 방문한 경험이 있거나, 차원의 특성을 자세히 연구했거나, 신뢰할 수 있는 출처로부터 구체적인 지식을 얻은 경우에 해당합니다. 목적지를 연구하지 않았거나 이 지식을 갖추지 못한 동의하는 생물은 시전 도중 당신과 물리적으로 접촉하고 있어야 합니다. 도착지는 그 차원 어딘가(특정 지점이 아님), 또는 당신이 알고 있는 특정 장소—예를 들어 포탈이나 이전에 방문한 위치—와 연관된 차원 내 지점이 됩니다.<br><strong>강화(9랭크):</strong> 동의하는 생물을 최대 100명까지 데려갈 수 있습니다." },
 
   { name_ko: "공포의 가면", name_en: "Mask of Terror", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["감정", "환영", "조작", "정신", "시각"],
-    summary: "무시무시한 환영 외관을 만들어 관찰자를 겁먹게 합니다. 대상을 보는 적은 의지 내성 시도. 실패 시 공포(frightened) 2. 대실패 시 공포 3+도주(fleeing) 1라운드.강화(8등급): 30피트 폭발 내...",
-    desc: "무시무시한 환영 외관을 만들어 관찰자를 겁먹게 합니다. 대상을 보는 적은 의지 내성 시도. 실패 시 <strong>공포(frightened) 2</strong>. 대실패 시 공포 3+<strong>도주(fleeing) 1라운드</strong>.<br><strong>강화(8등급):</strong> 30피트 폭발 내 모든 아군에 효과 적용 가능." },
+    summary: "무시무시한 환영 외관을 만들어 관찰자를 겁먹게 합니다. 대상을 보는 적은 의지 내성 시도. 실패 시 공포(frightened) 2. 대실패 시 공포 3+도주(fleeing) 1라운드.강화(8랭크): 30피트 폭발 내...",
+    desc: "무시무시한 환영 외관을 만들어 관찰자를 겁먹게 합니다. 대상을 보는 적은 의지 내성 시도. 실패 시 <strong>공포(frightened) 2</strong>. 대실패 시 공포 3+<strong>도주(fleeing) 1라운드</strong>.<br><strong>강화(8랭크):</strong> 30피트 폭발 내 모든 아군에 효과 적용 가능." },
 
   { name_ko: "차원 추방", name_en: "Planar Displacement", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["조작", "순간이동"],
@@ -1451,18 +1451,18 @@ const SPELL_DB = [
 
   { name_ko: "재생", name_en: "Regenerate", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["divine", "primal"], actions: "2행동", traits: ["치유", "조작", "활력"],
-    summary: "생물이 시간에 따라 치유되고, 기관을 재생하며, 신체 부위를 다시 붙입니다. 대상이 라운드당 15 HP를 회복합니다. 잃어버린 팔다리, 기관 등이 지속 시간 중에 재성장합니다.강화(9등급): 라운드당 20 HP.",
-    desc: "생물이 시간에 따라 치유되고, 기관을 재생하며, 신체 부위를 다시 붙입니다. 대상이 <strong>라운드당 15 HP</strong>를 회복합니다. 잃어버린 팔다리, 기관 등이 지속 시간 중에 재성장합니다.<br><strong>강화(9등급):</strong> 라운드당 20 HP." },
+    summary: "생물이 시간에 따라 치유되고, 기관을 재생하며, 신체 부위를 다시 붙입니다. 대상이 라운드당 15 HP를 회복합니다. 잃어버린 팔다리, 기관 등이 지속 시간 중에 재성장합니다.강화(9랭크): 라운드당 20 HP.",
+    desc: "생물이 시간에 따라 치유되고, 기관을 재생하며, 신체 부위를 다시 붙입니다. 대상이 <strong>라운드당 15 HP</strong>를 회복합니다. 잃어버린 팔다리, 기관 등이 지속 시간 중에 재성장합니다.<br><strong>강화(9랭크):</strong> 라운드당 20 HP." },
 
   { name_ko: "과거 인지", name_en: "Retrocognition", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["조작"],
-    summary: "현재 위치의 과거 사건에 대한 감각 인상을 얻습니다. 유지할수록 더 먼 과거로 거슬러 올라가며, 중요한 감정적 사건일수록 더 선명하게 인지합니다.강화(8등급): 수천 년 전까지. 강화(9등급): 시간 제한 없음.",
-    desc: "현재 위치의 과거 사건에 대한 감각 인상을 얻습니다. 유지할수록 더 먼 과거로 거슬러 올라가며, 중요한 감정적 사건일수록 더 선명하게 인지합니다.<br><strong>강화(8등급):</strong> 수천 년 전까지. <strong>강화(9등급):</strong> 시간 제한 없음." },
+    summary: "현재 위치의 과거 사건에 대한 감각 인상을 얻습니다. 유지할수록 더 먼 과거로 거슬러 올라가며, 중요한 감정적 사건일수록 더 선명하게 인지합니다.강화(8랭크): 수천 년 전까지. 강화(9랭크): 시간 제한 없음.",
+    desc: "현재 위치의 과거 사건에 대한 감각 인상을 얻습니다. 유지할수록 더 먼 과거로 거슬러 올라가며, 중요한 감정적 사건일수록 더 선명하게 인지합니다.<br><strong>강화(8랭크):</strong> 수천 년 전까지. <strong>강화(9랭크):</strong> 시간 제한 없음." },
 
   { name_ko: "태양 폭발", name_en: "Sunburst", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["divine", "primal"], actions: "2행동", traits: ["화염", "빛", "조작", "활력"],
-    summary: "태양 빛의 구체가 화염 피해를 주고, 언데드를 해치며, 어둠을 극복합니다. 8d10 화염 피해(반사). 언데드에 추가 8d10 활력 피해. 영역의 마법 어둠을 상쇄 시도. 4등급 이하 비마법 불빛이 1분간 꺼짐.강화...",
-    desc: "태양 빛의 구체가 화염 피해를 주고, 언데드를 해치며, 어둠을 극복합니다. <strong>8d10 화염 피해</strong>(반사). 언데드에 추가 <strong>8d10 활력 피해</strong>. 영역의 마법 어둠을 상쇄 시도. 4등급 이하 비마법 불빛이 1분간 꺼짐.<br><strong>강화(+1):</strong> 화염 +1d10, 활력 +1d10." },
+    summary: "태양 빛의 구체가 화염 피해를 주고, 언데드를 해치며, 어둠을 극복합니다. 8d10 화염 피해(반사). 언데드에 추가 8d10 활력 피해. 영역의 마법 어둠을 상쇄 시도. 4랭크 이하 비마법 불빛이 1분간 꺼짐.강화...",
+    desc: "태양 빛의 구체가 화염 피해를 주고, 언데드를 해치며, 어둠을 극복합니다. <strong>8d10 화염 피해</strong>(반사). 언데드에 추가 <strong>8d10 활력 피해</strong>. 영역의 마법 어둠을 상쇄 시도. 4랭크 이하 비마법 불빛이 1분간 꺼짐.<br><strong>강화(+1):</strong> 화염 +1d10, 활력 +1d10." },
 
   { name_ko: "정밀 대상", name_en: "True Target", rank: 7, is_cantrip: false, is_focus: false,
     traditions: ["arcane"], actions: "1행동", traits: ["예언"],
@@ -1502,7 +1502,7 @@ const SPELL_DB = [
   { name_ko: "신성한 영감", name_en: "Divine Inspiration", rank: 8, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "2행동", traits: ["조작", "정신"],
     summary: "대상을 신성한 힘으로 채워 직업 자질과의 연결을 회복시킵니다. 대상은 하루에 제한된 횟수만 사용할 수 있는 소진된 직업 요소 중 하나(집중 풀, 기의 풀 또는 기타 능력 등)를 되찾습니다. 주문 시전자의 경우, 4등...",
-    desc: "대상을 신성한 힘으로 채워 직업 자질과의 연결을 회복시킵니다. 대상은 하루에 제한된 횟수만 사용할 수 있는 소진된 직업 요소 중 하나(집중 풀, 기의 풀 또는 기타 능력 등)를 되찾습니다. 주문 시전자의 경우, 4등급 이하의 소진된 주문 슬롯 하나를 회복합니다.<br><strong>강화(10등급):</strong> 회복할 수 있는 주문 슬롯이 최대 7등급까지 가능합니다." },
+    desc: "대상을 신성한 힘으로 채워 직업 자질과의 연결을 회복시킵니다. 대상은 하루에 제한된 횟수만 사용할 수 있는 소진된 직업 요소 중 하나(집중 풀, 기의 풀 또는 기타 능력 등)를 되찾습니다. 주문 시전자의 경우, 4랭크 이하의 소진된 주문 슬롯 하나를 회복합니다.<br><strong>강화(10랭크):</strong> 회복할 수 있는 주문 슬롯이 최대 7랭크까지 가능합니다." },
 
   { name_ko: "지진", name_en: "Earthquake", rank: 8, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["대지", "조작"],
@@ -1561,8 +1561,8 @@ const SPELL_DB = [
 
   { name_ko: "유성 낙하", name_en: "Falling Stars", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작"],
-    summary: "하늘에서 네 개의 천체 조각을 내려칩니다. 각 유성은 10피트 폭발 영역에 6d10 둔기 피해 + 6d10 화염 피해(기본 반사). 영역은 겹칠 수 있으며, 겹치는 영역의 생물은 한 번만 내성.강화(10등급): 6개...",
-    desc: "하늘에서 네 개의 천체 조각을 내려칩니다. 각 유성은 10피트 폭발 영역에 <strong>6d10 둔기 피해 + 6d10 화염 피해</strong>(기본 반사). 영역은 겹칠 수 있으며, 겹치는 영역의 생물은 한 번만 내성.<br><strong>강화(10등급):</strong> 6개 유성." },
+    summary: "하늘에서 네 개의 천체 조각을 내려칩니다. 각 유성은 10피트 폭발 영역에 6d10 둔기 피해 + 6d10 화염 피해(기본 반사). 영역은 겹칠 수 있으며, 겹치는 영역의 생물은 한 번만 내성.강화(10랭크): 6개...",
+    desc: "하늘에서 네 개의 천체 조각을 내려칩니다. 각 유성은 10피트 폭발 영역에 <strong>6d10 둔기 피해 + 6d10 화염 피해</strong>(기본 반사). 영역은 겹칠 수 있으며, 겹치는 영역의 생물은 한 번만 내성.<br><strong>강화(10랭크):</strong> 6개 유성." },
 
   { name_ko: "예지", name_en: "Foresight", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "2행동", traits: ["조작", "예언"],
@@ -1571,18 +1571,18 @@ const SPELL_DB = [
 
   { name_ko: "내파", name_en: "Implosion", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["arcane"], actions: "2행동", traits: ["조작"],
-    summary: "생물을 내부로 붕괴시킵니다. 75 피해(기본 인내). 유지 시마다 같은 대상이나 새 대상에 같은 효과. 원래 대상은 반복 시 내성에 -1 상황 페널티 누적.강화(10등급): 피해 100.",
-    desc: "생물을 내부로 붕괴시킵니다. <strong>75 피해</strong>(기본 인내). 유지 시마다 같은 대상이나 새 대상에 같은 효과. 원래 대상은 반복 시 내성에 -1 상황 페널티 누적.<br><strong>강화(10등급):</strong> 피해 100." },
+    summary: "생물을 내부로 붕괴시킵니다. 75 피해(기본 인내). 유지 시마다 같은 대상이나 새 대상에 같은 효과. 원래 대상은 반복 시 내성에 -1 상황 페널티 누적.강화(10랭크): 피해 100.",
+    desc: "생물을 내부로 붕괴시킵니다. <strong>75 피해</strong>(기본 인내). 유지 시마다 같은 대상이나 새 대상에 같은 효과. 원래 대상은 반복 시 내성에 -1 상황 페널티 누적.<br><strong>강화(10랭크):</strong> 피해 100." },
 
   { name_ko: "대학살", name_en: "Massacre", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "primal"], actions: "2행동", traits: ["조작", "공허", "죽음"],
-    summary: "즉시 여러 생물을 죽입니다. 영역 내 생물이 인내 내성 시도. 14레벨 이하 생물이 실패하면 즉사(죽음 효과). 더 높은 레벨은 100 피해. 대실패 시 레벨에 관계없이 즉사.강화(10등급): 영향받는 최대 레벨 1...",
-    desc: "즉시 여러 생물을 죽입니다. 영역 내 생물이 인내 내성 시도. 14레벨 이하 생물이 실패하면 <strong>즉사</strong>(죽음 효과). 더 높은 레벨은 <strong>100 피해</strong>. 대실패 시 레벨에 관계없이 즉사.<br><strong>강화(10등급):</strong> 영향받는 최대 레벨 17 이하로 증가." },
+    summary: "즉시 여러 생물을 죽입니다. 영역 내 생물이 인내 내성 시도. 14레벨 이하 생물이 실패하면 즉사(죽음 효과). 더 높은 레벨은 100 피해. 대실패 시 레벨에 관계없이 즉사.강화(10랭크): 영향받는 최대 레벨 1...",
+    desc: "즉시 여러 생물을 죽입니다. 영역 내 생물이 인내 내성 시도. 14레벨 이하 생물이 실패하면 <strong>즉사</strong>(죽음 효과). 더 높은 레벨은 <strong>100 피해</strong>. 대실패 시 레벨에 관계없이 즉사.<br><strong>강화(10랭크):</strong> 영향받는 최대 레벨 17 이하로 증가." },
 
   { name_ko: "변형", name_en: "Metamorphosis", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "primal"], actions: "2행동", traits: ["조작", "변이"],
-    summary: "변환 마법의 달인으로서 형태 속에 또 다른 형태를 숨깁니다. 주문 목록에 있거나 8등급 이하로 준비 가능한 모든 변신형(polymorph) 주문이 부여하는 형태로 변신할 수 있습니다(8등급 이하 상향된 버전 포함)....",
-    desc: "변환 마법의 달인으로서 형태 속에 또 다른 형태를 숨깁니다. 주문 목록에 있거나 8등급 이하로 준비 가능한 모든 변신형(polymorph) 주문이 부여하는 형태로 변신할 수 있습니다(8등급 이하 상향된 버전 포함). 해당 형태에서 일반적으로 얻는 임시 HP 대신 <strong>임시 HP 40</strong>을 얻습니다." },
+    summary: "변환 마법의 달인으로서 형태 속에 또 다른 형태를 숨깁니다. 주문 목록에 있거나 8랭크 이하로 준비 가능한 모든 변신형(polymorph) 주문이 부여하는 형태로 변신할 수 있습니다(8랭크 이하 상향된 버전 포함)....",
+    desc: "변환 마법의 달인으로서 형태 속에 또 다른 형태를 숨깁니다. 주문 목록에 있거나 8랭크 이하로 준비 가능한 모든 변신형(polymorph) 주문이 부여하는 형태로 변신할 수 있습니다(8랭크 이하 상향된 버전 포함). 해당 형태에서 일반적으로 얻는 임시 HP 대신 <strong>임시 HP 40</strong>을 얻습니다." },
 
   { name_ko: "압도적 존재", name_en: "Overwhelming Presence", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["청각", "무력화", "조작", "정신", "시각"],
@@ -1601,8 +1601,8 @@ const SPELL_DB = [
 
   { name_ko: "폭풍 군주", name_en: "Storm Lord", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["공기", "전기", "조작"],
-    summary: "강력한 폭풍을 불러옵니다. 영역에 폭우+강풍. 유지 시마다 번개 3줄기를 원하는 대상에 발사(각 4d12 전기 피해, 기본 반사). 비행 중인 적은 이동이 방해됩니다.강화(10등급): 번개 6줄기.",
-    desc: "강력한 폭풍을 불러옵니다. 영역에 폭우+강풍. 유지 시마다 번개 3줄기를 원하는 대상에 발사(<strong>각 4d12 전기 피해</strong>, 기본 반사). 비행 중인 적은 이동이 방해됩니다.<br><strong>강화(10등급):</strong> 번개 6줄기." },
+    summary: "강력한 폭풍을 불러옵니다. 영역에 폭우+강풍. 유지 시마다 번개 3줄기를 원하는 대상에 발사(각 4d12 전기 피해, 기본 반사). 비행 중인 적은 이동이 방해됩니다.강화(10랭크): 번개 6줄기.",
+    desc: "강력한 폭풍을 불러옵니다. 영역에 폭우+강풍. 유지 시마다 번개 3줄기를 원하는 대상에 발사(<strong>각 4d12 전기 피해</strong>, 기본 반사). 비행 중인 적은 이동이 방해됩니다.<br><strong>강화(10랭크):</strong> 번개 6줄기." },
 
   { name_ko: "불가해한 노래", name_en: "Unfathomable Song", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["청각", "무력화", "조작", "정신"],
@@ -1616,8 +1616,8 @@ const SPELL_DB = [
 
   { name_ko: "소망", name_en: "Wish", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["arcane"], actions: "3행동", traits: ["조작"],
-    summary: "가장 강력한 비전 마법입니다. 비전 주문 목록의 7등급 이하 주문 하나를 복제하거나, 다른 전통의 7등급 이하 주문을 복제할 수 있습니다. 또는 GM 재량으로 그 이상의 효과를 얻을 수도 있지만, 의도와 다르게 해석...",
-    desc: "가장 강력한 비전 마법입니다. 비전 주문 목록의 7등급 이하 주문 하나를 복제하거나, 다른 전통의 7등급 이하 주문을 복제할 수 있습니다. 또는 GM 재량으로 그 이상의 효과를 얻을 수도 있지만, 의도와 다르게 해석될 위험이 있습니다." },
+    summary: "가장 강력한 비전 마법입니다. 비전 주문 목록의 7랭크 이하 주문 하나를 복제하거나, 다른 전통의 7랭크 이하 주문을 복제할 수 있습니다. 또는 GM 재량으로 그 이상의 효과를 얻을 수도 있지만, 의도와 다르게 해석...",
+    desc: "가장 강력한 비전 마법입니다. 비전 주문 목록의 7랭크 이하 주문 하나를 복제하거나, 다른 전통의 7랭크 이하 주문을 복제할 수 있습니다. 또는 GM 재량으로 그 이상의 효과를 얻을 수도 있지만, 의도와 다르게 해석될 위험이 있습니다." },
 
   { name_ko: "분노의 폭풍", name_en: "Wrathful Storm", rank: 9, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["공기", "전기", "조작"],
@@ -1651,8 +1651,8 @@ const SPELL_DB = [
 
   { name_ko: "발현", name_en: "Manifestation", rank: 10, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "3행동", traits: ["조작"],
-    summary: "유연하게 자신의 전통에서 9등급 주문을 시전합니다. 시전 시 전통 목록에서 9등급 이하 주문 하나를 선택하여 즉시 시전합니다. 선택한 주문의 모든 규칙을 따릅니다.",
-    desc: "유연하게 자신의 전통에서 9등급 주문을 시전합니다. 시전 시 전통 목록에서 9등급 이하 주문 하나를 선택하여 즉시 시전합니다. 선택한 주문의 모든 규칙을 따릅니다." },
+    summary: "유연하게 자신의 전통에서 9랭크 주문을 시전합니다. 시전 시 전통 목록에서 9랭크 이하 주문 하나를 선택하여 즉시 시전합니다. 선택한 주문의 모든 규칙을 따릅니다.",
+    desc: "유연하게 자신의 전통에서 9랭크 주문을 시전합니다. 시전 시 전통 목록에서 9랭크 이하 주문 하나를 선택하여 즉시 시전합니다. 선택한 주문의 모든 규칙을 따릅니다." },
 
   { name_ko: "자연의 화신", name_en: "Nature Incarnate", rank: 10, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작", "변이"],
@@ -1762,8 +1762,8 @@ const SPELL_DB = [
 
   { name_ko: "경쟁심", name_en: "Competitive Edge", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["클레릭", "감정", "정신"],
-    summary: "경쟁심이 우월함을 입증하게 합니다. 명중 굴림과 기술 판정에 +1 상태 보너스. 20피트 이내의 적이 공격/기술 판정에 대성공하면 해당 보너스가 1라운드간 +3으로 증가.강화(7등급): 기본 +2, 대성공 시 +4.",
-    desc: "경쟁심이 우월함을 입증하게 합니다. 명중 굴림과 기술 판정에 <strong>+1 상태 보너스</strong>. 20피트 이내의 적이 공격/기술 판정에 대성공하면 해당 보너스가 1라운드간 <strong>+3</strong>으로 증가.<br><strong>강화(7등급):</strong> 기본 +2, 대성공 시 +4." },
+    summary: "경쟁심이 우월함을 입증하게 합니다. 명중 굴림과 기술 판정에 +1 상태 보너스. 20피트 이내의 적이 공격/기술 판정에 대성공하면 해당 보너스가 1라운드간 +3으로 증가.강화(7랭크): 기본 +2, 대성공 시 +4.",
+    desc: "경쟁심이 우월함을 입증하게 합니다. 명중 굴림과 기술 판정에 <strong>+1 상태 보너스</strong>. 20피트 이내의 적이 공격/기술 판정에 대성공하면 해당 보너스가 1라운드간 <strong>+3</strong>으로 증가.<br><strong>강화(7랭크):</strong> 기본 +2, 대성공 시 +4." },
 
   { name_ko: "축제의 뿔피리", name_en: "Cornucopia", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["클레릭", "조작", "식물"],
@@ -1792,8 +1792,8 @@ const SPELL_DB = [
 
   { name_ko: "눈부신 섬광", name_en: "Dazzling Flash", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["클레릭", "빛", "조작", "시각"],
-    summary: "종교 상징을 들어올려 눈부신 빛의 섬광을 만듭니다.대성공: 영향 없음. 성공: 눈부심 1라운드. 실패: 눈멈 1라운드+눈부심 1분. 대실패: 눈멈 1라운드+눈부심 1시간.강화(3등급): 영역 30피트 원뿔.",
-    desc: "종교 상징을 들어올려 눈부신 빛의 섬광을 만듭니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 눈부심 1라운드. <strong>실패:</strong> 눈멈 1라운드+눈부심 1분. <strong>대실패:</strong> 눈멈 1라운드+눈부심 1시간.<br><strong>강화(3등급):</strong> 영역 30피트 원뿔." },
+    summary: "종교 상징을 들어올려 눈부신 빛의 섬광을 만듭니다.대성공: 영향 없음. 성공: 눈부심 1라운드. 실패: 눈멈 1라운드+눈부심 1분. 대실패: 눈멈 1라운드+눈부심 1시간.강화(3랭크): 영역 30피트 원뿔.",
+    desc: "종교 상징을 들어올려 눈부신 빛의 섬광을 만듭니다.<br><strong>대성공:</strong> 영향 없음. <strong>성공:</strong> 눈부심 1라운드. <strong>실패:</strong> 눈멈 1라운드+눈부심 1분. <strong>대실패:</strong> 눈멈 1라운드+눈부심 1시간.<br><strong>강화(3랭크):</strong> 영역 30피트 원뿔." },
 
   { name_ko: "망상적 자만", name_en: "Delusional Pride", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["클레릭", "감정", "정신"],
@@ -1837,8 +1837,8 @@ const SPELL_DB = [
 
   { name_ko: "군중 속의 얼굴", name_en: "Face in the Crowd", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["클레릭", "조작", "시각"],
-    summary: "비슷한 생물의 군중 속에서 외모가 무난하고 눈에 띄지 않게 됩니다. 기만/은신에 +2 상태 보너스. 군중에 의한 험지 무시.강화(3등급): 10피트 사거리, 최대 10 대상.",
-    desc: "비슷한 생물의 군중 속에서 외모가 무난하고 눈에 띄지 않게 됩니다. 기만/은신에 <strong>+2 상태 보너스</strong>. 군중에 의한 험지 무시.<br><strong>강화(3등급):</strong> 10피트 사거리, 최대 10 대상." },
+    summary: "비슷한 생물의 군중 속에서 외모가 무난하고 눈에 띄지 않게 됩니다. 기만/은신에 +2 상태 보너스. 군중에 의한 험지 무시.강화(3랭크): 10피트 사거리, 최대 10 대상.",
+    desc: "비슷한 생물의 군중 속에서 외모가 무난하고 눈에 띄지 않게 됩니다. 기만/은신에 <strong>+2 상태 보너스</strong>. 군중에 의한 험지 무시.<br><strong>강화(3랭크):</strong> 10피트 사거리, 최대 10 대상." },
 
   { name_ko: "치명적 아리아", name_en: "Fatal Aria", rank: 10, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["바드", "작곡", "죽음", "감정", "정신"],
@@ -1852,8 +1852,8 @@ const SPELL_DB = [
 
   { name_ko: "화염 장벽", name_en: "Flame Barrier", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "반응", traits: ["클레릭"],
-    summary: "화염 피해를 흡수합니다. 대상이 받을 화염 피해를 최대 15만큼 감소시킵니다.강화(6등급): 감소 30.",
-    desc: "화염 피해를 흡수합니다. 대상이 받을 화염 피해를 <strong>최대 15만큼 감소</strong>시킵니다.<br><strong>강화(6등급):</strong> 감소 30." },
+    summary: "화염 피해를 흡수합니다. 대상이 받을 화염 피해를 최대 15만큼 감소시킵니다.강화(6랭크): 감소 30.",
+    desc: "화염 피해를 흡수합니다. 대상이 받을 화염 피해를 <strong>최대 15만큼 감소</strong>시킵니다.<br><strong>강화(6랭크):</strong> 감소 30." },
 
   { name_ko: "힘의 화살", name_en: "Force Bolt", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["힘", "위자드"],
@@ -1902,13 +1902,13 @@ const SPELL_DB = [
 
   { name_ko: "가시 꿰뚫기", name_en: "Impaling Briars", rank: 8, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["드루이드", "조작", "식물"],
-    summary: "가시 나무가 영역에서 자라납니다. 영역이 험지. 당신이 험지를 무시. 유지 시 영역 내 적에 10d6 관통 피해(기본 반사). 이전에 피해를 받지 않은 적에게만.강화(9등급): 피해 15d6.",
-    desc: "가시 나무가 영역에서 자라납니다. 영역이 <strong>험지</strong>. 당신이 험지를 무시. 유지 시 영역 내 적에 <strong>10d6 관통 피해</strong>(기본 반사). 이전에 피해를 받지 않은 적에게만.<br><strong>강화(9등급):</strong> 피해 15d6." },
+    summary: "가시 나무가 영역에서 자라납니다. 영역이 험지. 당신이 험지를 무시. 유지 시 영역 내 적에 10d6 관통 피해(기본 반사). 이전에 피해를 받지 않은 적에게만.강화(9랭크): 피해 15d6.",
+    desc: "가시 나무가 영역에서 자라납니다. 영역이 <strong>험지</strong>. 당신이 험지를 무시. 유지 시 영역 내 적에 <strong>10d6 관통 피해</strong>(기본 반사). 이전에 피해를 받지 않은 적에게만.<br><strong>강화(9랭크):</strong> 피해 15d6." },
 
   { name_ko: "학제간 주문", name_en: "Interdisciplinary Incantation", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["위자드"],
-    summary: "다른 전통의 주문을 비전 주문으로 시전합니다. 비전 목록에 없는 1-3등급 주문 하나를 선택하여 이번만 비전 주문으로 시전합니다.",
-    desc: "다른 전통의 주문을 비전 주문으로 시전합니다. 비전 목록에 없는 1-3등급 주문 하나를 선택하여 이번만 비전 주문으로 시전합니다." },
+    summary: "다른 전통의 주문을 비전 주문으로 시전합니다. 비전 목록에 없는 1-3랭크 주문 하나를 선택하여 이번만 비전 주문으로 시전합니다.",
+    desc: "다른 전통의 주문을 비전 주문으로 시전합니다. 비전 목록에 없는 1-3랭크 주문 하나를 선택하여 이번만 비전 주문으로 시전합니다." },
 
   { name_ko: "적 파악", name_en: "Know the Enemy", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "자유 행동", traits: ["레인저"],
@@ -1917,8 +1917,8 @@ const SPELL_DB = [
 
   { name_ko: "생명 충전", name_en: "Life Boost", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["드루이드", "치유", "활력"],
-    summary: "대상에 임시 HP = 주문 등급 × 2(1분 지속).강화(+1): 임시 HP +2.",
-    desc: "대상에 <strong>임시 HP = 주문 등급 × 2</strong>(1분 지속).<br><strong>강화(+1):</strong> 임시 HP +2." },
+    summary: "대상에 임시 HP = 주문 랭크 × 2(1분 지속).강화(+1): 임시 HP +2.",
+    desc: "대상에 <strong>임시 HP = 주문 랭크 × 2</strong>(1분 지속).<br><strong>강화(+1):</strong> 임시 HP +2." },
 
   { name_ko: "작곡 연장", name_en: "Lingering Composition", rank: 1, is_cantrip: false, is_focus: true,
     traditions: ["occult"], actions: "자유 행동", traits: ["바드"],
@@ -1962,8 +1962,8 @@ const SPELL_DB = [
 
   { name_ko: "신비의 등대", name_en: "Mystic Beacon", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["클레릭", "조작"],
-    summary: "대상이 다음에 시전하는 피해/치유 주문이 1등급 높은 것처럼 피해/치유를 줍니다(초기 피해/치유에만 적용). 주문 시전 후 종료.",
-    desc: "대상이 다음에 시전하는 피해/치유 주문이 <strong>1등급 높은 것처럼</strong> 피해/치유를 줍니다(초기 피해/치유에만 적용). 주문 시전 후 종료." },
+    summary: "대상이 다음에 시전하는 피해/치유 주문이 1랭크 높은 것처럼 피해/치유를 줍니다(초기 피해/치유에만 적용). 주문 시전 후 종료.",
+    desc: "대상이 다음에 시전하는 피해/치유 주문이 <strong>1랭크 높은 것처럼</strong> 피해/치유를 줍니다(초기 피해/치유에만 적용). 주문 시전 후 종료." },
 
   { name_ko: "복수의 바늘", name_en: "Needle of Vengeance", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "반응", traits: ["위치", "정신"],
@@ -2062,8 +2062,8 @@ const SPELL_DB = [
 
   { name_ko: "변형", name_en: "Shifting Form", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["클레릭", "변형"],
-    summary: "형태를 변화시킵니다. 다음 중 하나를 선택: 등반 속도 20피트, 수영 속도 20피트, 암시야, 도달 +5피트 비무장 공격.강화(6등급): 2가지 선택.",
-    desc: "형태를 변화시킵니다. 다음 중 하나를 선택: 등반 속도 20피트, 수영 속도 20피트, 암시야, 도달 +5피트 비무장 공격.<br><strong>강화(6등급):</strong> 2가지 선택." },
+    summary: "형태를 변화시킵니다. 다음 중 하나를 선택: 등반 속도 20피트, 수영 속도 20피트, 암시야, 도달 +5피트 비무장 공격.강화(6랭크): 2가지 선택.",
+    desc: "형태를 변화시킵니다. 다음 중 하나를 선택: 등반 속도 20피트, 수영 속도 20피트, 암시야, 도달 +5피트 비무장 공격.<br><strong>강화(6랭크):</strong> 2가지 선택." },
 
   { name_ko: "진정의 발라드", name_en: "Soothing Ballad", rank: 7, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["바드", "작곡", "감정", "치유", "조작", "정신"],
@@ -2092,8 +2092,8 @@ const SPELL_DB = [
 
   { name_ko: "자유로운 심장의 교향곡", name_en: "Symphony of the Unfettered Heart", rank: 5, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["바드", "작곡"],
-    summary: "공연 판정으로 조이기, 이동 불가, 마비, 억제, 느려짐, 멍해짐 중 하나를 상쇄합니다. 상태의 원천에 따라 상쇄 DC 결정.강화(9등급): 최대 4 대상.",
-    desc: "공연 판정으로 조이기, 이동 불가, 마비, 억제, 느려짐, 멍해짐 중 하나를 상쇄합니다. 상태의 원천에 따라 상쇄 DC 결정.<br><strong>강화(9등급):</strong> 최대 4 대상." },
+    summary: "공연 판정으로 조이기, 이동 불가, 마비, 억제, 느려짐, 멍해짐 중 하나를 상쇄합니다. 상태의 원천에 따라 상쇄 DC 결정.강화(9랭크): 최대 4 대상.",
+    desc: "공연 판정으로 조이기, 이동 불가, 마비, 억제, 느려짐, 멍해짐 중 하나를 상쇄합니다. 상태의 원천에 따라 상쇄 DC 결정.<br><strong>강화(9랭크):</strong> 최대 4 대상." },
 
   { name_ko: "경과 관찰", name_en: "Take Its Course", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["클레릭", "조작"],
