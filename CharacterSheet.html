@@ -1952,27 +1952,37 @@ function parseFixedSkills(skillStr) {
 // ═══════════════════════════════════════════════
 
 function showInfo(type, name) {
+  if (!name) return;
   let item = null;
+  const nameKo = name.split(' (')[0].trim();
+
   if (type === 'spell' && typeof SPELL_DB !== 'undefined') {
-    item = SPELL_DB.find(s => s.name_ko === name || s.name_en === name);
+    item = SPELL_DB.find(s => s.name_ko === nameKo || s.name_en === nameKo);
   } else if (type === 'feat' && typeof FEAT_DB !== 'undefined') {
-    const nameKo = name.split(' (')[0].trim();
     item = FEAT_DB.find(f => f.name_ko === nameKo) ||
            FEAT_DB.find(f => nameKo.startsWith(f.name_ko));
+  } else if (type === 'weapon' && typeof WEAPON_DB !== 'undefined') {
+    item = WEAPON_DB.find(w => w.name_ko === nameKo);
+  } else if (type === 'armor' && typeof ARMOR_DB !== 'undefined') {
+    item = ARMOR_DB.find(a => a.name_ko === nameKo);
+  } else if (type === 'shield' && typeof SHIELD_DB !== 'undefined') {
+    item = SHIELD_DB.find(s => s.name_ko === nameKo);
+  } else if (type === 'gear' && typeof GEAR_DB !== 'undefined') {
+    item = GEAR_DB.find(g => g.name_ko === nameKo);
   }
 
-  // DB에 없으면 저장된 이름으로 임시 카드 구성
+  // DB에 없으면 임시 카드
   if (!item) {
-    const nameKo = name.split(' (')[0].trim();
     const nameEn = (name.match(/\(([^)]+)\)/) || [])[1] || '';
     item = {
       name_ko: nameKo, name_en: nameEn,
-      summary: 'DB에 상세 정보가 없습니다.\n(선택 시 DB에서 추가된 항목만 상세 정보를 표시합니다.)',
+      summary: 'DB에 상세 정보가 없습니다.',
       ...(type === 'feat' ? {feat_level:'?', category:'-', traits:[], prerequisites:''} : {}),
       ...(type === 'spell' ? {rank:0, is_cantrip:false, is_focus:false, traditions:[], traits:[], actions:''} : {}),
     };
   }
 
+  const titleMap = {spell:'주문 정보', feat:'재주 정보', weapon:'무기 정보', armor:'방어구 정보', shield:'방패 정보', gear:'장비 정보'};
   document.getElementById('modal-overlay').classList.remove('hidden');
   const searchEl = document.getElementById('modal-search');
   if (searchEl) searchEl.style.display = 'none';
@@ -1980,9 +1990,8 @@ function showInfo(type, name) {
   if (fbar) fbar.innerHTML = '';
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = 'none';
-  document.getElementById('modal-title').textContent = type === 'spell' ? '주문 정보' : '재주 정보';
+  document.getElementById('modal-title').textContent = titleMap[type] || '정보';
   modalType = 'info';
-  // Hide list, show detail only
   const listEl = document.querySelector('.modal-list');
   if (listEl) listEl.style.display = 'none';
   showItemDetail(item);
@@ -2703,7 +2712,8 @@ function growthSlotHTML(lv, key, icon, label, value, onclickStr) {
 function growthFeatSlotHTML(lv, key, icon, label, featType, value) {
   const filled = value ? 'filled' : '';
   const display = value || '선택 안 됨';
-  return `<div class="growth-slot ${filled}" onclick="growthPickFeat(${lv},'${key}','${featType}')">
+  const clickAction = value ? `showInfo('feat','${(value||'').replace(/'/g,"\\'")}')` : `growthPickFeat(${lv},'${key}','${featType}')`;
+  return `<div class="growth-slot ${filled}" onclick="${clickAction}">
     <div class="growth-slot-icon">${icon}</div>
     <div class="growth-slot-body">
       <div class="growth-slot-label">${label}</div>
@@ -2774,8 +2784,9 @@ function renderWeapons() {
     row.className = 'weapon-row';
     const traitsArr = (w.traits||'').split(',').map(t=>t.trim()).filter(Boolean);
     const traitHtml = traitsArr.map(t=>traitTag(t)).join(' ');
+    const escapedName = (w.name||'').replace(/'/g,"\\'");
     row.innerHTML = `
-      <input class="w-name" placeholder="무기 이름" value="${w.name||''}" oninput="state.weapons[${i}].name=this.value;save()">
+      <input class="w-name" placeholder="무기 이름" value="${w.name||''}" oninput="state.weapons[${i}].name=this.value;save()" onclick="showInfo('weapon','${escapedName}')" style="cursor:pointer;">
       <input class="w-atk" placeholder="+0" value="${w.atk||''}" oninput="state.weapons[${i}].atk=this.value;save()">
       <input class="w-dmg" placeholder="1d6+STR" value="${w.dmg||''}" oninput="state.weapons[${i}].dmg=this.value;save()">
       <div class="w-traits-display">${traitHtml || '<span style="color:var(--text2);font-size:10px;">특성 없음</span>'}</div>
@@ -2805,8 +2816,10 @@ function renderEquip() {
     const equipBtn = (isWeapon || isArmor || isShield)
       ? `<span class="equip-btn ${equipped?'equipped':''}" onclick="toggleEquip(${i})" title="${equipped?'장착 해제':'장착'}">${equipped?(isShield?'🛡':'⚔'):'◻'}</span>`
       : '';
+    const eqType = isWeapon ? 'weapon' : (isArmor ? 'armor' : (isShield ? 'shield' : 'gear'));
+    const eqEscName = (e.name||'').replace(/'/g,"\\'");
     row.innerHTML = `
-      <input class="eq-name" placeholder="아이템 이름" value="${e.name||''}" style="flex:3;" oninput="state.equip[${i}].name=this.value;recalcBulk();save()">
+      <input class="eq-name" placeholder="아이템 이름" value="${e.name||''}" style="flex:3;cursor:pointer;" oninput="state.equip[${i}].name=this.value;recalcBulk();save()" onclick="showInfo('${eqType}','${eqEscName}')">
       <input class="eq-qty" type="number" min="0" value="${e.qty||1}" style="width:36px;text-align:center;" oninput="state.equip[${i}].qty=parseInt(this.value);save()">
       <input class="eq-bulk" type="number" min="0" step="0.1" value="${e.bulk||0}" style="width:36px;text-align:center;" oninput="state.equip[${i}].bulk=parseFloat(this.value);recalcBulk();save()">
       ${equipBtn}
@@ -3031,6 +3044,8 @@ function renderFeats() {
       const nameInput  = div.querySelector('input:not([type=number])');
       const levelInput = div.querySelector('input[type=number]');
       nameInput.addEventListener('input', () => { state.feats[t][i].name = nameInput.value; save(); });
+      nameInput.addEventListener('click', () => showInfo('feat', f.name));
+      nameInput.style.cursor = 'pointer';
       levelInput.addEventListener('input', () => { state.feats[t][i].level = parseInt(levelInput.value); save(); });
       div.querySelector('.info-btn').addEventListener('click', () => showInfo('feat', f.name));
       div.querySelector('.spell-del').addEventListener('click', () => removeFeat(t, i));
