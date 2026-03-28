@@ -360,22 +360,83 @@ body{
 .sidebar-row label{font-size:10px;color:var(--text2);min-width:44px;}
 
 /* ══════════════════════════════════
-   WEAPON ROWS
+   WEAPON PROFICIENCY BAR
    ══════════════════════════════════ */
-.weapon-row{
-  display:flex;gap:6px;align-items:center;padding:5px 6px;
-  border:1px solid var(--border);border-radius:4px;margin-bottom:4px;
-  background:var(--bg3);
+.weapon-prof-bar{
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  padding:6px 8px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;margin-bottom:8px;
 }
-.weapon-row input{
-  background:transparent;border:none;color:var(--text);outline:none;font-size:12px;
+.weapon-prof-item{
+  display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text2);
 }
-.weapon-row input:focus{background:var(--bg4);border-radius:2px;padding:1px 3px;}
-.w-name{flex:2;min-width:80px;}
-.w-atk{width:40px;text-align:center;color:var(--accent);font-weight:700;}
-.w-dmg{width:70px;text-align:center;}
-.w-traits{flex:1;font-size:10px;color:var(--text2);}
-.w-traits-display{flex:1;display:flex;flex-wrap:wrap;gap:2px;align-items:center;}
+.weapon-prof-item select{
+  background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:1px 3px;border-radius:3px;font-size:10px;cursor:pointer;width:42px;
+}
+.weapon-prof-item select option{background:var(--bg2);}
+.weapon-prof-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;font-size:9px;font-weight:700;
+  border:1px solid var(--border2);color:var(--text2);background:var(--bg3);
+}
+.weapon-prof-badge.trained{background:#1a3a1a;color:#4caf50;border-color:#4caf50;}
+.weapon-prof-badge.expert{background:#1a2a3a;color:#42a5f5;border-color:#42a5f5;}
+.weapon-prof-badge.master{background:#2a1a2a;color:#ab47bc;border-color:#ab47bc;}
+.weapon-prof-badge.legendary{background:#3a2a1a;color:#ffa726;border-color:#ffa726;}
+
+/* ══════════════════════════════════
+   WEAPON CARDS
+   ══════════════════════════════════ */
+.weapon-card{
+  border:1px solid var(--border);border-radius:6px;margin-bottom:6px;
+  background:var(--bg3);overflow:hidden;transition:opacity .2s;
+}
+.weapon-card.stowed{opacity:.45;border-style:dashed;}
+.weapon-card-header{
+  display:flex;align-items:center;gap:4px;padding:4px 8px;
+  background:var(--bg4);border-bottom:1px solid var(--border);
+}
+.weapon-btn{
+  background:var(--bg2);border:1px solid var(--border2);color:var(--text2);
+  padding:2px 6px;border-radius:3px;cursor:pointer;font-size:10px;
+  transition:border-color .15s,color .15s;
+}
+.weapon-btn:hover{border-color:var(--accent);color:var(--accent);}
+.weapon-btn.danger:hover{border-color:var(--red);color:var(--red-light);}
+.weapon-card-body{padding:6px 10px;}
+.weapon-card-stats{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.weapon-card-name{
+  font-size:13px;font-weight:700;color:var(--text);cursor:pointer;
+  display:flex;align-items:center;gap:4px;
+}
+.weapon-card-name:hover{color:var(--accent);}
+.weapon-stat{
+  display:flex;align-items:center;gap:3px;font-size:12px;
+}
+.weapon-stat .stat-label{font-size:10px;color:var(--text2);}
+.weapon-stat .stat-val{font-weight:700;color:var(--accent);font-size:13px;}
+.weapon-stat .stat-val.dmg{color:var(--text);}
+.weapon-card-traits{
+  display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;
+}
+.weapon-card-range{
+  font-size:11px;color:var(--text2);margin-top:3px;
+}
+/* Runes modal dropdown */
+.weapon-rune-popup{
+  position:absolute;z-index:100;background:var(--bg2);
+  border:1px solid var(--border2);border-radius:6px;
+  padding:10px;min-width:200px;box-shadow:0 4px 16px rgba(0,0,0,.5);
+}
+.weapon-rune-popup label{font-size:11px;color:var(--text2);display:block;margin-bottom:2px;}
+.weapon-rune-popup select{
+  width:100%;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);padding:3px 5px;border-radius:3px;font-size:11px;
+  margin-bottom:8px;
+}
 .add-btn{
   background:var(--bg3);border:1px dashed var(--border2);color:var(--text2);
   padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;width:100%;
@@ -1058,17 +1119,49 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
     <!-- ── 무기 Weapons ── -->
     <div id="panel-weapons" class="panel active">
       <div class="box">
-        <div class="box-title">공격 Strikes</div>
-        <div style="display:flex;gap:4px;padding:3px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);margin-bottom:4px;">
-          <span style="flex:2;">무기 이름</span>
-          <span style="width:40px;text-align:center;">명중</span>
-          <span style="width:70px;text-align:center;">피해</span>
-          <span style="flex:1;">특성/메모</span>
-          <span style="width:20px;"></span>
+        <div class="box-title">무기 숙련 Weapon Proficiencies</div>
+        <div class="weapon-prof-bar">
+          <div class="weapon-prof-item">
+            <span class="weapon-prof-badge" id="badge-wp-simple">U</span>
+            <span>단순</span>
+            <select id="prof-weapon-simple" onchange="updateWeaponProfBadge('simple');renderWeapons();save()">
+              <option value="0">미숙련</option><option value="2">숙련</option>
+              <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+            </select>
+          </div>
+          <div class="weapon-prof-item">
+            <span class="weapon-prof-badge" id="badge-wp-martial">U</span>
+            <span>군용</span>
+            <select id="prof-weapon-martial" onchange="updateWeaponProfBadge('martial');renderWeapons();save()">
+              <option value="0">미숙련</option><option value="2">숙련</option>
+              <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+            </select>
+          </div>
+          <div class="weapon-prof-item">
+            <span class="weapon-prof-badge" id="badge-wp-advanced">U</span>
+            <span>고급</span>
+            <select id="prof-weapon-advanced" onchange="updateWeaponProfBadge('advanced');renderWeapons();save()">
+              <option value="0">미숙련</option><option value="2">숙련</option>
+              <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+            </select>
+          </div>
+          <div class="weapon-prof-item">
+            <span class="weapon-prof-badge" id="badge-wp-unarmed">U</span>
+            <span>비무장</span>
+            <select id="prof-weapon-unarmed" onchange="updateWeaponProfBadge('unarmed');renderWeapons();save()">
+              <option value="0">미숙련</option><option value="2">숙련</option>
+              <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+            </select>
+          </div>
         </div>
+      </div>
+      <div class="box">
+        <div class="box-title">공격 Strikes</div>
         <div id="weapons-list"></div>
-        <button class="add-btn" onclick="openModal('weapon')">+ DB에서 선택</button>
-        <button class="add-btn" onclick="addWeapon()">+ 직접 입력</button>
+        <div style="display:flex;gap:4px;margin-top:4px;">
+          <button class="add-btn" onclick="openModal('weapon')" style="flex:1;">+ DB에서 선택</button>
+          <button class="add-btn" onclick="addWeapon()" style="flex:1;">+ 직접 입력</button>
+        </div>
       </div>
       <div class="box">
         <div class="box-title">주문 공격 / 주문 DC</div>
@@ -2414,6 +2507,7 @@ function recalcAll() {
   updateHP();
   updateHpGauge();
   updateShieldGauge();
+  renderWeapons();
   renderGrowthPlan();
   // 행동 탭이 활성화된 경우에만 재렌더
   if (document.getElementById('panel-actions')?.classList.contains('active')) renderActions();
@@ -2772,26 +2866,291 @@ function growthPickSkillIncrease(lv) {
 function addWeapon(data) {
   const d = data || {name:'',atk:'',dmg:'',traits:''};
   const id = 'w-'+Date.now();
+  // Ensure rune/stow fields exist
+  if (d._potency === undefined) d._potency = 0;
+  if (d._striking === undefined) d._striking = 0;
+  if (d._propertyRunes === undefined) d._propertyRunes = [];
+  if (d._stowed === undefined) d._stowed = false;
+  if (d._twoHand === undefined) d._twoHand = false;
   state.weapons.push({id,...d});
   renderWeapons();
 }
 
+// ── Weapon proficiency badge helpers ──
+function updateWeaponProfBadge(cat) {
+  const el = document.getElementById('badge-wp-'+cat);
+  if (!el) return;
+  const val = parseInt(document.getElementById('prof-weapon-'+cat)?.value||0);
+  const map = {0:['U',''],2:['T','trained'],4:['E','expert'],6:['M','master'],8:['L','legendary']};
+  const [letter,cls] = map[val]||['U',''];
+  el.textContent = letter;
+  el.className = 'weapon-prof-badge' + (cls?' '+cls:'');
+}
+function initWeaponProfBadges() {
+  ['simple','martial','advanced','unarmed'].forEach(c=>updateWeaponProfBadge(c));
+}
+
+// ── Weapon category mapping ──
+function getWeaponCategory(w) {
+  // From DB data
+  const cat = (w._dbData?.category || w.category || '').toLowerCase();
+  if (cat.includes('비무장') || cat.includes('unarmed')) return 'unarmed';
+  if (cat.includes('고급') || cat.includes('advanced') || cat.includes('상급')) return 'advanced';
+  if (cat.includes('군용') || cat.includes('martial')) return 'martial';
+  if (cat.includes('단순') || cat.includes('simple')) return 'simple';
+  // Fallback: check traits
+  const traits = getWeaponTraits(w);
+  if (traits.some(t=>t.includes('비무장'))) return 'unarmed';
+  return 'simple';
+}
+
+function getWeaponTraits(w) {
+  if (w._dbData?.traits) return w._dbData.traits;
+  if (Array.isArray(w.traits)) return w.traits;
+  if (typeof w.traits === 'string') return w.traits.split(',').map(t=>t.trim()).filter(Boolean);
+  return [];
+}
+
+function isRangedWeapon(w) {
+  const cat = (w._dbData?.category || w.category || '').toLowerCase();
+  if (cat.includes('원거리') || cat.includes('ranged')) return true;
+  const range = w._dbData?.range || w.range;
+  if (range && range > 0) return true;
+  return false;
+}
+
+function hasWeaponTrait(w, traitKey) {
+  const traits = getWeaponTraits(w);
+  return traits.some(t => t.toLowerCase().includes(traitKey.toLowerCase()));
+}
+
+// ── Hit & Damage Calculation ──
+function calcWeaponHit(w) {
+  const cat = getWeaponCategory(w);
+  const profSelId = 'prof-weapon-' + cat;
+  const rank = parseInt(document.getElementById(profSelId)?.value || 0);
+  const lv = getLevel();
+  const profBonus = rank > 0 ? (rank + lv) : 0;
+
+  // Ability modifier
+  let abilMod;
+  const ranged = isRangedWeapon(w);
+  const finesse = hasWeaponTrait(w, '기교') || hasWeaponTrait(w, 'finesse');
+  if (ranged) {
+    abilMod = getMod('dex');
+  } else if (finesse) {
+    abilMod = Math.max(getMod('str'), getMod('dex'));
+  } else {
+    abilMod = getMod('str');
+  }
+
+  // Item bonus (potency rune)
+  const itemBonus = parseInt(w._potency) || 0;
+
+  return abilMod + profBonus + itemBonus;
+}
+
+function calcWeaponDamage(w) {
+  // Parse base damage dice from DB or stored string
+  const rawDmg = w._dbData?.damage || w.dmg || '';
+  const diceMatch = rawDmg.match(/(\d+)?d(\d+)/);
+  let numDice = diceMatch ? parseInt(diceMatch[1] || 1) : 0;
+  let dieSizeBase = diceMatch ? parseInt(diceMatch[2]) : 0;
+  const dmgTypeMatch = rawDmg.match(/\s+([A-Z]|[가-힣]+)\s*$/);
+  let dmgType = dmgTypeMatch ? dmgTypeMatch[1] : '';
+  // Map single-letter damage types
+  const typeMap = {'B':'타격','P':'관통','S':'참격','b':'타격','p':'관통','s':'참격'};
+  if (typeMap[dmgType]) dmgType = typeMap[dmgType];
+
+  // Two-hand: check if toggled and weapon has 양손 trait
+  let dieSize = dieSizeBase;
+  if (w._twoHand) {
+    const traits = getWeaponTraits(w);
+    const thTrait = traits.find(t => t.includes('양손') || t.toLowerCase().includes('two-hand'));
+    if (thTrait) {
+      const thMatch = thTrait.match(/d(\d+)/);
+      if (thMatch) dieSize = parseInt(thMatch[1]);
+    }
+  }
+
+  // Striking rune: adds extra dice
+  const striking = parseInt(w._striking) || 0;
+  numDice += striking;
+
+  // Ability modifier for damage
+  let abilMod = 0;
+  const ranged = isRangedWeapon(w);
+  const propulsive = hasWeaponTrait(w, '추진') || hasWeaponTrait(w, 'propulsive');
+  if (!ranged) {
+    abilMod = getMod('str');
+  } else if (propulsive) {
+    abilMod = Math.floor(getMod('str') / 2);
+    if (getMod('str') < 0) abilMod = getMod('str'); // negative STR fully applied
+  }
+
+  // Rune damage bonus (potency doesn't add to damage in PF2e, only hit)
+  // But we keep the structure for property runes later
+
+  const totalBonus = abilMod;
+  if (numDice === 0 && dieSizeBase === 0) {
+    // No parseable dice, return raw string
+    return { str: rawDmg || '—', abilMod };
+  }
+  let str = numDice + 'd' + dieSize;
+  if (totalBonus > 0) str += '+' + totalBonus;
+  else if (totalBonus < 0) str += totalBonus;
+  if (dmgType) str += ' ' + dmgType;
+  return { str, abilMod };
+}
+
+// ── Runes popup ──
+let activeRunePopup = null;
+function showRunePopup(idx, btnEl) {
+  closeRunePopup();
+  const w = state.weapons[idx];
+  if (!w) return;
+  const popup = document.createElement('div');
+  popup.className = 'weapon-rune-popup';
+  popup.id = 'rune-popup-active';
+  popup.innerHTML = `
+    <label>잠재력 룬 (Potency)</label>
+    <select onchange="state.weapons[${idx}]._potency=parseInt(this.value);renderWeapons();save()">
+      <option value="0" ${(w._potency||0)===0?'selected':''}>없음</option>
+      <option value="1" ${(w._potency||0)===1?'selected':''}>+1</option>
+      <option value="2" ${(w._potency||0)===2?'selected':''}>+2</option>
+      <option value="3" ${(w._potency||0)===3?'selected':''}>+3</option>
+    </select>
+    <label>강타 룬 (Striking)</label>
+    <select onchange="state.weapons[${idx}]._striking=parseInt(this.value);renderWeapons();save()">
+      <option value="0" ${(w._striking||0)===0?'selected':''}>없음</option>
+      <option value="1" ${(w._striking||0)===1?'selected':''}>강타 (Striking)</option>
+      <option value="2" ${(w._striking||0)===2?'selected':''}>상위 강타 (Greater)</option>
+      <option value="3" ${(w._striking||0)===3?'selected':''}>최상위 강타 (Major)</option>
+    </select>
+    <button class="weapon-btn" onclick="closeRunePopup()" style="width:100%;margin-top:2px;">닫기</button>
+  `;
+  // Position near the button
+  const rect = btnEl.getBoundingClientRect();
+  popup.style.position = 'fixed';
+  popup.style.top = (rect.bottom + 4) + 'px';
+  popup.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
+  document.body.appendChild(popup);
+  activeRunePopup = popup;
+  // Close on outside click
+  setTimeout(() => {
+    document.addEventListener('click', closeRunePopupOutside, {once:true,capture:true});
+  }, 50);
+}
+function closeRunePopup() {
+  const p = document.getElementById('rune-popup-active');
+  if (p) p.remove();
+  activeRunePopup = null;
+}
+function closeRunePopupOutside(e) {
+  if (activeRunePopup && !activeRunePopup.contains(e.target)) {
+    closeRunePopup();
+  }
+}
+
+// ── Options popup (two-hand toggle) ──
+function showWeaponOptions(idx, btnEl) {
+  closeRunePopup();
+  const w = state.weapons[idx];
+  if (!w) return;
+  const traits = getWeaponTraits(w);
+  const hasTwoHand = traits.some(t => t.includes('양손') || t.toLowerCase().includes('two-hand'));
+  if (!hasTwoHand) return; // no options if no two-hand trait
+  const popup = document.createElement('div');
+  popup.className = 'weapon-rune-popup';
+  popup.id = 'rune-popup-active';
+  popup.innerHTML = `
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <input type="checkbox" ${w._twoHand?'checked':''} onchange="state.weapons[${idx}]._twoHand=this.checked;renderWeapons();save()">
+      양손 사용 (Two-Hand)
+    </label>
+    <button class="weapon-btn" onclick="closeRunePopup()" style="width:100%;margin-top:6px;">닫기</button>
+  `;
+  const rect = btnEl.getBoundingClientRect();
+  popup.style.position = 'fixed';
+  popup.style.top = (rect.bottom + 4) + 'px';
+  popup.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
+  document.body.appendChild(popup);
+  activeRunePopup = popup;
+  setTimeout(() => {
+    document.addEventListener('click', closeRunePopupOutside, {once:true,capture:true});
+  }, 50);
+}
+
+// ── Stow toggle ──
+function toggleWeaponStow(idx) {
+  const w = state.weapons[idx];
+  if (!w) return;
+  w._stowed = !w._stowed;
+  renderWeapons();
+  save();
+}
+
 function renderWeapons() {
   const list = document.getElementById('weapons-list');
+  if (!list) return;
   list.innerHTML = '';
   state.weapons.forEach((w,i) => {
-    const row = document.createElement('div');
-    row.className = 'weapon-row';
-    const traitsArr = (w.traits||'').split(',').map(t=>t.trim()).filter(Boolean);
-    const traitHtml = traitsArr.map(t=>traitTag(t)).join(' ');
-    const escapedName = (w.name||'').replace(/'/g,"\\'");
-    row.innerHTML = `
-      <input class="w-name" placeholder="무기 이름" value="${w.name||''}" oninput="state.weapons[${i}].name=this.value;save()" onclick="showInfo('weapon','${escapedName}')" style="cursor:pointer;">
-      <input class="w-atk" placeholder="+0" value="${w.atk||''}" oninput="state.weapons[${i}].atk=this.value;save()">
-      <input class="w-dmg" placeholder="1d6+STR" value="${w.dmg||''}" oninput="state.weapons[${i}].dmg=this.value;save()">
-      <div class="w-traits-display">${traitHtml || '<span style="color:var(--text2);font-size:10px;">특성 없음</span>'}</div>
-      <span class="spell-del" onclick="removeWeapon(${i})">✕</span>`;
-    list.appendChild(row);
+    const card = document.createElement('div');
+    card.className = 'weapon-card' + (w._stowed ? ' stowed' : '');
+
+    const escapedName = (w.name||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    const traits = getWeaponTraits(w);
+    const traitHtml = traits.map(t=>traitTag(t)).join(' ');
+    const hasTwoHandTrait = traits.some(t => t.includes('양손') || t.toLowerCase().includes('two-hand'));
+
+    // Calculate hit and damage
+    const hitMod = calcWeaponHit(w);
+    const dmgResult = calcWeaponDamage(w);
+    const hitStr = fmtBonus(hitMod);
+    const dmgStr = dmgResult.str || '—';
+
+    // Range info
+    const range = w._dbData?.range || w.range || null;
+    const rangeHtml = range ? `<div class="weapon-card-range">\uD83C\uDFAF 사거리: ${range} ft.</div>` : '';
+
+    // Rune indicator text
+    let runeInfo = '';
+    if ((w._potency||0) > 0 || (w._striking||0) > 0) {
+      const parts = [];
+      if (w._potency > 0) parts.push('+'+w._potency+' 잠재력');
+      if (w._striking === 1) parts.push('강타');
+      if (w._striking === 2) parts.push('상위 강타');
+      if (w._striking === 3) parts.push('최상위 강타');
+      runeInfo = `<span style="font-size:9px;color:var(--accent);margin-left:6px;">[${parts.join(', ')}]</span>`;
+    }
+
+    card.innerHTML = `
+      <div class="weapon-card-header">
+        ${hasTwoHandTrait ? `<button class="weapon-btn" onclick="showWeaponOptions(${i},this)" title="옵션">옵션</button>` : ''}
+        <button class="weapon-btn" onclick="showRunePopup(${i},this)" title="룬 설정">룬</button>
+        <button class="weapon-btn" onclick="toggleWeaponStow(${i})" title="${w._stowed?'꺼내기':'넣기'}">${w._stowed?'꺼내기':'넣기'}</button>
+        <span style="flex:1;"></span>
+        <button class="weapon-btn danger" onclick="removeWeapon(${i})" title="삭제">삭제</button>
+      </div>
+      <div class="weapon-card-body">
+        <div class="weapon-card-stats">
+          <div class="weapon-card-name" onclick="showInfo('weapon','${escapedName}')">
+            \u2694 ${w.name||'무기'}${runeInfo}
+          </div>
+          <div class="weapon-stat">
+            <span class="stat-label">\u2699 명중</span>
+            <span class="stat-val">${hitStr}</span>
+          </div>
+          <div class="weapon-stat">
+            <span class="stat-label">\uD83C\uDFAF 피해</span>
+            <span class="stat-val dmg">${dmgStr}</span>
+          </div>
+        </div>
+        ${traitHtml ? `<div class="weapon-card-traits">${traitHtml}</div>` : ''}
+        ${rangeHtml}
+      </div>
+    `;
+    list.appendChild(card);
   });
 }
 
@@ -2836,7 +3195,7 @@ function toggleEquip(i) {
 
   if (item._equipped && item._type === 'weapon' && item._data) {
     const w = item._data;
-    addWeapon({name: w.name_ko, atk:'+0', dmg: w.damage||'', traits: (w.traits||[]).join(', '), _fromEquip:i});
+    addWeapon({name: w.name_ko, dmg: w.damage||'', traits: (w.traits||[]).join(', '), _dbData: w, category: w.category, range: w.range, _fromEquip:i});
   } else if (item._equipped && item._type === 'armor' && item._data) {
     const a = item._data;
     const nameEl = document.getElementById('armor-name');
@@ -3455,7 +3814,7 @@ function confirmModal() {
     renderSpells();
   } else if (modalType==='weapon') {
     const w = modalSelected;
-    addWeapon({name: w.name_ko, atk:'+0', dmg: w.damage||'', traits: (w.traits||[]).join(', ')});
+    addWeapon({name: w.name_ko, dmg: w.damage||'', traits: (w.traits||[]).join(', '), _dbData: w, category: w.category, range: w.range});
   } else if (modalType==='subclass') {
     state.selectedSubclass = modalSelected;
     const btn = document.getElementById('btn-subclass');
@@ -3547,6 +3906,39 @@ function applyClassDefaults(cls) {
     subBtn.classList.remove('filled');
     state.selectedSubclass = null;
   }
+  // Weapon proficiencies based on class
+  const wpDefaults = {
+    fighter:   {simple:'4',martial:'4',advanced:'2',unarmed:'4'},
+    champion:  {simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    ranger:    {simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    barbarian: {simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    rogue:     {simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    monk:      {simple:'2',martial:'0',advanced:'0',unarmed:'4'},
+    swashbuckler:{simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    investigator:{simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    gunslinger:{simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    inventor:  {simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    magus:     {simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    thaumaturge:{simple:'2',martial:'2',advanced:'0',unarmed:'2'},
+    bard:      {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    cleric:    {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    druid:     {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    oracle:    {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    psychic:   {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    sorcerer:  {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    summoner:  {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    witch:     {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    wizard:    {simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+    kineticist:{simple:'2',martial:'0',advanced:'0',unarmed:'2'},
+  };
+  const clsId = (cls.id||cls.en||'').toLowerCase();
+  const wp = wpDefaults[clsId] || {simple:'2',martial:'0',advanced:'0',unarmed:'2'};
+  ['simple','martial','advanced','unarmed'].forEach(c => {
+    const el = document.getElementById('prof-weapon-'+c);
+    if (el) el.value = wp[c];
+  });
+  initWeaponProfBadges();
+
   // Auto-set class key attribute boost
   const key = parseAttrKey(cls.keyAttr);
   if (key) state.boosts.cls = key;
@@ -3829,6 +4221,10 @@ function collectData() {
       perc: document.getElementById('prof-perc')?.value,
       classdc: document.getElementById('prof-classdc')?.value,
       spatk: document.getElementById('prof-spatk')?.value,
+      weaponSimple: document.getElementById('prof-weapon-simple')?.value,
+      weaponMartial: document.getElementById('prof-weapon-martial')?.value,
+      weaponAdvanced: document.getElementById('prof-weapon-advanced')?.value,
+      weaponUnarmed: document.getElementById('prof-weapon-unarmed')?.value,
     },
     skillProfs: {}, loreNames: {},
     armor:  {name:document.getElementById('armor-name')?.value,  ac:document.getElementById('armor-ac')?.value,   dex:document.getElementById('armor-dex')?.value},
@@ -3931,6 +4327,15 @@ function loadData(d) {
         const el = document.getElementById('prof-'+p);
         if (el && d.profs[p] !== undefined) el.value = d.profs[p];
       });
+      // Weapon proficiencies
+      const wpMap = {weaponSimple:'simple',weaponMartial:'martial',weaponAdvanced:'advanced',weaponUnarmed:'unarmed'};
+      for (const [key,cat] of Object.entries(wpMap)) {
+        if (d.profs[key] !== undefined) {
+          const el = document.getElementById('prof-weapon-'+cat);
+          if (el) el.value = d.profs[key];
+        }
+      }
+      initWeaponProfBadges();
     }
     // Skills
     if (d.skillProfs) {
@@ -4098,7 +4503,14 @@ window.onload = function() {
   buildSkills();
   buildConditions();
   buildSpellSlots();
-  addWeapon({name:'비무장 공격', atk:'+0', dmg:'1d4', traits:'비치명, 민첩/근력'});
+  // Find fist from WEAPON_DB if available
+  const fistDb = (typeof WEAPON_DB !== 'undefined') ? WEAPON_DB.find(w=>w.name_ko==='주먹') : null;
+  if (fistDb) {
+    addWeapon({name:'주먹', dmg: fistDb.damage, traits: fistDb.traits.join(', '), _dbData: fistDb, category: fistDb.category});
+  } else {
+    addWeapon({name:'비무장 공격', dmg:'1d4 B', traits:'비치명, 민첩, 기교, 비무장'});
+  }
+  initWeaponProfBadges();
   addEquip({name:'모험가 꾸러미', qty:1, bulk:1});
   renderFeats();
   recalcAll();
