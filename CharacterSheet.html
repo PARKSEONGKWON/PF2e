@@ -1013,12 +1013,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <div class="box">
         <div class="box-title">주문 공격 / 주문 DC</div>
         <div class="stat-row">
-          <span class="stat-label">주문 공격 수정치</span>
-          <select class="prof-sel" id="prof-spatk" onchange="recalcSpellStats();save()">
-            <option value="0">미숙련</option><option value="2">숙련</option>
-            <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-          </select>
+          <span class="stat-label">주문 명중</span>
           <span class="stat-val" id="val-spatk">+0</span>
+          <span class="stat-label" style="margin-left:12px;">DC</span>
+          <span class="stat-val" id="val-spdc-mirror">10</span>
+          <span style="font-size:10px;color:var(--text2);margin-left:8px;">(주문 탭에서 설정)</span>
         </div>
         <div class="stat-row">
           <span class="stat-label">주문 DC</span>
@@ -1086,6 +1085,12 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
           </select>
         </div>
         <div class="spell-header-stats">
+          <span class="spell-stat">숙련
+            <select class="prof-sel" id="prof-spatk" onchange="recalcSpellStats();save()" style="font-size:11px;padding:2px 4px;">
+              <option value="0">미숙련</option><option value="2">숙련</option>
+              <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
+            </select>
+          </span>
           <span class="spell-stat">DC <strong id="spell-dc-val">10</strong></span>
           <span class="spell-stat">명중 <strong id="spell-atk-val">+0</strong></span>
           <span class="spell-stat-sep">|</span>
@@ -2400,8 +2405,19 @@ function recalcSpellStats() {
   const keyAttr = getClassKeyAttr();
   const prof = getProfBonus('prof-spatk');
   const atk = getMod(keyAttr) + prof;
-  document.getElementById('val-spatk').textContent = fmtBonus(atk);
-  document.getElementById('val-spdc').textContent = 10 + getMod(keyAttr) + prof;
+  const dc = 10 + getMod(keyAttr) + prof;
+  const atkEl = document.getElementById('val-spatk');
+  if (atkEl) atkEl.textContent = fmtBonus(atk);
+  const dcEl = document.getElementById('val-spdc');
+  if (dcEl) dcEl.textContent = dc;
+  // 주문 탭 헤더 업데이트
+  const spDcVal = document.getElementById('spell-dc-val');
+  if (spDcVal) spDcVal.textContent = dc;
+  const spAtkVal = document.getElementById('spell-atk-val');
+  if (spAtkVal) spAtkVal.textContent = fmtBonus(atk);
+  // 방어 탭 미러 업데이트
+  const mirrorDc = document.getElementById('val-spdc-mirror');
+  if (mirrorDc) mirrorDc.textContent = dc;
 }
 
 function recalcSkills() {
@@ -3222,6 +3238,12 @@ function applyClassDefaults(cls) {
   if (cls.casting) {
     const spEl = document.getElementById('prof-spatk');
     if (spEl) spEl.value = '2';
+    // 주문 계열 자동 설정
+    const tradEl = document.getElementById('spell-tradition');
+    if (tradEl && cls.tradition && cls.tradition !== 'any') tradEl.value = cls.tradition;
+    // 시전 유형 자동 설정
+    const typeEl = document.getElementById('spell-type');
+    if (typeEl && cls.casting) typeEl.value = cls.casting;
   }
   const speedEl = document.getElementById('speed');
   if (speedEl && state.selectedAncestry) speedEl.value = state.selectedAncestry.speed;
