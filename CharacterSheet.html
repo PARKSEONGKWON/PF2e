@@ -320,7 +320,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
   <div class="tab active" onclick="switchTab('main')">캐릭터 정보</div>
   <div class="tab" onclick="switchTab('combat')">전투</div>
   <div class="tab" onclick="switchTab('spells')">주문</div>
-  <div class="tab" onclick="switchTab('feats')">특기</div>
+  <div class="tab" onclick="switchTab('feats')">재주</div>
   <div class="tab" onclick="switchTab('equip')">장비</div>
   <div class="tab" onclick="switchTab('actions')">액션</div>
 </div>
@@ -368,8 +368,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
     </div>
 
     <div class="box" style="margin-top:8px;">
-      <div class="box-title">언어 / 특질</div>
-      <textarea class="notes-area" id="f-languages" placeholder="언어, 특질 기록..." style="min-height:50px;" oninput="save()"></textarea>
+      <div class="box-title">언어 / 특성</div>
+      <textarea class="notes-area" id="f-languages" placeholder="언어, 특성 기록..." style="min-height:50px;" oninput="save()"></textarea>
     </div>
     <div class="box" style="margin-top:8px;">
       <div class="box-title">메모</div>
@@ -618,23 +618,23 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
   </div>
 </div>
 
-<!-- ═══════════════ TAB: 특기 ═══════════════ -->
+<!-- ═══════════════ TAB: 재주 ═══════════════ -->
 <div id="panel-feats" class="panel" style="grid-template-columns:1fr 1fr;">
   <div>
     <div class="box">
-      <div class="box-title">혈통 특기 Ancestry Feats</div>
+      <div class="box-title">혈통 재주 Ancestry Feats</div>
       <div id="feats-ancestry"></div>
       <button class="add-btn" onclick="openModal('feat','ancestry')">+ DB에서 선택</button>
       <button class="add-btn" onclick="addFeat('ancestry')" style="margin-top:3px;">+ 직접 입력</button>
     </div>
     <div class="box" style="margin-top:8px;">
-      <div class="box-title">클래스 특기 Class Feats</div>
+      <div class="box-title">클래스 재주 Class Feats</div>
       <div id="feats-class"></div>
       <button class="add-btn" onclick="openModal('feat','class')">+ DB에서 선택</button>
       <button class="add-btn" onclick="addFeat('class')" style="margin-top:3px;">+ 직접 입력</button>
     </div>
     <div class="box" style="margin-top:8px;">
-      <div class="box-title">일반 특기 General Feats</div>
+      <div class="box-title">일반 재주 General Feats</div>
       <div id="feats-general"></div>
       <button class="add-btn" onclick="openModal('feat','general')">+ DB에서 선택</button>
       <button class="add-btn" onclick="addFeat('general')" style="margin-top:3px;">+ 직접 입력</button>
@@ -642,13 +642,13 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
   </div>
   <div>
     <div class="box">
-      <div class="box-title">기술 특기 Skill Feats</div>
+      <div class="box-title">기술 재주 Skill Feats</div>
       <div id="feats-skill"></div>
       <button class="add-btn" onclick="openModal('feat','skill')">+ DB에서 선택</button>
       <button class="add-btn" onclick="addFeat('skill')" style="margin-top:3px;">+ 직접 입력</button>
     </div>
     <div class="box" style="margin-top:8px;">
-      <div class="box-title">원형 특기 Archetype Feats</div>
+      <div class="box-title">원형 재주 Archetype Feats</div>
       <div id="feats-archetype"></div>
       <button class="add-btn" onclick="openModal('feat','archetype')">+ DB에서 선택</button>
       <button class="add-btn" onclick="addFeat('archetype')" style="margin-top:3px;">+ 직접 입력</button>
@@ -708,7 +708,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
     <button class="active" data-filter="all" onclick="setActionFilter('all',this)">전체</button>
     <button data-filter="basic" onclick="setActionFilter('basic',this)">기본 행동</button>
     <button data-filter="skill" onclick="setActionFilter('skill',this)">기술 행동</button>
-    <button data-filter="feat" onclick="setActionFilter('feat',this)">특기 행동</button>
+    <button data-filter="feat" onclick="setActionFilter('feat',this)">재주 행동</button>
     <button data-filter="reaction" onclick="setActionFilter('reaction',this)">반응</button>
   </div>
   <div id="actions-content"></div>
@@ -744,13 +744,13 @@ const CLASSES = [
   {id:'bard', name:'바드', en:'Bard', hp:8,
    keyAttr:'매력 (CHA)', tradition:'occult', casting:'spontaneous',
    saves:{fort:'숙련',ref:'숙련',will:'전문가'}, perc:'전문가',
-   desc:'예술의 달인이자 숨겨진 비밀의 학자. 강력한 공연과 비학 주문으로 파티를 이끕니다.',
-   skills:'비학, 공연 + 4+INT개'},
+   desc:'예술의 달인이자 숨겨진 비밀의 학자. 강력한 공연과 오컬티즘 주문으로 파티를 이끕니다.',
+   skills:'오컬티즘, 공연 + 4+INT개'},
   {id:'cleric', name:'클레릭', en:'Cleric', hp:8,
    keyAttr:'지혜 (WIS)', tradition:'divine', casting:'prepared',
    saves:{fort:'숙련',ref:'숙련',will:'전문가'}, perc:'숙련',
    desc:'신격의 충실한 종복. 신성 마법으로 치유하고 적을 벌합니다.',
-   skills:'종교 + 신격기술 + 2+INT개'},
+   skills:'종교학 + 신격기술 + 2+INT개'},
   {id:'druid', name:'드루이드', en:'Druid', hp:8,
    keyAttr:'지혜 (WIS)', tradition:'primal', casting:'prepared',
    saves:{fort:'숙련',ref:'숙련',will:'전문가'}, perc:'숙련',
@@ -775,19 +775,19 @@ const CLASSES = [
    keyAttr:'지능 (INT)', tradition:'any', casting:'prepared',
    saves:{fort:'숙련',ref:'숙련',will:'전문가'}, perc:'숙련',
    desc:'이세계 후원자에게 힘을 부여받은 마법사. 강력한 주술(Hex)을 사용.',
-   skills:'비학 + 3+INT개'},
+   skills:'오컬티즘 + 3+INT개'},
   {id:'wizard', name:'위자드', en:'Wizard', hp:6,
    keyAttr:'지능 (INT)', tradition:'arcane', casting:'prepared',
    saves:{fort:'숙련',ref:'숙련',will:'전문가'}, perc:'숙련',
    desc:'비전 마법의 학자. 방대한 주문 목록과 강력한 마법학파 전문화.',
-   skills:'신비학 + 3+INT개'},
+   skills:'주문학 + 3+INT개'},
 ];
 
 // 클래스 서브클래스 DB
 const SUBCLASS_DB = [
   // ── 바드 뮤즈 ──
   {id:'muse-enigma',  class_id:'bard', subclass_type:'뮤즈', name_ko:'수수께끼', name_en:'Enigma',
-   summary:'지식과 신비의 뮤즈. 바드는 더 많은 것을 알려는 탐구 본능에 사로잡힙니다. 추가로 비학(Occultism)에 훈련됨을 얻습니다. 뮤즈 주문: 비전 자물쇠(Arcane Lock). 집중 주문: 용감한 서사(Inspire Competence) 향상.'},
+   summary:'지식과 신비의 뮤즈. 바드는 더 많은 것을 알려는 탐구 본능에 사로잡힙니다. 추가로 오컬티즘(Occultism)에 훈련됨을 얻습니다. 뮤즈 주문: 비전 자물쇠(Arcane Lock). 집중 주문: 용감한 서사(Inspire Competence) 향상.'},
   {id:'muse-maestro', class_id:'bard', subclass_type:'뮤즈', name_ko:'대가',    name_en:'Maestro',
    summary:'공연 예술의 대가에게 영감을 받은 뮤즈. 사람들을 움직이는 능력에 집중합니다. 뮤즈 주문: 숙면(Sleep). 집중 주문: 영웅적 영감(Inspire Heroics) 습득.'},
   {id:'muse-warrior',  class_id:'bard', subclass_type:'뮤즈', name_ko:'전사',    name_en:'Warrior',
@@ -901,9 +901,9 @@ const ANCESTRIES = [
 ];
 
 const BACKGROUNDS = [
-  {id:'acolyte', name:'수도자', en:'Acolyte', boosts:'지능 또는 지혜, 자유', skills:'종교, 필사 지식', feat:'경전 학도', desc:'종교 수도원이나 수도회에서 어린 시절을 보냈습니다.'},
+  {id:'acolyte', name:'수도자', en:'Acolyte', boosts:'지능 또는 지혜, 자유', skills:'종교학, 필사 지식', feat:'경전 학도', desc:'종교 수도원이나 수도회에서 어린 시절을 보냈습니다.'},
   {id:'acrobat', name:'곡예사', en:'Acrobat', boosts:'근력 또는 민첩, 자유', skills:'곡예, 서커스 지식', feat:'안정된 균형', desc:'서커스나 거리에서 곡예사로 공연하여 급료를 벌었습니다.'},
-  {id:'animal-whisperer', name:'동물 소통사', en:'Animal Whisperer', boosts:'지혜 또는 매력, 자유', skills:'자연, 지형 지식', feat:'동물 훈련', desc:'항상 동물과 유대를 느꼈고, 그들을 훈련하는 것은 작은 도약이었습니다.'},
+  {id:'animal-whisperer', name:'동물 소통사', en:'Animal Whisperer', boosts:'지혜 또는 매력, 자유', skills:'자연학, 지형 지식', feat:'동물 훈련', desc:'항상 동물과 유대를 느꼈고, 그들을 훈련하는 것은 작은 도약이었습니다.'},
   {id:'artisan', name:'장인', en:'Artisan', boosts:'근력 또는 지능, 자유', skills:'제작, 길드 지식', feat:'전문 제작', desc:'도제로서 건축이나 공예의 특정 형태를 연습했습니다.'},
   {id:'artist', name:'예술가', en:'Artist', boosts:'민첩 또는 매력, 자유', skills:'제작, 예술 지식', feat:'전문 제작', desc:'예술이 가장 큰 열정입니다.'},
   {id:'bandit', name:'산적', en:'Bandit', boosts:'민첩 또는 매력, 자유', skills:'위협, 지형 지식', feat:'집단 강요', desc:'과거에 적지 않은 시골 산적질이 있었습니다.'},
@@ -913,18 +913,18 @@ const BACKGROUNDS = [
   {id:'charlatan', name:'사기꾼', en:'Charlatan', boosts:'지능 또는 매력, 자유', skills:'기만, 뒷세계 지식', feat:'매력적인 거짓말쟁이', desc:'이곳저곳을 돌아다니며 가짜 운세와 만병통치약을 팔았습니다.'},
   {id:'cook', name:'요리사', en:'Cook', boosts:'건강 또는 지능, 자유', skills:'생존, 요리 지식', feat:'양념 달인', desc:'주막이나 식당의 주방에서 자라며 뛰어난 요리사가 되었습니다.'},
   {id:'criminal', name:'범죄자', en:'Criminal', boosts:'민첩 또는 지능, 자유', skills:'은신, 뒷세계 지식', feat:'숙련된 밀수꾼', desc:'파렴치한 개인이나 지하 조직의 일원으로 범죄의 삶을 살았습니다.'},
-  {id:'cultist', name:'이교도', en:'Cultist', boosts:'지능 또는 매력, 자유', skills:'비학, 신격/교단 지식', feat:'비밀 교육', desc:'교단의 구성원으로 신성한 의식을 행했습니다.'},
+  {id:'cultist', name:'이교도', en:'Cultist', boosts:'지능 또는 매력, 자유', skills:'오컬티즘, 신격/교단 지식', feat:'비밀 교육', desc:'교단의 구성원으로 신성한 의식을 행했습니다.'},
   {id:'detective', name:'탐정', en:'Detective', boosts:'지능 또는 지혜, 자유', skills:'사회, 뒷세계 지식', feat:'거리 지혜', desc:'경찰 조사관이나 사립 탐정으로 범죄를 해결했습니다.'},
   {id:'emissary', name:'사절', en:'Emissary', boosts:'지능 또는 매력, 자유', skills:'사회, 도시 지식', feat:'다국어', desc:'외교관이나 전령으로 멀고 넓게 여행했습니다.'},
   {id:'entertainer', name:'연예인', en:'Entertainer', boosts:'민첩 또는 매력, 자유', skills:'공연, 극장 지식', feat:'매혹적 공연', desc:'관중을 즐겁게 하는 법을 배웠습니다.'},
   {id:'farmhand', name:'농부', en:'Farmhand', boosts:'건강 또는 지혜, 자유', skills:'운동, 농업 지식', feat:'운동 확인', desc:'땅을 갈고 작물을 돌봤습니다.'},
   {id:'field-medic', name:'야전 의무관', en:'Field Medic', boosts:'건강 또는 지혜, 자유', skills:'의학, 전쟁 지식', feat:'전투 의료', desc:'전투의 혼란 속에서 부상자를 치료했습니다.'},
-  {id:'fortune-teller', name:'점술사', en:'Fortune Teller', boosts:'지능 또는 매력, 자유', skills:'비학, 점술 지식', feat:'기이한 것 식별', desc:'운명의 실을 읽고 미래를 점쳤습니다.'},
+  {id:'fortune-teller', name:'점술사', en:'Fortune Teller', boosts:'지능 또는 매력, 자유', skills:'오컬티즘, 점술 지식', feat:'기이한 것 식별', desc:'운명의 실을 읽고 미래를 점쳤습니다.'},
   {id:'gambler', name:'도박꾼', en:'Gambler', boosts:'민첩 또는 매력, 자유', skills:'기만, 게임 지식', feat:'거짓 간파', desc:'승리의 짜릿함이 당신을 우연의 게임으로 끌어들였습니다.'},
   {id:'gladiator', name:'검투사', en:'Gladiator', boosts:'근력 또는 매력, 자유', skills:'공연, 검투 지식', feat:'인상적 공연', desc:'투기장의 피의 경기가 전투 기술을 가르쳤습니다.'},
   {id:'guard', name:'경비원', en:'Guard', boosts:'근력 또는 매력, 자유', skills:'위협, 법률 지식', feat:'빠른 강요', desc:'경비대에 복무했습니다.'},
-  {id:'herbalist', name:'약초사', en:'Herbalist', boosts:'건강 또는 지혜, 자유', skills:'자연, 약초학 지식', feat:'자연 의학', desc:'다양한 약초의 치유 속성을 배웠습니다.'},
-  {id:'hermit', name:'은둔자', en:'Hermit', boosts:'건강 또는 지능, 자유', skills:'자연 또는 비학, 지형 지식', feat:'의심스러운 지식', desc:'격리된 곳에서 고독한 삶을 살았습니다.'},
+  {id:'herbalist', name:'약초사', en:'Herbalist', boosts:'건강 또는 지혜, 자유', skills:'자연학, 약초학 지식', feat:'자연 의학', desc:'다양한 약초의 치유 속성을 배웠습니다.'},
+  {id:'hermit', name:'은둔자', en:'Hermit', boosts:'건강 또는 지능, 자유', skills:'자연학 또는 오컬티즘, 지형 지식', feat:'의심스러운 지식', desc:'격리된 곳에서 고독한 삶을 살았습니다.'},
   {id:'hunter', name:'사냥꾼', en:'Hunter', boosts:'민첩 또는 지혜, 자유', skills:'생존, 무두질 지식', feat:'야생 동물 조사', desc:'야생의 동물과 다른 생물을 추적하고 잡았습니다.'},
   {id:'laborer', name:'노동자', en:'Laborer', boosts:'근력 또는 건강, 자유', skills:'운동, 노동 지식', feat:'무거운 짐꾼', desc:'수년간 고된 육체 노동을 수행했습니다.'},
   {id:'martial-disciple', name:'무예 수련생', en:'Martial Disciple', boosts:'근력 또는 민첩, 자유', skills:'곡예 또는 운동, 전쟁 지식', feat:'고양이 착지/빠른 점프', desc:'위대한 전사가 되기 위해 강도 높은 훈련에 헌신했습니다.'},
@@ -935,7 +935,7 @@ const BACKGROUNDS = [
   {id:'prisoner', name:'수감자', en:'Prisoner', boosts:'근력 또는 건강, 자유', skills:'은신, 뒷세계 지식', feat:'숙련된 밀수꾼', desc:'범죄로 투옥되거나 처벌받았습니다.'},
   {id:'raised-by-belief', name:'신앙에 의해 양육됨', en:'Raised by Belief', boosts:'신격 속성 중 하나, 자유', skills:'신격 기술, 신격 지식', feat:'기술 확인', desc:'특정 신격의 전통에 깊이 젖은 양육을 받았습니다.'},
   {id:'sailor', name:'선원', en:'Sailor', boosts:'근력 또는 민첩, 자유', skills:'운동, 항해 지식', feat:'수중 약탈자', desc:'바다의 부름을 들었습니다.'},
-  {id:'scholar', name:'학자', en:'Scholar', boosts:'지능 또는 지혜, 자유', skills:'신비학/자연/비학/종교 중 선택, 학술원 지식', feat:'기술 확인', desc:'배우는 재능이 있어 할 수 있는 모든 것을 배웠습니다.'},
+  {id:'scholar', name:'학자', en:'Scholar', boosts:'지능 또는 지혜, 자유', skills:'주문학/자연학/오컬티즘/종교학 중 선택, 학술원 지식', feat:'기술 확인', desc:'배우는 재능이 있어 할 수 있는 모든 것을 배웠습니다.'},
   {id:'scout', name:'정찰병', en:'Scout', boosts:'민첩 또는 지혜, 자유', skills:'생존, 지형 지식', feat:'채집가', desc:'야생을 고향이라 부르며 길을 찾고 여행자를 안내했습니다.'},
   {id:'street-urchin', name:'거리의 부랑아', en:'Street Urchin', boosts:'민첩 또는 건강, 자유', skills:'도둑질, 도시 지식', feat:'소매치기', desc:'대도시의 거리에서 소매치기로 근근이 살았습니다.'},
   {id:'teacher', name:'교사', en:'Teacher', boosts:'지능 또는 지혜, 자유', skills:'공연 또는 사회, 학술원 지식', feat:'숙련된 전문가', desc:'아이와 어른에게 세계와 경이에 대해 가르쳤습니다.'},
@@ -951,7 +951,7 @@ const HERITAGE_DB = [
   {id:'rock-dwarf',name_ko:'바위 드워프',name_en:'Rock Dwarf',ancestry:'dwarf',summary:'밀쳐내기(Push), 이동(Trip), 넘어뜨리기 등에 특별히 저항합니다.'},
   {id:'strong-blooded-dwarf',name_ko:'강혈 드워프',name_en:'Strong-Blooded Dwarf',ancestry:'dwarf',summary:'독에 강하며, 독 상태의 지속을 줄입니다.'},
   // 엘프
-  {id:'ancient-elf',name_ko:'고대 엘프',name_en:'Ancient Elf',ancestry:'elf',summary:'수백 년의 삶에서 다양한 기술을 연마했습니다. 하나의 다중 클래스 혈통 특기를 레벨 제한 없이 선택합니다.'},
+  {id:'ancient-elf',name_ko:'고대 엘프',name_en:'Ancient Elf',ancestry:'elf',summary:'수백 년의 삶에서 다양한 기술을 연마했습니다. 하나의 다중 클래스 혈통 재주를 레벨 제한 없이 선택합니다.'},
   {id:'arctic-elf',name_ko:'극지 엘프',name_en:'Arctic Elf',ancestry:'elf',summary:'혹한 환경에 적응하여 냉기 저항과 혹한에서의 페널티 면역을 얻습니다.'},
   {id:'cavern-elf',name_ko:'동굴 엘프',name_en:'Cavern Elf',ancestry:'elf',summary:'지하 생활에 적응하여 저광 시야 대신 암시야(darkvision)를 얻습니다.'},
   {id:'seer-elf',name_ko:'예언자 엘프',name_en:'Seer Elf',ancestry:'elf',summary:'마법 기운을 감지하는 능력이 뛰어납니다. 마법 감지 시 추가 정보를 얻습니다.'},
@@ -977,7 +977,7 @@ const HERITAGE_DB = [
   {id:'wildwood-halfling',name_ko:'야생림 하플링',name_en:'Wildwood Halfling',ancestry:'halfling',summary:'덤불과 험한 지형을 무시하며 이동할 수 있습니다.'},
   // 인간
   {id:'skilled-human',name_ko:'숙련된 인간',name_en:'Skilled Human',ancestry:'human',summary:'하나의 기술에서 훈련됨 대신 전문가 숙련도를 얻습니다.'},
-  {id:'versatile-human',name_ko:'다재다능한 인간',name_en:'Versatile Human',ancestry:'human',summary:'1레벨에 추가 기술 특기를 얻습니다.'},
+  {id:'versatile-human',name_ko:'다재다능한 인간',name_en:'Versatile Human',ancestry:'human',summary:'1레벨에 추가 기술 재주를 얻습니다.'},
   // 레쉬
   {id:'fungus-leshy',name_ko:'균류 레쉬',name_en:'Fungus Leshy',ancestry:'leshy',summary:'어둠에서 볼 수 있는 암시야와 독 저항을 얻습니다.'},
   {id:'gourd-leshy',name_ko:'호박 레쉬',name_en:'Gourd Leshy',ancestry:'leshy',summary:'머리를 분리하여 정찰하거나 야광으로 조명을 만들 수 있습니다.'},
@@ -994,7 +994,7 @@ const HERITAGE_DB = [
 const TRAIT_DB = {
   // 무기 특성
   '민첩':'다중 공격 페널티가 -5/-10 대신 -4/-8로 감소.',
-  '기교':'공격 굴림에 근력 대신 민첩 수정치를 사용할 수 있음.',
+  '기교':'명중 굴림에 근력 대신 민첩 수정치를 사용할 수 있음.',
   '비치명':'이 무기로 입힌 피해는 대상을 죽이지 않음 (기절 0으로 만듦).',
   '도달':'이 무기의 근접 도달이 10피트로 증가.',
   '밀기':'이 무기로 밀기(Shove) 특수 공격을 시도할 수 있음.',
@@ -1067,10 +1067,10 @@ const TRAIT_DB = {
   '오크':'오크(Orc) 혈통 특성.',
   '레쉬':'레쉬(Leshy) 혈통 특성. 식물로 분류됨.',
   '식물':'식물(Plant) 생물 분류.',
-  // 특기 분류
-  '일반':'일반(General) 특기. 클래스 무관 선택 가능.',
-  '기술':'기술(Skill) 특기. 해당 기술 훈련됨이 선행 조건.',
-  '원형':'원형(Archetype) 특기. 다중 클래스 전용.',
+  // 재주 분류
+  '일반':'일반(General) 재주. 클래스 무관 선택 가능.',
+  '기술':'기술(Skill) 재주. 해당 기술 훈련됨이 선행 조건.',
+  '원형':'원형(Archetype) 재주. 다중 클래스 전용.',
 };
 
 const CONDITIONS_DATA = [
@@ -1117,7 +1117,7 @@ const CONDITIONS_DATA = [
 
 const SKILLS = [
   {id:'acrobatics',  name:'곡예',   en:'Acrobatics',  attr:'dex'},
-  {id:'arcana',      name:'신비학', en:'Arcana',       attr:'int'},
+  {id:'arcana',      name:'주문학', en:'Arcana',       attr:'int'},
   {id:'athletics',   name:'운동',   en:'Athletics',    attr:'str'},
   {id:'crafting',    name:'제작',   en:'Crafting',     attr:'int'},
   {id:'deception',   name:'기만',   en:'Deception',    attr:'cha'},
@@ -1126,10 +1126,10 @@ const SKILLS = [
   {id:'lore1',       name:'지식 1', en:'Lore',         attr:'int', isLore:true},
   {id:'lore2',       name:'지식 2', en:'Lore',         attr:'int', isLore:true},
   {id:'medicine',    name:'의학',   en:'Medicine',     attr:'wis'},
-  {id:'nature',      name:'자연',   en:'Nature',       attr:'wis'},
-  {id:'occultism',   name:'비의학', en:'Occultism',    attr:'int'},
+  {id:'nature',      name:'자연학',   en:'Nature',       attr:'wis'},
+  {id:'occultism',   name:'오컬티즘', en:'Occultism',    attr:'int'},
   {id:'performance', name:'공연',   en:'Performance',  attr:'cha'},
-  {id:'religion',    name:'종교',   en:'Religion',     attr:'wis'},
+  {id:'religion',    name:'종교학',   en:'Religion',     attr:'wis'},
   {id:'society',     name:'사회',   en:'Society',      attr:'int'},
   {id:'stealth',     name:'은신',   en:'Stealth',      attr:'dex'},
   {id:'survival',    name:'생존',   en:'Survival',     attr:'wis'},
@@ -1137,10 +1137,10 @@ const SKILLS = [
 ];
 
 const SKILL_NAME_MAP = {
-  '곡예':'acrobatics','신비학':'arcana','운동':'athletics','제작':'crafting',
+  '곡예':'acrobatics','주문학':'arcana','운동':'athletics','제작':'crafting',
   '기만':'deception','외교':'diplomacy','위협':'intimidation','의학':'medicine',
-  '자연':'nature','비의학':'occultism','비학':'occultism','공연':'performance',
-  '종교':'religion','사회':'society','은신':'stealth','생존':'survival','도둑질':'thievery',
+  '자연학':'nature','오컬티즘':'occultism','공연':'performance',
+  '종교학':'religion','사회':'society','은신':'stealth','생존':'survival','도둑질':'thievery',
 };
 
 const ACTION_DB = [
@@ -1149,7 +1149,7 @@ const ACTION_DB = [
   {id:'stride',        cat:'basic', cat_label:'기본 행동', name_ko:'이동',            name_en:'Stride',         cost:'1',        traits:['이동'],            req_skill:null, req_rank:0, req_feat:null, summary:'이동 속도만큼 이동합니다.'},
   {id:'step',          cat:'basic', cat_label:'기본 행동', name_ko:'비틀거림',        name_en:'Step',           cost:'1',        traits:[],                  req_skill:null, req_rank:0, req_feat:null, summary:'반응 행동을 유발하지 않고 5피트 이동합니다.'},
   {id:'interact',      cat:'basic', cat_label:'기본 행동', name_ko:'상호작용',        name_en:'Interact',       cost:'1',        traits:['조작'],            req_skill:null, req_rank:0, req_feat:null, summary:'물건을 집거나, 장비를 꺼내거나, 문을 열거나, 간단한 조작을 합니다.'},
-  {id:'escape',        cat:'basic', cat_label:'기본 행동', name_ko:'탈출',            name_en:'Escape',         cost:'1',        traits:['공격'],            req_skill:null, req_rank:0, req_feat:null, summary:'붙잡히거나 속박된 상태에서 벗어납니다. 운동 또는 곡예 또는 공격 굴림.'},
+  {id:'escape',        cat:'basic', cat_label:'기본 행동', name_ko:'탈출',            name_en:'Escape',         cost:'1',        traits:['공격'],            req_skill:null, req_rank:0, req_feat:null, summary:'붙잡히거나 속박된 상태에서 벗어납니다. 운동 또는 곡예 또는 명중 굴림.'},
   {id:'seek',          cat:'basic', cat_label:'기본 행동', name_ko:'탐색',            name_en:'Seek',           cost:'1',        traits:[],                  req_skill:null, req_rank:0, req_feat:null, summary:'주변 30피트(원뿔 15피트) 내의 숨겨진 존재나 물체를 탐지합니다. 감지 판정.'},
   {id:'stand',         cat:'basic', cat_label:'기본 행동', name_ko:'서기',            name_en:'Stand',          cost:'1',        traits:[],                  req_skill:null, req_rank:0, req_feat:null, summary:'넘어짐 상태를 해제하고 일어납니다.'},
   {id:'drop-prone',    cat:'basic', cat_label:'기본 행동', name_ko:'엎드리기',        name_en:'Drop Prone',     cost:'1',        traits:[],                  req_skill:null, req_rank:0, req_feat:null, summary:'자발적으로 넘어짐 상태가 됩니다. 원거리 공격에 대한 은폐를 얻습니다.'},
@@ -1226,23 +1226,23 @@ const ACTION_DB = [
   {id:'perform',       cat:'skill', cat_label:'공연 행동', name_ko:'공연',            name_en:'Perform',         cost:'1',        traits:[],                  req_skill:'performance', req_rank:0, req_feat:null, summary:'관중 앞에서 공연합니다. 반응이나 수입을 얻을 수 있습니다.'},
 
   // ── 지식 기술 행동 (Recall Knowledge) ──
-  {id:'recall-arcana', cat:'skill', cat_label:'지식 행동', name_ko:'지식 회상(신비학)',name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'arcana',      req_rank:0, req_feat:null, summary:'주문, 마법 아이템, 아케인 전통 등에 대한 정보를 회상합니다.'},
-  {id:'recall-nature', cat:'skill', cat_label:'지식 행동', name_ko:'지식 회상(자연)',  name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'nature',      req_rank:0, req_feat:null, summary:'동물, 식물, 자연 현상에 대한 정보를 회상합니다.'},
-  {id:'recall-occult', cat:'skill', cat_label:'지식 행동', name_ko:'지식 회상(비학)',  name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'occultism',   req_rank:0, req_feat:null, summary:'신비로운 현상, 악령, 비학 전통에 대한 정보를 회상합니다.'},
-  {id:'recall-religion',cat:'skill',cat_label:'지식 행동', name_ko:'지식 회상(종교)',  name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'religion',    req_rank:0, req_feat:null, summary:'신들, 악마, 신성한 전통에 대한 정보를 회상합니다.'},
+  {id:'recall-arcana', cat:'skill', cat_label:'지식 행동', name_ko:'지식 회상(주문학)',name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'arcana',      req_rank:0, req_feat:null, summary:'주문, 마법 아이템, 아케인 전통 등에 대한 정보를 회상합니다.'},
+  {id:'recall-nature', cat:'skill', cat_label:'지식 행동', name_ko:'지식 회상(자연학)',  name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'nature',      req_rank:0, req_feat:null, summary:'동물, 식물, 자연 현상에 대한 정보를 회상합니다.'},
+  {id:'recall-occult', cat:'skill', cat_label:'지식 행동', name_ko:'지식 회상(오컬티즘)',  name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'occultism',   req_rank:0, req_feat:null, summary:'신비로운 현상, 악령, 오컬티즘 전통에 대한 정보를 회상합니다.'},
+  {id:'recall-religion',cat:'skill',cat_label:'지식 행동', name_ko:'지식 회상(종교학)',  name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'religion',    req_rank:0, req_feat:null, summary:'신들, 악마, 신성한 전통에 대한 정보를 회상합니다.'},
   {id:'recall-society',cat:'skill', cat_label:'지식 행동', name_ko:'지식 회상(사회)',  name_en:'Recall Knowledge',cost:'1',       traits:['집중'],            req_skill:'society',     req_rank:0, req_feat:null, summary:'귀족, 법, 역사, 인간 문명에 대한 정보를 회상합니다.'},
 
-  // ── 특기로 해금되는 행동 ──
-  {id:'shield-block',  cat:'feat',  cat_label:'특기 행동', name_ko:'방패 막기',       name_en:'Shield Block',   cost:'reaction', traits:[],                  req_skill:null, req_rank:0, req_feat:'방패 막기', summary:'방패를 올린 상태에서 피해를 받을 때, 방패로 막아 피해를 감소시킵니다.'},
-  {id:'aoo',           cat:'feat',  cat_label:'특기 행동', name_ko:'기회 공격',       name_en:'Attack of Opportunity',cost:'reaction',traits:['전사'],         req_skill:null, req_rank:0, req_feat:'기회 공격', summary:'적이 원거리 공격, 기술 행동, 이동 시 트리거하여 근접 스트라이크를 가합니다.'},
-  {id:'sudden-charge', cat:'feat',  cat_label:'특기 행동', name_ko:'돌격',            name_en:'Sudden Charge',  cost:'2',        traits:['충격','이동'],     req_skill:null, req_rank:0, req_feat:'돌격', summary:'2배 이동 속도로 달려가 스트라이크를 가합니다.'},
-  {id:'power-attack',  cat:'feat',  cat_label:'특기 행동', name_ko:'강공격',          name_en:'Power Attack',   cost:'2',        traits:['전사'],            req_skill:null, req_rank:0, req_feat:'강공격', summary:'두 행동을 소모하여 추가 피해 주사위 1개를 더한 스트라이크를 가합니다.'},
-  {id:'reactive-shield',cat:'feat', cat_label:'특기 행동', name_ko:'반응 방패',       name_en:'Reactive Shield',cost:'reaction', traits:[],                  req_skill:null, req_rank:0, req_feat:'반응 방패', summary:'명중 당할 때 반응으로 방패 올리기를 사용합니다.'},
-  {id:'double-slice',  cat:'feat',  cat_label:'특기 행동', name_ko:'이중 참격',       name_en:'Double Slice',   cost:'2',        traits:[],                  req_skill:null, req_rank:0, req_feat:'이중 참격', summary:'양손 무기로 두 번 스트라이크를 가합니다. 두 번째 타격의 다중 공격 페널티 감소.'},
-  {id:'sneak-attack-ability',cat:'feat',cat_label:'특기 행동',name_ko:'기습 공격',    name_en:'Sneak Attack',   cost:'passive',  traits:[],                  req_skill:null, req_rank:0, req_feat:'기습 공격', summary:'대상이 속임수(flanked) 또는 민첩 보너스를 잃을 때 추가 정밀 피해를 입힙니다.'},
-  {id:'inspire-courage',cat:'feat', cat_label:'특기 행동', name_ko:'용기 고취',       name_en:'Inspire Courage',cost:'1',        traits:['집중','조작','청각','감정','정신'],req_skill:null, req_rank:0, req_feat:'용기 고취', summary:'바드 캔트립. 아군의 공격 굴림과 피해 굴림에 +1 사기 보너스.'},
-  {id:'inspire-defense',cat:'feat', cat_label:'특기 행동', name_ko:'방어 고취',       name_en:'Inspire Defense',cost:'1',        traits:['집중','조작','청각','감정','정신'],req_skill:null, req_rank:0, req_feat:'방어 고취', summary:'바드 캔트립. 아군의 AC와 내성에 +1 사기 보너스.'},
-  {id:'channel-smite', cat:'feat',  cat_label:'특기 행동', name_ko:'채널 강타',       name_en:'Channel Smite',  cost:'2',        traits:['신성','사악','선'],req_skill:null, req_rank:0, req_feat:'채널 강타', summary:'신성 시전 에너지를 무기 타격에 담아 발사합니다.'},
+  // ── 재주로 해금되는 행동 ──
+  {id:'shield-block',  cat:'feat',  cat_label:'재주 행동', name_ko:'방패 막기',       name_en:'Shield Block',   cost:'reaction', traits:[],                  req_skill:null, req_rank:0, req_feat:'방패 막기', summary:'방패를 올린 상태에서 피해를 받을 때, 방패로 막아 피해를 감소시킵니다.'},
+  {id:'aoo',           cat:'feat',  cat_label:'재주 행동', name_ko:'기회 공격',       name_en:'Attack of Opportunity',cost:'reaction',traits:['전사'],         req_skill:null, req_rank:0, req_feat:'기회 공격', summary:'적이 원거리 공격, 기술 행동, 이동 시 트리거하여 근접 스트라이크를 가합니다.'},
+  {id:'sudden-charge', cat:'feat',  cat_label:'재주 행동', name_ko:'돌격',            name_en:'Sudden Charge',  cost:'2',        traits:['충격','이동'],     req_skill:null, req_rank:0, req_feat:'돌격', summary:'2배 이동 속도로 달려가 스트라이크를 가합니다.'},
+  {id:'power-attack',  cat:'feat',  cat_label:'재주 행동', name_ko:'강공격',          name_en:'Power Attack',   cost:'2',        traits:['전사'],            req_skill:null, req_rank:0, req_feat:'강공격', summary:'두 행동을 소모하여 추가 피해 주사위 1개를 더한 스트라이크를 가합니다.'},
+  {id:'reactive-shield',cat:'feat', cat_label:'재주 행동', name_ko:'반응 방패',       name_en:'Reactive Shield',cost:'reaction', traits:[],                  req_skill:null, req_rank:0, req_feat:'반응 방패', summary:'명중 당할 때 반응으로 방패 올리기를 사용합니다.'},
+  {id:'double-slice',  cat:'feat',  cat_label:'재주 행동', name_ko:'이중 참격',       name_en:'Double Slice',   cost:'2',        traits:[],                  req_skill:null, req_rank:0, req_feat:'이중 참격', summary:'양손 무기로 두 번 스트라이크를 가합니다. 두 번째 타격의 다중 공격 페널티 감소.'},
+  {id:'sneak-attack-ability',cat:'feat',cat_label:'재주 행동',name_ko:'기습 공격',    name_en:'Sneak Attack',   cost:'passive',  traits:[],                  req_skill:null, req_rank:0, req_feat:'기습 공격', summary:'대상이 속임수(flanked) 또는 민첩 보너스를 잃을 때 추가 정밀 피해를 입힙니다.'},
+  {id:'inspire-courage',cat:'feat', cat_label:'재주 행동', name_ko:'용기 고취',       name_en:'Inspire Courage',cost:'1',        traits:['집중','조작','청각','감정','정신'],req_skill:null, req_rank:0, req_feat:'용기 고취', summary:'바드 캔트립. 아군의 명중 굴림과 피해 굴림에 +1 사기 보너스.'},
+  {id:'inspire-defense',cat:'feat', cat_label:'재주 행동', name_ko:'방어 고취',       name_en:'Inspire Defense',cost:'1',        traits:['집중','조작','청각','감정','정신'],req_skill:null, req_rank:0, req_feat:'방어 고취', summary:'바드 캔트립. 아군의 AC와 내성에 +1 사기 보너스.'},
+  {id:'channel-smite', cat:'feat',  cat_label:'재주 행동', name_ko:'채널 강타',       name_en:'Channel Smite',  cost:'2',        traits:['신성','사악','선'],req_skill:null, req_rank:0, req_feat:'채널 강타', summary:'신성 시전 에너지를 무기 타격에 담아 발사합니다.'},
 ];
 
 const CONDITIONS = [
@@ -1324,7 +1324,7 @@ function setSkillTrained(id) {
 }
 
 function parseFixedSkills(skillStr) {
-  // '비학, 공연 + 4+INT개' → ['비학','공연']
+  // '오컬티즘, 공연 + 4+INT개' → ['오컬티즘','공연']
   // '곡예 또는 운동 + 3+INT개' → [] (skip choices)
   const part = (skillStr || '').split(' + ')[0];
   if (part.includes(' 또는 ')) return [];
@@ -1364,7 +1364,7 @@ function showInfo(type, name) {
   if (fbar) fbar.innerHTML = '';
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = 'none';
-  document.getElementById('modal-title').textContent = type === 'spell' ? '주문 정보' : '특기 정보';
+  document.getElementById('modal-title').textContent = type === 'spell' ? '주문 정보' : '재주 정보';
   modalType = 'info';
   renderOptions([item]);
 }
@@ -1380,7 +1380,7 @@ window.onload = function() {
   // 기본 항목 초기화 (JSON 불러오기 전까지 표시)
   addWeapon({name:'비무장 공격', atk:'+0', dmg:'1d4', traits:'비치명, 민첩/근력'});
   addEquip({name:'모험가 꾸러미', qty:1, bulk:1});
-  // 플레이스홀더 제거됨 — 유저가 직접 특기를 추가
+  // 플레이스홀더 제거됨 — 유저가 직접 재주를 추가
   renderFeats();
   recalcAll();
 };
@@ -2004,7 +2004,7 @@ function removeSpell(type, i) {
 }
 
 function addFeat(type) {
-  const name = prompt('특기/능력 이름:');
+  const name = prompt('재주/능력 이름:');
   if (!name) return;
   state.feats[type].push({name, level:getLevel()});
   renderFeats();
@@ -2022,7 +2022,7 @@ function renderFeats() {
       const div = document.createElement('div');
       div.className = 'feat-entry';
       div.innerHTML = `
-        <input value="${f.name.replace(/"/g,'&quot;')}" placeholder="${labels[t]} 특기 이름..." style="width:100%;margin-bottom:2px;">
+        <input value="${f.name.replace(/"/g,'&quot;')}" placeholder="${labels[t]} 재주 이름..." style="width:100%;margin-bottom:2px;">
         <div class="feat-src">
           Lv: <input type="number" value="${f.level||1}" min="1" max="20" style="width:32px;">
           <span class="info-btn" title="DB 정보 보기">ℹ</span>
@@ -2074,7 +2074,7 @@ function openModal(type, ctx) {
 
   const titles = {
     class:'클래스 선택', ancestry:'혈통 선택', background:'배경 선택',
-    heritage:'유산 선택', subclass:'서브클래스 선택', feat:'특기 선택', spell:'주문 선택',
+    heritage:'유산 선택', subclass:'서브클래스 선택', feat:'재주 선택', spell:'주문 선택',
     weapon:'무기 선택', armor:'방어구 선택'
   };
   document.getElementById('modal-title').textContent = titles[type]||type;
@@ -2247,7 +2247,7 @@ function renderOptions(data) {
     } else if (modalType==='background') {
       tags = `<span class="tag hl">속성: ${item.boosts}</span>
               <span class="tag">기술: ${item.skills}</span>
-              <span class="tag">특기: ${item.feat}</span>`;
+              <span class="tag">재주: ${item.feat}</span>`;
     } else if (modalType==='feat' || (modalType==='info' && item.feat_level !== undefined)) {
       tags = `<span class="tag hl">${item.feat_level}레벨</span>
               <span class="tag">${item.category}</span>
@@ -2411,7 +2411,7 @@ function applyAncestryDefaults(anc) {
   if (speedEl) speedEl.value = anc.speed;
   const langEl = document.getElementById('f-languages');
   if (langEl && !langEl.value) {
-    langEl.value = `특질: ${anc.traits.join(', ')}\n시야: ${anc.vision}\n${anc.specials.join('\n')}`;
+    langEl.value = `특성: ${anc.traits.join(', ')}\n시야: ${anc.vision}\n${anc.specials.join('\n')}`;
   }
   // Parse ancestry boosts/flaws from format like ['건강(CON)','지혜(WIS)','자유']
   const fixed = [], flaws = [];
@@ -2433,7 +2433,7 @@ function applyBackgroundInfo(bg) {
   // Show info in notes if empty
   const notesEl = document.getElementById('f-notes');
   if (notesEl && !notesEl.value) {
-    notesEl.value = `[배경: ${bg.name}]\n속성 부스트: ${bg.boosts}\n기술: ${bg.skills}\n기술 특기: ${bg.feat}`;
+    notesEl.value = `[배경: ${bg.name}]\n속성 부스트: ${bg.boosts}\n기술: ${bg.skills}\n기술 재주: ${bg.feat}`;
   }
   // Auto-set background skill proficiencies
   if (bg.skills) {
@@ -2571,7 +2571,7 @@ function renderActions() {
     else groups[a.cat_label].locked.push(a);
   });
 
-  const catOrder = ['기본 행동','운동 행동','곡예 행동','은신 행동','기만 행동','외교 행동','위협 행동','의학 행동','도둑질 행동','자연 행동','생존 행동','제작 행동','공연 행동','지식 행동','특기 행동'];
+  const catOrder = ['기본 행동','운동 행동','곡예 행동','은신 행동','기만 행동','외교 행동','위협 행동','의학 행동','도둑질 행동','자연 행동','생존 행동','제작 행동','공연 행동','지식 행동','재주 행동'];
 
   let html = '';
   const orderedGroups = [...catOrder.filter(k => groups[k]), ...Object.keys(groups).filter(k => !catOrder.includes(k))];
@@ -2588,7 +2588,7 @@ function renderActions() {
       const traitsHtml = (a.traits||[]).map(t => `<span class="tag">${t}</span>`).join('');
       let reqHtml = '';
       if (!avail) {
-        if (a.req_feat) reqHtml = `<div class="action-req">특기 필요: ${a.req_feat}</div>`;
+        if (a.req_feat) reqHtml = `<div class="action-req">재주 필요: ${a.req_feat}</div>`;
         else if (a.req_skill && a.req_rank > 0) {
           const rankNames = {2:'숙련',4:'전문가',6:'대가',8:'전설'};
           const sk = SKILLS.find(s=>s.id===a.req_skill);
