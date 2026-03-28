@@ -1754,7 +1754,7 @@ const SKILLS = [
 const SKILL_NAME_MAP = {
   '곡예':'acrobatics','주문학':'arcana','운동':'athletics','제작':'crafting',
   '기만':'deception','외교':'diplomacy','위협':'intimidation','의학':'medicine',
-  '자연학':'nature','오컬티즘':'occultism','공연':'performance',
+  '자연학':'nature','자연':'nature','오컬티즘':'occultism','공연':'performance',
   '종교학':'religion','사회':'society','은신':'stealth','생존':'survival','도둑질':'thievery',
 };
 
@@ -2626,6 +2626,16 @@ function renderGrowthPlan() {
       html += growthSlotHTML(lv, 'class-sel', '⚔', '클래스 Class',
         state.selectedClass ? `${state.selectedClass.name} (${state.selectedClass.en})` : null,
         "openModal('class')");
+      // Background skill feat (auto-granted, display only)
+      if (g.bgSkillFeat) {
+        html += `<div class="growth-slot filled" style="cursor:default;">
+          <div class="growth-slot-icon">📚</div>
+          <div class="growth-slot-body">
+            <div class="growth-slot-label">배경 기술 재주 Background Skill Feat</div>
+            <div class="growth-slot-value">${g.bgSkillFeat}</div>
+          </div>
+        </div>`;
+      }
     }
 
     // Ability Boosts
@@ -3530,6 +3540,14 @@ function applyClassDefaults(cls) {
     const id = skillNameToId(name);
     if (id) setSkillTrained(id);
   });
+  // Parse trainable skill slot count (e.g. '4+INT개' from '오컬티즘, 공연 + 4+INT개')
+  const skillParts = (cls.skills || '').split(' + ');
+  let trainableSlots = 0;
+  for (const p of skillParts) {
+    const m = p.match(/(\d+)\+INT개/);
+    if (m) { trainableSlots = parseInt(m[1]); break; }
+  }
+  state.trainableSkillSlots = trainableSlots;
   updateHP();
   updateSpellSlotsForClass();
   recalcSkills();
@@ -3538,9 +3556,12 @@ function applyClassDefaults(cls) {
 function applyAncestryDefaults(anc) {
   const speedEl = document.getElementById('speed');
   if (speedEl) speedEl.value = anc.speed;
+  // Save vision and size to state
+  state.vision = anc.vision || '없음';
+  state.size = anc.size || '중형';
   const langEl = document.getElementById('f-languages');
   if (langEl && !langEl.value) {
-    langEl.value = `특성: ${anc.traits.join(', ')}\n시야: ${anc.vision}\n${anc.specials.join('\n')}`;
+    langEl.value = `특성: ${anc.traits.join(', ')}\n크기: ${anc.size}\n시야: ${anc.vision}\n${anc.specials.join('\n')}`;
   }
   // Parse ancestry boosts/flaws from format like ['건강(CON)','지혜(WIS)','자유']
   const fixed = [], flaws = [];
@@ -3569,6 +3590,10 @@ function applyBackgroundInfo(bg) {
     let loreUsed = 0;
     bg.skills.split(', ').forEach(skillName => {
       const s = skillName.trim();
+      // Skip choice skills (contains '또는')
+      if (s.includes('또는')) return;
+      // Skip slash-separated choices (e.g. '주문학/자연학/오컬티즘/종교학 중 선택')
+      if (s.includes('/') || s.includes('중 선택')) return;
       if (s.endsWith(' 지식') || s === '필사 지식' || s.includes('지식')) {
         const loreName = s.replace(' 지식', '').trim();
         const loreId = loreUsed === 0 ? 'lore1' : 'lore2';
@@ -3581,6 +3606,23 @@ function applyBackgroundInfo(bg) {
         if (id) setSkillTrained(id);
       }
     });
+  }
+  // Auto-set background skill feat
+  if (bg.feat) {
+    const featName = bg.feat.trim();
+    // Don't add if it contains a choice indicator
+    if (featName && !featName.includes('/') && !featName.includes('또는')) {
+      // Avoid duplicates
+      const alreadyHas = state.feats.skill.some(f => f.name === featName);
+      if (!alreadyHas) {
+        state.feats.skill.push({name: featName, level: 1});
+        // Also store in growth plan Level 1
+        if (!state.growth[1]) state.growth[1] = {};
+        state.growth[1].bgSkillFeat = featName;
+        renderFeats();
+        renderGrowthPlan();
+      }
+    }
   }
   recalcSkills();
 }
@@ -3788,6 +3830,9 @@ function collectData() {
     spells: state.spells, spellSlots: state.spellSlots, spellSlotsUsed: state.spellSlotsUsed,
     feats: state.feats, conditions: state.conditions,
     growth: state.growth,
+    vision: state.vision || null,
+    size: state.size || null,
+    trainableSkillSlots: state.trainableSkillSlots || 0,
   };
   SKILLS.forEach(sk => {
     data.skillProfs[sk.id] = document.getElementById('sk-prof-'+sk.id)?.value;
@@ -3988,6 +4033,10 @@ function loadData(d) {
       // 값을 복원 후 buildConditions 다시 실행
       buildConditions();
     }
+    // Restore extra state fields
+    if (d.vision) state.vision = d.vision;
+    if (d.size) state.size = d.size;
+    if (d.trainableSkillSlots !== undefined) state.trainableSkillSlots = d.trainableSkillSlots;
   } catch(e) { console.warn('Load failed',e); }
 }
 
