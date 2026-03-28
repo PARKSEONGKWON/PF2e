@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PF2e 캐릭터 시트 (Player Core 한국어판)</title>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyCM0_tctWtlRY08fVmcBaVrk2-mNb--SQM",
+  authDomain: "pf2e-sheets.firebaseapp.com",
+  projectId: "pf2e-sheets",
+  storageBucket: "pf2e-sheets.firebasestorage.app",
+  messagingSenderId: "967668320246",
+  appId: "1:967668320246:web:6e012c3069d4fd2f33e9d7"
+});
+const auth = firebase.auth();
+const db = firebase.firestore();
+</script>
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
@@ -237,6 +253,19 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
 </style>
 </head>
 <body>
+<!-- Firebase Auth Bar -->
+<div id="auth-bar" style="position:sticky;top:0;z-index:9999;background:#1a1a2e;border-bottom:2px solid #333;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;font-family:'Noto Sans KR',sans-serif;font-size:13px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="color:#f5c518;font-weight:700;">PF2e 캐릭터 시트</span>
+    <span id="save-status" style="color:#666;font-size:11px;"></span>
+  </div>
+  <div id="auth-area">
+    <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
+  </div>
+</div>
+<!-- Character Slot Selector (shown after login) -->
+<div id="slot-bar" style="display:none;background:#16213e;border-bottom:1px solid #333;padding:6px 16px;font-family:'Noto Sans KR',sans-serif;font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+</div>
 
 <!-- ═══════════════ HEADER ═══════════════ -->
 <div id="header">
@@ -2831,6 +2860,124 @@ function loadData(d) {
   } catch(e) { console.warn('Load failed',e); }
 }
 
+</script>
+
+<!-- Firebase Auth + Cloud Save -->
+<script>
+// ═══════════════════════════════════════════════
+//  FIREBASE AUTH + FIRESTORE SAVE/LOAD
+// ═══════════════════════════════════════════════
+let currentUser = null;
+let currentSlot = 'slot1';
+let autoSaveTimer = null;
+
+function updateAuthUI(user) {
+  const area = document.getElementById('auth-area');
+  const slotBar = document.getElementById('slot-bar');
+  if (user) {
+    currentUser = user;
+    area.innerHTML = '<span style="color:#aaa;margin-right:8px;">' + (user.displayName || user.email) + '</span>' +
+      '<button onclick="loadFromCloud()" style="background:#27ae60;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">불러오기</button>' +
+      '<button onclick="saveToCloud()" style="background:#2980b9;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">저장</button>' +
+      '<button onclick="googleLogout()" style="background:#555;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;">로그아웃</button>';
+    slotBar.style.display = 'flex';
+    slotBar.innerHTML = '<span style="color:#888;">캐릭터 슬롯:</span>';
+    for (let i = 1; i <= 5; i++) {
+      const active = currentSlot === 'slot' + i ? 'background:#f5c518;color:#000;' : 'background:#333;color:#ccc;';
+      slotBar.innerHTML += '<button onclick="switchSlot(\'slot' + i + '\')" style="border:none;padding:3px 10px;border-radius:3px;cursor:pointer;font-size:11px;' + active + '">슬롯 ' + i + '</button>';
+    }
+    loadSlotNames(user.uid);
+    startAutoSave();
+  } else {
+    currentUser = null;
+    area.innerHTML = '<button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>';
+    slotBar.style.display = 'none';
+    stopAutoSave();
+  }
+}
+
+function googleLogin() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(function(e) { alert('로그인 실패: ' + e.message); });
+}
+
+function googleLogout() {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(function(user) {
+  updateAuthUI(user);
+});
+
+function saveToCloud() {
+  if (!currentUser) { alert('로그인이 필요합니다.'); return; }
+  var data = collectData();
+  var status = document.getElementById('save-status');
+  status.textContent = '저장 중...';
+  status.style.color = '#f5c518';
+  db.collection('users').doc(currentUser.uid).collection('characters').doc(currentSlot).set({
+    data: JSON.stringify(data),
+    name: data.name || '이름 없음',
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function() {
+    status.textContent = '✓ 저장 완료 (' + new Date().toLocaleTimeString() + ')';
+    status.style.color = '#27ae60';
+    loadSlotNames(currentUser.uid);
+  }).catch(function(e) {
+    status.textContent = '✗ 저장 실패';
+    status.style.color = '#e74c3c';
+    console.error(e);
+  });
+}
+
+function loadFromCloud() {
+  if (!currentUser) { alert('로그인이 필요합니다.'); return; }
+  var status = document.getElementById('save-status');
+  status.textContent = '불러오는 중...';
+  status.style.color = '#f5c518';
+  db.collection('users').doc(currentUser.uid).collection('characters').doc(currentSlot).get().then(function(doc) {
+    if (doc.exists && doc.data().data) {
+      var data = JSON.parse(doc.data().data);
+      applyData(data);
+      status.textContent = '✓ 불러오기 완료';
+      status.style.color = '#27ae60';
+    } else {
+      status.textContent = '이 슬롯은 비어있습니다.';
+      status.style.color = '#888';
+    }
+  }).catch(function(e) {
+    status.textContent = '✗ 불러오기 실패';
+    status.style.color = '#e74c3c';
+    console.error(e);
+  });
+}
+
+function switchSlot(slot) {
+  currentSlot = slot;
+  if (currentUser) updateAuthUI(currentUser);
+}
+
+function loadSlotNames(uid) {
+  db.collection('users').doc(uid).collection('characters').get().then(function(snap) {
+    snap.forEach(function(doc) {
+      var d = doc.data();
+      var slotNum = doc.id.replace('slot', '');
+      var btn = document.querySelector('#slot-bar button:nth-child(' + (parseInt(slotNum) + 1) + ')');
+      if (btn && d.name) btn.textContent = '슬롯 ' + slotNum + ': ' + d.name;
+    });
+  });
+}
+
+function startAutoSave() {
+  stopAutoSave();
+  autoSaveTimer = setInterval(function() {
+    if (currentUser) saveToCloud();
+  }, 120000); // 2분마다 자동 저장
+}
+
+function stopAutoSave() {
+  if (autoSaveTimer) { clearInterval(autoSaveTimer); autoSaveTimer = null; }
+}
 </script>
 </body>
 </html>
