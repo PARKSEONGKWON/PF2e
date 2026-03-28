@@ -1351,8 +1351,7 @@ window.onload = function() {
   // 기본 항목 초기화 (JSON 불러오기 전까지 표시)
   addWeapon({name:'비무장 공격', atk:'+0', dmg:'1d4', traits:'비치명, 민첩/근력'});
   addEquip({name:'모험가 꾸러미', qty:1, bulk:1});
-  state.feats.ancestry.push({name:'(혈통 특기)', level:1});
-  state.feats.class.push({name:'(클래스 특기)', level:1});
+  // 플레이스홀더 제거됨 — 유저가 직접 특기를 추가
   renderFeats();
   recalcAll();
 };
