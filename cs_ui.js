@@ -1726,7 +1726,10 @@ function openPetBarding(i) {
         row.classList.add('expanded');
         let dd = row.nextElementSibling;
         if (!dd || !dd.classList.contains('opt-row-detail')) { dd = document.createElement('div'); dd.className = 'opt-row-detail'; row.after(dd); }
-        dd.innerHTML = buildBardingDetailHtml(b) + `<button onclick="applyBarding(${i},'${b.name}')" style="width:100%;margin-top:8px;padding:10px;background:var(--accent);color:#000;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">장착</button>`;
+        dd.innerHTML = buildBardingDetailHtml(b) + `<div style="display:flex;gap:6px;margin-top:8px;">
+          <button onclick="applyBarding(${i},'${b.name}')" style="flex:1;padding:10px;background:var(--bg4);color:var(--text);border:1px solid var(--border2);border-radius:4px;font-size:13px;cursor:pointer;">획득</button>
+          <button onclick="buyBarding(${i},'${b.name}')" style="flex:1;padding:10px;background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent);border-radius:4px;font-size:13px;cursor:pointer;">구매</button>
+        </div>`;
         dd.classList.add('open');
       }
     });
@@ -1756,8 +1759,23 @@ function showBardingDetail(petIdx, b) {
     ${b.category !== '없음' ? `<div class="modal-detail-tags"><span class="tag hl">${b.category}</span></div>` : ''}
     <div class="modal-detail-desc" style="margin-bottom:16px;">${buildBardingDetailHtml(b)}</div>
     <div class="equip-give-buy">
-      <button class="btn-give" onclick="applyBarding(${petIdx},'${b.name}')">장착</button>
+      <button class="btn-give" onclick="applyBarding(${petIdx},'${b.name}')">획득</button>
+      <button class="btn-buy" onclick="buyBarding(${petIdx},'${b.name}')">구매</button>
     </div>`;
+}
+
+function buyBarding(petIdx, bardingName) {
+  const prices = {'패딩 마갑':4,'가죽 마갑':400,'사슬 마갑':1000,'합성 마갑':1200,'반판 마갑':2000}; // in cp
+  const costCp = prices[bardingName] || 0;
+  if (costCp > 0) {
+    const totalCp = getCurrencyTotalCp();
+    if (totalCp < costCp) {
+      alert('소지금이 부족합니다! (필요: ' + (costCp >= 100 ? Math.floor(costCp/100)+'gp' : costCp >= 10 ? Math.floor(costCp/10)+'sp' : costCp+'cp') + ')');
+      return;
+    }
+    deductCurrency(costCp);
+  }
+  applyBarding(petIdx, bardingName);
 }
 
 function applyBarding(petIdx, bardingName) {
