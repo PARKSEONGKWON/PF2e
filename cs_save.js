@@ -369,7 +369,8 @@ function switchTab(id, el) {
   if (id === 'actions') renderActions();
 }
 
-// Fix recalcAll to also update mobile mirror attribute displays
+// Fix recalcAll to also update mobile mirror attribute displays + auto-save
+let _loadComplete = false;
 const _origRecalcAll = recalcAll;
 recalcAll = function() {
   _origRecalcAll();
@@ -379,6 +380,8 @@ recalcAll = function() {
     const dst = document.getElementById('mod-' + a + '-m');
     if (src && dst) dst.textContent = src.textContent;
   });
+  // 초기 로드 완료 후에만 자동저장
+  if (_loadComplete) save();
 };
 
 // Re-init window.onload to use new tab
@@ -397,4 +400,5 @@ window.onload = function() {
   renderLanguages();
   renderPets();
   recalcAll();
+  _loadComplete = true;
 };
