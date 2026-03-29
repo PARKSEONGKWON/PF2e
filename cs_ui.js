@@ -593,6 +593,114 @@ function toggleEquip(i) {
 
 function removeEquip(i) { state.equip.splice(i,1); renderEquip(); save(); }
 
+// ── 컨테이너 (서브 인벤토리) ──
+function addContainer() {
+  const name = prompt('컨테이너 이름 (예: 배낭, 벨트 주머니):');
+  if (!name) return;
+  if (!state.containers) state.containers = [];
+  state.containers.push({name, items:[]});
+  renderContainers();
+  save();
+}
+
+function addContainerItem(ci) {
+  const name = prompt('아이템 이름:');
+  if (!name) return;
+  state.containers[ci].items.push({name, qty:1, bulk:0});
+  renderContainers();
+  save();
+}
+
+function removeContainerItem(ci, ii) {
+  state.containers[ci].items.splice(ii, 1);
+  renderContainers();
+  save();
+}
+
+function removeContainer(ci) {
+  if (!confirm(state.containers[ci].name + ' 컨테이너를 삭제합니까?')) return;
+  state.containers.splice(ci, 1);
+  renderContainers();
+  save();
+}
+
+function renderContainers() {
+  const el = document.getElementById('container-list');
+  if (!el) return;
+  if (!state.containers) state.containers = [];
+  el.innerHTML = '';
+  state.containers.forEach((c, ci) => {
+    let html = `<div class="box">
+      <div class="box-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>📦 ${c.name}</span>
+        <span class="spell-del" onclick="removeContainer(${ci})" style="cursor:pointer;">✕</span>
+      </div>`;
+    c.items.forEach((item, ii) => {
+      html += `<div style="display:flex;align-items:center;gap:4px;padding:2px 4px;border-bottom:1px solid var(--border);font-size:12px;">
+        <span style="flex:3;color:var(--text);">${item.name}</span>
+        <input type="number" value="${item.qty}" min="0" style="width:36px;text-align:center;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:3px;font-size:11px;"
+          oninput="state.containers[${ci}].items[${ii}].qty=parseInt(this.value||0);save()">
+        <input type="number" value="${item.bulk}" min="0" step="0.1" style="width:36px;text-align:center;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:3px;font-size:11px;"
+          oninput="state.containers[${ci}].items[${ii}].bulk=parseFloat(this.value||0);save()">
+        <span class="spell-del" onclick="removeContainerItem(${ci},${ii})" style="cursor:pointer;width:20px;text-align:center;">✕</span>
+      </div>`;
+    });
+    html += `<button class="add-btn" onclick="addContainerItem(${ci})" style="margin-top:4px;">+ 아이템 추가</button></div>`;
+    el.innerHTML += html;
+  });
+}
+
+// ── 포뮬라 (레시피) ──
+function addFormula() {
+  if (typeof SPELL_DB === 'undefined' && typeof GEAR_DB === 'undefined') {
+    const name = prompt('포뮬라(레시피) 이름:');
+    if (!name) return;
+    if (!state.formulas) state.formulas = [];
+    state.formulas.push({name, level:1});
+    renderFormulas();
+    save();
+    return;
+  }
+  // 장비 DB에서 선택하여 획득
+  modalType = 'formula-pick';
+  openModal('equip-gear');
+}
+
+function addFormulaByName(name, level) {
+  if (!state.formulas) state.formulas = [];
+  if (!state.formulas.some(f => f.name === name)) {
+    state.formulas.push({name, level: level||1});
+    renderFormulas();
+    save();
+  }
+}
+
+function removeFormula(i) {
+  if (!state.formulas) return;
+  state.formulas.splice(i, 1);
+  renderFormulas();
+  save();
+}
+
+function renderFormulas() {
+  const el = document.getElementById('formula-list');
+  if (!el) return;
+  if (!state.formulas) state.formulas = [];
+  el.innerHTML = '';
+  if (state.formulas.length === 0) {
+    el.innerHTML = '<div style="font-size:10px;color:var(--text2);text-align:center;padding:6px 0;">제작 레시피를 추가하세요</div>';
+    return;
+  }
+  state.formulas.forEach((f, i) => {
+    el.innerHTML += `<div style="display:flex;align-items:center;gap:4px;padding:3px 4px;border-bottom:1px solid var(--border);font-size:12px;">
+      <span style="color:var(--accent);font-size:10px;">📜</span>
+      <span style="flex:1;color:var(--text);">${f.name}</span>
+      <span style="font-size:10px;color:var(--text2);">Lv ${f.level}</span>
+      <span class="spell-del" onclick="removeFormula(${i})" style="cursor:pointer;width:20px;text-align:center;">✕</span>
+    </div>`;
+  });
+}
+
 function addSpell(rank) {
   const name = prompt(`${rank===0?'캔트립':'주문'} 이름:`);
   if (!name) return;
