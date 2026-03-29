@@ -1405,9 +1405,13 @@ function filterFeats() {
   const q = document.getElementById('modal-search')?.value.toLowerCase()||'';
   const cat = document.getElementById('filter-feat-cat')?.value||'';
   const lv = parseInt(document.getElementById('filter-feat-lv')?.value||0);
+  // 혈통 재주: 선택된 혈통의 특성(trait)에 맞는 것만
+  const ancTraits = (cat === 'ancestry' && state.selectedAncestry)
+    ? (state.selectedAncestry.traits || []) : null;
   return FEAT_DB.filter(f =>
     (!cat || f.category===cat) &&
     (!lv || f.feat_level<=lv) &&
+    (!ancTraits || (f.traits && f.traits.some(t => ancTraits.includes(t)))) &&
     (!q || f.name_ko.includes(q) || (f.name_en||'').toLowerCase().includes(q) || (f.summary||'').includes(q))
   );
 }
