@@ -498,6 +498,24 @@ function renderGrowthPlan() {
           state.selectedHeritage ? state.selectedHeritage.name_ko : null,
           "openModal('heritage')", state.selectedHeritage ? "clearCoreSelection('heritage')" : null);
       }
+      // Languages
+      if (state.selectedAncestry) {
+        const intMod = Math.max(0, getMod('int'));
+        const baseCount = 2; // 공용어 + 혈통어
+        const maxLangs = baseCount + intMod;
+        const curLangs = (state.languages || []).length;
+        const remain = Math.max(0, maxLangs - curLangs);
+        const langNames = (state.languages || []).join(', ');
+        html += `<div class="growth-slot ${curLangs >= maxLangs ? 'filled' : ''}" onclick="addLanguage()">
+          <div class="growth-slot-icon">🗣</div>
+          <div class="growth-slot-body">
+            <div class="growth-slot-label">언어 Languages</div>
+            <div class="growth-slot-value">${curLangs >= maxLangs ? langNames : curLangs + '/' + maxLangs + ' 선택' + (langNames ? ' — ' + langNames : '')}</div>
+          </div>
+          ${remain > 0 ? `<div class="growth-slot-badge">${remain}</div>` : ''}
+        </div>`;
+      }
+
       // Subclass (only if class selected AND has subclasses)
       if (state.selectedClass) {
         const subs = SUBCLASS_DB.filter(s => s.class_id === state.selectedClass.id);
