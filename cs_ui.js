@@ -706,58 +706,77 @@ function removeFormula(i) {
 const COMMON_LANGUAGES = ['공용어','드워프어','엘프어','노움어','고블린어','하플링어','요툰어','오크어'];
 const UNCOMMON_LANGUAGES = ['아클로어','크토니안어','드라코닉어','천상어','페이어','콜로어','네크릴어','페트란어','사크브로스어','숲요정어'];
 
+function getMaxLanguages() {
+  const intMod = Math.max(0, getMod('int'));
+  return 2 + intMod; // 공용어 + 혈통어 + INT 수정치
+}
+
 function addLanguage() {
   if (!state.languages) state.languages = [];
-  const all = [...COMMON_LANGUAGES, ...UNCOMMON_LANGUAGES].filter(l => !state.languages.includes(l));
-  if (all.length === 0) { alert('선택 가능한 언어가 없습니다.'); return; }
+  const maxLangs = getMaxLanguages();
+  const selected = state.languages;
 
-  // 모달로 선택
-  const overlay = document.getElementById('modal-overlay');
-  overlay.classList.remove('hidden');
-  modalType = 'language-pick';
-  document.getElementById('modal-title').textContent = '언어 선택';
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  document.getElementById('modal-title').textContent = `언어 선택 (${selected.length}/${maxLangs})`;
   const searchEl = document.getElementById('modal-search');
   if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; }
   const fbar = document.getElementById('modal-filterbar');
   if (fbar) fbar.innerHTML = '';
   const confirmBtn = document.querySelector('.btn-confirm');
-  if (confirmBtn) confirmBtn.style.display = 'none';
+  if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.textContent = '완료'; }
+  modalType = 'skill-multi'; // 완료 버튼으로 닫기 위해 skill-multi 사용
+  modalSelected = null;
 
-  // 리스트 영역 확실히 표시
   const listEl = document.querySelector('.modal-list');
   if (listEl) listEl.style.display = '';
   const detail = document.getElementById('modal-detail');
-  if (detail) detail.innerHTML = '<div class="modal-detail-empty">언어를 선택하세요.</div>';
+  if (detail) detail.innerHTML = `<div class="modal-detail-empty">${maxLangs}개의 언어를 선택하세요.</div>`;
 
   renderLanguagePickList();
 }
 
 function renderLanguagePickList() {
   if (!state.languages) state.languages = [];
+  const maxLangs = getMaxLanguages();
+  const selected = state.languages;
+  const isFull = selected.length >= maxLangs;
   const q = document.getElementById('modal-search')?.value?.toLowerCase() || '';
   const container = document.getElementById('modal-options');
   container.innerHTML = '';
 
+  // 타이틀 갱신
+  const titleEl = document.getElementById('modal-title');
+  if (titleEl) titleEl.textContent = `언어 선택 (${selected.length}/${maxLangs})`;
+
   const addSection = (title, langs) => {
-    const filtered = langs.filter(l => !state.languages.includes(l) && (!q || l.includes(q)));
-    if (filtered.length === 0) return;
+    const items = langs.filter(l => !q || l.toLowerCase().includes(q));
+    if (items.length === 0) return;
     const header = document.createElement('div');
     header.className = 'opt-section-header';
     header.textContent = title;
     container.appendChild(header);
-    filtered.forEach(l => {
+    items.forEach(l => {
+      const isSelected = selected.includes(l);
       const row = document.createElement('div');
-      row.className = 'opt-row';
-      row.style.cursor = 'pointer';
-      row.innerHTML = `<div class="opt-row-name">${l}</div>`;
-      row.addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.languages.push(l);
-        renderLanguages();
-        renderGrowthPlan();
-        save();
-        closeModal();
-      });
+      row.className = 'opt-row' + (isSelected ? ' selected' : '');
+      if (!isSelected && isFull) row.style.opacity = '0.4';
+      row.innerHTML = `
+        <div class="opt-row-icon">${isSelected ? '✓' : '🗣'}</div>
+        <span class="opt-row-name">${l}</span>`;
+      row.style.cursor = (isSelected || !isFull) ? 'pointer' : 'default';
+      if (isSelected || !isFull) {
+        row.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (isSelected) {
+            state.languages = state.languages.filter(x => x !== l);
+          } else {
+            state.languages.push(l);
+          }
+          renderLanguagePickList();
+          renderGrowthPlan();
+          save();
+        });
+      }
       container.appendChild(row);
     });
   };
