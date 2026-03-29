@@ -899,10 +899,9 @@ function renderExtraSpeeds() {
   types.forEach(([key, label]) => {
     const val = state.extraSpeeds[key];
     if (val && val > 0) {
-      html += `<div class="stat-row" style="padding-left:20px;">
-        <span class="stat-label" style="font-size:10px;">${label} 속도</span>
-        <span style="font-size:13px;font-weight:600;color:var(--text);">${val}</span>
-        <span style="font-size:10px;color:var(--text2);">피트</span>
+      html += `<div style="text-align:center;cursor:pointer;" onclick="openSpeedModal()">
+        <div style="font-size:8px;color:var(--text2);text-transform:uppercase;">${label}</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);">${val}</div>
       </div>`;
     }
   });
