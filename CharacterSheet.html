@@ -800,6 +800,33 @@ body{
 }
 
 /* ══════════════════════════════════
+   EQUIPMENT BROWSE MODAL
+   ══════════════════════════════════ */
+.equip-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);padding:0 12px;background:var(--bg2);flex-shrink:0;}
+.equip-tab{padding:8px 16px;font-size:13px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;}
+.equip-tab:hover{color:var(--text);}
+.equip-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.equip-subtabs{display:flex;gap:0;padding:0 12px;background:var(--bg3);border-bottom:1px solid var(--border);flex-wrap:wrap;flex-shrink:0;}
+.equip-subtab{padding:5px 12px;font-size:11px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
+.equip-subtab:hover{color:var(--text);}
+.equip-subtab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.equip-give-buy{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);}
+.equip-give-buy button{flex:1;padding:10px;border:1px solid var(--border2);border-radius:4px;font-size:13px;cursor:pointer;font-weight:600;}
+.equip-give-buy .btn-give{background:var(--bg4);color:var(--text);}
+.equip-give-buy .btn-give:hover{border-color:var(--accent);color:var(--accent);}
+.equip-give-buy .btn-buy{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
+.equip-give-buy .btn-buy:hover{background:var(--accent);color:#fff;}
+.modal-currency{display:flex;align-items:center;gap:16px;margin-left:auto;}
+.modal-currency-item{display:flex;align-items:center;gap:5px;font-size:12px;}
+.modal-currency-item .coin{width:24px;height:24px;border-radius:50%;display:inline-block;}
+.coin-pp{background:linear-gradient(135deg,#d0d0d0,#a0a0a0);}
+.coin-gp{background:linear-gradient(135deg,#e8c547,#c9a020);}
+.coin-sp{background:linear-gradient(135deg,#c0c0c0,#909090);}
+.coin-cp{background:linear-gradient(135deg,#cd8c52,#a06830);}
+.modal-currency-item .coin-label{color:var(--text2);font-size:11px;}
+.modal-currency-item .coin-val{color:var(--text);font-weight:700;font-size:14px;}
+
+/* ══════════════════════════════════
    TRAIT TOOLTIPS
    ══════════════════════════════════ */
 .trait-tag{
@@ -1010,7 +1037,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 <!-- ═══════════════ CHARACTER HEADER ═══════════════ -->
 <div id="header">
-  <div id="header-title">⚔ PF2e<br><small>Player Core KR</small></div>
+  <span style="color:var(--text2);font-size:12px;">PF2e 캐릭터 시트</span>
   <div style="flex:1;"></div>
   <div class="hdr-actions">
     <button class="btn btn-confirm" onclick="exportJSON()">⬇ JSON</button>
@@ -1492,10 +1519,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
               <span style="width:20px;"></span>
             </div>
             <div id="equip-list"></div>
-            <button class="add-btn" onclick="openModal('equip-weapon')">+ 무기 DB</button>
-            <button class="add-btn" onclick="openModal('equip-armor')">+ 방어구 DB</button>
-            <button class="add-btn" onclick="openModal('equip-shield')">+ 방패 DB</button>
-            <button class="add-btn" onclick="openModal('equip-gear')">+ 장비 DB</button>
+            <button class="add-btn" onclick="openEquipBrowse()">+ 장비 DB</button>
             <button class="add-btn" onclick="addEquip()">+ 직접 입력</button>
           </div>
         </div>
@@ -4303,6 +4327,242 @@ function updateSlotChecks(rank) {
 }
 
 // ═══════════════════════════════════════════════
+//  EQUIPMENT BROWSE MODAL
+// ═══════════════════════════════════════════════
+
+let equipBrowseTab = 'weapon';
+let equipBrowseSubTab = '';
+
+function openEquipBrowse() {
+  modalType = 'equip-browse';
+  modalSelected = null;
+  modalContext = null;
+
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  document.getElementById('modal-search').value = '';
+  document.getElementById('modal-title').textContent = '장비 추가';
+
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = '';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+
+  // Inject tab bar
+  let tabContainer = document.getElementById('equip-tab-container');
+  if (!tabContainer) {
+    tabContainer = document.createElement('div');
+    tabContainer.id = 'equip-tab-container';
+    const modalEl = document.querySelector('.modal');
+    const modalBody = document.getElementById('modal-body');
+    modalEl.insertBefore(tabContainer, modalBody);
+  }
+  tabContainer.style.display = '';
+  tabContainer.innerHTML = `
+    <div class="equip-tabs" id="equip-tabs">
+      <div class="equip-tab active" onclick="switchEquipTab('weapon')">무기</div>
+      <div class="equip-tab" onclick="switchEquipTab('armor')">방어구</div>
+      <div class="equip-tab" onclick="switchEquipTab('shield')">방패</div>
+      <div class="equip-tab" onclick="switchEquipTab('gear')">장비</div>
+      <div class="equip-tab" onclick="switchEquipTab('all')">전체</div>
+    </div>
+    <div class="equip-subtabs" id="equip-subtabs" style="display:none;"></div>`;
+
+  // Replace footer with currency
+  const footer = document.querySelector('.modal-footer');
+  footer.innerHTML = `<div class="modal-currency" id="modal-currency">
+    <div class="modal-currency-item"><span class="coin coin-pp"></span><span class="coin-label">백금</span><span class="coin-val" id="mc-pp">${document.getElementById('cur-pp')?.value||0}</span></div>
+    <div class="modal-currency-item"><span class="coin coin-gp"></span><span class="coin-label">금화</span><span class="coin-val" id="mc-gp">${document.getElementById('cur-gp')?.value||0}</span></div>
+    <div class="modal-currency-item"><span class="coin coin-sp"></span><span class="coin-label">은화</span><span class="coin-val" id="mc-sp">${document.getElementById('cur-sp')?.value||0}</span></div>
+    <div class="modal-currency-item"><span class="coin coin-cp"></span><span class="coin-label">동화</span><span class="coin-val" id="mc-cp">${document.getElementById('cur-cp')?.value||0}</span></div>
+  </div>`;
+
+  equipBrowseTab = 'weapon';
+  equipBrowseSubTab = '';
+  switchEquipTab('weapon');
+}
+
+function switchEquipTab(tab) {
+  equipBrowseTab = tab;
+  equipBrowseSubTab = '';
+  document.querySelectorAll('#equip-tabs .equip-tab').forEach(t => t.classList.remove('active'));
+  const tabMap = {weapon:0, armor:1, shield:2, gear:3, all:4};
+  const tabs = document.querySelectorAll('#equip-tabs .equip-tab');
+  if (tabs[tabMap[tab]]) tabs[tabMap[tab]].classList.add('active');
+
+  const subContainer = document.getElementById('equip-subtabs');
+  let cats = [];
+  if (tab === 'weapon') cats = [...new Set(WEAPON_DB.map(w => w.category))];
+  else if (tab === 'armor') cats = [...new Set(ARMOR_DB.map(a => a.category))];
+
+  if (cats.length > 0) {
+    subContainer.innerHTML = `<div class="equip-subtab active" onclick="switchEquipSubTab('')">전체</div>` +
+      cats.map(c => `<div class="equip-subtab" onclick="switchEquipSubTab('${c}')">${c}</div>`).join('');
+    subContainer.style.display = '';
+  } else {
+    subContainer.innerHTML = '';
+    subContainer.style.display = 'none';
+  }
+  renderEquipBrowseItems();
+}
+
+function switchEquipSubTab(sub) {
+  equipBrowseSubTab = sub;
+  document.querySelectorAll('#equip-subtabs .equip-subtab').forEach(t => t.classList.remove('active'));
+  if (!sub) {
+    document.querySelector('#equip-subtabs .equip-subtab')?.classList.add('active');
+  } else {
+    document.querySelectorAll('#equip-subtabs .equip-subtab').forEach(s => { if (s.textContent === sub) s.classList.add('active'); });
+  }
+  renderEquipBrowseItems();
+}
+
+function renderEquipBrowseItems() {
+  let items = [];
+  if (equipBrowseTab === 'weapon') items = [...WEAPON_DB];
+  else if (equipBrowseTab === 'armor') items = [...ARMOR_DB];
+  else if (equipBrowseTab === 'shield') items = [...SHIELD_DB];
+  else if (equipBrowseTab === 'gear') items = [...GEAR_DB];
+  else items = [...WEAPON_DB, ...ARMOR_DB, ...SHIELD_DB, ...GEAR_DB];
+
+  if (equipBrowseSubTab) items = items.filter(i => i.category === equipBrowseSubTab);
+
+  const q = (document.getElementById('modal-search')?.value||'').toLowerCase();
+  if (q) items = items.filter(i => (i.name_ko||'').includes(q) || (i.name_en||'').toLowerCase().includes(q));
+
+  renderOptions(items);
+}
+
+function showEquipDetail(item) {
+  const detail = document.getElementById('modal-detail');
+  if (!detail) return;
+  const nameKo = item.name_ko || item.name || '';
+  const nameEn = item.name_en || '';
+  let infoHtml = '';
+
+  if (item.damage !== undefined) {
+    infoHtml = `<div style="margin:12px 0;font-size:13px;line-height:2.2;">
+      <div><strong>가격:</strong> ${item.price||'—'}</div>
+      <div><strong>피해:</strong> ${item.damage}</div>
+      <div><strong>부피:</strong> ${item.bulk==='L'?'L':item.bulk==='—'?'—':item.bulk}</div>
+      <div><strong>손:</strong> ${item.hands}</div>
+      ${item.range?`<div><strong>사거리:</strong> ${item.range}ft</div>`:''}
+      ${item.reload!==null&&item.reload!==undefined?`<div><strong>재장전:</strong> ${item.reload}</div>`:''}
+      <div><strong>분류:</strong> ${item.category||''}</div>
+      <div><strong>그룹:</strong> ${item.group||''}</div>
+    </div>${(item.traits||[]).length?`<div class="modal-detail-tags">${item.traits.map(t=>traitTag(t)).join('')}</div>`:''}`;
+  } else if (item.hardness !== undefined) {
+    infoHtml = `<div style="margin:12px 0;font-size:13px;line-height:2.2;">
+      <div><strong>가격:</strong> ${item.price||'—'}</div>
+      <div><strong>AC 보너스:</strong> +${item.ac_bonus}</div>
+      <div><strong>경도:</strong> ${item.hardness}</div>
+      <div><strong>HP:</strong> ${item.hp} (BT: ${item.bt})</div>
+      <div><strong>부피:</strong> ${item.bulk==='L'?'L':item.bulk}</div>
+      ${item.speed_penalty?`<div style="color:var(--red-light);"><strong>속도 페널티:</strong> ${item.speed_penalty}</div>`:''}
+    </div>`;
+  } else if (item.ac_bonus !== undefined) {
+    infoHtml = `<div style="margin:12px 0;font-size:13px;line-height:2.2;">
+      <div><strong>가격:</strong> ${item.price||'—'}</div>
+      <div><strong>AC 보너스:</strong> +${item.ac_bonus}</div>
+      ${item.dex_cap!==null?`<div><strong>DEX 상한:</strong> +${item.dex_cap}</div>`:''}
+      ${item.check_penalty?`<div style="color:var(--red-light);"><strong>점검 페널티:</strong> ${item.check_penalty}</div>`:''}
+      ${item.speed_penalty?`<div style="color:var(--red-light);"><strong>속도 페널티:</strong> ${item.speed_penalty}</div>`:''}
+      ${item.strength?`<div><strong>근력 요구:</strong> ${item.strength}</div>`:''}
+      <div><strong>부피:</strong> ${item.bulk==='L'?'L':item.bulk==='—'?'—':item.bulk}</div>
+      <div><strong>분류:</strong> ${item.category||''}</div>
+      <div><strong>그룹:</strong> ${item.group||''}</div>
+    </div>${(item.traits||[]).length?`<div class="modal-detail-tags">${item.traits.map(t=>traitTag(t)).join('')}</div>`:''}`;
+  } else {
+    infoHtml = `<div style="margin:12px 0;font-size:13px;line-height:2.2;">
+      <div><strong>가격:</strong> ${item.price||'—'}</div>
+      <div><strong>부피:</strong> ${item.bulk==='L'?'L':item.bulk==='—'?'—':item.bulk}</div>
+    </div>`;
+  }
+
+  detail.innerHTML = `
+    <div class="modal-detail-back" onclick="document.getElementById('modal-body').classList.remove('detail-open')">← 목록으로</div>
+    <div class="modal-detail-title">${nameKo}</div>
+    <div class="modal-detail-en">${nameEn}</div>
+    ${infoHtml}
+    <div class="equip-give-buy">
+      <button class="btn-give" onclick="equipBrowseGive()">획득</button>
+      <button class="btn-buy" onclick="equipBrowseBuy()">구매</button>
+    </div>`;
+}
+
+// ── Price Parsing & Currency ──
+
+function parsePrice(priceStr) {
+  if (!priceStr || priceStr === '—' || priceStr === '-') return 0;
+  let totalCp = 0;
+  const re = /(\d+)\s*(pp|gp|sp|cp)/gi;
+  let m;
+  while ((m = re.exec(priceStr)) !== null) {
+    const n = parseInt(m[1]);
+    const u = m[2].toLowerCase();
+    if (u === 'pp') totalCp += n * 1000;
+    else if (u === 'gp') totalCp += n * 100;
+    else if (u === 'sp') totalCp += n * 10;
+    else totalCp += n;
+  }
+  return totalCp;
+}
+
+function getCurrencyTotalCp() {
+  const pp = parseInt(document.getElementById('cur-pp')?.value||0);
+  const gp = parseInt(document.getElementById('cur-gp')?.value||0);
+  const sp = parseInt(document.getElementById('cur-sp')?.value||0);
+  const cp = parseInt(document.getElementById('cur-cp')?.value||0);
+  return pp*1000 + gp*100 + sp*10 + cp;
+}
+
+function deductCurrency(costCp) {
+  let total = getCurrencyTotalCp() - costCp;
+  if (total < 0) return false;
+  const pp = Math.floor(total/1000); total %= 1000;
+  const gp = Math.floor(total/100); total %= 100;
+  const sp = Math.floor(total/10); total %= 10;
+  document.getElementById('cur-pp').value = pp;
+  document.getElementById('cur-gp').value = gp;
+  document.getElementById('cur-sp').value = sp;
+  document.getElementById('cur-cp').value = total;
+  updateEquipBrowseCurrency();
+  save();
+  return true;
+}
+
+function updateEquipBrowseCurrency() {
+  const ids = [['mc-pp','cur-pp'],['mc-gp','cur-gp'],['mc-sp','cur-sp'],['mc-cp','cur-cp']];
+  ids.forEach(([modal,main]) => {
+    const el = document.getElementById(modal);
+    if (el) el.textContent = document.getElementById(main)?.value||0;
+  });
+}
+
+function equipBrowseGive() {
+  if (!modalSelected) return;
+  const item = modalSelected;
+  const bulk = typeof item.bulk==='number'?item.bulk:(item.bulk==='L'?0.1:0);
+  let type = null;
+  if (item.damage !== undefined) type = 'weapon';
+  else if (item.hardness !== undefined) type = 'shield';
+  else if (item.ac_bonus !== undefined) type = 'armor';
+  addEquip({name: item.name_ko, qty:1, bulk, _type: type, _data: type ? item : undefined});
+  recalcAll();
+  save();
+}
+
+function equipBrowseBuy() {
+  if (!modalSelected) return;
+  const item = modalSelected;
+  const costCp = parsePrice(item.price);
+  if (!costCp) { equipBrowseGive(); return; }
+  if (getCurrencyTotalCp() < costCp) { alert('소지금이 부족합니다!'); return; }
+  deductCurrency(costCp);
+  equipBrowseGive();
+}
+
+// ═══════════════════════════════════════════════
 //  MODAL SYSTEM
 // ═══════════════════════════════════════════════
 
@@ -4511,6 +4771,22 @@ function renderOptions(data) {
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(item);
     });
+  } else if (modalType === 'equip-browse' && !equipBrowseSubTab) {
+    if (equipBrowseTab === 'all') {
+      grouped = {};
+      data.forEach(item => {
+        const key = item.damage!==undefined?'⚔ 무기':item.hardness!==undefined?'🛡 방패':item.ac_bonus!==undefined?'🛡 방어구':'📦 장비';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(item);
+      });
+    } else if (data.length > 0 && data[0].category) {
+      grouped = {};
+      data.forEach(item => {
+        const key = item.category || '기타';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(item);
+      });
+    }
   }
 
   function renderItem(item) {
@@ -4525,6 +4801,7 @@ function renderOptions(data) {
     let levelText = '';
     if (item.feat_level !== undefined) { levelNum = item.feat_level; levelText = item.feat_level; }
     else if (item.rank !== undefined) { levelNum = item.is_cantrip ? 0 : item.rank; levelText = item.is_cantrip ? 'C' : item.rank; }
+    else if (modalType === 'equip-browse' && item.price && item.price !== '—') { levelNum = 0; levelText = item.price; }
 
     // Action icons
     let actionsHtml = '';
@@ -4566,7 +4843,8 @@ function selectOption(item, row) {
   document.querySelectorAll('.opt-row').forEach(c => c.classList.remove('selected'));
   if (row) row.classList.add('selected');
   modalSelected = item;
-  showItemDetail(item);
+  if (modalType === 'equip-browse') showEquipDetail(item);
+  else showItemDetail(item);
   // Mobile: show detail pane
   const body = document.getElementById('modal-body');
   if (body && window.innerWidth <= 700) body.classList.add('detail-open');
@@ -4626,6 +4904,7 @@ function showItemDetail(item) {
 }
 
 function filterOptions() {
+  if (modalType === 'equip-browse') { renderEquipBrowseItems(); return; }
   renderOptions(getOptionsData(modalType));
 }
 
@@ -4934,6 +5213,13 @@ function confirmModal() {
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.add('hidden');
+  // Clean up equip-browse
+  const eqTabs = document.getElementById('equip-tab-container');
+  if (eqTabs) eqTabs.style.display = 'none';
+  const footer = document.querySelector('.modal-footer');
+  if (footer && !footer.querySelector('.btn-cancel')) {
+    footer.innerHTML = '<button class="btn btn-cancel" onclick="closeModal()">취소</button><button class="btn btn-confirm" onclick="confirmModal()">선택</button>';
+  }
   modalType = null;
   modalSelected = null;
   // Clear growth pending state
