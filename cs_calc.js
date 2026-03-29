@@ -17,6 +17,7 @@ function syncProfRankText(textId, selectId) {
 function syncAllProfRanks() {
   ['simple','martial','advanced','unarmed'].forEach(c => syncProfRankText('rank-weapon-'+c, 'prof-weapon-'+c));
   ['light','medium','heavy','unarmored'].forEach(c => syncProfRankText('rank-armor-'+c, 'prof-armor-'+c));
+  syncProfRankText('rank-spell', 'prof-spatk');
 }
 
 // Legacy aliases

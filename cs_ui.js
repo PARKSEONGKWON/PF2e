@@ -628,13 +628,7 @@ function switchSpellSubtab(tab) {
 
 
 function updateSpellTemlBadges() {
-  const cur = parseInt(document.getElementById('prof-spatk')?.value||0);
-  const badges = document.querySelectorAll('#spell-teml-badges .spell-teml-badge');
-  // T=2(숙련), E=4(전문가), M=6(달인), L=8(전설); 0=미숙련
-  const ranks = [2,4,6,8];
-  badges.forEach((b, i) => {
-    b.classList.toggle('active', cur >= ranks[i]);
-  });
+  if (typeof syncAllProfRanks === 'function') syncAllProfRanks();
 }
 
 function setSpellProf(rank) {
