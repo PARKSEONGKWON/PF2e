@@ -1499,21 +1499,160 @@ const BARDING_DB = [
   {name:'반판 마갑', ac:5, dex:1, check:-3, speed:-10, bulk:4, category:'중갑'},
 ];
 
+const COMPANION_DB = [
+  {id:'ape',name_ko:'유인원',name_en:'Ape',size:'소형',hp:6,str:3,dex:2,con:2,int:-4,wis:2,cha:0,
+   skill:'위협',senses:'저광 시야',speed:25,speeds:{climb:25},
+   attacks:[{name:'주먹',hit:'',dmg:'1d8 B',traits:[]}]},
+  {id:'arboreal',name_ko:'수목 묘목',name_en:'Arboreal Sapling',size:'소형',hp:8,str:3,dex:1,con:2,int:-4,wis:2,cha:0,
+   skill:'은신',senses:'저광 시야',speed:25,speeds:{},
+   attacks:[{name:'가지',hit:'',dmg:'1d8 B',traits:[]}]},
+  {id:'bat',name_ko:'박쥐',name_en:'Bat',size:'소형',hp:6,str:2,dex:3,con:2,int:-4,wis:1,cha:0,
+   skill:'은신',senses:'반향정위 20피트, 저광 시야',speed:15,speeds:{fly:30},
+   attacks:[{name:'턱',hit:'',dmg:'1d6 P',traits:['기교']},{name:'날개',hit:'',dmg:'1d4 S',traits:['민첩','기교']}]},
+  {id:'badger',name_ko:'오소리',name_en:'Badger',size:'소형',hp:8,str:2,dex:2,con:2,int:-4,wis:2,cha:0,
+   skill:'생존',senses:'저광 시야, 후각(부정확 30피트)',speed:25,speeds:{burrow:10,climb:10},
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:[]},{name:'발톱',hit:'',dmg:'1d6 S',traits:['민첩']}]},
+  {id:'bear',name_ko:'곰',name_en:'Bear',size:'소형',hp:8,str:3,dex:2,con:2,int:-4,wis:1,cha:0,
+   skill:'위협',senses:'저광 시야, 후각(부정확 30피트)',speed:35,speeds:{},
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:[]},{name:'발톱',hit:'',dmg:'1d6 S',traits:['민첩']}]},
+  {id:'bird',name_ko:'새',name_en:'Bird',size:'소형',hp:4,str:2,dex:3,con:1,int:-4,wis:2,cha:0,
+   skill:'은신',senses:'저광 시야',speed:10,speeds:{fly:60},
+   attacks:[{name:'부리',hit:'',dmg:'1d6 P',traits:['기교']},{name:'발톱',hit:'',dmg:'1d4 S',traits:['민첩','기교']}]},
+  {id:'boar',name_ko:'멧돼지',name_en:'Boar',size:'소형',hp:8,str:3,dex:1,con:2,int:-4,wis:2,cha:0,
+   skill:'생존',senses:'저광 시야, 후각(부정확 30피트)',speed:35,speeds:{},
+   attacks:[{name:'엄니',hit:'',dmg:'1d8 P',traits:[]}]},
+  {id:'cat',name_ko:'고양이',name_en:'Cat',size:'소형',hp:4,str:2,dex:3,con:1,int:-4,wis:2,cha:0,
+   skill:'은신',senses:'저광 시야, 후각(부정확 30피트)',speed:35,speeds:{},
+   attacks:[{name:'턱',hit:'',dmg:'1d6 P',traits:['기교']},{name:'발톱',hit:'',dmg:'1d4 S',traits:['민첩','기교']}]},
+  {id:'crocodile',name_ko:'악어',name_en:'Crocodile',size:'소형',hp:6,str:3,dex:2,con:2,int:-4,wis:1,cha:0,
+   skill:'은신',senses:'저광 시야',speed:20,speeds:{swim:25},
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:[]},{name:'꼬리',hit:'',dmg:'1d6 B',traits:['민첩']}]},
+  {id:'dromaeosaur',name_ko:'드로마에오사우루스',name_en:'Dromaeosaur',size:'소형',hp:6,str:2,dex:3,con:2,int:-4,wis:1,cha:0,
+   skill:'은신',senses:'저광 시야, 후각(부정확 30피트)',speed:50,speeds:{},
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:['기교']},{name:'발톱',hit:'',dmg:'1d6 S',traits:['민첩','기교']}]},
+  {id:'horse',name_ko:'말',name_en:'Horse',size:'대형',hp:8,str:3,dex:2,con:2,int:-4,wis:1,cha:0,
+   skill:'생존',senses:'저광 시야, 후각(부정확 30피트)',speed:40,speeds:{},mount:true,
+   attacks:[{name:'발굽',hit:'',dmg:'1d6 B',traits:['민첩']}]},
+  {id:'drake',name_ko:'기마 드레이크',name_en:'Riding Drake',size:'대형',hp:8,str:2,dex:1,con:2,int:-4,wis:1,cha:2,
+   skill:'위협',senses:'암시야',speed:45,speeds:{},mount:true,uncommon:true,
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:[]},{name:'꼬리',hit:'',dmg:'1d6 B',traits:[]}]},
+  {id:'scorpion',name_ko:'전갈',name_en:'Scorpion',size:'소형',hp:6,str:3,dex:3,con:1,int:-4,wis:1,cha:0,
+   skill:'은신',senses:'암시야',speed:30,speeds:{},
+   attacks:[{name:'침',hit:'',dmg:'1d6 P',traits:[]},{name:'집게',hit:'',dmg:'1d6 S',traits:['민첩']}]},
+  {id:'shark',name_ko:'상어',name_en:'Shark',size:'소형',hp:6,str:3,dex:2,con:2,int:-4,wis:1,cha:0,
+   skill:'은신',senses:'피냄새, 후각(부정확 60피트)',speed:0,speeds:{swim:40},
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:[]}]},
+  {id:'snake',name_ko:'뱀',name_en:'Snake',size:'소형',hp:6,str:3,dex:3,con:1,int:-4,wis:1,cha:0,
+   skill:'은신',senses:'저광 시야, 후각(부정확 30피트)',speed:20,speeds:{climb:20,swim:20},
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:['기교']}]},
+  {id:'wolf',name_ko:'늑대',name_en:'Wolf',size:'소형',hp:6,str:2,dex:3,con:2,int:-4,wis:1,cha:0,
+   skill:'생존',senses:'저광 시야, 후각(부정확 30피트)',speed:40,speeds:{},
+   attacks:[{name:'턱',hit:'',dmg:'1d8 P',traits:['기교']}]},
+];
+
 function addPet() {
   if (!state.pets) state.pets = [];
-  const name = prompt('반려동물 이름:');
-  if (!name) return;
-  state.pets.push({
-    name, type:'동물 친구',
-    hp:{cur:0,max:0}, ac:10, speed:25, size:'소형',
-    str:0,dex:0,con:0,int:-4,wis:0,cha:0,
-    fort:0,ref:0,will:0,perc:0,
-    senses:'저광 시야',
-    attacks:[],
-    notes:''
+  // 동물 동료 선택 모달
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'pet-add';
+  document.getElementById('modal-title').textContent = '🐾 동료 추가';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; }
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) { listEl.style.display = ''; listEl.style.width = ''; listEl.style.borderRight = ''; }
+  const detail = document.getElementById('modal-detail');
+  if (detail) { detail.style.display = ''; detail.innerHTML = '<div class="modal-detail-empty">동물을 선택하면 상세 정보가 표시됩니다.</div>'; }
+
+  const container = document.getElementById('modal-options');
+  container.innerHTML = '';
+
+  // 커스텀 옵션
+  const customRow = document.createElement('div');
+  customRow.className = 'opt-row';
+  customRow.style.cursor = 'pointer';
+  customRow.innerHTML = '<div class="opt-row-icon">✏</div><span class="opt-row-name">직접 입력 (커스텀)</span>';
+  customRow.onclick = () => {
+    closeModal();
+    const name = prompt('동료 이름:');
+    if (!name) return;
+    state.pets.push({name, type:'커스텀', hp:{cur:0,max:0}, ac:10, speed:25, size:'소형',
+      str:0,dex:0,con:0,int:-4,wis:0,cha:0, fort:0,ref:0,will:0,perc:0, senses:'', attacks:[], notes:''});
+    renderPets(); save();
+  };
+  container.appendChild(customRow);
+
+  // 동물 동료 목록
+  const header = document.createElement('div');
+  header.className = 'opt-section-header';
+  header.textContent = '동물 동료 Animal Companions';
+  container.appendChild(header);
+
+  COMPANION_DB.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'opt-row';
+    row.style.cursor = 'pointer';
+    row.innerHTML = `
+      <div class="opt-row-icon">🐾</div>
+      <div style="flex:1;">
+        <div class="opt-row-name">${c.name_ko} <span style="color:var(--text2);font-size:10px;">${c.name_en}</span></div>
+        <div style="font-size:10px;color:var(--text2);">${c.size} | 속도 ${c.speed}피트 | HP ${c.hp}/Lv</div>
+      </div>`;
+    row.addEventListener('click', () => {
+      container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+      row.classList.add('selected');
+      if (detail && window.innerWidth > 900) {
+        const speedStr = [c.speed + '피트', ...Object.entries(c.speeds||{}).map(([k,v])=>({climb:'등반',swim:'수영',fly:'비행',burrow:'굴착'}[k]||k)+' '+v+'피트')].join(', ');
+        detail.innerHTML = `
+          <div class="modal-detail-title">${c.name_ko}</div>
+          <div class="modal-detail-en">${c.name_en}</div>
+          <div class="modal-detail-desc" style="margin-top:10px;">
+            <strong>크기:</strong> ${c.size}<br>
+            <strong>HP:</strong> ${c.hp} + (6+CON)×레벨<br>
+            <strong>속도:</strong> ${speedStr}<br>
+            <strong>감각:</strong> ${c.senses}<br>
+            <strong>기술:</strong> ${c.skill}<br>
+            <strong>능력치:</strong> 근${c.str>=0?'+':''}${c.str} 민${c.dex>=0?'+':''}${c.dex} 건${c.con>=0?'+':''}${c.con} 지${c.int>=0?'+':''}${c.int} 혜${c.wis>=0?'+':''}${c.wis} 매${c.cha>=0?'+':''}${c.cha}<br><br>
+            <strong>공격:</strong><br>
+            ${c.attacks.map(a => `• ${a.name} — ${a.dmg}${a.traits.length ? ' ('+a.traits.join(', ')+')' : ''}`).join('<br>')}
+          </div>
+          <button onclick="createCompanionPet('${c.id}')" style="width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#000;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">추가</button>`;
+      }
+    });
+    container.appendChild(row);
   });
-  renderPets();
-  save();
+}
+
+function createCompanionPet(compId) {
+  const c = COMPANION_DB.find(x => x.id === compId);
+  if (!c) return;
+  const name = prompt(c.name_ko + '의 이름:', c.name_ko);
+  if (!name) return;
+  const lv = getLevel();
+  const hpMax = c.hp + (6 + c.con) * lv;
+  // AC = 10 + DEX + 숙련(trained=2) + 레벨
+  const ac = 10 + Math.min(c.dex, 99) + 2 + lv;
+  // 내성/지각 = 속성 + 숙련(trained=2) + 레벨
+  const profBonus = 2 + lv;
+  state.pets.push({
+    name, type: c.name_ko, companionId: c.id,
+    hp: {cur: hpMax, max: hpMax},
+    ac: ac, speed: c.speed, size: c.size,
+    str: c.str, dex: c.dex, con: c.con, int: c.int, wis: c.wis, cha: c.cha,
+    fort: c.con + profBonus, ref: c.dex + profBonus, will: c.wis + profBonus,
+    perc: c.wis + profBonus,
+    senses: c.senses,
+    attacks: c.attacks.map(a => ({name: a.name, hit: '+' + (Math.max(c.str, c.dex) + profBonus), dmg: a.dmg})),
+    speeds: c.speeds || {},
+    skill: c.skill,
+    notes: '',
+    mount: c.mount || false,
+  });
+  renderPets(); save(); closeModal();
 }
 
 function removePet(i) {
