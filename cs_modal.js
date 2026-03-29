@@ -1567,7 +1567,7 @@ function selectOption(item, row) {
     document.querySelectorAll('.opt-row.expanded').forEach(r => r.classList.remove('expanded'));
     // Build detail HTML
     let detailHtml = '';
-    if (modalType === 'equip-browse') {
+    if (modalType === 'equip-browse' || modalType === 'formula-pick') {
       const i = item;
       const p = i.price && i.price !== '—' ? `<div><strong>가격:</strong> ${i.price}</div>` : '';
       const b = `<div><strong>부피:</strong> ${i.bulk==='L'?'L':i.bulk==='—'?'—':i.bulk}</div>`;
@@ -1618,7 +1618,7 @@ function selectOption(item, row) {
   // Desktop: standard behavior
   document.querySelectorAll('.opt-row').forEach(c => c.classList.remove('selected'));
   if (row) row.classList.add('selected');
-  if (modalType === 'equip-browse') showEquipDetail(item);
+  if (modalType === 'equip-browse' || modalType === 'formula-pick') showEquipDetail(item);
   else showItemDetail(item);
 }
 
@@ -1676,7 +1676,7 @@ function showItemDetail(item) {
 }
 
 function filterOptions() {
-  if (modalType === 'equip-browse') { renderEquipBrowseItems(); return; }
+  if (modalType === 'equip-browse' || modalType === 'formula-pick') { renderEquipBrowseItems(); return; }
   renderOptions(getOptionsData(modalType));
 }
 

@@ -509,7 +509,7 @@ function renderEquip() {
   const header = document.createElement('div');
   header.className = 'equip-row';
   header.style.cssText = 'font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);padding:2px 4px;';
-  header.innerHTML = `<span style="flex:1;">아이템</span><span style="width:30px;text-align:center;">부피</span><span style="width:70px;text-align:center;">수량</span><span style="width:60px;text-align:center;">장착</span><span style="width:40px;text-align:center;">상태</span><span style="width:24px;"></span>`;
+  header.innerHTML = `<span style="flex:1;">아이템</span><span style="width:30px;text-align:center;">부피</span><span style="width:70px;text-align:center;">수량</span><span style="width:60px;text-align:center;">장착</span><span style="width:40px;text-align:center;">상태</span><span style="width:60px;text-align:center;">이동</span>`;
   list.appendChild(header);
 
   state.equip.forEach((e,i) => {
@@ -542,8 +542,11 @@ function renderEquip() {
       <span style="width:40px;text-align:center;">
         <button class="${e._broken ? 'equip-toggle equipped' : 'equip-toggle'}" onclick="event.stopPropagation();toggleBroken(${i})" style="font-size:9px;padding:2px 4px;${e._broken?'background:var(--red-bg);color:var(--red-light);border-color:var(--red);':''}">${e._broken ? '파손' : '정상'}</button>
       </span>
-      <span style="width:24px;text-align:center;">
-        ${hasContainers ? `<span style="cursor:pointer;font-size:12px;color:var(--text2);" onclick="event.stopPropagation();moveToContainer(${i})" title="배낭으로 이동">📦</span>` : ''}
+      <span style="width:60px;text-align:center;">
+        ${hasContainers ? `<select onchange="if(this.value!=='')moveToContainer(${i},parseInt(this.value));this.value=''" style="font-size:9px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:3px;padding:1px 2px;width:54px;">
+          <option value="">📦 이동</option>
+          ${state.containers.map((c,ci) => `<option value="${ci}">${c.name}</option>`).join('')}
+        </select>` : ''}
       </span>`;
     list.appendChild(row);
   });
@@ -570,15 +573,10 @@ function toggleBroken(i) {
   save();
 }
 
-function moveToContainer(itemIdx) {
-  if (!state.containers || state.containers.length === 0) return;
+function moveToContainer(itemIdx, ci) {
+  if (!state.containers || ci < 0 || ci >= state.containers.length) return;
   const item = state.equip[itemIdx];
   if (!item) return;
-  const names = state.containers.map((c,i) => `${i+1}. ${c.name}`).join('\n');
-  const choice = prompt('이동할 배낭 번호를 입력하세요:\n' + names);
-  if (!choice) return;
-  const ci = parseInt(choice) - 1;
-  if (ci < 0 || ci >= state.containers.length) return;
   state.containers[ci].items.push({name: item.name, qty: item.qty||1, bulk: item.bulk||0});
   state.equip.splice(itemIdx, 1);
   renderEquip();
