@@ -382,7 +382,7 @@ const SPELL_DB = [
   { name_ko: "피해 분담", name_en: "Share Life", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "2행동", traits: ["치유", "조작"],
     summary: "다른 생물이 받을 피해의 절반을 대신 흡수합니다.",
-    desc: "다른 생물이 받을 피해의 절반을 대신 흡수합니다." },
+    desc: "대상 생물에게 생명력의 유대를 형성합니다. <strong>지속:</strong> 최대 10분 (지속). 대상이 피해를 받을 때마다 그 피해의 절반을 당신이 대신 받고, 대상은 나머지 절반만 받습니다. 당신과 대상 사이의 거리가 30피트를 넘으면 주문이 종료됩니다." },
 
   { name_ko: "수면", name_en: "Sleep", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "2행동", traits: ["무력화", "조작", "정신"],
@@ -417,17 +417,17 @@ const SPELL_DB = [
   { name_ko: "페이 소환", name_en: "Summon Fey", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["occult", "primal"], actions: "3행동", traits: ["조작"],
     summary: "페이를 소환합니다. 주문 랭크 -1 이하 레벨.",
-    desc: "페이를 소환합니다. 주문 랭크 -1 이하 레벨." },
+    desc: "페이를 소환합니다. <strong>지속:</strong> 최대 1분 (지속). 선택한 페이의 레벨은 주문 랭크 -1 이하여야 합니다. 소환된 생물은 매 턴 2개의 행동을 얻고 명령이 필요합니다. 소환 생물은 소환 주문이나 다른 소환 생물을 소환할 수 없습니다.<br><strong>강화 (2nd):</strong> 레벨 1 이하. <strong>(3rd):</strong> 레벨 2 이하. <strong>(4th):</strong> 레벨 3 이하. 이후 1랭크당 +1." },
 
   { name_ko: "자연 식물 소환", name_en: "Summon Plant or Fungus", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "3행동", traits: ["조작"],
     summary: "식물이나 균류 생물을 소환합니다. 주문 랭크 -1 이하 레벨.",
-    desc: "식물이나 균류 생물을 소환합니다. 주문 랭크 -1 이하 레벨." },
+    desc: "식물이나 균류 생물을 소환합니다. <strong>지속:</strong> 최대 1분 (지속). 소환된 생물의 레벨은 주문 랭크 -1 이하여야 합니다. 매 턴 2개의 행동을 얻고 명령이 필요합니다.<br><strong>강화:</strong> 1랭크당 소환 가능한 최대 레벨 +1." },
 
   { name_ko: "언데드 소환", name_en: "Summon Undead", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult"], actions: "3행동", traits: ["조작"],
     summary: "언데드를 소환합니다. 주문 랭크 -1 이하 레벨.",
-    desc: "언데드를 소환합니다. 주문 랭크 -1 이하 레벨." },
+    desc: "언데드를 소환합니다. <strong>지속:</strong> 최대 1분 (지속). 소환된 언데드의 레벨은 주문 랭크 -1 이하여야 합니다. 소환된 생물은 매 턴 2개의 행동을 얻고 명령이 필요합니다.<br><strong>강화:</strong> 1랭크당 소환 가능한 최대 레벨 +1." },
 
   { name_ko: "확실한 타격", name_en: "Sure Strike", rank: 1, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "occult"], actions: "1행동", traits: [],
@@ -622,7 +622,7 @@ const SPELL_DB = [
   { name_ko: "평화로운 안식", name_en: "Peaceful Rest", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
     summary: "시체가 부패하지 않으며 언데드가 될 수 없습니다.",
-    desc: "시체가 부패하지 않으며 언데드가 될 수 없습니다." },
+    desc: "대상 시체에 평화의 마법을 부여합니다. <strong>지속:</strong> 다음 준비까지. 시체가 부패하지 않으며 언데드로 일어날 수 없습니다. 시체를 되살리기 위한 시간 제한에도 영향을 주지 않습니다." },
 
   { name_ko: "에너지 저항", name_en: "Resist Energy", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["arcane", "divine", "occult", "primal"], actions: "2행동", traits: ["조작"],
@@ -667,7 +667,7 @@ const SPELL_DB = [
   { name_ko: "동물과 대화", name_en: "Speak with Animals", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "2행동", traits: ["조작"],
     summary: "동물과 대화할 수 있습니다. 동물이 종의 지능 범위 내에서 대답합니다.",
-    desc: "동물과 대화할 수 있습니다. 동물이 종의 지능 범위 내에서 대답합니다." },
+    desc: "동물과 대화할 수 있습니다. <strong>지속:</strong> 10분. 동물이 종의 지능 범위 내에서 질문에 대답합니다. 대부분의 동물은 최근 기억이나 주변 환경에 대한 정보를 제공할 수 있지만, 복잡한 개념이나 추상적 사고는 불가능합니다." },
 
   { name_ko: "영적 무장", name_en: "Spiritual Armament", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ["divine", "occult"], actions: "2행동", traits: ["조작", "성별화", "영혼"],
@@ -1207,22 +1207,22 @@ const SPELL_DB = [
   { name_ko: "실체 소환", name_en: "Summon Entity", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "3행동", traits: ["조작"],
     summary: "기형체(aberration)를 소환합니다. 주문 랭크 -1 이하 레벨.",
-    desc: "기형체(aberration)를 소환합니다. 주문 랭크 -1 이하 레벨." },
+    desc: "기형체(aberration)를 소환합니다. <strong>지속:</strong> 최대 1분 (지속). 소환된 기형체의 레벨은 주문 랭크 -1 이하여야 합니다. 매 턴 2개의 행동을 얻고 명령이 필요합니다.<br><strong>강화:</strong> 1랭크당 소환 가능한 최대 레벨 +1." },
 
   { name_ko: "마귀 소환", name_en: "Summon Fiend", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "3행동", traits: ["조작"],
     summary: "마귀를 소환합니다. 주문 랭크 -1 이하 레벨.",
-    desc: "마귀를 소환합니다. 주문 랭크 -1 이하 레벨." },
+    desc: "마귀를 소환합니다. <strong>지속:</strong> 최대 1분 (지속). 소환된 마귀의 레벨은 주문 랭크 -1 이하여야 합니다. 매 턴 2개의 행동을 얻고 명령이 필요합니다.<br><strong>강화:</strong> 1랭크당 소환 가능한 최대 레벨 +1." },
 
   { name_ko: "거인 소환", name_en: "Summon Giant", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["primal"], actions: "3행동", traits: ["조작"],
     summary: "거인을 소환합니다. 주문 랭크 -1 이하 레벨의 거인.",
-    desc: "거인을 소환합니다. 주문 랭크 -1 이하 레벨의 거인." },
+    desc: "거인을 소환합니다. <strong>지속:</strong> 최대 1분 (지속). 소환된 거인의 레벨은 주문 랭크 -1 이하여야 합니다. 매 턴 2개의 행동을 얻고 명령이 필요합니다.<br><strong>강화:</strong> 1랭크당 소환 가능한 최대 레벨 +1." },
 
   { name_ko: "감시자 소환", name_en: "Summon Monitor", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["divine"], actions: "3행동", traits: ["조작"],
     summary: "차원 감시자를 소환합니다. 주문 랭크 -1 이하 레벨.",
-    desc: "차원 감시자를 소환합니다. 주문 랭크 -1 이하 레벨." },
+    desc: "차원 감시자를 소환합니다. <strong>지속:</strong> 최대 1분 (지속). 소환된 감시자의 레벨은 주문 랭크 -1 이하여야 합니다. 매 턴 2개의 행동을 얻고 명령이 필요합니다.<br><strong>강화:</strong> 1랭크당 소환 가능한 최대 레벨 +1." },
 
   { name_ko: "시냅스 파동", name_en: "Synaptic Pulse", rank: 5, is_cantrip: false, is_focus: false,
     traditions: ["occult"], actions: "2행동", traits: ["무력화", "조작", "정신"],
@@ -1758,7 +1758,7 @@ const SPELL_DB = [
   { name_ko: "가족 회복", name_en: "Community Restoration", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["클레릭", "치유", "조작"],
     summary: "대상 각각의 상태 하나를 상쇄합니다(고통 정화와 유사).",
-    desc: "대상 각각의 상태 하나를 상쇄합니다(고통 정화와 유사)." },
+    desc: "최대 10명의 대상을 골라 각각에게 걸린 고통 하나를 해소합니다. 고통 정화(cleanse affliction)와 유사하게 작동합니다. 각 대상의 <strong>질병, 독, 저주 중 1개</strong>에 대해 해제를 시도합니다." },
 
   { name_ko: "경쟁심", name_en: "Competitive Edge", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["클레릭", "감정", "정신"],
@@ -2128,7 +2128,7 @@ const SPELL_DB = [
   { name_ko: "방해 없는 보폭", name_en: "Unimpeded Stride", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["레인저"],
     summary: "비마법적 험지를 무시합니다. 극심 험지를 일반 험지로 취급합니다.",
-    desc: "비마법적 험지를 무시합니다. 극심 험지를 일반 험지로 취급합니다." },
+    desc: "마법이 아닌 <strong>험한 지형을 무시</strong>합니다. 극심한 험한 지형은 일반 험한 지형으로 취급합니다. <strong>지속:</strong> 1분." },
 
   { name_ko: "야생 해방", name_en: "Untamed Form", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["드루이드", "변형"],
