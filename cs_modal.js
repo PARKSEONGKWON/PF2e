@@ -96,6 +96,11 @@ function openConditionModal() {
   if (fbar) fbar.innerHTML = '';
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = 'none';
+  // PC: 리스트+디테일 모두 표시
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) { listEl.style.display = ''; listEl.style.width = ''; listEl.style.borderRight = ''; }
+  const detail = document.getElementById('modal-detail');
+  if (detail) { detail.style.display = ''; detail.innerHTML = '<div class="modal-detail-empty">상태이상을 선택하면 상세 정보가 표시됩니다.</div>'; }
 
   renderConditionList();
 }
@@ -1970,9 +1975,11 @@ function closeModal() {
   _spellSlotPending = null;
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = '';
-  // Restore list visibility (hidden by showInfo)
+  // Restore list/detail to default state
   const listEl = document.querySelector('.modal-list');
-  if (listEl) listEl.style.display = '';
+  if (listEl) { listEl.style.display = ''; listEl.style.width = ''; listEl.style.borderRight = ''; }
+  const detailEl = document.getElementById('modal-detail');
+  if (detailEl) { detailEl.style.display = ''; detailEl.innerHTML = '<div class="modal-detail-empty">항목을 선택하면 상세 정보가 표시됩니다.</div>'; }
   const searchEl = document.getElementById('modal-search');
   if (searchEl) searchEl.style.display = '';
   // Mobile: reset detail-open
