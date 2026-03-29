@@ -1649,6 +1649,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <button data-filter="skill" onclick="setActionFilter('skill',this)">기술 행동</button>
         <button data-filter="feat" onclick="setActionFilter('feat',this)">재주 행동</button>
         <button data-filter="reaction" onclick="setActionFilter('reaction',this)">반응</button>
+        <button data-filter="conditions" onclick="setActionFilter('conditions',this)">상태이상</button>
       </div>
       <div id="actions-content"></div>
     </div><!-- /#panel-actions -->
@@ -5994,6 +5995,26 @@ function isActionAvailable(action) {
 function renderActions() {
   const container = document.getElementById('actions-content');
   if (!container) return;
+
+  // Conditions reference tab
+  if (_actionFilter === 'conditions') {
+    let html = '';
+    CONDITIONS_DATA.forEach(c => {
+      const val = state.conditions[c.name] || 0;
+      const isActive = c.valued ? val > 0 : !!val;
+      const maxStr = c.valued ? ` (최대 ${c.max||4})` : '';
+      html += `<div style="padding:8px 10px;border-bottom:1px solid var(--border);${isActive?'background:var(--red-bg);border-left:3px solid var(--red);':''}">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <strong style="font-size:13px;${isActive?'color:var(--red-light);':''}">${c.name}</strong>
+          <span style="font-size:11px;color:var(--text2);">${c.en}${maxStr}</span>
+          ${isActive?`<span style="margin-left:auto;font-size:11px;color:var(--red);font-weight:700;">${c.valued?'수치 '+val:'적용 중'}</span>`:''}
+        </div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6;margin-top:4px;">${c.desc}</div>
+      </div>`;
+    });
+    container.innerHTML = html;
+    return;
+  }
 
   // Filter
   let visible = ACTION_DB.filter(a => {
