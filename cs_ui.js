@@ -955,12 +955,29 @@ function renderSpells() {
   }
 
   // ── Focus spells ──
-  renderSpellSlotList('spells-focus', state.spells.focus, 'focus');
-  // Update FP mirrors
-  const fpCurMirror = document.getElementById('fp-cur-mirror');
-  const fpMaxMirror = document.getElementById('fp-max-mirror');
-  if (fpCurMirror) fpCurMirror.textContent = document.getElementById('fp-cur')?.value || '0';
-  if (fpMaxMirror) fpMaxMirror.textContent = document.getElementById('fp-max')?.value || '0';
+  // 집중 캔트립과 집중 주문 분리 렌더링
+  const focusCantrips = (state.spells.focus || []).filter(s => s?._auto && s?.name?.includes('캔트립'));
+  const focusRegular = (state.spells.focus || []).filter(s => !focusCantrips.includes(s));
+  renderSpellSlotList('spells-focus-cantrips', focusCantrips, 'focus');
+  renderSpellSlotList('spells-focus', focusRegular, 'focus');
+
+  // 집중 포인트 자동 계산: min(집중 주문 수, 3)
+  const totalFocusSpells = (state.spells.focus || []).length;
+  const fpMax = Math.min(3, Math.max(1, totalFocusSpells));
+  const fpMaxEl = document.getElementById('fp-max');
+  const fpCurEl = document.getElementById('fp-cur');
+  if (fpMaxEl && totalFocusSpells > 0) {
+    const oldMax = parseInt(fpMaxEl.value || 0);
+    fpMaxEl.value = fpMax;
+    // 최대치가 늘어나면 현재도 따라 늘림
+    if (fpCurEl && (parseInt(fpCurEl.value || 0) === oldMax || oldMax === 0)) {
+      fpCurEl.value = fpMax;
+    }
+  } else if (fpMaxEl && totalFocusSpells === 0) {
+    fpMaxEl.value = 0;
+    if (fpCurEl) fpCurEl.value = 0;
+  }
+  if (typeof renderFpChecks === 'function') renderFpChecks();
 
   // ── Divine Font (Cleric) ──
   const dfSection = document.getElementById('spell-divine-font-section');
