@@ -770,7 +770,8 @@ function recalcSaves() {
 function recalcPerc() {
   const total = getMod('wis') + getProfBonus('prof-perc');
   document.getElementById('val-perc').textContent = fmtBonus(total);
-  document.getElementById('val-init').textContent = fmtBonus(total);
+  const initEl = document.getElementById('val-init');
+  if (initEl) initEl.textContent = fmtBonus(total);
 }
 
 function getClassKeyAttr() {
