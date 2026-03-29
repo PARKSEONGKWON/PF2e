@@ -556,6 +556,22 @@ function renderBoostGrid() {
   if (lv >= 20) addRow('레벨 20 (4개)', 'lv20', 4, null, false);
 }
 function getLevel() { return parseInt(document.getElementById('f-level')?.value||1); }
+
+function checkXpLevelUp() {
+  const xpEl = document.getElementById('f-xp');
+  const lvEl = document.getElementById('f-level');
+  if (!xpEl || !lvEl) return;
+  let xp = parseInt(xpEl.value || 0);
+  let lv = parseInt(lvEl.value || 1);
+  if (xp >= 1000 && lv < 20) {
+    lv += 1;
+    xp -= 1000;
+    lvEl.value = lv;
+    xpEl.value = xp;
+    onLevelChange();
+  }
+  save();
+}
 function getProfBonus(selectId) {
   const v = parseInt(document.getElementById(selectId)?.value||0);
   return v > 0 ? (v + getLevel()) : 0;
