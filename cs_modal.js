@@ -405,13 +405,14 @@ function renderGrowthPlan() {
     if (plan.boosts) {
       const boostKey = lv === 1 ? 'lv1' : `lv${lv}`;
       const boostCount = (state.boosts[boostKey] || []).length;
+      const boostRemain = plan.boosts - boostCount;
       html += `<div class="growth-slot ${boostCount >= plan.boosts ? 'filled' : ''}" onclick="openModal('boost')">
         <div class="growth-slot-icon">⚙</div>
         <div class="growth-slot-body">
           <div class="growth-slot-label">능력치 부스트 Set Abilities</div>
-          <div class="growth-slot-value">${boostCount >= plan.boosts ? boostCount + '개 선택 완료' : '클릭하여 부스트 배분'}</div>
+          <div class="growth-slot-value">${boostCount >= plan.boosts ? boostCount + '개 선택 완료' : boostCount + '/' + plan.boosts + ' 선택'}</div>
         </div>
-        <div class="growth-slot-badge">${plan.boosts}</div>
+        ${boostRemain > 0 ? `<div class="growth-slot-badge">${boostRemain}</div>` : ''}
       </div>`;
     }
 
@@ -1467,6 +1468,7 @@ function confirmModal() {
 }
 
 function closeModal() {
+  const wasBoost = (modalType === 'boost');
   document.getElementById('modal-overlay').classList.add('hidden');
   // Clean up equip-browse
   const eqTabs = document.getElementById('equip-tab-container');
@@ -1492,6 +1494,8 @@ function closeModal() {
   // Mobile: reset detail-open
   const body = document.getElementById('modal-body');
   if (body) body.classList.remove('detail-open');
+  // 부스트 모달 닫을 때 성장 계획 + 수치 갱신
+  if (wasBoost) { renderGrowthPlan(); recalcAll(); }
 }
 
 document.getElementById('modal-overlay').addEventListener('click', function(e) {
