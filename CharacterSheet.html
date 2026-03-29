@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=4"></script>
+<script src="class_features_db.js?v=5"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1687,11 +1687,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=4"></script>
-<script src="cs_calc.js?v=4"></script>
-<script src="cs_ui.js?v=4"></script>
-<script src="cs_modal.js?v=4"></script>
-<script src="cs_save.js?v=4"></script>
+<script src="cs_data.js?v=5"></script>
+<script src="cs_calc.js?v=5"></script>
+<script src="cs_ui.js?v=5"></script>
+<script src="cs_modal.js?v=5"></script>
+<script src="cs_save.js?v=5"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
@@ -1713,11 +1713,7 @@ function updateAuthUI(user) {
       '<button onclick="saveToCloud()" style="background:#2980b9;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">저장</button>' +
       '<button onclick="googleLogout()" style="background:#555;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;">로그아웃</button>';
     slotBar.style.display = 'flex';
-    slotBar.innerHTML = '<span style="color:#888;">캐릭터 슬롯:</span>';
-    for (let i = 1; i <= 5; i++) {
-      const active = currentSlot === 'slot' + i ? 'background:#f5c518;color:#000;' : 'background:#333;color:#ccc;';
-      slotBar.innerHTML += '<button onclick="switchSlot(\'slot' + i + '\')" style="border:none;padding:3px 10px;border-radius:3px;cursor:pointer;font-size:11px;' + active + '">슬롯 ' + i + '</button>';
-    }
+    updateSlotBar();
     loadSlotNames(user.uid);
     loadFromCloud(); // 로그인 복원 시 자동 불러오기
     startAutoSave();
@@ -1770,8 +1766,40 @@ function loadFromCloud() {
 }
 
 function switchSlot(slot) {
-  currentSlot = slot;
-  if (currentUser) updateAuthUI(currentUser);
+  if (slot === currentSlot) return;
+  // 현재 슬롯 즉시 저장 후 새 슬롯 로드
+  if (_autoSaveDebounce) { clearTimeout(_autoSaveDebounce); _autoSaveDebounce = null; }
+  if (currentUser) {
+    var data = collectData();
+    var oldSlot = currentSlot;
+    db.collection('users').doc(currentUser.uid).collection('characters').doc(oldSlot).set({
+      data: JSON.stringify(data),
+      name: data.name || '이름 없음',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      currentSlot = slot;
+      loadFromCloud();
+      updateSlotBar();
+      loadSlotNames(currentUser.uid);
+    }).catch(function() {
+      currentSlot = slot;
+      loadFromCloud();
+      updateSlotBar();
+    });
+  } else {
+    currentSlot = slot;
+    updateSlotBar();
+  }
+}
+
+function updateSlotBar() {
+  var slotBar = document.getElementById('slot-bar');
+  if (!slotBar) return;
+  slotBar.innerHTML = '<span style="color:#888;">캐릭터 슬롯:</span>';
+  for (var i = 1; i <= 5; i++) {
+    var active = currentSlot === 'slot' + i ? 'background:#f5c518;color:#000;' : 'background:#333;color:#ccc;';
+    slotBar.innerHTML += '<button onclick="switchSlot(\'slot' + i + '\')" style="border:none;padding:3px 10px;border-radius:3px;cursor:pointer;font-size:11px;' + active + '" id="slot-btn-' + i + '">슬롯 ' + i + '</button>';
+  }
 }
 
 function loadSlotNames(uid) {
@@ -1779,8 +1807,11 @@ function loadSlotNames(uid) {
     snap.forEach(function(doc) {
       var d = doc.data();
       var slotNum = doc.id.replace('slot', '');
-      var btn = document.querySelector('#slot-bar button:nth-child(' + (parseInt(slotNum) + 1) + ')');
-      if (btn) btn.textContent = '슬롯 ' + slotNum;
+      var btn = document.getElementById('slot-btn-' + slotNum);
+      if (btn) {
+        var charName = d.name && d.name !== '이름 없음' ? d.name : '';
+        btn.textContent = charName ? charName : '슬롯 ' + slotNum;
+      }
     });
   });
 }
