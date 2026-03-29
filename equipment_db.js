@@ -2,9 +2,9 @@
 // 출처: PlayerCore.html 6장 장비
 
 const ARMOR_DB = [
-  // ── 비장갑 ──
-  {name_ko:'갑옷 없음', name_en:'No Armor', category:'비장갑', price:'—', ac_bonus:0, dex_cap:null, check_penalty:0, speed_penalty:0, strength:0, bulk:'—', group:'—', traits:[]},
-  {name_ko:'탐험가 의복', name_en:"Explorer's Clothing", category:'비장갑', price:'1sp', ac_bonus:0, dex_cap:5, check_penalty:0, speed_penalty:0, strength:0, bulk:'L', group:'천', traits:['편안']},
+  // ── 비무장 ──
+  {name_ko:'갑옷 없음', name_en:'No Armor', category:'비무장', price:'—', ac_bonus:0, dex_cap:null, check_penalty:0, speed_penalty:0, strength:0, bulk:'—', group:'—', traits:[]},
+  {name_ko:'탐험가 의복', name_en:"Explorer's Clothing", category:'비무장', price:'1sp', ac_bonus:0, dex_cap:5, check_penalty:0, speed_penalty:0, strength:0, bulk:'L', group:'천', traits:['편안']},
   // ── 경갑 ──
   {name_ko:'패딩 갑옷', name_en:'Padded Armor', category:'경갑', price:'2sp', ac_bonus:1, dex_cap:3, check_penalty:0, speed_penalty:0, strength:0, bulk:'L', group:'천', traits:['편안']},
   {name_ko:'가죽 갑옷', name_en:'Leather Armor', category:'경갑', price:'2gp', ac_bonus:1, dex_cap:4, check_penalty:-1, speed_penalty:0, strength:0, bulk:1, group:'가죽', traits:[]},
