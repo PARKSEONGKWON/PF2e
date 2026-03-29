@@ -674,12 +674,53 @@ function removeEquip(i) { state.equip.splice(i,1); renderEquip(); save(); }
 
 // ── 컨테이너 (서브 인벤토리) ──
 function addContainer() {
-  const name = prompt('컨테이너 이름 (예: 배낭, 벨트 주머니):');
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'container-add';
+  document.getElementById('modal-title').textContent = '📦 배낭 추가';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = 'none';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) { listEl.style.display = ''; listEl.style.width = '100%'; listEl.style.borderRight = 'none'; }
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.style.display = 'none';
+  const modalEl = document.querySelector('.modal');
+  if (modalEl && window.innerWidth > 900) { modalEl.style.maxWidth = '420px'; modalEl.style.height = 'auto'; }
+
+  const container = document.getElementById('modal-options');
+  const presets = [
+    {name:'배낭', bulk:1, desc:'일반적인 모험가 배낭.'},
+    {name:'벨트 주머니', bulk:'L', desc:'허리에 차는 작은 주머니.'},
+    {name:'자루', bulk:'L', desc:'물건을 넣는 간단한 자루.'},
+    {name:'허리 가방', bulk:'L', desc:'허리에 착용하는 가방.'},
+  ];
+  container.innerHTML = `<div style="padding:16px;">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">배낭 유형을 선택하거나 직접 입력하세요.</div>
+    ${presets.map(p => `<div class="opt-row" style="cursor:pointer;" onclick="createContainer('${p.name}')">
+      <div class="opt-row-icon">📦</div>
+      <span class="opt-row-name">${p.name}</span>
+      <span style="font-size:10px;color:var(--text2);">${p.desc}</span>
+    </div>`).join('')}
+    <hr class="divider" style="margin:12px 0;">
+    <div style="display:flex;gap:6px;">
+      <input id="container-custom-name" placeholder="직접 입력..." style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:13px;"
+        onkeydown="if(event.key==='Enter')createContainer(this.value)">
+      <button onclick="createContainer(document.getElementById('container-custom-name').value)" style="padding:8px 16px;background:var(--accent);color:#000;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;">추가</button>
+    </div>
+  </div>`;
+}
+
+function createContainer(name) {
   if (!name) return;
   if (!state.containers) state.containers = [];
   state.containers.push({name, items:[]});
   renderContainers();
   save();
+  closeModal();
 }
 
 function addContainerItem(ci) {
@@ -731,6 +772,27 @@ function renderContainers() {
 
 // ── 제조법 (레시피) ──
 function addFormula() {
+  // 장비 DB 모달과 동일하게 열되, 획득/구매 대신 "제조법 기록" 버튼
+  modalType = 'formula-pick';
+  openEquipBrowse();
+  // openEquipBrowse 호출 후 modalType을 덮어씀
+  setTimeout(() => { modalType = 'formula-pick'; }, 50);
+}
+
+function recordFormula(name) {
+  if (!name) return;
+  if (!state.formulas) state.formulas = [];
+  if (state.formulas.some(f => f.name === name)) {
+    alert(name + ' 제조법은 이미 기록되어 있습니다.');
+    return;
+  }
+  state.formulas.push({name, level: 1});
+  renderFormulas();
+  save();
+  closeModal();
+}
+
+function addFormulaManual() {
   const name = prompt('제조법 이름 (아이템 이름):');
   if (!name) return;
   if (!state.formulas) state.formulas = [];
@@ -1433,8 +1495,10 @@ function showEquipDetail(item) {
     <div class="modal-detail-en">${nameEn}</div>
     ${infoHtml}
     <div class="equip-give-buy">
-      <button class="btn-give" onclick="equipBrowseGive()">획득</button>
-      <button class="btn-buy" onclick="equipBrowseBuy()">구매</button>
+      ${modalType === 'formula-pick'
+        ? `<button class="btn-give" onclick="recordFormula('${nameKo.replace(/'/g,"\\'")}')">📜 제조법 기록</button>`
+        : `<button class="btn-give" onclick="equipBrowseGive()">획득</button>
+           <button class="btn-buy" onclick="equipBrowseBuy()">구매</button>`}
     </div>`;
 }
 
@@ -2127,6 +2191,7 @@ function renderPetCondList(i) {
   container.innerHTML = '';
 
   CONDITIONS_DATA.forEach(c => {
+    if (c.name === '파손됨') return; // 장비 상태이므로 제외
     if (q && !c.name.includes(q) && !c.en.toLowerCase().includes(q)) return;
     const current = p.conditions[c.name] || 0;
     const isActive = c.valued ? current > 0 : !!current;
