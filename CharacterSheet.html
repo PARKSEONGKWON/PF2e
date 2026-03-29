@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=18"></script>
+<script src="class_features_db.js?v=19"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1463,23 +1463,16 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
             <div style="text-align:center;"><div class="bd-label">Item</div><div class="bd-val" id="spell-item-val" style="font-weight:700;color:var(--text);">0</div></div>
           </div>
         </div>
-        <!-- Controls: tradition / type selects (hidden but functional) -->
-        <div class="spell-controls-row">
-          <select class="prof-sel" id="spell-tradition" onchange="save()" style="min-width:80px;font-size:12px;">
-            <option value="">계열 선택</option>
-            <option value="arcane">비전</option><option value="divine">신성</option>
-            <option value="occult">비의</option><option value="primal">원시</option>
-          </select>
-          <select class="prof-sel" id="spell-type" onchange="save()" style="min-width:70px;font-size:12px;">
-            <option value="">시전 유형</option>
-            <option value="prepared">준비형</option><option value="spontaneous">즉흥형</option>
-          </select>
-          <!-- Hidden proficiency select for save/load compat -->
-          <select class="prof-sel" id="prof-spatk" onchange="recalcSpellStats();save()" style="display:none;">
-            <option value="0">미숙련</option><option value="2">숙련</option>
-            <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-          </select>
+        <!-- 계열 / 시전 유형 (읽기전용 표시) -->
+        <div style="display:flex;justify-content:center;gap:16px;padding:6px 12px;font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);">
+          <span>계열: <strong style="color:var(--text);" id="spell-tradition-display">—</strong></span>
+          <span>|</span>
+          <span>시전: <strong style="color:var(--text);" id="spell-type-display">—</strong></span>
         </div>
+        <!-- Hidden selects for save/load -->
+        <select id="spell-tradition" style="display:none;"><option value="">—</option><option value="arcane">비전</option><option value="divine">신성</option><option value="occult">비의</option><option value="primal">원시</option></select>
+        <select id="spell-type" style="display:none;"><option value="">—</option><option value="prepared">준비형</option><option value="spontaneous">즉흥형</option></select>
+        <select id="prof-spatk" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
 
         <!-- Cantrips Section -->
         <div class="spell-rank-section" id="spell-cantrips-section">
@@ -1691,11 +1684,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=18"></script>
-<script src="cs_calc.js?v=18"></script>
-<script src="cs_ui.js?v=18"></script>
-<script src="cs_modal.js?v=18"></script>
-<script src="cs_save.js?v=18"></script>
+<script src="cs_data.js?v=19"></script>
+<script src="cs_calc.js?v=19"></script>
+<script src="cs_ui.js?v=19"></script>
+<script src="cs_modal.js?v=19"></script>
+<script src="cs_save.js?v=19"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

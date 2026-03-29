@@ -29,6 +29,13 @@ function syncAllProfRanks() {
   ['light','medium','heavy','unarmored'].forEach(c => syncProfRankText('rank-armor-'+c, 'prof-armor-'+c));
   syncProfRankText('rank-spell', 'prof-spatk');
   syncProfRankText('rank-spell-focus', 'prof-spatk');
+  // 계열/시전 유형 텍스트 동기화
+  const tradSel = document.getElementById('spell-tradition');
+  const tradDisp = document.getElementById('spell-tradition-display');
+  if (tradSel && tradDisp) tradDisp.textContent = tradSel.selectedOptions[0]?.textContent || '—';
+  const typeSel = document.getElementById('spell-type');
+  const typeDisp = document.getElementById('spell-type-display');
+  if (typeSel && typeDisp) typeDisp.textContent = typeSel.selectedOptions[0]?.textContent || '—';
   // 내성/지각/클래스DC 배지
   ['fort','ref','will','perc','classdc'].forEach(k => syncProfRankBadge('rank-'+k, 'prof-'+k));
   // 기술 배지
