@@ -284,8 +284,10 @@ function calcWeaponHit(w) {
 
   // Item bonus (potency rune)
   const itemBonus = parseInt(w._potency) || 0;
+  // 파손 페널티: -2
+  const brokenPen = w._broken ? -2 : 0;
 
-  return abilMod + profBonus + itemBonus;
+  return abilMod + profBonus + itemBonus + brokenPen;
 }
 
 function calcWeaponDamage(w) {
@@ -473,11 +475,11 @@ function renderWeapons() {
       <div class="weapon-card-body">
         <div class="weapon-card-stats">
           <div class="weapon-card-name" onclick="showInfo('weapon','${escapedName}')">
-            \u2694 ${w.name||'무기'}${runeInfo}
+            \u2694 ${w._broken?'<span style="color:var(--red-light);">파손된 </span>':''}${w.name||'무기'}${runeInfo}
           </div>
           <div class="weapon-stat">
             <span class="stat-label">\u2699 명중</span>
-            <span class="stat-val">${hitStr}</span>
+            <span class="stat-val" style="${w._broken?'color:var(--red-light);':''}">${hitStr}</span>
           </div>
           <div class="weapon-stat">
             <span class="stat-label">\uD83C\uDFAF 피해</span>
@@ -529,7 +531,7 @@ function renderEquip() {
     const hasContainers = state.containers && state.containers.length > 0;
 
     row.innerHTML = `
-      <span style="flex:1;font-size:12px;color:var(--text);cursor:pointer;" onclick="showInfo('${eqType}','${eqEscName}')">${e.name||'아이템'}</span>
+      <span style="flex:1;font-size:12px;color:${e._broken?'var(--red-light)':'var(--text)'};cursor:pointer;" onclick="showInfo('${eqType}','${eqEscName}')">${e._broken?'파손된 ':''}${e.name||'아이템'}</span>
       <span style="width:30px;text-align:center;font-size:10px;color:var(--text2);">${bulkDisplay}</span>
       <span style="width:70px;display:flex;align-items:center;justify-content:center;gap:2px;">
         <button class="qty-btn" onclick="event.stopPropagation();changeQty(${i},-1)">−</button>
@@ -549,7 +551,18 @@ function renderEquip() {
 }
 
 function toggleBroken(i) {
-  state.equip[i]._broken = !state.equip[i]._broken;
+  const item = state.equip[i];
+  item._broken = !item._broken;
+  // 장착된 무기 파손 상태 동기화
+  if (item._equipped && item._type === 'weapon') {
+    const wIdx = state.weapons.findIndex(w => w._fromEquip === i);
+    if (wIdx >= 0) state.weapons[wIdx]._broken = item._broken;
+    renderWeapons();
+  }
+  // 장착된 갑옷 파손 → AC 재계산
+  if (item._equipped && item._type === 'armor') {
+    recalcAC();
+  }
   renderEquip();
   save();
 }
@@ -592,7 +605,7 @@ function toggleEquip(i) {
 
   if (item._equipped && item._type === 'weapon' && item._data) {
     const w = item._data;
-    addWeapon({name: w.name_ko, dmg: w.damage||'', traits: (w.traits||[]).join(', '), _dbData: w, category: w.category, range: w.range, _fromEquip:i});
+    addWeapon({name: w.name_ko, dmg: w.damage||'', traits: (w.traits||[]).join(', '), _dbData: w, category: w.category, range: w.range, _fromEquip:i, _broken: item._broken||false});
   } else if (item._equipped && item._type === 'armor' && item._data) {
     const a = item._data;
     const nameEl = document.getElementById('armor-name');
@@ -1867,7 +1880,7 @@ function renderPets() {
           </div>
         </div>
       </div>
-      ${p.barding && p.barding !== '없음' ? `<div style="font-size:10px;color:var(--text2);margin-bottom:4px;">🛡 마갑: <strong style="color:var(--text);">${p.barding}</strong> <span style="color:var(--text2);">(AC+${bd?.ac||0} 민첩상한+${bd?.dex||0} 판정${bd?.check||0})</span>
+      ${p.barding && p.barding !== '없음' ? `<div style="font-size:10px;color:var(--text2);margin-bottom:4px;">🛡 마갑: <strong style="color:${p.bardingBroken?'var(--red-light)':'var(--text)'};">${p.bardingBroken?'파손된 ':''}${p.barding}</strong> <span style="color:var(--text2);">(AC+${bd?.ac||0} 민첩상한+${bd?.dex||0} 판정${bd?.check||0})</span>
         <button onclick="event.stopPropagation();togglePetBardingBroken(${i})" style="font-size:9px;padding:1px 6px;border-radius:3px;cursor:pointer;margin-left:4px;${p.bardingBroken?'background:var(--red-bg);color:var(--red-light);border:1px solid var(--red);':'background:var(--bg4);color:var(--text2);border:1px solid var(--border2);'}">${p.bardingBroken?'파손됨':'정상'}</button>
       </div>` : ''}
       ${p.isFamiliar && p.familiarAbilities?.length > 0 ? `<div style="font-size:10px;color:var(--text2);margin-bottom:4px;">✦ 능력: <strong style="color:var(--accent);">${p.familiarAbilities.map(id => FAMILIAR_ABILITIES.find(a=>a.id===id)?.name||id).join(', ')}</strong></div>` : ''}

@@ -688,7 +688,9 @@ function applyPenaltyColor(el, base, penalty) {
 function recalcAC() {
   const baseAc = parseInt(document.getElementById('armor-ac')?.value||0);
   const potency = state.armorPotency || 0;
-  const armorBonus = baseAc + potency;
+  // 파손 시 AC 보너스 절반
+  const armorBroken = state.equip?.some(e => e._equipped && e._type === 'armor' && e._broken);
+  const armorBonus = armorBroken ? Math.floor((baseAc + potency) / 2) : (baseAc + potency);
   const dexCap = document.getElementById('armor-dex')?.value;
   let dexMod = getMod('dex');
   if (dexCap && dexCap !== '-' && dexCap !== '') dexMod = Math.min(dexMod, parseInt(dexCap)||99);
