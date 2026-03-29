@@ -183,40 +183,41 @@ function openHpModal() {
   const detail = document.getElementById('modal-detail');
   if (detail) detail.innerHTML = '';
 
+  const inputStyle = 'flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;';
   const container = document.getElementById('modal-options');
   container.innerHTML = `<div style="padding:16px;">
     <div style="text-align:center;margin-bottom:16px;">
       <div style="font-size:12px;color:var(--text2);">현재 HP</div>
       <div style="font-size:28px;font-weight:700;color:var(--text);">${cur} <span style="color:var(--text2);font-size:16px;">/ ${max}</span></div>
-      ${temp > 0 ? '<div style="font-size:12px;color:var(--accent);">임시 HP: +' + temp + '</div>' : ''}
+      ${temp > 0 ? '<div style="font-size:12px;color:#999;">임시 HP: +' + temp + '</div>' : ''}
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div style="border:1px solid var(--border);border-radius:6px;padding:12px;">
         <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">❤️ 회복</div>
         <div style="display:flex;gap:6px;">
-          <input type="number" id="hp-heal-val" min="0" value="0" style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;">
-          <button onclick="applyHpHeal()" style="padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;">회복</button>
+          <input type="number" id="hp-heal-val" min="0" value="0" onkeydown="if(event.key==='Enter')applyHpHeal()" style="${inputStyle}">
+          <button onclick="applyHpHeal()" style="padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;">확인</button>
         </div>
       </div>
       <div style="border:1px solid var(--border);border-radius:6px;padding:12px;">
         <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">⚔️ 피해</div>
         <div style="display:flex;gap:6px;">
-          <input type="number" id="hp-dmg-val" min="0" value="0" style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;">
-          <button onclick="applyHpDamage()" style="padding:8px 16px;background:var(--red);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;">적용</button>
+          <input type="number" id="hp-dmg-val" min="0" value="0" onkeydown="if(event.key==='Enter')applyHpDamage()" style="${inputStyle}">
+          <button onclick="applyHpDamage()" style="padding:8px 16px;background:var(--red);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;">확인</button>
         </div>
       </div>
       <div style="border:1px solid var(--border);border-radius:6px;padding:12px;">
-        <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">🔧 직접 설정</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">🔧 HP 직접 설정</div>
         <div style="display:flex;gap:6px;">
-          <input type="number" id="hp-set-val" min="0" value="${cur}" style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;">
-          <button onclick="applyHpSet()" style="padding:8px 16px;background:var(--bg4);color:var(--text);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-size:13px;">설정</button>
+          <input type="number" id="hp-set-val" min="0" value="${cur}" onkeydown="if(event.key==='Enter')applyHpSet()" style="${inputStyle}">
+          <button onclick="applyHpSet()" style="padding:8px 16px;background:var(--bg4);color:var(--text);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-size:13px;">확인</button>
         </div>
       </div>
       <div style="border:1px solid var(--border);border-radius:6px;padding:12px;">
-        <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">🛡 임시 HP</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">🛡 임시 HP 설정</div>
         <div style="display:flex;gap:6px;">
-          <input type="number" id="hp-temp-set" min="0" value="${temp}" style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;">
-          <button onclick="applyHpTemp()" style="padding:8px 16px;background:var(--bg4);color:var(--text);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-size:13px;">설정</button>
+          <input type="number" id="hp-temp-set" min="0" value="${temp}" onkeydown="if(event.key==='Enter')applyHpTemp()" style="${inputStyle}">
+          <button onclick="applyHpTemp()" style="padding:8px 16px;background:var(--bg4);color:var(--text);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-size:13px;">확인</button>
         </div>
       </div>
     </div>
