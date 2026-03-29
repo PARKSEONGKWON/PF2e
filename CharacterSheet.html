@@ -505,7 +505,8 @@ body{
 }
 .weapon-stat .stat-label{font-size:10px;color:var(--text2);}
 .weapon-stat .stat-val{font-weight:700;color:var(--accent);font-size:13px;}
-.weapon-stat .stat-val.dmg{color:var(--text);}
+.weapon-stat .stat-val.dmg{color:var(--text);white-space:nowrap;}
+.weapon-stat{white-space:nowrap;}
 .weapon-card-traits{
   display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;
 }
@@ -6601,7 +6602,7 @@ function loadSlotNames(uid) {
       var d = doc.data();
       var slotNum = doc.id.replace('slot', '');
       var btn = document.querySelector('#slot-bar button:nth-child(' + (parseInt(slotNum) + 1) + ')');
-      if (btn && d.name) btn.textContent = '슬롯 ' + slotNum + ': ' + d.name;
+      if (btn) btn.textContent = '슬롯 ' + slotNum;
     });
   });
 }
