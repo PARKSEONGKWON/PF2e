@@ -23,6 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
+<script src="class_features_db.js"></script>
 <style>
 /* ═══════════════════════════════════════════
    PATHBUILDER2E STYLE — CSS CUSTOM PROPERTIES
@@ -2918,8 +2919,64 @@ function updateHP() {
   }
 }
 
-function onLevelChange() {
+// ═══════════════════════════════════════════════
+//  CLASS FEATURES AUTO-APPLY
+// ═══════════════════════════════════════════════
+
+function applyClassFeatures() {
+  const cls = state.selectedClass;
+  if (!cls) return;
+  const level = getLevel();
+
+  // Build combined prof table: class base + subclass overrides
+  const profs = {};
+  const cp = typeof CLASS_PROF_TABLE !== 'undefined' ? CLASS_PROF_TABLE[cls.id] : null;
+  if (cp) { for (const [t, p] of Object.entries(cp)) profs[t] = {...p}; }
+
+  if (state.selectedSubclass && typeof SUBCLASS_PROF_TABLE !== 'undefined') {
+    const sp = SUBCLASS_PROF_TABLE[state.selectedSubclass.id];
+    if (sp) { for (const [t, p] of Object.entries(sp)) profs[t] = {...p}; } // REPLACE
+  }
+
+  // Apply proficiencies
+  for (const [target, progression] of Object.entries(profs)) {
+    let rank = 0;
+    for (const [lv, val] of Object.entries(progression)) {
+      if (parseInt(lv) <= level) rank = Math.max(rank, val);
+    }
+    const el = document.getElementById('prof-' + target);
+    if (el) el.value = rank;
+  }
+
+  // Auto-granted feats
+  if (typeof CLASS_AUTO_FEATS !== 'undefined') {
+    // Remove old auto feats
+    ['class','general','skill','ancestry','other'].forEach(cat => {
+      state.feats[cat] = (state.feats[cat]||[]).filter(f => !f._auto);
+    });
+    // Add current auto feats
+    const autoFeats = CLASS_AUTO_FEATS[cls.id] || [];
+    autoFeats.forEach(f => {
+      if (f.lv <= level) {
+        const featName = f.name_ko + (f.name_en ? ` (${f.name_en})` : '');
+        const cat = f.category || 'class';
+        if (!state.feats[cat]) state.feats[cat] = [];
+        if (!state.feats[cat].some(e => e.name === featName)) {
+          state.feats[cat].push({name: featName, level: f.lv, _auto: true});
+        }
+      }
+    });
+    if (typeof renderFeats === 'function') renderFeats();
+  }
+
+  // Update UI badges
+  if (typeof initWeaponProfBadges === 'function') initWeaponProfBadges();
+  if (typeof initArmorProfBadges === 'function') initArmorProfBadges();
   recalcAll();
+}
+
+function onLevelChange() {
+  applyClassFeatures();
   renderGrowthPlan();
   updateSpellSlotsForClass();
   save();
@@ -2982,6 +3039,23 @@ function renderGrowthPlan() {
     const g = state.growth[lv] || {};
 
     html += `<div class="growth-level-header">레벨 ${lv}<span style="font-size:10px;color:var(--text2);font-weight:400;">Level ${lv}</span></div>`;
+
+    // Class features at this level (auto-display)
+    if (state.selectedClass && typeof CLASS_FEATURE_NAMES !== 'undefined') {
+      const classFeats = (CLASS_FEATURE_NAMES[state.selectedClass.id]||[]).filter(f => f.lv === lv);
+      const subFeats = state.selectedSubclass && typeof SUBCLASS_FEATURE_NAMES !== 'undefined'
+        ? (SUBCLASS_FEATURE_NAMES[state.selectedSubclass.id]||[]).filter(f => f.lv === lv) : [];
+      const allFeats = [...classFeats, ...subFeats];
+      if (allFeats.length > 0) {
+        html += `<div class="growth-slot" style="cursor:default;opacity:0.85;border-left:2px solid var(--accent);background:var(--accent-bg);">
+          <div class="growth-slot-icon" style="background:var(--accent);color:#fff;font-size:10px;">⚡</div>
+          <div class="growth-slot-body">
+            <div class="growth-slot-label" style="color:var(--accent);font-size:10px;">클래스 특성</div>
+            <div class="growth-slot-value" style="font-size:11px;line-height:1.5;">${allFeats.map(f => f.name_ko + ' <span style="color:var(--text2);font-size:9px;">' + f.name_en + '</span>').join('<br>')}</div>
+          </div>
+        </div>`;
+      }
+    }
 
     // Level 1 specials
     if (lv === 1) {
@@ -5072,6 +5146,7 @@ function confirmModal() {
     const btnC = document.getElementById('btn-class');
     if (btnC) { btnC.textContent = `${modalSelected.name} (${modalSelected.en})`; btnC.classList.add('filled'); }
     applyClassDefaults(modalSelected);
+    applyClassFeatures();
   } else if (modalType==='ancestry') {
     // Cascade reset if changing ancestry
     if (state.selectedAncestry && state.selectedAncestry.id !== modalSelected.id) {
@@ -5163,6 +5238,7 @@ function confirmModal() {
     state.selectedSubclass = modalSelected;
     const btn = document.getElementById('btn-subclass');
     if (btn) { btn.textContent = `${modalSelected.subclass_type}: ${modalSelected.name_ko}`; btn.classList.add('filled'); }
+    applyClassFeatures();
     renderGrowthPlan();
   } else if (modalType==='heritage') {
     state.selectedHeritage = modalSelected;
@@ -5874,7 +5950,9 @@ function loadData(d) {
     if (d.cantripSlots) state.cantripSlots = d.cantripSlots;
     renderSpells();
     if (d.feats) { state.feats = d.feats; renderFeats(); }
-    if (d.growth) { state.growth = d.growth; renderGrowthPlan(); }
+    if (d.growth) { state.growth = d.growth; }
+    applyClassFeatures();
+    renderGrowthPlan();
     if (d.conditions) {
       state.conditions = d.conditions;
       // 값을 복원 후 buildConditions 다시 실행

@@ -1,0 +1,336 @@
+// PF2e Player Core — Class Features Database
+// 레벨별 숙련도 진행 및 자동 부여 특성
+// 숙련 등급: 0=미숙련(U), 2=숙련(T), 4=전문가(E), 6=달인(M), 8=전설(L)
+
+// ═══════════════════════════════════════════════
+//  CLASS PROFICIENCY TABLE — {target: {level: rank}}
+//  target = DOM element suffix (prof-{target})
+// ═══════════════════════════════════════════════
+
+const CLASS_PROF_TABLE = {
+  bard: {
+    fort:{1:2, 9:4},
+    ref:{1:2, 3:4},
+    will:{1:4, 9:6},
+    perc:{1:4, 11:6},
+    spatk:{1:2, 7:4, 15:6, 19:8},
+    classdc:{1:2},
+    'weapon-simple':{1:2, 11:4}, 'weapon-unarmed':{1:2, 11:4},
+    'armor-light':{1:2, 13:4, 17:6}, 'armor-unarmored':{1:2, 13:4, 17:6},
+  },
+  cleric: {
+    fort:{1:2, 3:4, 9:6},
+    ref:{1:2},
+    will:{1:4, 9:6},
+    perc:{1:2, 5:4, 11:6},
+    spatk:{1:2}, // doctrine overrides this
+    classdc:{1:2},
+    'weapon-simple':{1:2}, 'weapon-unarmed':{1:2},
+    'armor-unarmored':{1:2},
+  },
+  druid: {
+    fort:{1:2, 3:4},
+    ref:{1:2, 5:4},
+    will:{1:4, 11:6},
+    perc:{1:2, 3:4},
+    spatk:{1:2, 7:4, 15:6, 19:8},
+    classdc:{1:2},
+    'weapon-simple':{1:2, 11:4}, 'weapon-unarmed':{1:2, 11:4},
+    'armor-light':{1:2, 13:4}, 'armor-medium':{1:2, 13:4}, 'armor-unarmored':{1:2, 13:4},
+  },
+  fighter: {
+    fort:{1:4, 9:6, 17:8},
+    ref:{1:4, 15:6},
+    will:{1:2, 3:4, 17:6},
+    perc:{1:4, 7:6, 13:8},
+    classdc:{1:2, 9:4},
+    'weapon-simple':{1:4, 5:6, 13:8}, 'weapon-martial':{1:4, 5:6, 13:8},
+    'weapon-advanced':{1:2, 5:4, 13:6}, 'weapon-unarmed':{1:4, 5:6, 13:8},
+    'armor-light':{1:2, 11:4, 17:6}, 'armor-medium':{1:2, 11:4, 17:6},
+    'armor-heavy':{1:2, 11:4, 17:6}, 'armor-unarmored':{1:2, 11:4, 17:6},
+  },
+  ranger: {
+    fort:{1:4, 9:6},
+    ref:{1:4, 15:6},
+    will:{1:2, 3:4, 17:6},
+    perc:{1:4, 7:6, 15:8},
+    classdc:{1:2, 9:4},
+    'weapon-simple':{1:2, 5:4, 13:6}, 'weapon-martial':{1:2, 5:4, 13:6},
+    'weapon-unarmed':{1:2, 5:4, 13:6},
+    'armor-light':{1:2, 11:4, 17:6}, 'armor-medium':{1:2, 11:4, 17:6},
+    'armor-unarmored':{1:2, 11:4, 17:6},
+  },
+  rogue: {
+    fort:{1:2, 9:4},
+    ref:{1:4, 13:6, 17:8},
+    will:{1:4, 17:6},
+    perc:{1:4, 7:6, 13:8},
+    classdc:{1:2, 9:4},
+    'weapon-simple':{1:2, 11:4}, 'weapon-unarmed':{1:2, 11:4},
+    // Rogue also trains rapier, sap, shortbow, shortsword specifically
+    'armor-light':{1:2, 13:4, 17:6}, 'armor-unarmored':{1:2, 13:4, 17:6},
+  },
+  witch: {
+    fort:{1:2, 9:4},
+    ref:{1:2, 5:4},
+    will:{1:4, 9:6, 17:8},
+    perc:{1:2, 5:4, 11:6},
+    spatk:{1:2, 7:4, 15:6, 19:8},
+    classdc:{1:2},
+    'weapon-simple':{1:2}, 'weapon-unarmed':{1:2},
+    'armor-unarmored':{1:2},
+  },
+  wizard: {
+    fort:{1:2, 9:4},
+    ref:{1:2, 5:4},
+    will:{1:4, 9:6, 17:8},
+    perc:{1:2, 5:4, 11:6},
+    spatk:{1:2, 7:4, 15:6, 19:8},
+    classdc:{1:2},
+    'weapon-simple':{1:2}, 'weapon-unarmed':{1:2},
+    'armor-unarmored':{1:2},
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  SUBCLASS PROFICIENCY TABLE — overrides CLASS entries
+//  Entries REPLACE (not merge) the class entry for that target
+// ═══════════════════════════════════════════════
+
+const SUBCLASS_PROF_TABLE = {
+  // ── 클레릭 교리 ──
+  'doctrine-cloistered': {
+    spatk:{1:2, 3:4, 15:6, 19:8},   // 빠른 주문 성장
+    ref:{1:2, 15:4},                  // Lightning Reflexes @15
+    will:{1:4, 9:6, 17:8},           // → Legendary @17
+    'armor-light':{1:2},
+  },
+  'doctrine-warpriest': {
+    spatk:{1:2, 7:4, 15:6},          // 느린 주문 성장 (no Legendary)
+    ref:{1:2, 3:4},                   // → Expert @3
+    will:{1:4, 9:6},                  // stays Master
+    'weapon-martial':{1:2, 7:4},     // 군용 무기 훈련
+    'armor-light':{1:2, 13:4, 17:6},
+    'armor-medium':{1:2, 13:4, 17:6},
+    'armor-heavy':{1:2},
+  },
+  // ── 바드 뮤즈 ──
+  'muse-warrior': {
+    'weapon-martial':{1:2},           // 군용 무기 훈련 추가
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  CLASS FEATURE NAMES — for display in growth plan
+//  Each entry: {lv, name_ko, name_en, type?}
+//  type: 'feat' = auto-granted feat, undefined = display-only
+// ═══════════════════════════════════════════════
+
+const CLASS_FEATURE_NAMES = {
+  bard: [
+    {lv:1, name_ko:'오컬트 주문시전', name_en:'Occult Spellcasting'},
+    {lv:1, name_ko:'작곡 주문', name_en:'Composition Spells'},
+    {lv:3, name_ko:'번개 반사', name_en:'Lightning Reflexes'},
+    {lv:3, name_ko:'대표 주문', name_en:'Signature Spells'},
+    {lv:7, name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster'},
+    {lv:9, name_ko:'강인한 체력', name_en:'Great Fortitude'},
+    {lv:9, name_ko:'결의', name_en:'Resolve'},
+    {lv:11, name_ko:'바드 무기 숙련', name_en:'Bard Weapon Expertise'},
+    {lv:11, name_ko:'경각심', name_en:'Vigilant Senses'},
+    {lv:13, name_ko:'경갑 숙련', name_en:'Light Armor Expertise'},
+    {lv:13, name_ko:'무기 전문화', name_en:'Weapon Specialization'},
+    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster'},
+    {lv:15, name_ko:'대결의', name_en:'Greater Resolve'},
+    {lv:17, name_ko:'경갑 달인', name_en:'Light Armor Mastery'},
+    {lv:19, name_ko:'전설 주문시전자', name_en:'Legendary Spellcaster'},
+  ],
+  cleric: [
+    {lv:1, name_ko:'신성 주문시전', name_en:'Divine Spellcasting'},
+    {lv:1, name_ko:'신성 샘', name_en:'Divine Font'},
+    {lv:3, name_ko:'2차 교리', name_en:'Second Doctrine'},
+    {lv:5, name_ko:'경각심', name_en:'Alertness'},
+    {lv:7, name_ko:'3차 교리', name_en:'Third Doctrine'},
+    {lv:9, name_ko:'결의', name_en:'Resolve'},
+    {lv:11, name_ko:'4차 교리', name_en:'Fourth Doctrine'},
+    {lv:13, name_ko:'무기 전문화', name_en:'Weapon Specialization'},
+    {lv:15, name_ko:'5차 교리', name_en:'Fifth Doctrine'},
+    {lv:17, name_ko:'6차 교리', name_en:'Sixth Doctrine'},
+    {lv:19, name_ko:'7차 교리', name_en:'Seventh Doctrine'},
+  ],
+  druid: [
+    {lv:1, name_ko:'원시 주문시전', name_en:'Primal Spellcasting'},
+    {lv:1, name_ko:'드루이드 교단', name_en:'Druidic Order'},
+    {lv:1, name_ko:'방패 막기', name_en:'Shield Block', type:'feat'},
+    {lv:1, name_ko:'야생 공감', name_en:'Wild Empathy'},
+    {lv:3, name_ko:'경각심', name_en:'Alertness'},
+    {lv:3, name_ko:'강인한 체력', name_en:'Great Fortitude'},
+    {lv:5, name_ko:'번개 반사', name_en:'Lightning Reflexes'},
+    {lv:7, name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster'},
+    {lv:11, name_ko:'드루이드 무기 숙련', name_en:'Druid Weapon Expertise'},
+    {lv:11, name_ko:'결의', name_en:'Resolve'},
+    {lv:13, name_ko:'중갑 숙련', name_en:'Medium Armor Expertise'},
+    {lv:13, name_ko:'무기 전문화', name_en:'Weapon Specialization'},
+    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster'},
+    {lv:17, name_ko:'경각심 (달인)', name_en:'Vigilant Senses'},
+    {lv:19, name_ko:'전설 주문시전자', name_en:'Legendary Spellcaster'},
+  ],
+  fighter: [
+    {lv:1, name_ko:'기회 공격', name_en:'Attack of Opportunity'},
+    {lv:1, name_ko:'방패 막기', name_en:'Shield Block', type:'feat'},
+    {lv:3, name_ko:'용기', name_en:'Bravery'},
+    {lv:5, name_ko:'파이터 무기 달인', name_en:'Fighter Weapon Mastery'},
+    {lv:7, name_ko:'전장 감시자', name_en:'Battlefield Surveyor'},
+    {lv:9, name_ko:'전투 유연성', name_en:'Combat Flexibility'},
+    {lv:9, name_ko:'철벽', name_en:'Juggernaut'},
+    {lv:11, name_ko:'갑옷 숙련', name_en:'Armor Expertise'},
+    {lv:11, name_ko:'파이터 숙련', name_en:'Fighter Expertise'},
+    {lv:13, name_ko:'무기 전설', name_en:'Weapon Legend'},
+    {lv:13, name_ko:'무기 대전문화', name_en:'Greater Weapon Specialization'},
+    {lv:15, name_ko:'회피', name_en:'Evasion'},
+    {lv:15, name_ko:'향상된 유연성', name_en:'Improved Flexibility'},
+    {lv:17, name_ko:'갑옷 달인', name_en:'Armor Mastery'},
+    {lv:17, name_ko:'결의', name_en:'Resolve'},
+    {lv:19, name_ko:'다재다능한 전설', name_en:'Versatile Legend'},
+  ],
+  ranger: [
+    {lv:1, name_ko:'사냥 목표', name_en:'Hunt Prey'},
+    {lv:3, name_ko:'철의 의지', name_en:'Iron Will'},
+    {lv:5, name_ko:'레인저 무기 숙련', name_en:'Ranger Weapon Expertise'},
+    {lv:7, name_ko:'인지 달인', name_en:'Perception Master'},
+    {lv:7, name_ko:'회피', name_en:'Evasion'},
+    {lv:9, name_ko:'자연의 우위', name_en:"Nature's Edge"},
+    {lv:9, name_ko:'철벽', name_en:'Juggernaut'},
+    {lv:11, name_ko:'야생 보행', name_en:'Wild Stride'},
+    {lv:11, name_ko:'무기 전문화', name_en:'Weapon Specialization'},
+    {lv:13, name_ko:'무기 달인', name_en:'Weapon Mastery'},
+    {lv:15, name_ko:'향상된 회피', name_en:'Improved Evasion'},
+    {lv:15, name_ko:'인지 전설', name_en:'Incredible Senses'},
+    {lv:17, name_ko:'달인의 사냥꾼', name_en:'Masterful Hunter'},
+    {lv:17, name_ko:'결의', name_en:'Resolve'},
+    {lv:19, name_ko:'빠른 사냥', name_en:'Swift Prey'},
+  ],
+  rogue: [
+    {lv:1, name_ko:'급소 공격 1d6', name_en:'Sneak Attack 1d6'},
+    {lv:1, name_ko:'기습', name_en:'Surprise Attack'},
+    {lv:3, name_ko:'이점 부정', name_en:'Deny Advantage'},
+    {lv:5, name_ko:'급소 공격 2d6', name_en:'Sneak Attack 2d6'},
+    {lv:5, name_ko:'무기 교묘함', name_en:'Weapon Tricks'},
+    {lv:7, name_ko:'인지 달인', name_en:'Perception Master'},
+    {lv:7, name_ko:'회피', name_en:'Evasion'},
+    {lv:9, name_ko:'강인한 체력', name_en:'Great Fortitude'},
+    {lv:9, name_ko:'로그 숙련', name_en:'Rogue Expertise'},
+    {lv:11, name_ko:'급소 공격 3d6', name_en:'Sneak Attack 3d6'},
+    {lv:11, name_ko:'무기 전문화', name_en:'Weapon Specialization'},
+    {lv:13, name_ko:'인지 전설', name_en:'Incredible Senses'},
+    {lv:13, name_ko:'경갑 숙련', name_en:'Light Armor Expertise'},
+    {lv:15, name_ko:'이중 약화', name_en:'Double Debilitation'},
+    {lv:17, name_ko:'결의', name_en:'Resolve'},
+    {lv:17, name_ko:'경갑 달인', name_en:'Light Armor Mastery'},
+    {lv:17, name_ko:'전설 반사', name_en:'Legendary Reflexes'},
+    {lv:19, name_ko:'달인 일격', name_en:'Master Strike'},
+    {lv:19, name_ko:'급소 공격 4d6', name_en:'Sneak Attack 4d6'},
+  ],
+  witch: [
+    {lv:1, name_ko:'주문시전 (후원자 전통)', name_en:'Spellcasting'},
+    {lv:1, name_ko:'사역마', name_en:'Familiar'},
+    {lv:1, name_ko:'주술', name_en:'Hexes'},
+    {lv:5, name_ko:'경각심', name_en:'Alertness'},
+    {lv:5, name_ko:'번개 반사', name_en:'Lightning Reflexes'},
+    {lv:7, name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster'},
+    {lv:9, name_ko:'강인한 체력', name_en:'Great Fortitude'},
+    {lv:9, name_ko:'결의', name_en:'Resolve'},
+    {lv:11, name_ko:'경각심 (달인)', name_en:'Vigilant Senses'},
+    {lv:11, name_ko:'위치 무기 숙련', name_en:'Witch Weapon Expertise'},
+    {lv:13, name_ko:'무기 전문화', name_en:'Weapon Specialization'},
+    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster'},
+    {lv:17, name_ko:'대결의', name_en:'Greater Resolve'},
+    {lv:19, name_ko:'전설 주문시전자', name_en:'Legendary Spellcaster'},
+    {lv:19, name_ko:'후원자의 선물', name_en:"Patron's Gift"},
+  ],
+  wizard: [
+    {lv:1, name_ko:'비전 주문시전', name_en:'Arcane Spellcasting'},
+    {lv:1, name_ko:'비전 연결', name_en:'Arcane Bond'},
+    {lv:1, name_ko:'비전 학파', name_en:'Arcane School'},
+    {lv:5, name_ko:'경각심', name_en:'Alertness'},
+    {lv:5, name_ko:'번개 반사', name_en:'Lightning Reflexes'},
+    {lv:7, name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster'},
+    {lv:9, name_ko:'강인한 체력', name_en:'Great Fortitude'},
+    {lv:9, name_ko:'결의', name_en:'Resolve'},
+    {lv:11, name_ko:'위자드 무기 숙련', name_en:'Wizard Weapon Expertise'},
+    {lv:11, name_ko:'경각심 (달인)', name_en:'Vigilant Senses'},
+    {lv:13, name_ko:'무기 전문화', name_en:'Weapon Specialization'},
+    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster'},
+    {lv:17, name_ko:'대결의', name_en:'Greater Resolve'},
+    {lv:19, name_ko:'전설 주문시전자', name_en:'Legendary Spellcaster'},
+    {lv:19, name_ko:'비전 절정', name_en:"Archwizard's Might"},
+  ],
+};
+
+// ═══════════════════════════════════════════════
+//  AUTO-GRANTED FEATS — class features that grant feats
+// ═══════════════════════════════════════════════
+
+const CLASS_AUTO_FEATS = {
+  fighter: [{lv:1, name_ko:'방패 막기', name_en:'Shield Block', category:'class'}],
+  druid:   [{lv:1, name_ko:'방패 막기', name_en:'Shield Block', category:'class'}],
+};
+
+// ═══════════════════════════════════════════════
+//  SUBCLASS FEATURE NAMES — for display
+// ═══════════════════════════════════════════════
+
+const SUBCLASS_FEATURE_NAMES = {
+  // ── 바드 뮤즈 ──
+  'muse-enigma':  [{lv:1, name_ko:'바드 지식 (자유 지식 기술)', name_en:'Bardic Lore'}],
+  'muse-maestro': [{lv:1, name_ko:'여운 주문 재주', name_en:'Lingering Composition'}],
+  'muse-warrior': [{lv:1, name_ko:'군용 무기 훈련', name_en:'Martial Weapon Training'}],
+  'muse-lore':    [{lv:1, name_ko:'지식 기술 2개 추가', name_en:'Lore Skills'}],
+  // ── 클레릭 교리 ──
+  'doctrine-cloistered': [
+    {lv:1,  name_ko:'도메인 개시 주문 1개', name_en:'Domain Initiate Spell'},
+    {lv:3,  name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster'},
+    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster'},
+    {lv:19, name_ko:'전설 주문시전자', name_en:'Legendary Spellcaster'},
+  ],
+  'doctrine-warpriest': [
+    {lv:1,  name_ko:'군용 무기/중갑 훈련', name_en:'Martial & Medium Armor'},
+    {lv:3,  name_ko:'반사 전문가', name_en:'Expert Reflex'},
+    {lv:7,  name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster'},
+    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster'},
+  ],
+  // ── 드루이드 교단 ──
+  'order-animal': [{lv:1, name_ko:'동물 친구 습득', name_en:'Animal Companion'}],
+  'order-flame':  [{lv:1, name_ko:'집중 주문: 불꽃 씨앗', name_en:'Fire Ray'}],
+  'order-leaf':   [{lv:1, name_ko:'집중 주문: 치유의 새싹', name_en:'Goodberry'}],
+  'order-storm':  [{lv:1, name_ko:'집중 주문: 폭풍 쇄도', name_en:'Tempest Surge'}],
+  'order-wave':   [{lv:1, name_ko:'집중 주문: 물의 채찍', name_en:'Tidal Surge'}],
+  'order-wild':   [{lv:1, name_ko:'집중 주문: 야수 형태', name_en:'Wild Shape'}],
+  // ── 레인저 사냥 방식 ──
+  'edge-flurry':    [{lv:1, name_ko:'다중 공격 페널티 감소', name_en:'Flurry: -3/-6 MAP'}],
+  'edge-outwit':    [{lv:1, name_ko:'사냥 목표 AC +1', name_en:'Outwit: +1 AC vs Prey'}],
+  'edge-precision': [{lv:1, name_ko:'첫 타 정밀 피해 +1d8', name_en:'Precision: +1d8'}],
+  // ── 로그 전문 ──
+  'racket-thief':     [{lv:1, name_ko:'민첩→피해 (기교 무기)', name_en:'DEX to damage (finesse)'}],
+  'racket-scoundrel': [{lv:1, name_ko:'기만/위협→방어불가', name_en:'Feint/Demoralize → Flat-footed'}],
+  'racket-mastermind':[{lv:1, name_ko:'지식 확인→방어불가', name_en:'Recall Knowledge → Flat-footed'}],
+  'racket-acrobat':   [{lv:1, name_ko:'곡예→스닉 어택 기회', name_en:'Acrobatics → Sneak Attack'}],
+  'racket-assassin':  [{lv:1, name_ko:'기습 라운드 +2d6', name_en:'Surprise +2d6'}],
+  'racket-eldritch-trickster': [{lv:1, name_ko:'주문→스닉 어택', name_en:'Spell → Sneak Attack'}],
+  // ── 위치 후원자 ──
+  'patron-curse':  [{lv:1, name_ko:'비의 전통 / 주술: 악의 눈', name_en:'Occult / Evil Eye'}],
+  'patron-fate':   [{lv:1, name_ko:'비의 전통 / 주술: 운명의 실', name_en:'Occult / Nudge Fate'}],
+  'patron-fervor': [{lv:1, name_ko:'신성 전통 / 주술: 마음 불꽃', name_en:'Divine / Stoke the Heart'}],
+  'patron-night':  [{lv:1, name_ko:'비의 전통 / 주술: 마녀의 빗장', name_en:'Occult / Shroud of Night'}],
+  'patron-rune':   [{lv:1, name_ko:'비전 전통 / 주술: 파멸의 서약', name_en:'Arcane / Discern Secrets'}],
+  'patron-wild':   [{lv:1, name_ko:'원시 전통 / 주술: 야생의 분노', name_en:'Primal / Wilding Word'}],
+  // ── 위자드 마법학파 ──
+  'school-abjuration':    [{lv:1, name_ko:'학파 주문: 마법 방어막', name_en:'Protective Wards'}],
+  'school-conjuration':   [{lv:1, name_ko:'학파 주문: 비전 소환', name_en:'Augment Summoning'}],
+  'school-divination':    [{lv:1, name_ko:'학파 주문: 예언의 눈', name_en:"Diviner's Sight"}],
+  'school-enchantment':   [{lv:1, name_ko:'학파 주문: 매혹의 말', name_en:'Charming Words'}],
+  'school-evocation':     [{lv:1, name_ko:'학파 주문: 힘의 화살', name_en:'Force Bolt'}],
+  'school-illusion':      [{lv:1, name_ko:'학파 주문: 지형 왜곡', name_en:'Warped Terrain'}],
+  'school-necromancy':    [{lv:1, name_ko:'학파 주문: 무덤의 부름', name_en:'Call of the Grave'}],
+  'school-transmutation': [{lv:1, name_ko:'학파 주문: 물질 변형', name_en:'Shifting Form'}],
+  'school-unified':       [{lv:1, name_ko:'통합 이론: 유연한 학파', name_en:'Universalist Flexibility'}],
+};
