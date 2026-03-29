@@ -1486,3 +1486,173 @@ function equipBrowseBuy() {
   equipBrowseGive();
 }
 
+// ═══════════════════════════════════════════════
+//  PETS (반려동물)
+// ═══════════════════════════════════════════════
+
+function addPet() {
+  if (!state.pets) state.pets = [];
+  const name = prompt('반려동물 이름:');
+  if (!name) return;
+  state.pets.push({
+    name, type:'동물 친구',
+    hp:{cur:0,max:0}, ac:10, speed:25, size:'소형',
+    str:0,dex:0,con:0,int:-4,wis:0,cha:0,
+    fort:0,ref:0,will:0,perc:0,
+    senses:'저광 시야',
+    attacks:[],
+    notes:''
+  });
+  renderPets();
+  save();
+}
+
+function removePet(i) {
+  if (!confirm(state.pets[i].name + '을(를) 제거하시겠습니까?')) return;
+  state.pets.splice(i,1);
+  renderPets();
+  save();
+}
+
+function editPet(i) {
+  const p = state.pets[i];
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'pet-edit';
+  document.getElementById('modal-title').textContent = '🐾 ' + p.name + ' 편집';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = 'none';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.innerHTML = '';
+
+  const is = 'width:50px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:4px;border-radius:4px;font-size:13px;text-align:center;';
+  const container = document.getElementById('modal-options');
+  container.innerHTML = `<div style="padding:12px;font-size:12px;">
+    <div style="display:flex;gap:6px;margin-bottom:8px;">
+      <div style="flex:1;"><label style="font-size:9px;color:var(--text2);">이름</label><input id="pe-name" value="${p.name}" style="width:100%;${is}"></div>
+      <div><label style="font-size:9px;color:var(--text2);">유형</label><input id="pe-type" value="${p.type||''}" style="width:80px;${is}"></div>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:8px;">
+      <div><label style="font-size:9px;color:var(--text2);">AC</label><input id="pe-ac" type="number" value="${p.ac}" style="${is}"></div>
+      <div><label style="font-size:9px;color:var(--text2);">HP 최대</label><input id="pe-hpmax" type="number" value="${p.hp.max}" style="${is}"></div>
+      <div><label style="font-size:9px;color:var(--text2);">이동</label><input id="pe-speed" type="number" value="${p.speed}" style="${is}"></div>
+      <div><label style="font-size:9px;color:var(--text2);">크기</label><input id="pe-size" value="${p.size||'소형'}" style="width:50px;${is}"></div>
+    </div>
+    <div style="font-size:10px;color:var(--accent);margin-bottom:4px;">능력치 수정치</div>
+    <div style="display:flex;gap:4px;margin-bottom:8px;">
+      ${['str','dex','con','int','wis','cha'].map(a => `<div style="text-align:center;"><div style="font-size:8px;color:var(--text2);">${a.toUpperCase()}</div><input id="pe-${a}" type="number" value="${p[a]||0}" style="width:36px;${is}"></div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:var(--accent);margin-bottom:4px;">내성/지각</div>
+    <div style="display:flex;gap:4px;margin-bottom:8px;">
+      ${[['fort','인내'],['ref','반사'],['will','의지'],['perc','지각']].map(([k,l]) => `<div style="text-align:center;"><div style="font-size:8px;color:var(--text2);">${l}</div><input id="pe-${k}" type="number" value="${p[k]||0}" style="width:42px;${is}"></div>`).join('')}
+    </div>
+    <div style="margin-bottom:8px;"><label style="font-size:9px;color:var(--text2);">감각</label><input id="pe-senses" value="${p.senses||''}" style="width:100%;${is}"></div>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:9px;color:var(--text2);">공격 (줄마다: 이름,명중,피해)</label>
+      <textarea id="pe-attacks" style="width:100%;min-height:50px;${is};text-align:left;">${(p.attacks||[]).map(a=>a.name+','+a.hit+','+a.dmg).join('\n')}</textarea>
+    </div>
+    <div style="margin-bottom:8px;"><label style="font-size:9px;color:var(--text2);">메모</label><textarea id="pe-notes" style="width:100%;min-height:40px;${is};text-align:left;">${p.notes||''}</textarea></div>
+    <button onclick="applyPetEdit(${i})" style="width:100%;padding:10px;background:var(--accent);color:#000;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">저장</button>
+  </div>`;
+}
+
+function applyPetEdit(i) {
+  const p = state.pets[i];
+  p.name = document.getElementById('pe-name').value || p.name;
+  p.type = document.getElementById('pe-type').value;
+  p.ac = parseInt(document.getElementById('pe-ac').value)||10;
+  p.hp.max = parseInt(document.getElementById('pe-hpmax').value)||0;
+  if (p.hp.cur > p.hp.max) p.hp.cur = p.hp.max;
+  if (p.hp.cur === 0 && p.hp.max > 0) p.hp.cur = p.hp.max;
+  p.speed = parseInt(document.getElementById('pe-speed').value)||25;
+  p.size = document.getElementById('pe-size').value || '소형';
+  ['str','dex','con','int','wis','cha'].forEach(a => { p[a] = parseInt(document.getElementById('pe-'+a).value)||0; });
+  ['fort','ref','will','perc'].forEach(k => { p[k] = parseInt(document.getElementById('pe-'+k).value)||0; });
+  p.senses = document.getElementById('pe-senses').value;
+  p.notes = document.getElementById('pe-notes').value;
+  p.attacks = (document.getElementById('pe-attacks').value||'').split('\n').filter(l=>l.trim()).map(l => {
+    const [name,hit,dmg] = l.split(',').map(s=>s.trim());
+    return {name:name||'공격',hit:hit||'+0',dmg:dmg||'1d4'};
+  });
+  renderPets();
+  save();
+  closeModal();
+}
+
+function petHpChange(i, delta) {
+  const p = state.pets[i];
+  if (delta > 0) p.hp.cur = Math.min(p.hp.max, p.hp.cur + delta);
+  else p.hp.cur = Math.max(0, p.hp.cur + delta);
+  renderPets();
+  save();
+}
+
+function renderPets() {
+  const el = document.getElementById('pet-list');
+  if (!el) return;
+  if (!state.pets) state.pets = [];
+  el.innerHTML = '';
+  if (state.pets.length === 0) {
+    el.innerHTML = '<div style="font-size:11px;color:var(--text2);text-align:center;padding:16px;">반려동물을 추가하세요</div>';
+    return;
+  }
+  state.pets.forEach((p, i) => {
+    const hpPct = p.hp.max > 0 ? Math.round((p.hp.cur/p.hp.max)*100) : 0;
+    const hpColor = hpPct > 50 ? '#2d8a5e' : hpPct > 25 ? '#a08a20' : '#a03030';
+    el.innerHTML += `
+    <div class="box" style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div>
+          <span style="font-size:14px;font-weight:700;color:var(--accent);">${p.name}</span>
+          <span style="font-size:10px;color:var(--text2);margin-left:6px;">${p.type||''}</span>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <button class="defense-btn" onclick="editPet(${i})">편집</button>
+          <button class="defense-btn danger" onclick="removePet(${i})">삭제</button>
+        </div>
+      </div>
+      <!-- AC + HP -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+        <div class="ac-shield" style="width:40px;height:40px;font-size:16px;line-height:40px;">${p.ac}</div>
+        <div style="flex:1;">
+          <div style="position:relative;background:var(--bg4);border:1px solid var(--border);border-radius:4px;height:22px;overflow:hidden;cursor:pointer;" onclick="petHpChange(${i}, parseInt(prompt('HP 변경량 (+회복 / -피해):'))||0)">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:${hpPct}%;background:${hpColor};border-radius:3px;transition:width .3s;"></div>
+            <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:100%;font-size:11px;font-weight:700;color:#fff;">HP ${p.hp.cur}/${p.hp.max}</div>
+          </div>
+        </div>
+      </div>
+      <!-- Info row -->
+      <div style="display:flex;gap:8px;font-size:10px;color:var(--text2);margin-bottom:6px;flex-wrap:wrap;">
+        <span>이동 <strong style="color:var(--text);">${p.speed}</strong>피트</span>
+        <span>크기 <strong style="color:var(--text);">${p.size}</strong></span>
+        ${p.senses ? `<span>감각 <strong style="color:var(--text);">${p.senses}</strong></span>` : ''}
+      </div>
+      <!-- Attacks -->
+      ${(p.attacks||[]).length > 0 ? `<div style="margin-bottom:6px;">
+        ${p.attacks.map(a => `<div style="display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <span style="font-weight:600;color:var(--text);min-width:60px;">${a.name}</span>
+          <span style="color:var(--text2);">명중 <strong style="color:var(--accent);">${a.hit}</strong></span>
+          <span style="color:var(--text2);">피해 <strong style="color:var(--text);">${a.dmg}</strong></span>
+        </div>`).join('')}
+      </div>` : ''}
+      <!-- Saves + Stats -->
+      <div style="display:flex;gap:6px;font-size:10px;margin-bottom:4px;flex-wrap:wrap;">
+        <span style="color:var(--text2);">인내 <strong style="color:var(--text);">${p.fort>=0?'+':''}${p.fort}</strong></span>
+        <span style="color:var(--text2);">반사 <strong style="color:var(--text);">${p.ref>=0?'+':''}${p.ref}</strong></span>
+        <span style="color:var(--text2);">의지 <strong style="color:var(--text);">${p.will>=0?'+':''}${p.will}</strong></span>
+        <span style="color:var(--text2);">지각 <strong style="color:var(--text);">${p.perc>=0?'+':''}${p.perc}</strong></span>
+      </div>
+      <div style="display:flex;gap:4px;font-size:10px;flex-wrap:wrap;">
+        ${['str','dex','con','int','wis','cha'].map(a => `<span style="color:var(--text2);">${a.toUpperCase()} <strong style="color:${p[a]<0?'var(--red-light)':'var(--text)'};">${p[a]>=0?'+':''}${p[a]}</strong></span>`).join('')}
+      </div>
+      ${p.notes ? `<div style="font-size:10px;color:var(--text2);margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">${p.notes}</div>` : ''}
+    </div>`;
+  });
+}
+
