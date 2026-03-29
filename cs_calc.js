@@ -28,6 +28,7 @@ function syncAllProfRanks() {
   ['simple','martial','advanced','unarmed'].forEach(c => syncProfRankText('rank-weapon-'+c, 'prof-weapon-'+c));
   ['light','medium','heavy','unarmored'].forEach(c => syncProfRankText('rank-armor-'+c, 'prof-armor-'+c));
   syncProfRankText('rank-spell', 'prof-spatk');
+  syncProfRankText('rank-spell-focus', 'prof-spatk');
   // 내성/지각/클래스DC 배지
   ['fort','ref','will','perc','classdc'].forEach(k => syncProfRankBadge('rank-'+k, 'prof-'+k));
   // 기술 배지
@@ -732,9 +733,18 @@ function recalcSpellStats() {
   if (spDcVal) spDcVal.textContent = dc;
   const spAtkVal = document.getElementById('spell-atk-val');
   if (spAtkVal) spAtkVal.textContent = fmtBonus(atk);
-  // TEML badges & breakdown update
+  // Focus tab DC mirror
+  const focusDcEl = document.getElementById('spell-dc-val-focus');
+  if (focusDcEl) focusDcEl.textContent = dc;
+  // Breakdown update
+  const keyLabel = document.getElementById('spell-key-label');
+  if (keyLabel) keyLabel.textContent = keyAttr ? keyAttr.substring(0,3).toUpperCase() : '—';
+  const keyVal = document.getElementById('spell-key-val');
+  if (keyVal) keyVal.textContent = getMod(keyAttr);
+  const profVal = document.getElementById('spell-prof-val');
+  if (profVal) profVal.textContent = prof;
+  // TEML badges update
   if (typeof updateSpellTemlBadges === 'function') updateSpellTemlBadges();
-  if (typeof updateSpellBreakdown === 'function') updateSpellBreakdown();
   // 방어 탭 미러 업데이트
   const mirrorDc = document.getElementById('val-spdc-mirror');
   if (mirrorDc) mirrorDc.textContent = dc;

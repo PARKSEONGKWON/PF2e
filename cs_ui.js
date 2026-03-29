@@ -858,10 +858,12 @@ function getActionIcons(actions) {
 }
 
 function switchSpellSubtab(tab) {
-  document.getElementById('spell-subtab-class').classList.toggle('active', tab==='class');
-  document.getElementById('spell-subtab-ritual').classList.toggle('active', tab==='ritual');
-  document.getElementById('spell-content-class').style.display = tab==='class' ? '' : 'none';
-  document.getElementById('spell-content-ritual').style.display = tab==='ritual' ? '' : 'none';
+  ['class','focus','ritual'].forEach(t => {
+    const tabEl = document.getElementById('spell-subtab-'+t);
+    const contentEl = document.getElementById('spell-content-'+t);
+    if (tabEl) tabEl.classList.toggle('active', tab===t);
+    if (contentEl) contentEl.style.display = tab===t ? '' : 'none';
+  });
 }
 
 

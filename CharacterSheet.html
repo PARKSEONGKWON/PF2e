@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=17"></script>
+<script src="class_features_db.js?v=18"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1435,6 +1435,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <!-- Sub-tabs -->
       <div class="spell-subtabs">
         <span class="spell-subtab active" id="spell-subtab-class" onclick="switchSpellSubtab('class')">주문</span>
+        <span class="spell-subtab" id="spell-subtab-focus" onclick="switchSpellSubtab('focus')">집중 주문</span>
         <span class="spell-subtab" id="spell-subtab-ritual" onclick="switchSpellSubtab('ritual')">의식</span>
       </div>
 
@@ -1442,31 +1443,24 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <div id="spell-content-class">
         <!-- Header bar: DC / Attack + TEML -->
         <div class="spell-header-bar">
-          <div class="spell-dc-atk-box">
+          <div style="display:flex;align-items:center;gap:16px;">
             <div style="text-align:center;">
               <div class="spell-val-label">DC</div>
-              <div class="spell-val" id="spell-dc-val">10</div>
+              <div class="spell-val" id="spell-dc-val" style="font-size:22px;">10</div>
             </div>
-            <div style="text-align:center;">
-              <div class="spell-val-label">Attack</div>
-              <div class="spell-val" id="spell-atk-val">+0</div>
+            <div style="text-align:center;color:var(--text2);font-size:12px;">
+              (Attack <span id="spell-atk-val" style="font-weight:700;color:var(--text);">+0</span>)
             </div>
           </div>
           <div style="text-align:center;">
             <div class="spell-val-label">주문시전</div>
             <div class="prof-rank-text" id="rank-spell" style="font-size:16px;">미숙련</div>
           </div>
-          <div class="spell-header-stats">
-            <span class="spell-stat">FP
-              <input class="inline-edit" id="fp-cur" type="number" value="0" min="0" max="3" style="width:22px;font-size:11px;" oninput="save()">/<input class="inline-edit" id="fp-max" type="number" value="0" min="0" max="3" style="width:22px;font-size:11px;" oninput="save()">
-            </span>
+          <div style="display:flex;gap:12px;font-size:11px;color:var(--text2);">
+            <div style="text-align:center;"><div class="bd-label" id="spell-key-label">Wis</div><div class="bd-val" id="spell-key-val" style="font-weight:700;color:var(--text);">0</div></div>
+            <div style="text-align:center;"><div class="bd-label">Prof</div><div class="bd-val" id="spell-prof-val" style="font-weight:700;color:var(--text);">0</div></div>
+            <div style="text-align:center;"><div class="bd-label">Item</div><div class="bd-val" id="spell-item-val" style="font-weight:700;color:var(--text);">0</div></div>
           </div>
-        </div>
-        <!-- Breakdown row -->
-        <div class="spell-breakdown" id="spell-breakdown-row">
-          <div class="spell-breakdown-item"><span class="bd-label" id="spell-key-label">Wis</span><span class="bd-val" id="spell-key-val">0</span></div>
-          <div class="spell-breakdown-item"><span class="bd-label">Prof</span><span class="bd-val" id="spell-prof-val">0</span></div>
-          <div class="spell-breakdown-item"><span class="bd-label">Item</span><span class="bd-val" id="spell-item-val">0</span></div>
         </div>
         <!-- Controls: tradition / type selects (hidden but functional) -->
         <div class="spell-controls-row">
@@ -1501,18 +1495,40 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <!-- Spell Ranks 1~10 -->
         <div id="spell-ranks-container"></div>
 
-        <!-- Focus Spells -->
-        <div class="spell-rank-section" id="spell-focus-section">
-          <div class="spell-rank-header">집중 주문 <span class="en">Focus Spells</span></div>
-          <div style="padding:4px 12px;">
-            <span class="spell-stat" style="font-size:11px;">FP
-              <strong style="font-size:13px;"><span id="fp-cur-mirror">0</span>/<span id="fp-max-mirror">0</span></strong>
-            </span>
+      </div>
+
+      <!-- Focus Spells content (separate tab) -->
+      <div id="spell-content-focus" style="display:none;">
+        <!-- Focus header -->
+        <div class="spell-header-bar">
+          <div style="text-align:center;">
+            <div class="spell-val-label">집중 포인트 Focus Points</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;">
+              <input class="inline-edit" id="fp-cur" type="number" value="0" min="0" max="3" style="width:30px;font-size:16px;font-weight:700;text-align:center;" oninput="save()">
+              <span style="color:var(--text2);font-size:14px;">/</span>
+              <input class="inline-edit" id="fp-max" type="number" value="0" min="0" max="3" style="width:30px;font-size:16px;font-weight:700;text-align:center;" oninput="save()">
+            </div>
           </div>
+          <div style="text-align:center;">
+            <div class="spell-val-label">DC</div>
+            <div class="spell-val" id="spell-dc-val-focus">10</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="spell-val-label">주문시전</div>
+            <div class="prof-rank-text" id="rank-spell-focus" style="font-size:16px;">미숙련</div>
+          </div>
+        </div>
+        <!-- Focus Cantrips -->
+        <div class="spell-rank-section">
+          <div class="spell-rank-header">집중 캔트립 <span class="en">Focus Cantrips</span></div>
+          <div id="spells-focus-cantrips"></div>
+        </div>
+        <!-- Focus Spells -->
+        <div class="spell-rank-section">
+          <div class="spell-rank-header">집중 주문 <span class="en">Focus Spells</span></div>
           <div id="spells-focus"></div>
         </div>
-
-        <!-- Divine Font (Cleric only, rendered dynamically) -->
+        <!-- Divine Font (Cleric only) -->
         <div class="spell-rank-section" id="spell-divine-font-section" style="display:none;">
           <div class="spell-rank-header" style="background:var(--accent-bg);border-color:var(--accent);">
             ⛲ 신성 샘 <span class="en" id="divine-font-label">Divine Font</span>
@@ -1674,11 +1690,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=17"></script>
-<script src="cs_calc.js?v=17"></script>
-<script src="cs_ui.js?v=17"></script>
-<script src="cs_modal.js?v=17"></script>
-<script src="cs_save.js?v=17"></script>
+<script src="cs_data.js?v=18"></script>
+<script src="cs_calc.js?v=18"></script>
+<script src="cs_ui.js?v=18"></script>
+<script src="cs_modal.js?v=18"></script>
+<script src="cs_save.js?v=18"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
