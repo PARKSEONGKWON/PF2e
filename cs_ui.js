@@ -717,6 +717,7 @@ function createContainer(name) {
   if (!state.containers) state.containers = [];
   state.containers.push({name, items:[]});
   renderContainers();
+  renderEquip(); // 이동 드롭다운 갱신
   save();
   closeModal();
 }
@@ -736,9 +737,10 @@ function removeContainerItem(ci, ii) {
 }
 
 function removeContainer(ci) {
-  if (!confirm(state.containers[ci].name + ' 컨테이너를 삭제합니까?')) return;
+  if (!confirm(state.containers[ci].name + ' 배낭을 삭제합니까?')) return;
   state.containers.splice(ci, 1);
   renderContainers();
+  renderEquip();
   save();
 }
 
