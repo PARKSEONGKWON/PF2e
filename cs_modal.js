@@ -1,4 +1,148 @@
 // ═══════════════════════════════════════════════
+//  REST & CONDITION MODALS
+// ═══════════════════════════════════════════════
+
+function openRestModal() {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'rest';
+  document.getElementById('modal-title').textContent = '휴식 Rest';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = 'none';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+
+  const conMod = Math.max(1, getMod('con'));
+  const lv = getLevel();
+  const hpRecover = conMod * lv;
+
+  const container = document.getElementById('modal-options');
+  container.innerHTML = `<div style="padding:16px;">
+    <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px;border-left:3px solid var(--accent);padding-left:10px;">
+      캐릭터는 매일 8시간의 수면이 필요합니다. 휴식은 보통 밤에 하지만, 낮에도 같은 효과를 얻습니다. 24시간에 한 번만 휴식 효과를 받을 수 있습니다.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
+        <input type="checkbox" id="rest-hp" checked style="accent-color:var(--accent);width:18px;height:18px;">
+        HP를 건강 수정치 × 레벨만큼 회복 (${hpRecover} HP)
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
+        <input type="checkbox" id="rest-fatigue" checked style="accent-color:var(--accent);width:18px;height:18px;">
+        피로(Fatigued) 상태 해제
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
+        <input type="checkbox" id="rest-doomed" checked style="accent-color:var(--accent);width:18px;height:18px;">
+        파멸(Doomed)과 쇠약(Drained) 수치 1 감소
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
+        <input type="checkbox" id="rest-spells" checked style="accent-color:var(--accent);width:18px;height:18px;">
+        주문 슬롯 회복
+      </label>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button onclick="applyRest()" style="flex:1;padding:10px;background:var(--accent);color:#000;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">적용</button>
+      <button onclick="closeModal()" style="padding:10px 20px;background:var(--bg4);color:var(--text2);border:1px solid var(--border2);border-radius:4px;font-size:13px;cursor:pointer;">취소</button>
+    </div>
+  </div>`;
+
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.innerHTML = '';
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
+}
+
+function applyRest() {
+  if (document.getElementById('rest-hp')?.checked) {
+    const conMod = Math.max(1, getMod('con'));
+    const lv = getLevel();
+    const recover = conMod * lv;
+    const curEl = document.getElementById('hp-cur');
+    const maxEl = document.getElementById('hp-max');
+    if (curEl && maxEl) {
+      const maxHp = parseInt(maxEl.value || 0);
+      curEl.value = Math.min(maxHp, parseInt(curEl.value || 0) + recover);
+    }
+  }
+  if (document.getElementById('rest-fatigue')?.checked) {
+    if (state.conditions['피로']) { state.conditions['피로'] = 0; }
+  }
+  if (document.getElementById('rest-doomed')?.checked) {
+    if (state.conditions['파멸'] > 0) state.conditions['파멸'] = Math.max(0, state.conditions['파멸'] - 1);
+    if (state.conditions['쇠약'] > 0) state.conditions['쇠약'] = Math.max(0, state.conditions['쇠약'] - 1);
+  }
+  if (document.getElementById('rest-spells')?.checked) {
+    // 주문 슬롯 사용 초기화
+    state.spellSlotsUsed = {};
+    state.divineFontUsed = 0;
+  }
+  updateHpGauge();
+  buildConditions();
+  renderSpells();
+  recalcAll();
+  save();
+  closeModal();
+}
+
+function openConditionModal() {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'condition-pick';
+  document.getElementById('modal-title').textContent = '상태이상 추가';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = '';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+
+  renderConditionList();
+}
+
+function renderConditionList() {
+  const q = document.getElementById('modal-search')?.value?.toLowerCase() || '';
+  const container = document.getElementById('modal-options');
+  container.innerHTML = '';
+
+  CONDITIONS_DATA.forEach(c => {
+    if (q && !c.name.includes(q) && !c.en.toLowerCase().includes(q)) return;
+    const row = document.createElement('div');
+    row.className = 'opt-row';
+    row.style.cursor = 'pointer';
+    const current = state.conditions[c.name] || 0;
+    const isActive = c.valued ? current > 0 : current;
+    row.innerHTML = `
+      <div class="opt-row-icon" style="${isActive ? 'background:var(--red-bg);color:var(--red-light);' : ''}">${isActive ? '⚠' : '◻'}</div>
+      <div style="flex:1;">
+        <div class="opt-row-name">${c.name} <span style="color:var(--text2);font-size:10px;">${c.en}</span></div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px;">${c.desc.substring(0, 60)}...</div>
+      </div>
+      ${isActive ? '<span style="color:var(--red-light);font-size:11px;font-weight:600;">' + (c.valued ? current : '활성') + '</span>' : ''}`;
+    row.onclick = () => {
+      if (c.valued) {
+        state.conditions[c.name] = (state.conditions[c.name] || 0) + 1;
+        if (c.max && state.conditions[c.name] > c.max) state.conditions[c.name] = 0;
+      } else {
+        state.conditions[c.name] = state.conditions[c.name] ? 0 : 1;
+      }
+      buildConditions();
+      recalcAll();
+      save();
+      renderConditionList();
+    };
+    container.appendChild(row);
+  });
+
+  // 모바일 아코디언용: 검색 이벤트 연결
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl && !searchEl._condBound) {
+    searchEl.addEventListener('input', renderConditionList);
+    searchEl._condBound = true;
+  }
+}
+
+// ═══════════════════════════════════════════════
 //  CLASS FEATURES AUTO-APPLY
 // ═══════════════════════════════════════════════
 
