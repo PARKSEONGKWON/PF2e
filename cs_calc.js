@@ -712,8 +712,9 @@ function recalcAC() {
   const effectiveDex = stowed ? getMod('dex') : dexMod;
   const effectiveProf = stowed ? (parseInt(document.getElementById('prof-armor-unarmored')?.value||0) > 0 ? parseInt(document.getElementById('prof-armor-unarmored').value) + lv : 0) : profBonus;
 
-  // 방패 들기 보너스
-  const shieldBonus = (state.shieldRaised && !state.shieldStowed) ? parseInt(document.getElementById('shield-ac')?.value||0) : 0;
+  // 방패 들기 보너스 (파손 시 0)
+  const shieldBroken = state.equip?.some(e => e._equipped && e._type === 'shield' && e._broken);
+  const shieldBonus = (state.shieldRaised && !state.shieldStowed && !shieldBroken) ? parseInt(document.getElementById('shield-ac')?.value||0) : 0;
   const pen = getCondPenalty();
   const acPenalty = pen.all + pen.clumsy;
   const ac = 10 + effectiveDex + effectiveArmor + effectiveProf + shieldBonus - acPenalty;

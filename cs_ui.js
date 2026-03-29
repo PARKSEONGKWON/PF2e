@@ -559,11 +559,14 @@ function toggleBroken(i) {
     if (wIdx >= 0) state.weapons[wIdx]._broken = item._broken;
     renderWeapons();
   }
-  // 장착된 갑옷 파손 → AC 재계산
-  if (item._equipped && item._type === 'armor') {
+  // 장착된 갑옷/방패 파손 → AC 재계산
+  if (item._equipped && (item._type === 'armor' || item._type === 'shield')) {
+    renderArmorCard();
+    renderShieldCard();
     recalcAC();
   }
   renderEquip();
+  renderWeapons();
   save();
 }
 
@@ -1775,6 +1778,8 @@ function openPetHpModal(i) {
   if (listEl) { listEl.style.display = ''; listEl.style.width = '100%'; listEl.style.borderRight = 'none'; }
   const detail = document.getElementById('modal-detail');
   if (detail) detail.style.display = 'none';
+  const modalEl = document.querySelector('.modal');
+  if (modalEl && window.innerWidth > 900) { modalEl.style.maxWidth = '420px'; modalEl.style.height = 'auto'; }
 
   const inputStyle = 'flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;';
   const container = document.getElementById('modal-options');

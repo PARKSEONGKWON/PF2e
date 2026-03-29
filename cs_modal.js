@@ -94,6 +94,9 @@ function openConditionModal() {
   if (searchEl) searchEl.style.display = '';
   const fbar = document.getElementById('modal-filterbar');
   if (fbar) fbar.innerHTML = '';
+  // footer: 닫기만
+  const footer = document.querySelector('.modal-footer');
+  if (footer) footer.innerHTML = '<button class="btn btn-cancel" onclick="closeModal()">닫기</button>';
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = 'none';
   // PC: 리스트+디테일 모두 표시
@@ -301,9 +304,11 @@ function openHpModal() {
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = 'none';
   const listEl = document.querySelector('.modal-list');
-  if (listEl) listEl.style.display = '';
+  if (listEl) { listEl.style.display = ''; listEl.style.width = '100%'; listEl.style.borderRight = 'none'; }
   const detail = document.getElementById('modal-detail');
-  if (detail) detail.innerHTML = '';
+  if (detail) detail.style.display = 'none';
+  const modalEl = document.querySelector('.modal');
+  if (modalEl && window.innerWidth > 900) { modalEl.style.maxWidth = '420px'; modalEl.style.height = 'auto'; }
 
   const inputStyle = 'flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;';
   const container = document.getElementById('modal-options');
@@ -404,9 +409,11 @@ function openShieldHpModal() {
   const confirmBtn = document.querySelector('.btn-confirm');
   if (confirmBtn) confirmBtn.style.display = 'none';
   const listEl = document.querySelector('.modal-list');
-  if (listEl) listEl.style.display = '';
+  if (listEl) { listEl.style.display = ''; listEl.style.width = '100%'; listEl.style.borderRight = 'none'; }
   const detail = document.getElementById('modal-detail');
-  if (detail) detail.innerHTML = '';
+  if (detail) detail.style.display = 'none';
+  const modalEl = document.querySelector('.modal');
+  if (modalEl && window.innerWidth > 900) { modalEl.style.maxWidth = '420px'; modalEl.style.height = 'auto'; }
 
   const inputStyle = 'flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:14px;text-align:center;';
   const container = document.getElementById('modal-options');
@@ -468,6 +475,8 @@ function applyShieldSet() {
   updateShieldGauge(); save(); closeModal();
 }
 
+let _lastCondName = null;
+
 function toggleCondFromModal(name, dir) {
   const cdata = CONDITIONS_DATA.find(c => c.name === name);
   if (!cdata) return;
@@ -478,10 +487,27 @@ function toggleCondFromModal(name, dir) {
   } else {
     state.conditions[name] = dir > 0 ? 1 : 0;
   }
+  _lastCondName = name;
   buildConditions();
   recalcAll();
   save();
   renderConditionList();
+  // PC: 디테일 패인 즉시 갱신
+  if (window.innerWidth > 900) {
+    const c = cdata;
+    const curVal = state.conditions[c.name] || 0;
+    const statusText = c.valued ? `현재 수치: ${curVal}` + (c.max ? ` / ${c.max}` : '') : (curVal ? '활성' : '비활성');
+    const btnHtml = `<div style="display:flex;gap:6px;margin-top:12px;">
+      <button onclick="event.stopPropagation();toggleCondFromModal('${c.name}',1)" style="flex:1;padding:8px;background:var(--red-bg);color:var(--red-light);border:1px solid var(--red);border-radius:4px;cursor:pointer;font-size:12px;">${c.valued ? '+1 증가' : '적용'}</button>
+      <button onclick="event.stopPropagation();toggleCondFromModal('${c.name}',-1)" style="flex:1;padding:8px;background:var(--bg4);color:var(--text2);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-size:12px;">${c.valued ? '-1 감소' : '해제'}</button>
+    </div>`;
+    const detail = document.getElementById('modal-detail');
+    if (detail) {
+      detail.innerHTML = `<div class="modal-detail-title">${c.name}</div><div class="modal-detail-en">${c.en}</div>
+        <div style="font-size:11px;color:var(--red-light);margin:8px 0;">${statusText}</div>
+        <div class="modal-detail-desc">${c.desc}</div>${btnHtml}`;
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════
