@@ -725,18 +725,23 @@ function addContainer() {
       <span style="font-size:10px;color:var(--text2);">${p.desc}</span>
     </div>`).join('')}
     <hr class="divider" style="margin:12px 0;">
-    <div style="display:flex;gap:6px;">
+    <div style="display:flex;gap:6px;margin-bottom:8px;">
       <input id="container-custom-name" placeholder="직접 입력..." style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:4px;font-size:13px;"
         onkeydown="if(event.key==='Enter')createContainer(this.value)">
       <button onclick="createContainer(document.getElementById('container-custom-name').value)" style="padding:8px 16px;background:var(--accent);color:#000;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;">추가</button>
     </div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);cursor:pointer;">
+      <input type="checkbox" id="container-ignore-bulk" style="accent-color:var(--accent);width:16px;height:16px;">
+      이 배낭 안의 아이템 부피를 총 부피에 포함하지 않음
+    </label>
   </div>`;
 }
 
 function createContainer(name) {
   if (!name) return;
   if (!state.containers) state.containers = [];
-  state.containers.push({name, items:[]});
+  const ignoreBulk = document.getElementById('container-ignore-bulk')?.checked || false;
+  state.containers.push({name, items:[], ignoreBulk});
   renderContainers();
   renderEquip(); // 이동 드롭다운 갱신
   save();
@@ -788,7 +793,7 @@ function renderContainers() {
   state.containers.forEach((c, ci) => {
     let html = `<div class="box">
       <div class="box-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>📦 ${c.name}</span>
+        <span>📦 ${c.name}${c.ignoreBulk ? ' <span style="font-size:9px;color:var(--accent);font-weight:400;">(부피 미적용)</span>' : ''}</span>
         <span class="spell-del" onclick="removeContainer(${ci})" style="cursor:pointer;">✕</span>
       </div>`;
     c.items.forEach((item, ii) => {

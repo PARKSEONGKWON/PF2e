@@ -924,6 +924,16 @@ function recalcBulk() {
     const b = parseFloat(e.bulk||0);
     total += isNaN(b)?0:b;
   });
+  // 배낭 내 아이템 부피 (ignoreBulk가 아닌 경우만)
+  if (state.containers) {
+    state.containers.forEach(c => {
+      if (c.ignoreBulk) return;
+      c.items.forEach(e => {
+        const b = parseFloat(e.bulk||0);
+        total += isNaN(b)?0:b;
+      });
+    });
+  }
   document.getElementById('bulk-total').textContent = total.toFixed(1).replace('.0','');
   const maxBulk = getMod('str') + 5;
   document.getElementById('bulk-max').textContent = maxBulk;
