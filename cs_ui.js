@@ -50,8 +50,8 @@ function getArmorCategory(name) {
   if (!armor) return 'unarmored';
   const cat = armor.category || '';
   if (cat.includes('경갑') || cat.toLowerCase().includes('light')) return 'light';
-  if (cat.includes('重甲') || cat.includes('중갑(重甲)')) return 'heavy';
-  if (cat.includes('중갑') || cat.toLowerCase().includes('medium')) return 'medium';
+  if (cat.includes('重甲') || cat.includes('중갑')) return 'heavy';
+  if (cat.includes('평갑') || cat.toLowerCase().includes('medium')) return 'medium';
   return 'unarmored';
 }
 
