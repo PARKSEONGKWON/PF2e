@@ -849,37 +849,9 @@ function buildFeatFilters(ctx) {
 }
 
 function buildSpellFilters() {
+  // 필터 UI 없음 — 슬롯 타입에 맞게 자동 필터링
   const fbar = document.getElementById('modal-filterbar');
-  if (!fbar) return;
-  // 시트의 전통 자동 감지
-  const classTrad = state.selectedClass?.tradition || '';
-  const maxRank = Math.min(10, Math.ceil(getLevel() / 2));
-
-  fbar.innerHTML = `
-    <select id="filter-spell-trad" onchange="renderOptions(getOptionsData('spell'))">
-      <option value="">전체 계열</option>
-      <option value="arcane">비전</option><option value="divine">신성</option>
-      <option value="occult">비의</option><option value="primal">원시</option>
-    </select>
-    <select id="filter-spell-rank" onchange="renderOptions(getOptionsData('spell'))">
-      <option value="">전체 랭크</option>
-      ${[0,1,2,3,4,5,6,7,8,9,10].map(r=>`<option value="${r}">${r===0?'캔트립':'랭크 '+r}</option>`).join('')}
-    </select>
-    <select id="filter-spell-type" onchange="renderOptions(getOptionsData('spell'))">
-      <option value="">전체 유형</option>
-      <option value="cantrip">캔트립</option>
-      <option value="focus">집중</option>
-      <option value="regular">일반</option>
-    </select>
-    <label style="font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px;">
-      <input type="checkbox" id="filter-spell-auto" checked onchange="renderOptions(getOptionsData('spell'))"> 내 시트 기준
-    </label>`;
-
-  // 자동 필터: 시트의 전통 선택
-  if (classTrad && classTrad !== 'any') {
-    const tradSel = document.getElementById('filter-spell-trad');
-    if (tradSel) tradSel.value = classTrad;
-  }
+  if (fbar) fbar.innerHTML = '';
 }
 
 function buildWeaponFilters() {
@@ -908,19 +880,22 @@ function filterFeats() {
 function filterSpells() {
   if (typeof SPELL_DB==='undefined') return [];
   const q = document.getElementById('modal-search')?.value.toLowerCase()||'';
-  const trad = document.getElementById('filter-spell-trad')?.value||'';
-  const rank = document.getElementById('filter-spell-rank')?.value;
-  const stype = document.getElementById('filter-spell-type')?.value||'';
-  const autoFilter = document.getElementById('filter-spell-auto')?.checked;
-  const maxRank = autoFilter ? Math.min(10, Math.ceil(getLevel() / 2)) : 99;
+  const classTrad = state.selectedClass?.tradition || '';
+  const pending = typeof _spellSlotPending !== 'undefined' ? _spellSlotPending : null;
+  const slotType = pending?.type || '';  // 'cantrip', 'known', 'focus'
+  const slotRank = pending?.rank || 0;
+
   return SPELL_DB.filter(sp => {
-    if (trad && !sp.traditions?.includes(trad)) return false;
-    if (rank!==undefined && rank!=='' && sp.rank!==parseInt(rank)) return false;
-    if (stype==='cantrip' && !sp.is_cantrip) return false;
-    if (stype==='focus' && !sp.is_focus) return false;
-    if (stype==='regular' && (sp.is_cantrip||sp.is_focus)) return false;
-    // 내 시트 기준: 최대 랭크 제한
-    if (autoFilter && !sp.is_cantrip && !sp.is_focus && sp.rank > maxRank) return false;
+    // 클래스 전통 필터 (any면 모두 허용)
+    if (classTrad && classTrad !== 'any' && sp.traditions && !sp.traditions.includes(classTrad)) return false;
+    // 슬롯 타입별 필터
+    if (slotType === 'cantrip' && !sp.is_cantrip) return false;
+    if (slotType === 'focus' && !sp.is_focus) return false;
+    if (slotType === 'known') {
+      if (sp.is_cantrip || sp.is_focus) return false;
+      if (slotRank > 0 && sp.rank !== slotRank) return false;
+    }
+    // 검색어
     if (q && !sp.name_ko.includes(q) && !sp.name_en.toLowerCase().includes(q)) return false;
     return true;
   });
