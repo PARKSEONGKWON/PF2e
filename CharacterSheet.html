@@ -2927,6 +2927,8 @@ function applyClassFeatures() {
   const cls = state.selectedClass;
   if (!cls) return;
   const level = getLevel();
+  console.log('[applyClassFeatures] class:', cls.id, 'sub:', state.selectedSubclass?.id, 'lv:', level);
+  try {
 
   // Build combined prof table: class base + subclass overrides
   const profs = {};
@@ -2998,12 +3000,14 @@ function applyClassFeatures() {
       }
     }
   });
+  console.log('[applyClassFeatures] auto spells added — focus:', state.spells.focus.length, 'cantrip:', state.spells.cantrip.length);
   if (typeof renderSpells === 'function') renderSpells();
 
   // Update UI badges
   if (typeof initWeaponProfBadges === 'function') initWeaponProfBadges();
   if (typeof initArmorProfBadges === 'function') initArmorProfBadges();
   recalcAll();
+  } catch(e) { console.error('[applyClassFeatures] ERROR:', e); }
 }
 
 function onLevelChange() {

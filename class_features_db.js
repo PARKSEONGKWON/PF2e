@@ -7,7 +7,7 @@
 //  target = DOM element suffix (prof-{target})
 // ═══════════════════════════════════════════════
 
-const CLASS_PROF_TABLE = {
+var CLASS_PROF_TABLE = {
   bard: {
     fort:{1:2, 9:4},
     ref:{1:2, 3:4},
@@ -97,7 +97,7 @@ const CLASS_PROF_TABLE = {
 //  Entries REPLACE (not merge) the class entry for that target
 // ═══════════════════════════════════════════════
 
-const SUBCLASS_PROF_TABLE = {
+var SUBCLASS_PROF_TABLE = {
   // ── 클레릭 교리 ──
   'doctrine-cloistered': {
     spatk:{1:2, 3:4, 15:6, 19:8},   // 빠른 주문 성장
@@ -126,7 +126,7 @@ const SUBCLASS_PROF_TABLE = {
 //  type: 'feat' = auto-granted feat, undefined = display-only
 // ═══════════════════════════════════════════════
 
-const CLASS_FEATURE_NAMES = {
+var CLASS_FEATURE_NAMES = {
   bard: [
     {lv:1, name_ko:'오컬트 주문시전', name_en:'Occult Spellcasting'},
     {lv:1, name_ko:'작곡 주문', name_en:'Composition Spells'},
@@ -270,7 +270,7 @@ const CLASS_FEATURE_NAMES = {
 //  AUTO-GRANTED FEATS — class features that grant feats
 // ═══════════════════════════════════════════════
 
-const CLASS_AUTO_FEATS = {
+var CLASS_AUTO_FEATS = {
   fighter: [
     {lv:1, name_ko:'방패 막기', name_en:'Shield Block', category:'class'},
     {lv:1, name_ko:'기회 공격', name_en:'Attack of Opportunity', category:'class'},
@@ -289,7 +289,7 @@ const CLASS_AUTO_FEATS = {
 };
 
 // Subclass auto-granted feats
-const SUBCLASS_AUTO_FEATS = {
+var SUBCLASS_AUTO_FEATS = {
   'muse-maestro': [{lv:1, name_ko:'여운 주문', name_en:'Lingering Composition', category:'class'}],
   'muse-enigma':  [{lv:1, name_ko:'바드 지식', name_en:'Bardic Lore', category:'class'}],
 };
@@ -299,14 +299,14 @@ const SUBCLASS_AUTO_FEATS = {
 //  type: 'cantrip' | 'focus' | 'known'
 // ═══════════════════════════════════════════════
 
-const CLASS_AUTO_SPELLS = {
+var CLASS_AUTO_SPELLS = {
   // Bard: Inspire Courage composition cantrip at L1
   bard: [
     {lv:1, type:'cantrip', name_ko:'용기 부여', name_en:'Inspire Courage'},
   ],
 };
 
-const SUBCLASS_AUTO_SPELLS = {
+var SUBCLASS_AUTO_SPELLS = {
   // ── 바드 뮤즈 ──
   'muse-maestro': [{lv:1, type:'focus', name_ko:'영웅적 영감', name_en:'Inspire Heroics'}],
   'muse-warrior': [{lv:1, type:'cantrip', name_ko:'방어 부여', name_en:'Inspire Defense'}],
@@ -340,7 +340,7 @@ const SUBCLASS_AUTO_SPELLS = {
 //  SUBCLASS FEATURE NAMES — for display
 // ═══════════════════════════════════════════════
 
-const SUBCLASS_FEATURE_NAMES = {
+var SUBCLASS_FEATURE_NAMES = {
   // ── 바드 뮤즈 ──
   'muse-enigma':  [{lv:1, name_ko:'바드 지식 (자유 지식 기술)', name_en:'Bardic Lore'}],
   'muse-maestro': [{lv:1, name_ko:'여운 주문 재주', name_en:'Lingering Composition'}],
