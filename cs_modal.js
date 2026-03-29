@@ -963,13 +963,13 @@ function renderGrowthPlan() {
       </div>`;
     }
 
-    // Ancestry Feat
-    if (plan.ancestryFeat) {
+    // Ancestry Feat (혈통 선택 시에만)
+    if (plan.ancestryFeat && state.selectedAncestry) {
       html += growthFeatSlotHTML(lv, 'ancestryFeat', '🧬', '혈통 재주 Ancestry Feat', 'ancestry', g.ancestryFeat);
     }
 
-    // Class Feat
-    if (plan.classFeat) {
+    // Class Feat (클래스 선택 시에만)
+    if (plan.classFeat && state.selectedClass) {
       html += growthFeatSlotHTML(lv, 'classFeat', '⚔', '클래스 재주 Class Feat', 'class', g.classFeat);
     }
 
