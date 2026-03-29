@@ -1109,7 +1109,6 @@ function renderSpells() {
         const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
         const actions = getActionIcons(spellData?.actions);
         row.innerHTML = `
-          ${isAuto ? '<span style="color:var(--accent);font-size:9px;font-weight:700;width:30px;text-align:center;flex-shrink:0;">⚡</span>' : ''}
           <span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
           <span class="spell-slot-dur">\u2014</span>
           <span class="spell-slot-range">\u2014</span>
@@ -1315,7 +1314,6 @@ function renderSpellSlotList(elId, arr, type) {
     const row = document.createElement('div');
     row.className = 'spell-slot-row';
     row.innerHTML = `
-      ${isAuto ? '<span style="color:var(--accent);font-size:9px;font-weight:700;width:30px;text-align:center;flex-shrink:0;">⚡</span>' : ''}
       <span class="spell-slot-name" onclick="showInfo('spell','${s.name.replace(/'/g,"\\'")}')">${s.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
       <span class="spell-slot-dur">\u2014</span>
       <span class="spell-slot-range">\u2014</span>
@@ -1357,7 +1355,6 @@ function renderFeats() {
       if (isAuto) {
         div.innerHTML = `
           <div style="display:flex;align-items:center;gap:4px;width:100%;margin-bottom:2px;">
-            <span style="color:var(--accent);font-size:10px;font-weight:700;flex-shrink:0;">⚡자동</span>
             <span style="flex:1;color:var(--text);font-size:12px;">${f.name}</span>
           </div>
           <div class="feat-src"><span style="color:var(--text2);font-size:10px;">Lv ${f.level||1} — 클래스 특성</span></div>`;

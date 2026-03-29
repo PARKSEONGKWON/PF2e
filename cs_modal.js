@@ -1369,6 +1369,8 @@ function buildFeatFilters(ctx) {
   if (catSel && lvSel) {
     if (ctx === 'class' && state.selectedClass) {
       catSel.value = state.selectedClass.id;
+    } else if (ctx === 'ancestry') {
+      catSel.value = 'ancestry';
     } else if (ctx === 'general') {
       catSel.value = 'general';
     } else if (ctx === 'skill') {
