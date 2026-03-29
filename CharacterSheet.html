@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=12"></script>
+<script src="class_features_db.js?v=13"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1156,6 +1156,13 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <!-- ═══ LEFT SIDEBAR: Build Plan ═══ -->
   <div id="sidebar">
     <div id="growth-plan"></div>
+    <!-- 언어 -->
+    <div class="box">
+      <div class="box-title">언어 Languages</div>
+      <div style="font-size:10px;color:var(--text2);margin-bottom:6px;">기본 언어 + 지능 수정치만큼 추가 선택</div>
+      <div id="language-list"></div>
+      <button class="add-btn" onclick="addLanguage()" style="margin-top:4px;">+ 언어 추가</button>
+    </div>
   </div><!-- /#sidebar -->
 
   <!-- ═══ CENTER: Stats + Skills (always visible on desktop) ═══ -->
@@ -1322,16 +1329,10 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <div id="skills-list"></div>
     </div>
 
-    <!-- Languages / Traits -->
-    <div class="box">
-      <div class="box-title">언어 / 특성</div>
-      <textarea class="notes-area" id="f-languages" placeholder="언어, 특성 기록..." style="min-height:55px;" oninput="save()"></textarea>
-    </div>
-
-    <!-- Notes -->
-    <div class="box">
-      <div class="box-title">메모</div>
-      <textarea class="notes-area" id="f-notes" placeholder="메모..." style="min-height:70px;" oninput="save()"></textarea>
+    <!-- Active Conditions -->
+    <div class="box" id="active-conditions-box" style="display:none;">
+      <div class="box-title">활성 상태이상 Active Conditions</div>
+      <div id="active-conditions-list"></div>
     </div>
 
   </div><!-- /#center-col -->
@@ -1680,11 +1681,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=12"></script>
-<script src="cs_calc.js?v=12"></script>
-<script src="cs_ui.js?v=12"></script>
-<script src="cs_modal.js?v=12"></script>
-<script src="cs_save.js?v=12"></script>
+<script src="cs_data.js?v=13"></script>
+<script src="cs_calc.js?v=13"></script>
+<script src="cs_ui.js?v=13"></script>
+<script src="cs_modal.js?v=13"></script>
+<script src="cs_save.js?v=13"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

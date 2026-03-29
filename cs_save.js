@@ -79,7 +79,7 @@ function collectData() {
     selectedAncestry:   state.selectedAncestry?.id   || null,
     selectedBackground: state.selectedBackground?.id || null,
     selectedHeritage:   state.selectedHeritage?.id   || null,
-    weapons: state.weapons, equip: state.equip, containers: state.containers || [], formulas: state.formulas || [],
+    weapons: state.weapons, equip: state.equip, containers: state.containers || [], formulas: state.formulas || [], languages: state.languages || [],
     spells: state.spells, spellSlots: state.spellSlots, spellSlotsUsed: state.spellSlotsUsed, cantripSlots: state.cantripSlots || 5,
     feats: state.feats, conditions: state.conditions,
     growth: state.growth,
@@ -308,6 +308,7 @@ function loadData(d) {
     if (d.equip) { state.equip = d.equip; renderEquip(); }
     if (d.containers) { state.containers = d.containers; if (typeof renderContainers === 'function') renderContainers(); }
     if (d.formulas) { state.formulas = d.formulas; if (typeof renderFormulas === 'function') renderFormulas(); }
+    if (d.languages) { state.languages = d.languages; if (typeof renderLanguages === 'function') renderLanguages(); }
     if (d.spells) { state.spells = d.spells; }
     if (d.spellSlots) state.spellSlots = d.spellSlots;
     if (d.spellSlotsUsed) state.spellSlotsUsed = d.spellSlotsUsed;
@@ -385,5 +386,6 @@ window.onload = function() {
   renderFeats();
   renderContainers();
   renderFormulas();
+  renderLanguages();
   recalcAll();
 };

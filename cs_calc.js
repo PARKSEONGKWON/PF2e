@@ -215,6 +215,31 @@ function buildConditions() {
 
     grid.appendChild(item);
   });
+  renderActiveConditions();
+}
+
+function renderActiveConditions() {
+  const box = document.getElementById('active-conditions-box');
+  const list = document.getElementById('active-conditions-list');
+  if (!box || !list) return;
+  const active = CONDITIONS_DATA.filter(c => {
+    const v = state.conditions[c.name] || 0;
+    return c.valued ? v > 0 : !!v;
+  });
+  if (active.length === 0) {
+    box.style.display = 'none';
+    return;
+  }
+  box.style.display = '';
+  list.innerHTML = active.map(c => {
+    const v = state.conditions[c.name];
+    const valText = c.valued ? ` ${v}` : '';
+    return `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <span style="color:var(--red-light);font-weight:600;min-width:60px;">⚠ ${c.name}${valText}</span>
+      <span style="color:var(--text2);font-size:10px;flex:1;">${c.desc.substring(0, 80)}...</span>
+      <span style="cursor:pointer;color:var(--text2);font-size:10px;" onclick="state.conditions['${c.name}']=0;buildConditions();save();">✕</span>
+    </div>`;
+  }).join('');
 }
 
 function toggleCondValue(name) {

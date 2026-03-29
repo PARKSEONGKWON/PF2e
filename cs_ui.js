@@ -702,6 +702,90 @@ function removeFormula(i) {
   save();
 }
 
+// ── 언어 ──
+const COMMON_LANGUAGES = ['공용어','드워프어','엘프어','노움어','고블린어','하플링어','요툰어','오크어'];
+const UNCOMMON_LANGUAGES = ['아클로어','크토니안어','드라코닉어','천상어','페이어','콜로어','네크릴어','페트란어','사크브로스어','숲요정어'];
+
+function addLanguage() {
+  if (!state.languages) state.languages = [];
+  const all = [...COMMON_LANGUAGES, ...UNCOMMON_LANGUAGES].filter(l => !state.languages.includes(l));
+  if (all.length === 0) { alert('선택 가능한 언어가 없습니다.'); return; }
+
+  // 모달로 선택
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'language-pick';
+  document.getElementById('modal-title').textContent = '언어 선택';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; }
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+
+  renderLanguagePickList();
+}
+
+function renderLanguagePickList() {
+  if (!state.languages) state.languages = [];
+  const q = document.getElementById('modal-search')?.value?.toLowerCase() || '';
+  const container = document.getElementById('modal-options');
+  container.innerHTML = '';
+
+  const addSection = (title, langs) => {
+    const filtered = langs.filter(l => !state.languages.includes(l) && (!q || l.includes(q)));
+    if (filtered.length === 0) return;
+    const header = document.createElement('div');
+    header.className = 'opt-section-header';
+    header.textContent = title;
+    container.appendChild(header);
+    filtered.forEach(l => {
+      const row = document.createElement('div');
+      row.className = 'opt-row';
+      row.style.cursor = 'pointer';
+      row.innerHTML = `<div class="opt-row-name">${l}</div>`;
+      row.onclick = () => {
+        state.languages.push(l);
+        renderLanguages();
+        save();
+        closeModal();
+      };
+      container.appendChild(row);
+    });
+  };
+  addSection('일반 언어', COMMON_LANGUAGES);
+  addSection('비일반 언어', UNCOMMON_LANGUAGES);
+
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl && !searchEl._langBound) {
+    searchEl.addEventListener('input', renderLanguagePickList);
+    searchEl._langBound = true;
+  }
+}
+
+function removeLanguage(i) {
+  if (!state.languages) return;
+  state.languages.splice(i, 1);
+  renderLanguages();
+  save();
+}
+
+function renderLanguages() {
+  const el = document.getElementById('language-list');
+  if (!el) return;
+  if (!state.languages) state.languages = [];
+  if (state.languages.length === 0) {
+    el.innerHTML = '<div style="font-size:10px;color:var(--text2);text-align:center;padding:4px;">언어를 추가하세요</div>';
+    return;
+  }
+  el.innerHTML = state.languages.map((l, i) =>
+    `<div style="display:flex;align-items:center;gap:4px;padding:2px 4px;font-size:12px;border-bottom:1px solid var(--border);">
+      <span style="flex:1;color:var(--text);">${l}</span>
+      <span class="spell-del" onclick="removeLanguage(${i})" style="cursor:pointer;">✕</span>
+    </div>`
+  ).join('');
+}
+
 function renderFormulas() {
   const el = document.getElementById('formula-list');
   if (!el) return;
