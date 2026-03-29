@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=8"></script>
+<script src="class_features_db.js?v=9"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -658,16 +658,21 @@ body{
    EQUIPMENT
    ══════════════════════════════════ */
 .equip-row{
-  display:flex;gap:6px;align-items:center;padding:3px 4px;
+  display:flex;gap:6px;align-items:center;padding:6px 4px;
   border-bottom:1px solid var(--border);font-size:12px;
 }
-.equip-row input{background:transparent;border:none;color:var(--text);outline:none;font-size:12px;}
-.equip-btn{cursor:pointer;font-size:14px;color:var(--text2);width:20px;text-align:center;user-select:none;}
-.equip-btn:hover{color:var(--accent);}
-.equip-btn.equipped{color:var(--accent);}
-.eq-name{flex:2;}
-.eq-bulk{width:30px;text-align:center;color:var(--text2);}
-.eq-qty{width:30px;text-align:center;}
+.qty-btn{
+  width:24px;height:24px;border:1px solid var(--border2);border-radius:4px;
+  background:var(--bg4);color:var(--text);font-size:14px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.qty-btn:hover{border-color:var(--accent);color:var(--accent);}
+.equip-toggle{
+  font-size:10px;padding:3px 8px;border:1px solid var(--border2);border-radius:4px;
+  background:var(--bg4);color:var(--text2);cursor:pointer;white-space:nowrap;
+}
+.equip-toggle:hover{border-color:var(--accent);color:var(--accent);}
+.equip-toggle.equipped{background:var(--accent-bg);color:var(--accent);border-color:var(--accent);}
 .currency-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
 .currency-box{
   background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
@@ -1556,12 +1561,6 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <!-- 메인 인벤토리 -->
       <div class="box">
         <div class="box-title">메인 인벤토리 Main Inventory</div>
-        <div style="display:flex;gap:4px;padding:3px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);margin-bottom:4px;">
-          <span style="flex:3;">아이템 이름</span>
-          <span style="width:36px;text-align:center;">수량</span>
-          <span style="width:36px;text-align:center;">부피</span>
-          <span style="width:20px;"></span>
-        </div>
         <div id="equip-list"></div>
       </div>
       <!-- 컨테이너 목록 -->
@@ -1680,11 +1679,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=8"></script>
-<script src="cs_calc.js?v=8"></script>
-<script src="cs_ui.js?v=8"></script>
-<script src="cs_modal.js?v=8"></script>
-<script src="cs_save.js?v=8"></script>
+<script src="cs_data.js?v=9"></script>
+<script src="cs_calc.js?v=9"></script>
+<script src="cs_ui.js?v=9"></script>
+<script src="cs_modal.js?v=9"></script>
+<script src="cs_save.js?v=9"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

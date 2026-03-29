@@ -502,24 +502,48 @@ function renderEquip() {
   state.equip.forEach((e,i) => {
     const row = document.createElement('div');
     row.className = 'equip-row';
-    const isWeapon = e._type === 'weapon';
-    const isArmor = e._type === 'armor';
-    const isShield = e._type === 'shield';
+    const isEquippable = e._type === 'weapon' || e._type === 'armor' || e._type === 'shield';
     const equipped = e._equipped;
-    const equipBtn = (isWeapon || isArmor || isShield)
-      ? `<span class="equip-btn ${equipped?'equipped':''}" onclick="toggleEquip(${i})" title="${equipped?'장착 해제':'장착'}">${equipped?(isShield?'🛡':'⚔'):'◻'}</span>`
-      : '';
-    const eqType = isWeapon ? 'weapon' : (isArmor ? 'armor' : (isShield ? 'shield' : 'gear'));
+    const eqType = e._type === 'weapon' ? 'weapon' : (e._type === 'armor' ? 'armor' : (e._type === 'shield' ? 'shield' : 'gear'));
     const eqEscName = (e.name||'').replace(/'/g,"\\'");
+    const bulkDisplay = e.bulk === 'L' ? 'L' : (e.bulk || '—');
+
+    let equipBtnHtml = '';
+    if (isEquippable) {
+      equipBtnHtml = equipped
+        ? `<button class="equip-toggle equipped" onclick="event.stopPropagation();toggleEquip(${i})">장착 해제</button>`
+        : `<button class="equip-toggle" onclick="event.stopPropagation();toggleEquip(${i})">장착</button>`;
+    }
+
     row.innerHTML = `
-      <input class="eq-name" placeholder="아이템 이름" value="${e.name||''}" style="flex:3;cursor:pointer;" oninput="state.equip[${i}].name=this.value;recalcBulk();save()" onclick="showInfo('${eqType}','${eqEscName}')">
-      <input class="eq-qty" type="number" min="0" value="${e.qty||1}" style="width:36px;text-align:center;" oninput="state.equip[${i}].qty=parseInt(this.value);save()">
-      <input class="eq-bulk" type="number" min="0" step="0.1" value="${e.bulk||0}" style="width:36px;text-align:center;" oninput="state.equip[${i}].bulk=parseFloat(this.value);recalcBulk();save()">
-      ${equipBtn}
-      <span class="spell-del" onclick="removeEquip(${i})">✕</span>`;
+      <div style="display:flex;align-items:center;gap:6px;flex:1;cursor:pointer;" onclick="showInfo('${eqType}','${eqEscName}')">
+        <span style="flex:1;font-size:12px;color:var(--text);">${e.name||'아이템'}</span>
+        <span style="font-size:10px;color:var(--text2);min-width:24px;text-align:center;">${bulkDisplay}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:2px;">
+        <button class="qty-btn" onclick="event.stopPropagation();changeQty(${i},-1)">−</button>
+        <span style="min-width:20px;text-align:center;font-size:13px;font-weight:600;color:var(--text);">${e.qty||1}</span>
+        <button class="qty-btn" onclick="event.stopPropagation();changeQty(${i},1)">+</button>
+      </div>
+      ${equipBtnHtml}`;
     list.appendChild(row);
   });
   recalcBulk();
+}
+
+function changeQty(i, delta) {
+  const item = state.equip[i];
+  if (!item) return;
+  const newQty = (item.qty || 1) + delta;
+  if (newQty <= 0) {
+    if (confirm(item.name + '을(를) 제거하시겠습니까?')) {
+      removeEquip(i);
+    }
+    return;
+  }
+  item.qty = newQty;
+  renderEquip();
+  save();
 }
 
 function toggleEquip(i) {
