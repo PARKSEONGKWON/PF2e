@@ -167,6 +167,7 @@ function loadData(d) {
         }
       }
       initArmorProfBadges();
+      if (typeof syncAllTeml === 'function') syncAllTeml();
     }
     // Skills
     if (d.skillProfs) {
@@ -345,6 +346,7 @@ window.onload = function() {
   buildSkills();
   buildConditions();
   buildSpellSlots();
+  initAllTemlButtons();
   initWeaponProfBadges();
   initArmorProfBadges();
   renderArmorCard();

@@ -104,6 +104,7 @@ function applyClassFeatures() {
   // Update UI badges
   if (typeof initWeaponProfBadges === 'function') initWeaponProfBadges();
   if (typeof initArmorProfBadges === 'function') initArmorProfBadges();
+  if (typeof syncAllTeml === 'function') syncAllTeml();
   recalcAll();
   } catch(e) { console.error('[applyClassFeatures] ERROR:', e); }
 }
