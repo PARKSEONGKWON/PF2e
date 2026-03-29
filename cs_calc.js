@@ -36,6 +36,9 @@ function syncAllProfRanks() {
   const typeSel = document.getElementById('spell-type');
   const typeDisp = document.getElementById('spell-type-display');
   if (typeSel && typeDisp) typeDisp.textContent = typeSel.selectedOptions[0]?.textContent || '—';
+  // 크기 표시
+  const sizeEl = document.getElementById('char-size');
+  if (sizeEl) sizeEl.textContent = state.selectedAncestry?.size || state.size || '중형';
   // 내성/지각/클래스DC 배지
   ['fort','ref','will','perc','classdc'].forEach(k => syncProfRankBadge('rank-'+k, 'prof-'+k));
   // 기술 배지

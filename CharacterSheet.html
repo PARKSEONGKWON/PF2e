@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=19"></script>
+<script src="class_features_db.js?v=20"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1262,6 +1262,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <span class="stat-label">이동 속도</span>
         <input class="inline-edit" id="speed" type="number" value="25" style="width:40px;" oninput="save()">
         <span style="font-size:11px;color:var(--text2);">피트</span>
+        <span style="margin-left:12px;font-size:11px;color:var(--text2);">크기:</span>
+        <span style="font-size:11px;font-weight:600;color:var(--text);" id="char-size">중형</span>
       </div>
       <div class="stat-row" style="flex-wrap:wrap;">
         <span class="stat-label">영웅 점수</span>
@@ -1269,10 +1271,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <span class="hero-star" onclick="toggleHeroStar(2)">★</span>
         <span class="hero-star" onclick="toggleHeroStar(3)">★</span>
         <input type="hidden" id="hero-points" value="0">
-        <span style="font-size:10px;color:var(--text2);margin-left:8px;">빈사</span>
-        <input class="inline-edit" id="dying" type="number" value="0" min="0" max="4" style="width:28px;" oninput="save()">
-        <span style="font-size:10px;color:var(--text2);">부상</span>
-        <input class="inline-edit" id="wounded" type="number" value="0" min="0" max="3" style="width:28px;" oninput="save()">
+        <input type="hidden" id="dying" value="0">
+        <input type="hidden" id="wounded" value="0">
       </div>
     </div>
 
@@ -1414,19 +1414,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
           <!-- Shield Card -->
           <div class="defense-card" id="shield-card"></div>
         </div>
-        <div>
-          <!-- Conditions -->
-          <div class="defense-conditions">
-            <div class="box">
-              <div class="box-title">상태 이상 Conditions</div>
-              <div class="condition-grid" id="conditions-grid"></div>
-            </div>
-            <div class="box">
-              <div class="box-title">전투 메모</div>
-              <textarea class="notes-area" id="combat-notes" placeholder="전술, 특수 능력..." style="min-height:120px;" oninput="save()"></textarea>
-            </div>
-          </div>
-        </div>
+        <!-- conditions-grid hidden but kept for buildConditions() -->
+        <div id="conditions-grid" style="display:none;"></div>
       </div>
     </div><!-- /#panel-defense -->
 
@@ -1684,11 +1673,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=19"></script>
-<script src="cs_calc.js?v=19"></script>
-<script src="cs_ui.js?v=19"></script>
-<script src="cs_modal.js?v=19"></script>
-<script src="cs_save.js?v=19"></script>
+<script src="cs_data.js?v=20"></script>
+<script src="cs_calc.js?v=20"></script>
+<script src="cs_ui.js?v=20"></script>
+<script src="cs_modal.js?v=20"></script>
+<script src="cs_save.js?v=20"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
