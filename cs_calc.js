@@ -576,6 +576,7 @@ function recalcAll() {
   updateShieldGauge();
   renderWeapons();
   renderGrowthPlan();
+  syncAllProfRanks();
   // 행동 탭이 활성화된 경우에만 재렌더
   if (document.getElementById('panel-actions')?.classList.contains('active')) renderActions();
 }
