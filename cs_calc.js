@@ -36,9 +36,14 @@ function syncAllProfRanks() {
   const typeSel = document.getElementById('spell-type');
   const typeDisp = document.getElementById('spell-type-display');
   if (typeSel && typeDisp) typeDisp.textContent = typeSel.selectedOptions[0]?.textContent || '—';
-  // 크기 표시
+  // 크기 + 이동속도 표시
   const sizeEl = document.getElementById('char-size');
   if (sizeEl) sizeEl.textContent = state.selectedAncestry?.size || state.size || '중형';
+  const speedDisp = document.getElementById('speed-display');
+  const speedVal = document.getElementById('speed');
+  if (speedDisp && speedVal) speedDisp.textContent = speedVal.value || '25';
+  // 방패 정보 표시
+  updateShieldInfo();
   // 내성/지각/클래스DC 배지
   ['fort','ref','will','perc','classdc'].forEach(k => syncProfRankBadge('rank-'+k, 'prof-'+k));
   // 기술 배지
@@ -677,7 +682,9 @@ function recalcAC() {
   const effectiveDex = stowed ? getMod('dex') : dexMod;
   const effectiveProf = stowed ? (parseInt(document.getElementById('prof-armor-unarmored')?.value||0) > 0 ? parseInt(document.getElementById('prof-armor-unarmored').value) + lv : 0) : profBonus;
 
-  const ac = 10 + effectiveDex + effectiveArmor + effectiveProf;
+  // 방패 들기 보너스
+  const shieldBonus = (state.shieldRaised && !state.shieldStowed) ? parseInt(document.getElementById('shield-ac')?.value||0) : 0;
+  const ac = 10 + effectiveDex + effectiveArmor + effectiveProf + shieldBonus;
   document.getElementById('val-ac').textContent = ac;
 
   // Update AC breakdown display
@@ -869,6 +876,32 @@ function updateHP() {
     }
   }
   checkHpZero();
+}
+
+function updateShieldInfo() {
+  const shieldName = document.getElementById('shield-name')?.value || '';
+  const infoRow = document.getElementById('shield-info-row');
+  const raiseBtn = document.getElementById('shield-raise-btn');
+  if (infoRow) infoRow.style.display = shieldName ? '' : 'none';
+  if (raiseBtn) {
+    raiseBtn.style.display = shieldName ? '' : 'none';
+    const raised = state.shieldRaised || false;
+    raiseBtn.style.background = raised ? 'var(--accent-bg)' : 'var(--bg4)';
+    raiseBtn.style.color = raised ? 'var(--accent)' : 'var(--text2)';
+    raiseBtn.style.borderColor = raised ? 'var(--accent)' : 'var(--border2)';
+    raiseBtn.textContent = raised ? '🛡 방패 내리기' : '🛡 방패 들기';
+  }
+  const acDisp = document.getElementById('shield-ac-display');
+  const hardDisp = document.getElementById('shield-hard-display');
+  if (acDisp) acDisp.textContent = '+' + (document.getElementById('shield-ac')?.value || '0');
+  if (hardDisp) hardDisp.textContent = document.getElementById('shield-hard')?.value || '0';
+}
+
+function toggleShieldRaise() {
+  state.shieldRaised = !state.shieldRaised;
+  recalcAC();
+  updateShieldInfo();
+  save();
 }
 
 function checkHpZero() {

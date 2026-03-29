@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=25"></script>
+<script src="class_features_db.js?v=26"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1226,14 +1226,12 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <div class="ac-shield" id="val-ac">10</div>
         <div>
           <div class="ac-label">방어도 (AC)</div>
-          <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
-            <select class="prof-sel" id="prof-ac" onchange="recalcAC();save()">
-              <option value="0">미숙련</option><option value="2">숙련</option>
-              <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-            </select>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+            <button id="shield-raise-btn" onclick="toggleShieldRaise()" style="padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;background:var(--bg4);color:var(--text2);border:1px solid var(--border2);">🛡 방패 들기</button>
           </div>
         </div>
       </div>
+      <select id="prof-ac" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
 
       <!-- HP Gauge -->
       <div class="hp-gauge-wrap">
@@ -1260,11 +1258,19 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         </div>
         <input type="hidden" id="shield-hp-cur" value="0">
       </div>
+      <!-- 방패 정보 (장착 시) -->
+      <div id="shield-info-row" style="display:none;padding:2px 0;">
+        <div style="display:flex;gap:12px;justify-content:center;font-size:11px;color:var(--text2);">
+          <span>방패 AC: <strong style="color:var(--text);" id="shield-ac-display">+0</strong></span>
+          <span>경도: <strong style="color:var(--text);" id="shield-hard-display">0</strong></span>
+        </div>
+      </div>
 
       <div class="stat-row">
         <span class="stat-label">이동 속도</span>
-        <input class="inline-edit" id="speed" type="number" value="25" style="width:40px;" oninput="save()">
+        <span style="font-size:15px;font-weight:700;color:var(--text);" id="speed-display">25</span>
         <span style="font-size:11px;color:var(--text2);">피트</span>
+        <input type="hidden" id="speed" value="25">
         <span style="margin-left:12px;font-size:11px;color:var(--text2);">크기:</span>
         <span style="font-size:11px;font-weight:600;color:var(--text);" id="char-size">중형</span>
       </div>
@@ -1671,11 +1677,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=25"></script>
-<script src="cs_calc.js?v=25"></script>
-<script src="cs_ui.js?v=25"></script>
-<script src="cs_modal.js?v=25"></script>
-<script src="cs_save.js?v=25"></script>
+<script src="cs_data.js?v=26"></script>
+<script src="cs_calc.js?v=26"></script>
+<script src="cs_ui.js?v=26"></script>
+<script src="cs_modal.js?v=26"></script>
+<script src="cs_save.js?v=26"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
