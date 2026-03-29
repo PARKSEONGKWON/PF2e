@@ -400,5 +400,6 @@ window.onload = function() {
   renderLanguages();
   renderPets();
   recalcAll();
+  renderGrowthPlan();
   _loadComplete = true;
 };

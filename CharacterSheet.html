@@ -1759,11 +1759,13 @@ function loadFromCloud() {
     } else {
       status.textContent = '이 슬롯은 비어있습니다.';
       status.style.color = '#888';
+      recalcAll();
     }
   }).catch(function(e) {
     status.textContent = '새 캐릭터';
     status.style.color = '#888';
     console.warn('[loadFromCloud] empty or error:', e);
+    recalcAll();
   });
 }
 
