@@ -665,25 +665,26 @@ body{
 /* ══════════════════════════════════
    CONDITIONS
    ══════════════════════════════════ */
-.condition-grid{display:flex;flex-wrap:wrap;gap:4px;}
-.cond-chip{
-  position:relative;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:12px;padding:2px 8px;font-size:11px;cursor:pointer;
-  transition:all .15s;
+/* ── Conditions Grid ── */
+.condition-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:2px;}
+.cond-item{
+  display:flex;align-items:center;gap:4px;
+  padding:5px 8px;background:var(--bg3);border:1px solid var(--border);
+  cursor:pointer;transition:all .12s;font-size:11px;user-select:none;
+  border-radius:3px;
 }
-.cond-chip:hover{border-color:var(--red);}
-.cond-chip.active{background:var(--red-bg);border-color:var(--red);color:#fff;}
-.cond-chip .cond-desc{
-  display:none;position:absolute;bottom:calc(100% + 4px);left:50%;
-  transform:translateX(-50%);background:var(--bg2);border:1px solid var(--accent);
-  border-radius:4px;padding:6px 8px;font-size:11px;color:var(--text);
-  width:200px;z-index:200;line-height:1.5;white-space:normal;text-align:left;pointer-events:none;
+.cond-item:hover{border-color:var(--red-light);}
+.cond-item.active{background:var(--red-bg);border-color:var(--red);color:var(--red-light);}
+.cond-item .cond-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cond-item .cond-dots{display:flex;gap:2px;flex-shrink:0;}
+.cond-dot{width:8px;height:8px;border-radius:50%;background:var(--bg5);border:1px solid var(--border2);}
+.cond-dot.filled{background:var(--red);border-color:var(--red);}
+.cond-detail{
+  grid-column:1/-1;background:var(--bg2);border:1px solid var(--accent);
+  border-radius:4px;padding:8px 10px;font-size:11px;color:var(--text);
+  line-height:1.6;display:none;
 }
-.cond-chip:hover .cond-desc{display:block;}
-.cond-valued{display:flex;align-items:center;gap:2px;}
-.cond-num{background:var(--bg);border:none;color:var(--accent);font-size:12px;font-weight:700;width:20px;text-align:center;outline:none;}
-.cond-btn{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:2px;cursor:pointer;font-size:11px;padding:0 3px;line-height:1.4;}
-.cond-btn:hover{border-color:var(--accent);color:var(--accent);}
+.cond-detail.open{display:block;}
 
 /* ══════════════════════════════════
    ACTIONS TAB
@@ -2393,47 +2394,68 @@ function buildConditions() {
   const grid = document.getElementById('conditions-grid');
   grid.innerHTML = '';
   CONDITIONS_DATA.forEach(c => {
-    const chip = document.createElement('span');
-    chip.className = 'cond-chip';
-    chip.dataset.name = c.name;
-
     const val = state.conditions[c.name] || 0;
     const isActive = c.valued ? val > 0 : !!val;
-    chip.classList.toggle('active', isActive);
+    const max = c.valued ? (c.max || 4) : 1;
 
-    if (c.valued) {
-      chip.innerHTML = `
-        <div class="cond-valued">
-          <button class="cond-btn" onclick="adjustCond('${c.name}',-1,event)">−</button>
-          <span>${c.name}</span>
-          <span class="cond-num" id="cond-num-${c.name}">${val||0}</span>
-          <button class="cond-btn" onclick="adjustCond('${c.name}',1,event)">${c.max ? c.max : '+'}+</button>
-        </div>
-        <div class="cond-desc">[${c.en}] ${c.desc}</div>`;
-    } else {
-      chip.innerHTML = `<span>${c.name}</span><div class="cond-desc">[${c.en}] ${c.desc}</div>`;
-      chip.addEventListener('click', () => {
-        state.conditions[c.name] = !state.conditions[c.name];
-        chip.classList.toggle('active', !!state.conditions[c.name]);
-        save();
-      });
+    const item = document.createElement('div');
+    item.className = 'cond-item' + (isActive ? ' active' : '');
+    item.dataset.name = c.name;
+
+    let dotsHtml = '';
+    if (c.valued && max > 1) {
+      for (let i = 0; i < max; i++) {
+        dotsHtml += `<span class="cond-dot${i < val ? ' filled' : ''}"></span>`;
+      }
     }
-    grid.appendChild(chip);
+
+    item.innerHTML = `<span class="cond-name">${c.name}</span>${dotsHtml ? '<span class="cond-dots">'+dotsHtml+'</span>' : ''}`;
+
+    // Click = increment (toggle for non-valued, cycle for valued)
+    item.addEventListener('click', (e) => {
+      if (e.target.classList.contains('cond-name')) {
+        // Name click → show/hide description
+        toggleCondDesc(c.name);
+        return;
+      }
+      toggleCondValue(c.name);
+    });
+
+    grid.appendChild(item);
   });
 }
 
-function adjustCond(name, delta, event) {
-  event.stopPropagation();
+function toggleCondValue(name) {
   const cdata = CONDITIONS_DATA.find(c=>c.name===name);
-  const max = cdata?.max || 4;
-  let cur = parseInt(state.conditions[name]||0) + delta;
-  cur = Math.max(0, Math.min(max, cur));
+  if (!cdata) return;
+  const max = cdata.valued ? (cdata.max || 4) : 1;
+  let cur = parseInt(state.conditions[name] || 0);
+  cur = cur >= max ? 0 : cur + 1; // increment, reset at max
   state.conditions[name] = cur;
-  const numEl = document.getElementById('cond-num-'+name);
-  if (numEl) numEl.textContent = cur;
-  const chip = numEl?.closest('.cond-chip');
-  if (chip) chip.classList.toggle('active', cur > 0);
+  buildConditions(); // re-render
   save();
+}
+
+function toggleCondDesc(name) {
+  const grid = document.getElementById('conditions-grid');
+  const existing = grid.querySelector(`.cond-detail[data-name="${name}"]`);
+  // Close all open details
+  grid.querySelectorAll('.cond-detail.open').forEach(d => {
+    if (d.dataset.name !== name) d.classList.remove('open');
+  });
+  if (existing) {
+    existing.classList.toggle('open');
+  } else {
+    const cdata = CONDITIONS_DATA.find(c=>c.name===name);
+    if (!cdata) return;
+    const detail = document.createElement('div');
+    detail.className = 'cond-detail open';
+    detail.dataset.name = name;
+    detail.innerHTML = `<strong>${cdata.name}</strong> <span style="color:var(--text2);">${cdata.en}</span>${cdata.valued ? ' (최대 '+(cdata.max||4)+')' : ''}<br>${cdata.desc}`;
+    // Insert after the clicked item
+    const item = grid.querySelector(`.cond-item[data-name="${name}"]`);
+    if (item) item.after(detail);
+  }
 }
 
 function buildSpellSlots() {
