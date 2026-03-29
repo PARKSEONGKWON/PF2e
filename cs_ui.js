@@ -666,9 +666,9 @@ function pickSpellForSlot(type, rank, slotIndex) {
     // 유형 필터: 캔트립이면 캔트립, 아니면 일반
     const typeFilter = document.getElementById('filter-spell-type');
     if (typeFilter) typeFilter.value = type === 'cantrip' ? 'cantrip' : 'regular';
-    // 랭크 필터: 해당 랭크 고정
+    // 랭크 필터: 캔트립은 비움(유형 필터로 처리), 일반은 해당 랭크 고정
     const rankFilter = document.getElementById('filter-spell-rank');
-    if (rankFilter) rankFilter.value = type === 'cantrip' ? '0' : String(rank);
+    if (rankFilter) rankFilter.value = type === 'cantrip' ? '' : String(rank);
     // 내 시트 기준 체크
     const autoFilter = document.getElementById('filter-spell-auto');
     if (autoFilter) autoFilter.checked = true;
