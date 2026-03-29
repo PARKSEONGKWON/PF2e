@@ -1490,6 +1490,15 @@ function equipBrowseBuy() {
 //  PETS (반려동물)
 // ═══════════════════════════════════════════════
 
+const BARDING_DB = [
+  {name:'없음', ac:0, dex:99, check:0, speed:0, bulk:0, category:'없음'},
+  {name:'패딩 마갑', ac:1, dex:5, check:-1, speed:0, bulk:2, category:'경갑'},
+  {name:'가죽 마갑', ac:2, dex:4, check:-2, speed:-5, bulk:2, category:'경갑'},
+  {name:'사슬 마갑', ac:3, dex:3, check:-2, speed:-5, bulk:3, category:'경갑'},
+  {name:'합성 마갑', ac:4, dex:2, check:-3, speed:-10, bulk:4, category:'중갑'},
+  {name:'반판 마갑', ac:5, dex:1, check:-3, speed:-10, bulk:4, category:'중갑'},
+];
+
 function addPet() {
   if (!state.pets) state.pets = [];
   const name = prompt('반려동물 이름:');
@@ -1614,6 +1623,9 @@ function renderPets() {
         </div>
         <div style="display:flex;gap:4px;">
           <button class="defense-btn" onclick="editPet(${i})">편집</button>
+          <button class="defense-btn" onclick="openPetBarding(${i})">마갑</button>
+          <button class="defense-btn" onclick="openPetSkills(${i})">스킬</button>
+          <button class="defense-btn" onclick="openPetConditions(${i})">상태</button>
           <button class="defense-btn danger" onclick="removePet(${i})">삭제</button>
         </div>
       </div>
@@ -1627,6 +1639,8 @@ function renderPets() {
           </div>
         </div>
       </div>
+      ${p.barding && p.barding !== '없음' ? `<div style="font-size:10px;color:var(--text2);margin-bottom:4px;">🛡 마갑: <strong style="color:var(--text);">${p.barding}</strong></div>` : ''}
+      ${(p.conditions && Object.keys(p.conditions).some(k=>p.conditions[k]>0)) ? `<div style="font-size:10px;color:var(--red-light);margin-bottom:4px;">⚠ ${Object.entries(p.conditions).filter(([,v])=>v>0).map(([k,v])=>{const cd=CONDITIONS_DATA.find(c=>c.name===k);return cd?.valued?k+' '+v:k;}).join(', ')}</div>` : ''}
       <!-- Info row -->
       <div style="display:flex;gap:8px;font-size:10px;color:var(--text2);margin-bottom:6px;flex-wrap:wrap;">
         <span>이동 <strong style="color:var(--text);">${p.speed}</strong>피트</span>
@@ -1654,5 +1668,165 @@ function renderPets() {
       ${p.notes ? `<div style="font-size:10px;color:var(--text2);margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">${p.notes}</div>` : ''}
     </div>`;
   });
+}
+
+// ── 마갑 모달 ──
+function openPetBarding(i) {
+  const p = state.pets[i];
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'pet-barding';
+  document.getElementById('modal-title').textContent = '🛡 ' + p.name + ' — 마갑 선택';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = 'none';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.innerHTML = '';
+
+  const container = document.getElementById('modal-options');
+  container.innerHTML = '';
+  BARDING_DB.forEach(b => {
+    const isCur = (p.barding === b.name);
+    const row = document.createElement('div');
+    row.className = 'opt-row' + (isCur ? ' selected' : '');
+    row.style.cursor = 'pointer';
+    row.innerHTML = `
+      <div class="opt-row-icon">${isCur ? '✓' : '🛡'}</div>
+      <div style="flex:1;">
+        <div class="opt-row-name">${b.name} ${b.category !== '없음' ? '<span style="color:var(--text2);font-size:10px;">('+b.category+')</span>' : ''}</div>
+        ${b.ac > 0 ? `<div style="font-size:10px;color:var(--text2);">AC +${b.ac} | 민첩상한 +${b.dex} | 판정 ${b.check} | 속도 ${b.speed}피트</div>` : ''}
+      </div>`;
+    row.addEventListener('click', () => {
+      p.barding = b.name === '없음' ? null : b.name;
+      p.bardingData = b.name === '없음' ? null : b;
+      // AC에 마갑 보너스 적용 (편집에서 설정한 기본AC + 마갑AC)
+      renderPets();
+      save();
+      closeModal();
+    });
+    container.appendChild(row);
+  });
+}
+
+// ── 스킬 모달 ──
+function openPetSkills(i) {
+  const p = state.pets[i];
+  if (!p.skills) p.skills = {};
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'pet-skills';
+  document.getElementById('modal-title').textContent = '📖 ' + p.name + ' — 스킬';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = 'none';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.textContent = '완료'; }
+  modalSelected = null;
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.innerHTML = '';
+
+  renderPetSkillList(i);
+}
+
+function renderPetSkillList(i) {
+  const p = state.pets[i];
+  if (!p.skills) p.skills = {};
+  const container = document.getElementById('modal-options');
+  container.innerHTML = '';
+  const lv = getLevel();
+  SKILLS.forEach(sk => {
+    const rank = parseInt(p.skills[sk.id] || 0);
+    const mod = p[sk.attr] || 0;
+    const total = mod + (rank > 0 ? rank + lv : 0);
+    const rankLabel = RANK_LABELS[String(rank)] || '미숙련';
+    const rankClass = RANK_CLASSES[String(rank)] || '';
+    const row = document.createElement('div');
+    row.className = 'opt-row';
+    row.innerHTML = `
+      <span class="prof-rank-badge ${rankClass}" style="flex-shrink:0;">${RANK_LETTERS[String(rank)]||'U'}</span>
+      <span style="flex:1;font-size:12px;color:var(--text);">${sk.name} <span style="color:var(--text2);font-size:10px;">${sk.en}</span></span>
+      <span style="font-size:13px;font-weight:700;color:var(--accent);width:30px;text-align:right;">${total>=0?'+':''}${total}</span>`;
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', () => {
+      // 숙련 순환: 0→2→4→6→8→0
+      const next = rank >= 8 ? 0 : rank + 2;
+      p.skills[sk.id] = next;
+      save();
+      renderPetSkillList(i);
+    });
+    container.appendChild(row);
+  });
+}
+
+// ── 상태이상 모달 ──
+function openPetConditions(i) {
+  const p = state.pets[i];
+  if (!p.conditions) p.conditions = {};
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'pet-conditions';
+  document.getElementById('modal-title').textContent = '⚠ ' + p.name + ' — 상태이상';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; }
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.textContent = '완료'; }
+  modalSelected = null;
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.innerHTML = '';
+
+  renderPetCondList(i);
+}
+
+function renderPetCondList(i) {
+  const p = state.pets[i];
+  if (!p.conditions) p.conditions = {};
+  const q = document.getElementById('modal-search')?.value?.toLowerCase() || '';
+  const container = document.getElementById('modal-options');
+  container.innerHTML = '';
+
+  CONDITIONS_DATA.forEach(c => {
+    if (q && !c.name.includes(q) && !c.en.toLowerCase().includes(q)) return;
+    const current = p.conditions[c.name] || 0;
+    const isActive = c.valued ? current > 0 : !!current;
+    const row = document.createElement('div');
+    row.className = 'opt-row';
+    row.style.cursor = 'pointer';
+    row.innerHTML = `
+      <div class="opt-row-icon" style="${isActive ? 'background:var(--red-bg);color:var(--red-light);' : ''}">${isActive ? '⚠' : '◻'}</div>
+      <div style="flex:1;">
+        <div class="opt-row-name">${c.name} <span style="color:var(--text2);font-size:10px;">${c.en}</span></div>
+      </div>
+      ${isActive ? '<span style="color:var(--red-light);font-size:11px;font-weight:600;">' + (c.valued ? current : '활성') + '</span>' : ''}`;
+    row.onclick = () => {
+      if (c.valued) {
+        p.conditions[c.name] = (p.conditions[c.name] || 0) + 1;
+        if (c.max && p.conditions[c.name] > c.max) p.conditions[c.name] = 0;
+      } else {
+        p.conditions[c.name] = p.conditions[c.name] ? 0 : 1;
+      }
+      renderPets();
+      save();
+      renderPetCondList(i);
+    };
+    container.appendChild(row);
+  });
+
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl && !searchEl._petCondBound) {
+    searchEl.addEventListener('input', () => renderPetCondList(i));
+    searchEl._petCondBound = true;
+  }
 }
 
