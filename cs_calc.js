@@ -844,7 +844,7 @@ function updateShieldGauge() {
   const shieldName = document.getElementById('shield-name')?.value||'';
   const wrap = document.getElementById('shield-gauge-wrap');
   if (!wrap) return;
-  if (shieldHp <= 0 && !shieldName) { wrap.style.display = 'none'; return; }
+  if (!shieldName) { wrap.style.display = 'none'; return; }
   wrap.style.display = '';
   const cur = parseInt(document.getElementById('shield-hp-cur')?.value)||0;
   const pct = shieldHp > 0 ? Math.max(0, Math.min(100, (cur/shieldHp)*100)) : 0;
