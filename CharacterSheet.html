@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=26"></script>
+<script src="class_features_db.js?v=27"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1486,24 +1486,29 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
       <!-- Focus Spells content (separate tab) -->
       <div id="spell-content-focus" style="display:none;">
-        <!-- Focus header -->
+        <!-- Focus header (클래스 탭과 동일 구조) -->
         <div class="spell-header-bar">
-          <div style="text-align:center;">
-            <div class="spell-val-label">집중 포인트 Focus Points</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;">
-              <input class="inline-edit" id="fp-cur" type="number" value="0" min="0" max="3" style="width:30px;font-size:16px;font-weight:700;text-align:center;" oninput="save()">
-              <span style="color:var(--text2);font-size:14px;">/</span>
-              <input class="inline-edit" id="fp-max" type="number" value="0" min="0" max="3" style="width:30px;font-size:16px;font-weight:700;text-align:center;" oninput="save()">
+          <div style="display:flex;align-items:center;gap:20px;">
+            <div style="text-align:center;">
+              <div class="spell-val-label">DC</div>
+              <div class="spell-val" id="spell-dc-val-focus" style="font-size:22px;">10</div>
             </div>
-          </div>
-          <div style="text-align:center;">
-            <div class="spell-val-label">DC</div>
-            <div class="spell-val" id="spell-dc-val-focus">10</div>
+            <div style="text-align:center;">
+              <div class="spell-val-label">주문 명중</div>
+              <div class="spell-val" id="spell-atk-val-focus" style="font-size:22px;">+0</div>
+            </div>
           </div>
           <div style="text-align:center;">
             <div class="spell-val-label">주문시전</div>
             <div class="prof-rank-text" id="rank-spell-focus" style="font-size:16px;">미숙련</div>
           </div>
+        </div>
+        <!-- 집중 포인트 (체크박스 방식) -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;color:var(--text2);">집중 포인트</span>
+          <span id="fp-checks" style="display:flex;gap:4px;"></span>
+          <input type="hidden" id="fp-cur" value="0">
+          <input type="hidden" id="fp-max" value="0">
         </div>
         <!-- Focus Cantrips -->
         <div class="spell-rank-section">
@@ -1677,11 +1682,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=26"></script>
-<script src="cs_calc.js?v=26"></script>
-<script src="cs_ui.js?v=26"></script>
-<script src="cs_modal.js?v=26"></script>
-<script src="cs_save.js?v=26"></script>
+<script src="cs_data.js?v=27"></script>
+<script src="cs_calc.js?v=27"></script>
+<script src="cs_ui.js?v=27"></script>
+<script src="cs_modal.js?v=27"></script>
+<script src="cs_save.js?v=27"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

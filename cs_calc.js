@@ -750,9 +750,12 @@ function recalcSpellStats() {
   if (spDcVal) spDcVal.textContent = dc;
   const spAtkVal = document.getElementById('spell-atk-val');
   if (spAtkVal) spAtkVal.textContent = fmtBonus(atk);
-  // Focus tab DC mirror
+  // Focus tab mirrors
   const focusDcEl = document.getElementById('spell-dc-val-focus');
   if (focusDcEl) focusDcEl.textContent = dc;
+  const focusAtkEl = document.getElementById('spell-atk-val-focus');
+  if (focusAtkEl) focusAtkEl.textContent = fmtBonus(atk);
+  renderFpChecks();
   // Breakdown update
   const keyLabel = document.getElementById('spell-key-label');
   if (keyLabel) keyLabel.textContent = keyAttr ? keyAttr.substring(0,3).toUpperCase() : '—';
@@ -876,6 +879,35 @@ function updateHP() {
     }
   }
   checkHpZero();
+}
+
+function renderFpChecks() {
+  const container = document.getElementById('fp-checks');
+  if (!container) return;
+  const max = parseInt(document.getElementById('fp-max')?.value || 0);
+  const cur = parseInt(document.getElementById('fp-cur')?.value || 0);
+  if (max <= 0) { container.innerHTML = '<span style="font-size:11px;color:var(--text2);">—</span>'; return; }
+  let html = '';
+  for (let i = 0; i < max; i++) {
+    const used = i >= cur;
+    html += `<span onclick="toggleFpCheck(${i})" style="cursor:pointer;font-size:18px;color:${used ? 'var(--text2)' : 'var(--accent)'};">${used ? '○' : '●'}</span>`;
+  }
+  container.innerHTML = html;
+}
+
+function toggleFpCheck(idx) {
+  const curEl = document.getElementById('fp-cur');
+  const max = parseInt(document.getElementById('fp-max')?.value || 0);
+  let cur = parseInt(curEl?.value || 0);
+  if (idx < cur) {
+    // 사용: 해당 포인트 소모
+    curEl.value = idx;
+  } else {
+    // 회복: 해당 포인트까지 채움
+    curEl.value = Math.min(max, idx + 1);
+  }
+  renderFpChecks();
+  save();
 }
 
 function updateShieldInfo() {
