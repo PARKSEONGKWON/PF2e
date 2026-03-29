@@ -1687,11 +1687,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=3"></script>
-<script src="cs_calc.js?v=3"></script>
-<script src="cs_ui.js?v=3"></script>
-<script src="cs_modal.js?v=3"></script>
-<script src="cs_save.js?v=3"></script>
+<script src="cs_data.js?v=4"></script>
+<script src="cs_calc.js?v=4"></script>
+<script src="cs_ui.js?v=4"></script>
+<script src="cs_modal.js?v=4"></script>
+<script src="cs_save.js?v=4"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
@@ -1719,6 +1719,7 @@ function updateAuthUI(user) {
       slotBar.innerHTML += '<button onclick="switchSlot(\'slot' + i + '\')" style="border:none;padding:3px 10px;border-radius:3px;cursor:pointer;font-size:11px;' + active + '">슬롯 ' + i + '</button>';
     }
     loadSlotNames(user.uid);
+    loadFromCloud(); // 로그인 복원 시 자동 불러오기
     startAutoSave();
   } else {
     currentUser = null;
