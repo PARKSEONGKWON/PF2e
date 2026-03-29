@@ -1681,12 +1681,21 @@ function openPetBarding(i) {
   if (searchEl) searchEl.style.display = 'none';
   const fbar = document.getElementById('modal-filterbar');
   if (fbar) fbar.innerHTML = '';
+  let _bardingPetIdx = i;
+  let _bardingSelected = null;
   const confirmBtn = document.querySelector('.btn-confirm');
-  if (confirmBtn) confirmBtn.style.display = 'none';
+  if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.textContent = '장착'; confirmBtn.onclick = () => {
+    if (_bardingSelected) {
+      p.barding = _bardingSelected.name === '없음' ? null : _bardingSelected.name;
+      p.bardingData = _bardingSelected.name === '없음' ? null : _bardingSelected;
+      renderPets(); save();
+    }
+    closeModal();
+  };}
   const listEl = document.querySelector('.modal-list');
   if (listEl) listEl.style.display = '';
   const detail = document.getElementById('modal-detail');
-  if (detail) detail.innerHTML = '';
+  if (detail) detail.innerHTML = '<div class="modal-detail-empty">마갑을 선택하면 상세 정보가 표시됩니다.</div>';
 
   const container = document.getElementById('modal-options');
   container.innerHTML = '';
@@ -1699,15 +1708,26 @@ function openPetBarding(i) {
       <div class="opt-row-icon">${isCur ? '✓' : '🛡'}</div>
       <div style="flex:1;">
         <div class="opt-row-name">${b.name} ${b.category !== '없음' ? '<span style="color:var(--text2);font-size:10px;">('+b.category+')</span>' : ''}</div>
-        ${b.ac > 0 ? `<div style="font-size:10px;color:var(--text2);">AC +${b.ac} | 민첩상한 +${b.dex} | 판정 ${b.check} | 속도 ${b.speed}피트</div>` : ''}
       </div>`;
     row.addEventListener('click', () => {
-      p.barding = b.name === '없음' ? null : b.name;
-      p.bardingData = b.name === '없음' ? null : b;
-      // AC에 마갑 보너스 적용 (편집에서 설정한 기본AC + 마갑AC)
-      renderPets();
-      save();
-      closeModal();
+      _bardingSelected = b;
+      container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+      row.classList.add('selected');
+      if (detail) {
+        if (b.ac > 0) {
+          detail.innerHTML = `<div class="modal-detail-title">${b.name}</div>
+            <div class="modal-detail-tags"><span class="tag hl">${b.category}</span></div>
+            <div class="modal-detail-desc">
+              <strong>AC 보너스:</strong> +${b.ac}<br>
+              <strong>민첩 상한:</strong> +${b.dex}<br>
+              <strong>판정 페널티:</strong> ${b.check}<br>
+              <strong>속도 페널티:</strong> ${b.speed}피트<br>
+              <strong>부피:</strong> ${b.bulk}
+            </div>`;
+        } else {
+          detail.innerHTML = '<div class="modal-detail-title">없음</div><div class="modal-detail-desc">마갑을 장착하지 않습니다.</div>';
+        }
+      }
     });
     container.appendChild(row);
   });
@@ -1726,12 +1746,13 @@ function openPetSkills(i) {
   const fbar = document.getElementById('modal-filterbar');
   if (fbar) fbar.innerHTML = '';
   const confirmBtn = document.querySelector('.btn-confirm');
-  if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.textContent = '완료'; }
+  if (confirmBtn) confirmBtn.style.display = 'none';
   modalSelected = null;
+  // 리스트만 표시, 디테일 숨김
   const listEl = document.querySelector('.modal-list');
-  if (listEl) listEl.style.display = '';
+  if (listEl) { listEl.style.display = ''; listEl.style.width = '100%'; listEl.style.borderRight = 'none'; }
   const detail = document.getElementById('modal-detail');
-  if (detail) detail.innerHTML = '';
+  if (detail) detail.style.display = 'none';
 
   renderPetSkillList(i);
 }

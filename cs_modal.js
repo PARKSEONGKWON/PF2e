@@ -120,36 +120,39 @@ function renderConditionList() {
       </div>
       ${isActive ? '<span style="color:var(--red-light);font-size:11px;font-weight:600;">' + (c.valued ? current : '활성') + '</span>' : ''}`;
     row.onclick = () => {
-      // 상세 정보 토글
-      const existing = row.nextElementSibling;
-      if (existing && existing.classList.contains('opt-row-detail') && existing.classList.contains('open')) {
-        existing.classList.remove('open');
-        row.classList.remove('expanded');
-        return;
-      }
-      document.querySelectorAll('.opt-row-detail.open').forEach(d => d.classList.remove('open'));
-      document.querySelectorAll('.opt-row.expanded').forEach(r => r.classList.remove('expanded'));
-      row.classList.add('expanded');
-      let detailDiv = row.nextElementSibling;
-      if (!detailDiv || !detailDiv.classList.contains('opt-row-detail')) {
-        detailDiv = document.createElement('div');
-        detailDiv.className = 'opt-row-detail';
-        row.after(detailDiv);
-      }
       const curVal = state.conditions[c.name] || 0;
       const statusText = c.valued ? `현재 수치: ${curVal}` + (c.max ? ` / ${c.max}` : '') : (curVal ? '활성' : '비활성');
-      detailDiv.innerHTML = `
-        <div style="font-size:12px;line-height:1.6;margin-bottom:8px;">${c.desc}</div>
-        <div style="font-size:11px;color:var(--red-light);margin-bottom:8px;">${statusText}</div>
-        <div style="display:flex;gap:6px;">
-          <button onclick="event.stopPropagation();toggleCondFromModal('${c.name}',1)" style="flex:1;padding:6px;background:var(--red-bg);color:var(--red-light);border:1px solid var(--red);border-radius:4px;cursor:pointer;font-size:12px;">${c.valued ? '+1 증가' : '적용'}</button>
-          <button onclick="event.stopPropagation();toggleCondFromModal('${c.name}',-1)" style="flex:1;padding:6px;background:var(--bg4);color:var(--text2);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-size:12px;">${c.valued ? '-1 감소' : '해제'}</button>
-        </div>`;
-      detailDiv.classList.add('open');
-      // 데스크톱: 디테일 패인에도 표시
-      const detail = document.getElementById('modal-detail');
-      if (detail && window.innerWidth > 900) {
-        detail.innerHTML = `<div class="modal-detail-title">${c.name}</div><div class="modal-detail-en">${c.en}</div><div class="modal-detail-desc">${c.desc}</div>`;
+      const btnHtml = `<div style="display:flex;gap:6px;margin-top:12px;">
+        <button onclick="event.stopPropagation();toggleCondFromModal('${c.name}',1)" style="flex:1;padding:8px;background:var(--red-bg);color:var(--red-light);border:1px solid var(--red);border-radius:4px;cursor:pointer;font-size:12px;">${c.valued ? '+1 증가' : '적용'}</button>
+        <button onclick="event.stopPropagation();toggleCondFromModal('${c.name}',-1)" style="flex:1;padding:8px;background:var(--bg4);color:var(--text2);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-size:12px;">${c.valued ? '-1 감소' : '해제'}</button>
+      </div>`;
+
+      if (window.innerWidth > 900) {
+        // PC: 디테일 패인에 표시
+        container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+        row.classList.add('selected');
+        const detail = document.getElementById('modal-detail');
+        if (detail) {
+          detail.innerHTML = `<div class="modal-detail-title">${c.name}</div><div class="modal-detail-en">${c.en}</div>
+            <div style="font-size:11px;color:var(--red-light);margin:8px 0;">${statusText}</div>
+            <div class="modal-detail-desc">${c.desc}</div>${btnHtml}`;
+        }
+      } else {
+        // 모바일: 아코디언
+        const existing = row.nextElementSibling;
+        if (existing && existing.classList.contains('opt-row-detail') && existing.classList.contains('open')) {
+          existing.classList.remove('open'); row.classList.remove('expanded'); return;
+        }
+        document.querySelectorAll('.opt-row-detail.open').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('.opt-row.expanded').forEach(r => r.classList.remove('expanded'));
+        row.classList.add('expanded');
+        let detailDiv = row.nextElementSibling;
+        if (!detailDiv || !detailDiv.classList.contains('opt-row-detail')) {
+          detailDiv = document.createElement('div'); detailDiv.className = 'opt-row-detail'; row.after(detailDiv);
+        }
+        detailDiv.innerHTML = `<div style="font-size:12px;line-height:1.6;margin-bottom:8px;">${c.desc}</div>
+          <div style="font-size:11px;color:var(--red-light);margin-bottom:8px;">${statusText}</div>${btnHtml}`;
+        detailDiv.classList.add('open');
       }
     };
     container.appendChild(row);
