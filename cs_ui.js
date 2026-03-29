@@ -509,7 +509,7 @@ function renderEquip() {
   const header = document.createElement('div');
   header.className = 'equip-row';
   header.style.cssText = 'font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);padding:2px 4px;';
-  header.innerHTML = `<span style="flex:1;">아이템</span><span style="width:30px;text-align:center;">부피</span><span style="width:70px;text-align:center;">수량</span><span style="width:60px;text-align:center;">장착</span><span style="width:40px;text-align:center;">상태</span><span style="width:60px;text-align:center;">이동</span>`;
+  header.innerHTML = `<span style="flex:1;">아이템</span><span style="width:30px;text-align:center;">부피</span><span style="width:70px;text-align:center;">수량</span><span style="width:60px;text-align:center;">장착</span><span style="width:40px;text-align:center;">상태</span><span style="width:28px;"></span>`;
   list.appendChild(header);
 
   state.equip.forEach((e,i) => {
@@ -542,9 +542,9 @@ function renderEquip() {
       <span style="width:40px;text-align:center;">
         <button class="${e._broken ? 'equip-toggle equipped' : 'equip-toggle'}" onclick="event.stopPropagation();toggleBroken(${i})" style="font-size:9px;padding:2px 4px;${e._broken?'background:var(--red-bg);color:var(--red-light);border-color:var(--red);':''}">${e._broken ? '파손' : '정상'}</button>
       </span>
-      <span style="width:60px;text-align:center;">
-        ${hasContainers ? `<select onchange="if(this.value!=='')moveToContainer(${i},parseInt(this.value));this.value=''" style="font-size:9px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:3px;padding:1px 2px;width:54px;">
-          <option value="">📦 이동</option>
+      <span style="width:28px;text-align:center;">
+        ${hasContainers ? `<select onchange="if(this.value!=='')moveToContainer(${i},parseInt(this.value));this.value=''" style="font-size:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:3px;padding:1px;width:26px;cursor:pointer;" title="이동">
+          <option value="">▾</option>
           ${state.containers.map((c,ci) => `<option value="${ci}">${c.name}</option>`).join('')}
         </select>` : ''}
       </span>`;
@@ -587,11 +587,18 @@ function moveToContainer(itemIdx, ci) {
   save();
 }
 
-function moveToMainInventory(ci, ii) {
+function moveFromContainer(ci, ii, target) {
   if (!state.containers) return;
   const item = state.containers[ci].items[ii];
   if (!item) return;
-  state.equip.push({...item});
+  if (target === 'main') {
+    state.equip.push({...item});
+  } else {
+    const tci = parseInt(target);
+    if (tci >= 0 && tci < state.containers.length) {
+      state.containers[tci].items.push({...item});
+    }
+  }
   state.containers[ci].items.splice(ii, 1);
   renderEquip();
   renderContainers();
@@ -796,8 +803,12 @@ function renderContainers() {
           <span style="min-width:16px;text-align:center;font-size:13px;font-weight:600;color:var(--text);">${item.qty||1}</span>
           <button class="qty-btn" onclick="event.stopPropagation();changeContainerQty(${ci},${ii},1)">+</button>
         </span>
-        <span style="width:50px;text-align:center;">
-          <button class="equip-toggle" onclick="event.stopPropagation();moveToMainInventory(${ci},${ii})" style="font-size:9px;">꺼내기</button>
+        <span style="width:28px;text-align:center;">
+          <select onchange="if(this.value!=='')moveFromContainer(${ci},${ii},this.value);this.value=''" style="font-size:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:3px;padding:1px;width:26px;cursor:pointer;" title="이동">
+            <option value="">▾</option>
+            <option value="main">메인</option>
+            ${state.containers.map((cc,cci) => cci !== ci ? `<option value="${cci}">${cc.name}</option>` : '').join('')}
+          </select>
         </span>
       </div>`;
     });
