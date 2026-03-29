@@ -3085,10 +3085,19 @@ function applyClassFeatures() {
     if (!state.feats[cat]) state.feats[cat] = [];
     state.feats[cat] = state.feats[cat].filter(f => !f._auto);
   });
-  // Gather all auto feats
+  // Gather all auto feats (CLASS_AUTO_FEATS + SUBCLASS_AUTO_FEATS)
   const classFeats = CLASS_AUTO_FEATS?.[cls.id] || [];
   const subFeats = (state.selectedSubclass && SUBCLASS_AUTO_FEATS) ? (SUBCLASS_AUTO_FEATS[state.selectedSubclass.id]||[]) : [];
   const allAutoFeats = [...classFeats, ...subFeats];
+  // Also add CLASS_FEATURE_NAMES as auto-display items in special category
+  const featureNames = (typeof CLASS_FEATURE_NAMES !== 'undefined' ? CLASS_FEATURE_NAMES[cls.id] : null) || [];
+  const subFeatureNames = (state.selectedSubclass && typeof SUBCLASS_FEATURE_NAMES !== 'undefined')
+    ? (SUBCLASS_FEATURE_NAMES[state.selectedSubclass.id]||[]) : [];
+  [...featureNames, ...subFeatureNames].forEach(f => {
+    if (f.lv <= level && !allAutoFeats.some(a => a.name_ko === f.name_ko)) {
+      allAutoFeats.push({lv: f.lv, name_ko: f.name_ko, name_en: f.name_en, category: 'special'});
+    }
+  });
   console.log('[applyClassFeatures] auto feats:', allAutoFeats.length, 'items for', cls.id);
   allAutoFeats.forEach(f => {
     if (f.lv <= level) {
@@ -3097,7 +3106,6 @@ function applyClassFeatures() {
       if (!state.feats[cat]) state.feats[cat] = [];
       if (!state.feats[cat].some(e => e.name === featName)) {
         state.feats[cat].push({name: featName, level: f.lv, _auto: true});
-        console.log('[applyClassFeatures] + feat:', featName, '→', cat);
       }
     }
   });
