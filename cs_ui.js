@@ -937,29 +937,24 @@ function renderFeats() {
       const isAuto = f._auto;
       const div = document.createElement('div');
       div.className = 'feat-entry';
+      div.style.cursor = 'pointer';
       if (isAuto) {
         div.innerHTML = `
           <div style="display:flex;align-items:center;gap:4px;width:100%;margin-bottom:2px;">
             <span style="color:var(--accent);font-size:10px;font-weight:700;flex-shrink:0;">⚡자동</span>
-            <span style="flex:1;cursor:pointer;color:var(--text);font-size:12px;" onclick="showInfo('feat','${f.name.replace(/'/g,"\\'")}')">${f.name}</span>
+            <span style="flex:1;color:var(--text);font-size:12px;">${f.name}</span>
           </div>
           <div class="feat-src"><span style="color:var(--text2);font-size:10px;">Lv ${f.level||1} — 클래스 특성</span></div>`;
+        div.addEventListener('click', () => showInfo('feat', f.name));
       } else {
         div.innerHTML = `
-          <input value="${f.name.replace(/"/g,'&quot;')}" placeholder="${labels[t]} 재주 이름..." style="width:100%;margin-bottom:2px;">
-          <div class="feat-src">
-            Lv: <input type="number" value="${f.level||1}" min="1" max="20" style="width:32px;">
-            <span class="info-btn" title="DB 정보 보기">ℹ</span>
-            <span class="spell-del" style="margin-left:auto;">✕</span>
-          </div>`;
-        const nameInput  = div.querySelector('input:not([type=number])');
-        const levelInput = div.querySelector('input[type=number]');
-        nameInput.addEventListener('input', () => { state.feats[t][i].name = nameInput.value; save(); });
-        nameInput.addEventListener('click', () => showInfo('feat', f.name));
-        nameInput.style.cursor = 'pointer';
-        levelInput.addEventListener('input', () => { state.feats[t][i].level = parseInt(levelInput.value); save(); });
-        div.querySelector('.info-btn').addEventListener('click', () => showInfo('feat', f.name));
-        div.querySelector('.spell-del').addEventListener('click', () => removeFeat(t, i));
+          <div style="display:flex;align-items:center;gap:4px;width:100%;margin-bottom:2px;">
+            <span style="flex:1;color:var(--text);font-size:12px;">${f.name || labels[t] + ' 재주'}</span>
+            <span class="spell-del" style="flex-shrink:0;">✕</span>
+          </div>
+          <div class="feat-src"><span style="color:var(--text2);font-size:10px;">Lv ${f.level||1}</span></div>`;
+        div.addEventListener('click', (e) => { if (!e.target.classList.contains('spell-del')) showInfo('feat', f.name); });
+        div.querySelector('.spell-del').addEventListener('click', (e) => { e.stopPropagation(); removeFeat(t, i); });
       }
       el.appendChild(div);
     });
