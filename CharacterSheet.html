@@ -378,20 +378,22 @@ body{
    WEAPON PROFICIENCY BAR
    ══════════════════════════════════ */
 .prof-rank-text{
-  font-size:10px;font-weight:600;color:var(--text2);
+  font-size:18px;font-weight:700;color:var(--text2);line-height:1;
 }
 .prof-rank-text.trained{color:#4caf50;}
 .prof-rank-text.expert{color:#42a5f5;}
 .prof-rank-text.master{color:#ab47bc;}
 .prof-rank-text.legendary{color:#ffa726;}
 .weapon-prof-bar{
-  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
-  padding:6px 8px;background:var(--bg2);border:1px solid var(--border);
-  border-radius:4px;margin-bottom:8px;
+  display:flex;flex-wrap:wrap;gap:0;
+  margin-bottom:8px;
 }
 .weapon-prof-item{
-  display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text2);
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:8px 4px;border-right:1px solid var(--border);
 }
+.weapon-prof-item:last-child{border-right:none;}
+.weapon-prof-item span:first-child{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
 .weapon-prof-item select{
   background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
   padding:1px 3px;border-radius:3px;font-size:10px;cursor:pointer;width:42px;
@@ -411,13 +413,16 @@ body{
    DEFENSE PANEL
    ══════════════════════════════════ */
 .armor-prof-bar{
-  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
-  padding:8px 10px;background:var(--bg2);
+  display:flex;flex-wrap:wrap;gap:0;
+  padding:0;background:var(--bg2);
   border-bottom:1px solid var(--border);
 }
 .armor-prof-item{
-  display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text2);
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:8px 4px;border-right:1px solid var(--border);
 }
+.armor-prof-item:last-child{border-right:none;}
+.armor-prof-item span:first-child{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
 .armor-prof-item select{
   background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
   padding:1px 3px;border-radius:3px;font-size:10px;cursor:pointer;width:42px;
