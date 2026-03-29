@@ -83,8 +83,8 @@ function renderArmorCard() {
 
   card.className = 'defense-card' + (stowed ? ' stowed' : '');
   if (!name) {
-    card.innerHTML = `<div class="box"><div class="box-title">갑옷 Armor</div>
-      <div style="font-size:10px;color:var(--text2);text-align:center;padding:6px 0;">장비 탭에서 갑옷을 장착하면 여기에 표시됩니다</div></div>`;
+    card.innerHTML = `<div class="defense-card-header"><span class="defense-card-name" style="font-size:11px;">갑옷 Armor</span></div>
+      <div style="font-size:10px;color:var(--text2);text-align:center;padding:10px 0;">장비 탭에서 갑옷을 장착하면 여기에 표시됩니다</div>`;
     return;
   }
   card.innerHTML = `
@@ -190,8 +190,8 @@ function renderShieldCard() {
 
   if (!name) {
     card.className = 'defense-card';
-    card.innerHTML = `<div class="box"><div class="box-title">방패 Shield</div>
-      <div style="font-size:10px;color:var(--text2);text-align:center;padding:6px 0;">장비 탭에서 방패를 장착하면 여기에 표시됩니다</div></div>`;
+    card.innerHTML = `<div class="defense-card-header"><span class="defense-card-name" style="font-size:11px;">방패 Shield</span></div>
+      <div style="font-size:10px;color:var(--text2);text-align:center;padding:10px 0;">장비 탭에서 방패를 장착하면 여기에 표시됩니다</div>`;
     return;
   }
   card.className = 'defense-card' + (stowed ? ' stowed' : '');
