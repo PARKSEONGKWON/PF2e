@@ -1179,6 +1179,13 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
           <input id="f-xp" type="number" min="0" value="0" oninput="checkXpLevelUp()" style="width:100%;background:var(--bg3);border:none;border-bottom:1px solid var(--border2);color:var(--text);padding:4px 6px;font-size:13px;text-align:center;">
         </div>
       </div>
+      <div style="display:flex;align-items:center;gap:4px;margin-bottom:6px;">
+        <span style="font-size:10px;color:var(--text2);">영웅 점수</span>
+        <span class="hero-star" onclick="toggleHeroStar(1)">★</span>
+        <span class="hero-star" onclick="toggleHeroStar(2)">★</span>
+        <span class="hero-star" onclick="toggleHeroStar(3)">★</span>
+        <input type="hidden" id="hero-points" value="0">
+      </div>
       <div class="attr-grid">
         <div class="attr-box"><div class="attr-name">근력 STR</div><div class="attr-score" id="mod-str">+0</div><div class="attr-mod" id="partial-str"></div></div>
         <div class="attr-box"><div class="attr-name">민첩 DEX</div><div class="attr-score" id="mod-dex">+0</div><div class="attr-mod" id="partial-dex"></div></div>
@@ -1246,16 +1253,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
           <span>경도: <strong style="color:var(--text);" id="shield-hard-display">0</strong></span>
         </div>
       </div>
-      <!-- 영웅 점수 -->
-      <div class="stat-row" style="flex-wrap:wrap;">
-        <span class="stat-label">영웅 점수</span>
-        <span class="hero-star" onclick="toggleHeroStar(1)">★</span>
-        <span class="hero-star" onclick="toggleHeroStar(2)">★</span>
-        <span class="hero-star" onclick="toggleHeroStar(3)">★</span>
-        <input type="hidden" id="hero-points" value="0">
-        <input type="hidden" id="dying" value="0">
-        <input type="hidden" id="wounded" value="0">
-      </div>
+      <input type="hidden" id="dying" value="0">
+      <input type="hidden" id="wounded" value="0">
       <hr class="divider">
       <!-- 내성 굴림 -->
       <div class="stat-row">
