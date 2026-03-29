@@ -23,7 +23,7 @@ const db = firebase.firestore();
 <script src="equipment_db.js"></script>
 <script src="feat_db.js"></script>
 <script src="SPELL_DB.js"></script>
-<script src="class_features_db.js?v=11"></script>
+<script src="class_features_db.js?v=12"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -384,6 +384,15 @@ body{
 .prof-rank-text.expert{color:#42a5f5;}
 .prof-rank-text.master{color:#ab47bc;}
 .prof-rank-text.legendary{color:#ffa726;}
+.prof-rank-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:4px;font-size:10px;font-weight:700;
+  background:var(--bg4);color:var(--text2);border:1px solid var(--border);flex-shrink:0;
+}
+.prof-rank-badge.trained{background:#1a3a1a;color:#4caf50;border-color:#4caf50;}
+.prof-rank-badge.expert{background:#1a2a3a;color:#42a5f5;border-color:#42a5f5;}
+.prof-rank-badge.master{background:#2a1a2a;color:#ab47bc;border-color:#ab47bc;}
+.prof-rank-badge.legendary{background:#3a2a1a;color:#ffa726;border-color:#ffa726;}
 .weapon-prof-bar{
   display:flex;flex-wrap:wrap;gap:0;
   margin-bottom:8px;
@@ -1272,47 +1281,37 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <div class="box-title">내성 / 지각 / 클래스 DC</div>
       <div class="stat-row">
         <span class="stat-label">인내 Fortitude</span>
-        <select class="prof-sel" id="prof-fort" onchange="recalcSaves();save()">
-          <option value="0">미숙련</option><option value="2">숙련</option>
-          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-        </select>
+        <span class="prof-rank-badge" id="rank-fort">U</span>
+        <select id="prof-fort" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
         <span class="stat-val" id="val-fort">+0</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">반사 Reflex</span>
-        <select class="prof-sel" id="prof-ref" onchange="recalcSaves();save()">
-          <option value="0">미숙련</option><option value="2">숙련</option>
-          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-        </select>
+        <span class="prof-rank-badge" id="rank-ref">U</span>
+        <select id="prof-ref" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
         <span class="stat-val" id="val-ref">+0</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">의지 Will</span>
-        <select class="prof-sel" id="prof-will" onchange="recalcSaves();save()">
-          <option value="0">미숙련</option><option value="2">숙련</option>
-          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-        </select>
+        <span class="prof-rank-badge" id="rank-will">U</span>
+        <select id="prof-will" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
         <span class="stat-val" id="val-will">+0</span>
       </div>
       <hr class="divider">
       <div class="stat-row">
         <span class="stat-label">지각 Perception</span>
-        <select class="prof-sel" id="prof-perc" onchange="recalcPerc();save()">
-          <option value="0">미숙련</option><option value="2">숙련</option>
-          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-        </select>
+        <span class="prof-rank-badge" id="rank-perc">U</span>
+        <select id="prof-perc" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
         <span class="stat-val" id="val-perc">+0</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">이니셔티브</span>
+        <span class="stat-label">우선권</span>
         <span class="stat-val" id="val-init">+0</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">클래스 DC</span>
-        <select class="prof-sel" id="prof-classdc" onchange="recalcClassDC();save()">
-          <option value="0">미숙련</option><option value="2">숙련</option>
-          <option value="4">전문가</option><option value="6">달인</option><option value="8">전설</option>
-        </select>
+        <span class="prof-rank-badge" id="rank-classdc">U</span>
+        <select id="prof-classdc" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
         <span class="stat-val" id="val-classdc">10</span>
       </div>
     </div>
@@ -1681,11 +1680,11 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=11"></script>
-<script src="cs_calc.js?v=11"></script>
-<script src="cs_ui.js?v=11"></script>
-<script src="cs_modal.js?v=11"></script>
-<script src="cs_save.js?v=11"></script>
+<script src="cs_data.js?v=12"></script>
+<script src="cs_calc.js?v=12"></script>
+<script src="cs_ui.js?v=12"></script>
+<script src="cs_modal.js?v=12"></script>
+<script src="cs_save.js?v=12"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

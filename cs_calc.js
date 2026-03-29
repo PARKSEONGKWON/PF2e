@@ -3,6 +3,7 @@
 // ═══════════════════════════════════════════════
 
 const RANK_LABELS = {'0':'미숙련','2':'숙련','4':'전문가','6':'달인','8':'전설'};
+const RANK_LETTERS = {'0':'U','2':'T','4':'E','6':'M','8':'L'};
 const RANK_CLASSES = {'0':'','2':'trained','4':'expert','6':'master','8':'legendary'};
 
 function syncProfRankText(textId, selectId) {
@@ -14,10 +15,25 @@ function syncProfRankText(textId, selectId) {
   el.className = 'prof-rank-text ' + (RANK_CLASSES[v] || '');
 }
 
+function syncProfRankBadge(badgeId, selectId) {
+  const el = document.getElementById(badgeId);
+  const sel = document.getElementById(selectId);
+  if (!el || !sel) return;
+  const v = sel.value || '0';
+  el.textContent = RANK_LETTERS[v] || 'U';
+  el.className = 'prof-rank-badge ' + (RANK_CLASSES[v] || '');
+}
+
 function syncAllProfRanks() {
   ['simple','martial','advanced','unarmed'].forEach(c => syncProfRankText('rank-weapon-'+c, 'prof-weapon-'+c));
   ['light','medium','heavy','unarmored'].forEach(c => syncProfRankText('rank-armor-'+c, 'prof-armor-'+c));
   syncProfRankText('rank-spell', 'prof-spatk');
+  // 내성/지각/클래스DC 배지
+  ['fort','ref','will','perc','classdc'].forEach(k => syncProfRankBadge('rank-'+k, 'prof-'+k));
+  // 기술 배지
+  if (typeof SKILLS !== 'undefined') {
+    SKILLS.forEach(sk => syncProfRankBadge('rank-sk-'+sk.id, 'sk-prof-'+sk.id));
+  }
 }
 
 // Legacy aliases
@@ -157,13 +173,8 @@ function buildSkills() {
     const row = document.createElement('div');
     row.className = 'skill-row';
     row.innerHTML = `
-      <select class="skill-prof" id="sk-prof-${sk.id}" onchange="recalcSkill('${sk.id}');save()">
-        <option value="0">미숙</option>
-        <option value="2">숙련</option>
-        <option value="4">전문</option>
-        <option value="6">달인</option>
-        <option value="8">전설</option>
-      </select>
+      <span class="prof-rank-badge" id="rank-sk-${sk.id}">U</span>
+      <select id="sk-prof-${sk.id}" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
       <span class="skill-attr">${sk.attr.toUpperCase()}</span>
       <span class="skill-name">${sk.name}${sk.isLore?` <input class="inline-edit" id="lore-name-${sk.id}" placeholder="주제..." oninput="save()" style="width:60px;font-size:11px;">`:''}</span>
       <span class="skill-total" id="sk-val-${sk.id}">+0</span>`;
