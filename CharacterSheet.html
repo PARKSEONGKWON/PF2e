@@ -1126,8 +1126,6 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand">⚔ PF2e 캐릭터 시트</span>
     <span id="save-status"></span>
-    <button onclick="openRestModal()" style="background:var(--bg4);color:var(--accent2);border:1px solid var(--border2);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">🛏 휴식</button>
-    <button onclick="openConditionModal()" style="background:var(--bg4);color:var(--red-light);border:1px solid var(--border2);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">⚠ 상태이상</button>
   </div>
   <div id="auth-area">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1142,6 +1140,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <span style="color:var(--text2);font-size:12px;">PF2e 캐릭터 시트</span>
   <div style="flex:1;"></div>
   <div class="hdr-actions">
+    <button onclick="openRestModal()" style="background:var(--bg4);color:var(--accent2);border:1px solid var(--border2);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">🛏 휴식</button>
+    <button onclick="openConditionModal()" style="background:var(--bg4);color:var(--red-light);border:1px solid var(--border2);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">⚠ 상태이상</button>
     <button class="btn btn-confirm" onclick="exportJSON()">⬇ JSON</button>
     <label class="btn btn-cancel" style="cursor:pointer;text-align:center;">
       ⬆ JSON
