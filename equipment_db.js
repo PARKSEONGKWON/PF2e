@@ -29,8 +29,6 @@ const SHIELD_DB = [
 ];
 
 const WEAPON_DB = [
-  // 비무장
-  {name_ko:'주먹', name_en:'Fist', category:'비무장', price:'—', damage:'1d4 B', bulk:'—', hands:1, range:null, reload:null, group:'격투', traits:['민첩','기교','비치명','비무장']},
   // 단순 근접
   {name_ko:'클럽', name_en:'Club', category:'단순 근접', price:'—', damage:'1d6 B', bulk:1, hands:1, range:null, reload:null, group:'곤봉', traits:['투척 10ft']},
   {name_ko:'대거', name_en:'Dagger', category:'단순 근접', price:'2sp', damage:'1d4 P', bulk:'L', hands:1, range:null, reload:null, group:'칼', traits:['민첩','기교','투척 10ft','다용도 S']},

@@ -345,18 +345,10 @@ window.onload = function() {
   buildSkills();
   buildConditions();
   buildSpellSlots();
-  // Find fist from WEAPON_DB if available
-  const fistDb = (typeof WEAPON_DB !== 'undefined') ? WEAPON_DB.find(w=>w.name_ko==='주먹') : null;
-  if (fistDb) {
-    addWeapon({name:'주먹', dmg: fistDb.damage, traits: fistDb.traits.join(', '), _dbData: fistDb, category: fistDb.category});
-  } else {
-    addWeapon({name:'비무장 공격', dmg:'1d4 B', traits:'비치명, 민첩, 기교, 비무장'});
-  }
   initWeaponProfBadges();
   initArmorProfBadges();
   renderArmorCard();
   renderShieldCard();
-  addEquip({name:'모험가 꾸러미', qty:1, bulk:1});
   renderFeats();
   recalcAll();
 };
