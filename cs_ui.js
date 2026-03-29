@@ -1614,6 +1614,12 @@ function renderPets() {
   state.pets.forEach((p, i) => {
     const hpPct = p.hp.max > 0 ? Math.round((p.hp.cur/p.hp.max)*100) : 0;
     const hpColor = hpPct > 50 ? '#2d8a5e' : hpPct > 25 ? '#a08a20' : '#a03030';
+    // 마갑 적용 계산
+    const bd = p.bardingData || null;
+    const effectiveAC = p.ac + (bd ? bd.ac : 0);
+    const effectiveSpeed = Math.max(0, p.speed + (bd ? bd.speed : 0));
+    const bardingCheckPen = bd ? bd.check : 0;
+    const bardingDexCap = bd ? bd.dex : 99;
     el.innerHTML += `
     <div class="box" style="margin-bottom:10px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -1631,7 +1637,7 @@ function renderPets() {
       </div>
       <!-- AC + HP -->
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
-        <div class="ac-shield" style="width:40px;height:40px;font-size:16px;line-height:40px;">${p.ac}</div>
+        <div class="ac-shield" style="width:40px;height:40px;font-size:16px;line-height:40px;">${effectiveAC}</div>
         <div style="flex:1;">
           <div style="position:relative;background:var(--bg4);border:1px solid var(--border);border-radius:4px;height:22px;overflow:hidden;cursor:pointer;" onclick="petHpChange(${i}, parseInt(prompt('HP 변경량 (+회복 / -피해):'))||0)">
             <div style="position:absolute;left:0;top:0;bottom:0;width:${hpPct}%;background:${hpColor};border-radius:3px;transition:width .3s;"></div>
@@ -1639,11 +1645,11 @@ function renderPets() {
           </div>
         </div>
       </div>
-      ${p.barding && p.barding !== '없음' ? `<div style="font-size:10px;color:var(--text2);margin-bottom:4px;">🛡 마갑: <strong style="color:var(--text);">${p.barding}</strong></div>` : ''}
+      ${p.barding && p.barding !== '없음' ? `<div style="font-size:10px;color:var(--text2);margin-bottom:4px;">🛡 마갑: <strong style="color:var(--text);">${p.barding}</strong> <span style="color:var(--text2);">(AC+${bd?.ac||0} 민첩상한+${bd?.dex||0} 판정${bd?.check||0})</span></div>` : ''}
       ${(p.conditions && Object.keys(p.conditions).some(k=>p.conditions[k]>0)) ? `<div style="font-size:10px;color:var(--red-light);margin-bottom:4px;">⚠ ${Object.entries(p.conditions).filter(([,v])=>v>0).map(([k,v])=>{const cd=CONDITIONS_DATA.find(c=>c.name===k);return cd?.valued?k+' '+v:k;}).join(', ')}</div>` : ''}
       <!-- Info row -->
       <div style="display:flex;gap:8px;font-size:10px;color:var(--text2);margin-bottom:6px;flex-wrap:wrap;">
-        <span>이동 <strong style="color:var(--text);">${p.speed}</strong>피트</span>
+        <span>이동 <strong style="color:${effectiveSpeed < p.speed ? 'var(--red-light)' : 'var(--text)'};">${effectiveSpeed}</strong>피트</span>
         <span>크기 <strong style="color:var(--text);">${p.size}</strong></span>
         ${p.senses ? `<span>감각 <strong style="color:var(--text);">${p.senses}</strong></span>` : ''}
       </div>
