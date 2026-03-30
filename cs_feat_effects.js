@@ -2483,6 +2483,198 @@ const FEAT_EFFECTS = {
   'Unmistakable Lore': {
     effects: [{type:'display_note', text:'지식(Lore) 기술로 지식 회상 시 대실패→실패'}]
   },
+
+  // ═══════════════════════════════════════
+  //  원형 재주 (Archetype / Multiclass Feats)
+  // ═══════════════════════════════════════
+
+  // ── 바드 멀티클래스 ──
+  'Bard Dedication': {
+    choice: {type:'custom', label:'뮤즈를 선택하세요', options:[{id:'muse-enigma',name:'수수께끼'},{id:'muse-maestro',name:'마에스트로'},{id:'muse-warrior',name:'전사'},{id:'muse-lore',name:'지식'}]},
+    effects: [{type:'skill_trained', skill:'occultism'}, {type:'skill_trained', skill:'performance'}, {type:'display_note', text:'비의 캔트립 2개 습득. 주문 공격/DC 숙련됨. 핵심 속성: 매력. 뮤즈: $choice_name'}]
+  },
+  'Basic Bard Spellcasting': {
+    effects: [{type:'display_note', text:'기초 주문시전 혜택: 1랭크 주문 슬롯 1개. 6레벨에 2랭크, 8레벨에 3랭크 슬롯 추가'}]
+  },
+  "Basic Muse's Whispers": {
+    effects: [{type:'display_note', text:'1~2레벨 바드 재주 1개 습득'}]
+  },
+  "Advanced Muse's Whispers": {
+    effects: [{type:'display_note', text:'바드 재주 1개 습득 (바드 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  'Counter Perform': {
+    effects: [{type:'display_note', text:'집중 주문: 대항 공연 습득. 집중 포인트 풀 획득/확장'}]
+  },
+  'Anthemic Performance': {
+    effects: [{type:'display_note', text:'합주 캔트립: 용기의 찬가 습득'}]
+  },
+  'Occult Breadth': {
+    effects: [{type:'display_note', text:'바드 원형 주문 슬롯 수 증가 (최고 2랭크 제외 각 랭크 +1)'}]
+  },
+  'Expert Bard Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 전문가. 4랭크 슬롯. 14레벨에 5랭크, 16레벨에 6랭크'}]
+  },
+  'Master Bard Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 달인. 7랭크 슬롯. 20레벨에 8랭크'}]
+  },
+
+  // ── 클레릭 멀티클래스 ──
+  'Cleric Dedication': {
+    effects: [{type:'skill_trained', skill:'religion'}, {type:'display_note', text:'신격 선택. 신성 캔트립 2개. 주문 공격/DC 숙련됨. 핵심 속성: 지혜. 신격 기술 숙련'}]
+  },
+  'Basic Cleric Spellcasting': {
+    effects: [{type:'display_note', text:'기초 주문시전 혜택. 신격 주문을 원형 슬롯에 준비 가능'}]
+  },
+  'Basic Dogma': {
+    effects: [{type:'display_note', text:'1~2레벨 클레릭 재주 1개 습득'}]
+  },
+  'Advanced Dogma': {
+    effects: [{type:'display_note', text:'클레릭 재주 1개 습득 (클레릭 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  'Divine Breadth': {
+    effects: [{type:'display_note', text:'클레릭 원형 주문 슬롯 수 증가 (최고 2랭크 제외 각 랭크 +1)'}]
+  },
+  'Expert Cleric Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 전문가. 4랭크 슬롯. 14레벨에 5랭크, 16레벨에 6랭크'}]
+  },
+  'Master Cleric Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 달인. 7랭크 슬롯. 20레벨에 8랭크'}]
+  },
+
+  // ── 드루이드 멀티클래스 ──
+  'Druid Dedication': {
+    effects: [{type:'skill_trained', skill:'nature'}, {type:'display_note', text:'드루이드 교단 선택. 원시 캔트립 2개. 주문 공격/DC 숙련됨. 핵심 속성: 지혜. 드루이드 금기 적용'}]
+  },
+  'Basic Druid Spellcasting': {
+    effects: [{type:'display_note', text:'기초 주문시전 혜택'}]
+  },
+  'Basic Wilding': {
+    effects: [{type:'display_note', text:'1~2레벨 드루이드 재주 1개 습득'}]
+  },
+  'Order Spell': {
+    effects: [{type:'display_note', text:'교단의 초기 집중 주문 습득. 집중 포인트 풀 획득/확장'}]
+  },
+  'Advanced Wilding': {
+    effects: [{type:'display_note', text:'드루이드 재주 1개 습득 (드루이드 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  'Primal Breadth': {
+    effects: [{type:'display_note', text:'드루이드 원형 주문 슬롯 수 증가'}]
+  },
+  'Expert Druid Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 전문가. 4랭크 슬롯'}]
+  },
+  'Master Druid Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 달인. 7랭크 슬롯'}]
+  },
+
+  // ── 파이터 멀티클래스 ──
+  'Fighter Dedication': {
+    effects: [{type:'skill_trained', skill:'athletics'}, {type:'display_note', text:'군용 무기 숙련됨. 곡예 또는 운동 숙련. 파이터 클래스 DC 숙련'}]
+  },
+  'Basic Maneuver': {
+    effects: [{type:'display_note', text:'1~2레벨 파이터 재주 1개 습득'}]
+  },
+  'Fighter Resiliency': {
+    effects: [{type:'hp_bonus', value:3}, {type:'display_note', text:'파이터 원형 재주당 HP +3'}]
+  },
+  'Reactive Striker': {
+    effects: [{type:'grant_action', action:'aoo'}, {type:'display_note', text:'반격 타격(Reactive Strike) 반응 획득'}]
+  },
+  'Advanced Maneuver': {
+    effects: [{type:'display_note', text:'파이터 재주 1개 습득 (파이터 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  'Diverse Weapon Expert': {
+    effects: [{type:'display_note', text:'단순/군용 무기 숙련도 전문가. 고급 무기 숙련됨'}]
+  },
+
+  // ── 레인저 멀티클래스 ──
+  'Ranger Dedication': {
+    effects: [{type:'skill_trained', skill:'survival'}, {type:'display_note', text:'생존 숙련. 레인저 클래스 DC 숙련. 사냥감 추적(Hunt Prey) 행동 획득'}]
+  },
+  "Basic Hunter's Trick": {
+    effects: [{type:'display_note', text:'1~2레벨 레인저 재주 1개 습득'}]
+  },
+  'Ranger Resiliency': {
+    effects: [{type:'hp_bonus', value:3}, {type:'display_note', text:'레인저 원형 재주당 HP +3'}]
+  },
+  "Advanced Hunter's Trick": {
+    effects: [{type:'display_note', text:'레인저 재주 1개 습득 (레인저 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  'Master Spotter': {
+    effects: [{type:'display_note', text:'지각 숙련도 달인으로 증가'}]
+  },
+
+  // ── 로그 멀티클래스 ──
+  'Rogue Dedication': {
+    effects: [{type:'skill_trained', skill:'stealth'}, {type:'skill_trained', skill:'thievery'}, {type:'display_note', text:'기술 재주 1개 + 기습 공격. 경갑 숙련됨. 로그 클래스 DC 숙련'}]
+  },
+  'Basic Trickery': {
+    effects: [{type:'display_note', text:'1~2레벨 로그 재주 1개 습득'}]
+  },
+  'Sneak Attacker': {
+    effects: [{type:'damage_note', scaling:{1:'1d4',6:'1d6'}, damage_type:'정밀'}, {type:'display_note', text:'은밀 공격 1d4 (6레벨에 1d6). 레벨 스케일링 없음'}]
+  },
+  'Advanced Trickery': {
+    effects: [{type:'display_note', text:'로그 재주 1개 습득 (로그 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  'Skill Mastery': {
+    effects: [{type:'display_note', text:'기술 1개 전문가→달인, 다른 1개 숙련→전문가. 기술 재주 1개. 최대 5회'}]
+  },
+  'Uncanny Dodge': {
+    effects: [{type:'display_note', text:'이점 부정(Deny Advantage) 획득. 은폐/기습의 방어불가 면역'}]
+  },
+  'Evasiveness': {
+    effects: [{type:'display_note', text:'반사 내성 숙련도 달인으로 증가'}]
+  },
+
+  // ── 위치 멀티클래스 ──
+  'Witch Dedication': {
+    effects: [{type:'skill_trained', skill:'occultism'}, {type:'display_note', text:'후원자 선택. 사역마 획득. 캔트립 1개. 주문 공격/DC 숙련됨. 핵심 속성: 지능'}]
+  },
+  'Basic Witch Spellcasting': {
+    effects: [{type:'display_note', text:'기초 주문시전 혜택'}]
+  },
+  'Basic Witchcraft': {
+    effects: [{type:'familiar_abilities', value:1}, {type:'display_note', text:'1~2레벨 위치 재주 1개. 사역마 능력 3개 (기본 2개→3개)'}]
+  },
+  'Advanced Witchcraft': {
+    effects: [{type:'display_note', text:'위치 재주 1개 습득 (위치 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  "Patron's Breadth": {
+    effects: [{type:'display_note', text:'위치 원형 주문 슬롯 수 증가'}]
+  },
+  'Expert Witch Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 전문가. 4랭크 슬롯'}]
+  },
+  'Master Witch Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 달인. 7랭크 슬롯'}]
+  },
+
+  // ── 위자드 멀티클래스 ──
+  'Wizard Dedication': {
+    effects: [{type:'skill_trained', skill:'arcana'}, {type:'display_note', text:'주문서 획득 (캔트립 4개, 매일 2개 준비). 주문 공격/DC 숙련됨. 핵심 속성: 지능. 학파 선택'}]
+  },
+  'Arcane School Spell': {
+    effects: [{type:'display_note', text:'학파의 초기 학파 주문 습득. 집중 포인트 풀 획득'}]
+  },
+  'Basic Arcana': {
+    effects: [{type:'display_note', text:'1~2레벨 위자드 재주 1개 습득'}]
+  },
+  'Basic Wizard Spellcasting': {
+    effects: [{type:'display_note', text:'기초 주문시전 혜택. 주문서에 주문 추가'}]
+  },
+  'Advanced Arcana': {
+    effects: [{type:'display_note', text:'위자드 재주 1개 습득 (위자드 레벨 = 캐릭터 레벨/2). 반복 선택 가능'}]
+  },
+  'Arcane Breadth': {
+    effects: [{type:'display_note', text:'위자드 원형 주문 슬롯 수 증가'}]
+  },
+  'Expert Wizard Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 전문가. 4랭크 슬롯'}]
+  },
+  'Master Wizard Spellcasting': {
+    effects: [{type:'display_note', text:'주문 공격/DC 달인. 7랭크 슬롯'}]
+  },
 };
 
 
