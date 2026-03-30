@@ -1334,6 +1334,12 @@ function openModal(type, ctx) {
   renderOptions(getOptionsData(type));
 }
 
+function _searchFilter(arr) {
+  const q = (document.getElementById('modal-search')?.value||'').toLowerCase();
+  if (!q) return arr;
+  return arr.filter(i => (i.name_ko||i.name||'').toLowerCase().includes(q) || (i.name_en||i.en||'').toLowerCase().includes(q) || (i.summary||'').toLowerCase().includes(q));
+}
+
 function getOptionsData(type) {
   if (type==='class') return CLASSES;
   if (type==='ancestry') return ANCESTRIES;
@@ -1343,9 +1349,9 @@ function getOptionsData(type) {
   if (type==='feat') return filterFeats();
   if (type==='spell') return filterSpells();
   if (type==='weapon' || type==='equip-weapon') return filterWeapons();
-  if (type==='armor' || type==='equip-armor') return typeof ARMOR_DB!=='undefined' ? ARMOR_DB : [];
-  if (type==='shield' || type==='equip-shield') return typeof SHIELD_DB!=='undefined' ? SHIELD_DB : [];
-  if (type==='equip-gear') return typeof GEAR_DB!=='undefined' ? GEAR_DB : [];
+  if (type==='armor' || type==='equip-armor') return _searchFilter(typeof ARMOR_DB!=='undefined' ? ARMOR_DB : []);
+  if (type==='shield' || type==='equip-shield') return _searchFilter(typeof SHIELD_DB!=='undefined' ? SHIELD_DB : []);
+  if (type==='equip-gear') return _searchFilter(typeof GEAR_DB!=='undefined' ? GEAR_DB : []);
   return [];
 }
 
