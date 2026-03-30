@@ -481,6 +481,7 @@ let _lastCondName = null;
 function toggleCondFromModal(name, dir) {
   const cdata = CONDITIONS_DATA.find(c => c.name === name);
   if (!cdata) return;
+  if (cdata.auto) return; // 자동 관리 상태이상은 수동 변경 불가
   if (cdata.valued) {
     let cur = state.conditions[name] || 0;
     cur = dir > 0 ? Math.min(cur + 1, cdata.max || 99) : Math.max(cur - 1, 0);
