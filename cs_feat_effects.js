@@ -2891,7 +2891,19 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
     };
     container.appendChild(btn);
   } else if (choiceDef.type === 'custom' && choiceDef.options) {
-    choiceDef.options.forEach(opt => {
+    // 영역 입문: 신격 영역으로 필터링
+    let filteredOpts = choiceDef.options;
+    if (choiceDef.label && choiceDef.label.includes('영역') && state.deity && typeof DEITY_DB !== 'undefined') {
+      const deity = DEITY_DB.find(d => d.id === state.deity);
+      if (deity && deity.domains && deity.domains.length > 0) {
+        filteredOpts = choiceDef.options.filter(opt => deity.domains.includes(opt.name));
+        const note = document.createElement('div');
+        note.style.cssText = 'font-size:11px;color:var(--accent);padding:8px 12px;border-bottom:1px solid var(--border);';
+        note.textContent = `${deity.name_ko}의 영역: ${deity.domains.join(', ')}`;
+        container.appendChild(note);
+      }
+    }
+    filteredOpts.forEach(opt => {
       const row = document.createElement('div');
       row.className = 'opt-row';
       row.style.cursor = 'pointer';

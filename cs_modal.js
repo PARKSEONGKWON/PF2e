@@ -661,16 +661,20 @@ function previewDeity(id, row) {
   const skillMap = {society:'사회학',deception:'기만',athletics:'운동',acrobatics:'곡예',survival:'생존',
     intimidation:'위협',medicine:'의학',arcana:'주문학',stealth:'은신',crafting:'공예'};
   const skillName = skillMap[d.skill] || d.skill || '';
+  const titleStr = d.title ? `<div style="font-size:12px;color:var(--accent);font-style:italic;margin-top:2px;">${d.title}</div>` : '';
+  const descStr = d.desc ? `<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:4px;">${d.desc}</div>` : '';
 
   const detailHtml = `
     <div class="modal-detail-title">${d.name_ko}</div>
     <div class="modal-detail-en">${d.name_en}</div>
+    ${titleStr}
     <div style="margin:12px 0;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.7;">
       <div><b>선호 무기:</b> ${d.weapon}</div>
       <div><b>신성화:</b> ${sanctLabel}</div>
       <div><b>신격 기술:</b> ${skillName}</div>
       <div><b>영역:</b> ${(d.domains||[]).join(', ')}</div>
     </div>
+    ${descStr}
     <button onclick="confirmDeity()" style="width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">선택 확정</button>`;
 
   // 모바일: 아코디언
