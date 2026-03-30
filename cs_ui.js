@@ -1237,10 +1237,9 @@ function renderSpells() {
     for (let i = 0; i < totalSlots; i++) {
       const spell = spellsAtRank[i] || null;
       const row = document.createElement('div');
-      row.className = 'spell-slot-row';
-
       // Cast label (clickable to toggle)
       const isCast = !!(state.spellSlotsUsed?.[r]?.[i]);
+      row.className = 'spell-slot-row' + (isCast ? ' slot-used' : '');
 
       if (spell) {
         const globalIdx = state.spells.known.indexOf(spell);
