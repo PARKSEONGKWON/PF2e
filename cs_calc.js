@@ -231,10 +231,10 @@ function showInfo(type, name) {
       const nameEnD = item.en || item.name_en || '';
       const desc = item.desc || item.summary || '';
       let tags = '';
-      if (item.feat_level !== undefined) tags = `<span class="tag hl">${item.feat_level}레벨</span> <span class="tag">${item.category||''}</span>`;
-      else if (item.rank !== undefined) tags = `<span class="tag hl">${item.is_cantrip?'캔트립':'랭크 '+item.rank}</span>`;
-      else if (item.damage) tags = `<span class="tag hl">${item.damage}</span> <span class="tag">${item.price||''}</span>`;
-      else if (item.ac_bonus !== undefined) tags = `<span class="tag hl">AC+${item.ac_bonus}</span>`;
+      if (item.feat_level !== undefined) tags = `<span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${item.category||''}</span>`;
+      else if (item.rank !== undefined) tags = `<span class="tag-meta">${item.is_cantrip?'캔트립':'랭크 '+item.rank}</span>`;
+      else if (item.damage) tags = `<span class="tag-meta">${item.damage}</span> <span class="tag-meta">${item.price||''}</span>`;
+      else if (item.ac_bonus !== undefined) tags = `<span class="tag-meta">AC+${item.ac_bonus}</span>`;
       const spellNotes = (item.rank !== undefined) ? getSpellFeatNotes(nameKoD) : '';
       listItems.innerHTML = `<div style="padding:16px;">
         <div style="font-size:16px;font-weight:700;margin-bottom:2px;">${nameKoD}</div>

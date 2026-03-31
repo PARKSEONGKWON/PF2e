@@ -1701,7 +1701,7 @@ function selectOption(item, row) {
       let mDesc = item.desc || item.summary || '';
       let tags = '';
       if (item.feat_level !== undefined) {
-        tags = `<span class="tag hl">${item.feat_level}레벨</span> <span class="tag">${item.category||''}</span>`;
+        tags = `<span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${item.category||''}</span>`;
         if (item.prerequisites) {
           const parts = item.prerequisites.split(/(?<=\.)\s+/);
           const prereqName = parts[0].replace(/\.$/,'');
@@ -1712,9 +1712,9 @@ function selectOption(item, row) {
           mDesc = dp.join('<br>');
         }
       }
-      else if (item.rank !== undefined) tags = `<span class="tag hl">${item.is_cantrip?'캔트립':'랭크 '+item.rank}</span>`;
-      else if (item.damage) tags = `<span class="tag hl">${item.damage}</span> <span class="tag">가격: ${item.price||'-'}</span>`;
-      else if (item.ac_bonus !== undefined) tags = `<span class="tag hl">AC+${item.ac_bonus}</span>`;
+      else if (item.rank !== undefined) tags = `<span class="tag-meta">${item.is_cantrip?'캔트립':'랭크 '+item.rank}</span>`;
+      else if (item.damage) tags = `<span class="tag-meta">${item.damage}</span> <span class="tag-meta">가격: ${item.price||'-'}</span>`;
+      else if (item.ac_bonus !== undefined) tags = `<span class="tag-meta">AC+${item.ac_bonus}</span>`;
       const mSpellNotes = (item.rank !== undefined && typeof getSpellFeatNotes === 'function') ? getSpellFeatNotes(item.name||item.name_ko||'') : '';
       detailHtml = `${tags?'<div style="margin-bottom:6px;">'+tags+'</div>':''}
         <div style="font-size:12px;line-height:1.6;">${formatDescActions(mDesc, item)}${mSpellNotes}</div>`;
@@ -1836,9 +1836,7 @@ function showItemDetail(item) {
 
   let tags = '';
   if (item.feat_level !== undefined) {
-    tags = `<span class="tag hl">${item.feat_level}레벨</span>
-            <span class="tag">${item.category||''}</span>
-            ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    tags = `<span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${item.category||''}</span> ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
     // 선행 요소: 첫 문장만 선행으로, 나머지는 본문에 합침
     if (item.prerequisites) {
       const parts = item.prerequisites.split(/(?<=\.)\s+/);
@@ -1852,26 +1850,18 @@ function showItemDetail(item) {
     }
   } else if (item.rank !== undefined) {
     const rankStr = item.is_cantrip?'캔트립':item.is_focus?'집중':`랭크 ${item.rank}`;
-    tags = `<span class="tag hl">${rankStr}</span>
-            <span class="spell-actions">${item.actions||''}</span>
-            ${(item.traditions||[]).map(t=>traitTag(t)).join('')}
-            ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    tags = `<span class="tag-meta">${rankStr}</span> <span class="spell-actions">${item.actions||''}</span> ${(item.traditions||[]).map(t=>traitTag(t)).join('')} ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
   } else if (item.damage !== undefined) {
-    tags = `<span class="tag hl">${item.damage||''}</span>
-            <span class="tag">${item.category||''}</span>
-            <span class="tag">가격: ${item.price||'-'}</span>
-            ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    tags = `<span class="tag-meta">${item.damage||''}</span> <span class="tag-meta">${item.category||''}</span> <span class="tag-meta">가격: ${item.price||'-'}</span> ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
   } else if (item.ac_bonus !== undefined) {
-    tags = `<span class="tag hl">AC+${item.ac_bonus}</span>
-            <span class="tag">${item.category||''}</span>
-            ${item.dex_cap!==null&&item.dex_cap!==undefined?`<span class="tag">DEX상한: ${item.dex_cap}</span>`:''}
-            ${item.hardness!==undefined?`<span class="tag">경도: ${item.hardness}</span>`:''}
-            ${item.hp!==undefined&&item.bt!==undefined?`<span class="tag">HP: ${item.hp} (BT: ${item.bt})</span>`:''}
-            ${item.speed_penalty?`<span class="tag" style="color:var(--red-light);">속도: ${item.speed_penalty}</span>`:''}
-            <span class="tag">가격: ${item.price||'-'}</span>`;
+    tags = `<span class="tag-meta">AC+${item.ac_bonus}</span> <span class="tag-meta">${item.category||''}</span>
+            ${item.dex_cap!==null&&item.dex_cap!==undefined?`<span class="tag-meta">DEX상한: ${item.dex_cap}</span>`:''}
+            ${item.hardness!==undefined?`<span class="tag-meta">경도: ${item.hardness}</span>`:''}
+            ${item.hp!==undefined&&item.bt!==undefined?`<span class="tag-meta">HP: ${item.hp} (BT: ${item.bt})</span>`:''}
+            ${item.speed_penalty?`<span class="tag-meta" style="color:var(--red-light);">속도: ${item.speed_penalty}</span>`:''}
+            <span class="tag-meta">가격: ${item.price||'-'}</span>`;
   } else if (item.hp !== undefined && item.keyAttr !== undefined) {
-    tags = `<span class="tag hl">HP ${item.hp}+CON</span>
-            <span class="tag hl">${item.keyAttr}</span>
+    tags = `<span class="tag-meta">HP ${item.hp}+CON</span> <span class="tag-meta">${item.keyAttr}</span>
             ${item.tradition?`<span class="tag">${item.tradition} 주문</span>`:''}`;
   } else if (item.boosts && item.flaws) {
     tags = `<span class="tag hl">HP ${item.hp}</span>
