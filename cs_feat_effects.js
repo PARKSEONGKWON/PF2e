@@ -3135,9 +3135,7 @@ function _applyFeatChoice(choiceId) {
   state.feats[featType][featIndex].choice = choiceId;
 
   // spell_cantrip 선택 시 선천적 주문에 추가
-  console.log('[_applyFeatChoice] choiceId:', choiceId, 'type:', choiceDef?.type, 'feat:', state.feats[featType]?.[featIndex]?.name);
   if (choiceDef?.type === 'spell_cantrip') {
-    console.log('[spell_cantrip] adding innate spell:', choiceId);
     const tradition = choiceDef.tradition || 'arcane';
     const tradKo = {arcane:'비전',divine:'신성',occult:'비의',primal:'근원'}[tradition] || tradition;
     const featName = state.feats[featType][featIndex].name || '';
