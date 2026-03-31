@@ -1157,13 +1157,13 @@ function renderSpells() {
           let checks = '';
           for (let u = 0; u < maxUses; u++) {
             const isUsed = u < used;
-            checks += `<span onclick="toggleInnateUse(${i},${u},${maxUses})" style="cursor:pointer;font-size:12px;margin:0 1px;color:${isUsed ? 'var(--text2)' : 'var(--accent)'};">${isUsed ? '○' : '●'}</span>`;
+            checks += `<span class="spell-slot-fire${isUsed?' used':''}" onclick="toggleInnateUse(${i},${u},${maxUses})" style="cursor:pointer;font-size:14px;margin:0 1px;">🔥</span>`;
           }
           usesHtml = `<span style="margin-left:6px;">${checks}</span>`;
         }
         const row = document.createElement('div');
         row.className = 'spell-slot-row';
-        row.style.opacity = (maxUses > 0 && used >= maxUses) ? '0.5' : '1';
+        // 행 반투명 없음 — 개별 🔥 딤으로 사용 상태 표시
         row.innerHTML = `
           <span class="spell-slot-name" onclick="showInfo('spell','${(s.name||'').replace(/'/g,"\\'")}')">${s.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
           <span style="font-size:10px;color:var(--accent);margin-left:4px;">${rankLabel}</span>
