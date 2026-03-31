@@ -358,7 +358,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'신성한 부적 소지. 마법에 대한 의지 내성 +1 상황 보너스'}]
   },
   'Arcane Sense': {
-    effects: [{type:'display_note', text:'60피트 이내 마법 감지(1행동). 전문가=상시 마법 감지'}]
+    effects: [{type:'grant_innate_spell', spell:'마법 감지', tradition:'신비', spellType:'cantrip', uses:'자유'}, {type:'display_note', text:'전문가=1행동, 대가=자유 행동, 전설=수동 상시 감지'}]
   },
   'Unified Theory': {
     effects: [{type:'display_note', text:'주문학으로 다른 마법 전통(신성/비의/원시) 판정 대체 가능. 전설 전용'}]
@@ -600,7 +600,10 @@ const FEAT_EFFECTS = {
   },
   'Adapted Cantrip': {
     choice: {type:'spell_cantrip', tradition:'any', label:'다른 전통에서 캔트립 선택'},
-    effects: [{type:'grant_innate_spell'}]
+    effects: []
+  },
+  'Supernatural Charm': {
+    effects: [{type:'grant_innate_spell', spell:'매혹', tradition:'비전', spellType:'spell', uses:'하루 1회'}]
   },
   'Natural Skill': {
     choice: {
@@ -716,6 +719,27 @@ const FEAT_EFFECTS = {
   },
   'Orc Sight': {
     effects: [{type:'display_note', text:'암시야(darkvision) 획득'}]
+  },
+  'Celestial Mercy': {
+    effects: [{type:'grant_innate_spell', spell:'고통 정화', tradition:'신성', spellType:'spell', uses:'하루 2회'}]
+  },
+  'Slip Sideways': {
+    effects: [{type:'grant_innate_spell', spell:'순간이동', tradition:'신성', spellType:'spell', uses:'하루 1회'}]
+  },
+  'Hag Magic': {
+    effects: [{type:'display_note', text:'4랭크 비의 선천 주문 하루 1회 (점술, 매혹, 투청, 투시, 꿈 메시지, 환영 변장 중 선택)'}]
+  },
+  'Otherworldly Acumen': {
+    effects: [{type:'display_note', text:'같은 전통의 2랭크 주문 1개를 선천 주문으로 하루 1회. 휴식 1일로 변경 가능'}]
+  },
+  'Celestial Magic': {
+    effects: [{type:'display_note', text:'2랭크 신성 선천 주문 2개 하루 1회 (맑은 마음, 영원의 빛, 인간형 형태, 폭로의 빛, 생명 공유, 확실한 발놀림 중 선택)'}]
+  },
+  'Fiendish Magic': {
+    effects: [{type:'display_note', text:'2랭크 신성 선천 주문 2개 하루 1회 (변장 마법, 거짓 활력, 투명화, 투시, 분쇄, 편집증 중 선택)'}]
+  },
+  'Summon Nephilim Kin': {
+    effects: [{type:'display_note', text:'5랭크 소환 주문을 신성 선천 주문으로 하루 1회'}]
   },
 
   // ═══════════════════════════════════════
@@ -2870,6 +2894,20 @@ function _applyOneEffect(fb, eff, feat, level) {
       // 특정 무기에 직접 훈련됨(trained) 부여
       if (!fb.trainedWeapons) fb.trainedWeapons = [];
       if (eff.weapons) eff.weapons.forEach(w => { if (!fb.trainedWeapons.includes(w)) fb.trainedWeapons.push(w); });
+      break;
+    }
+    case 'grant_innate_spell': {
+      // 고정 선천 주문 부여 (선택 불필요)
+      if (eff.spell && feat.name) {
+        if (!state.spells.innate) state.spells.innate = [];
+        const existing = state.spells.innate.find(s => s._sourceFeat === feat.name && s.name === eff.spell);
+        if (!existing) {
+          state.spells.innate.push({
+            name: eff.spell, tradition: eff.tradition || '', type: eff.spellType || 'spell',
+            uses: eff.uses || '하루 1회', _sourceFeat: feat.name, _source: feat.name
+          });
+        }
+      }
       break;
     }
     case 'grant_lore': {
