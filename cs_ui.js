@@ -1437,12 +1437,16 @@ function renderFeats() {
       div.className = 'feat-entry';
       div.style.cursor = 'pointer';
       const desc = h.summary || h.desc || '';
+      const hAncestry = h.ancestry === '*' ? '다목적 유산' : h.ancestry || '';
       div.innerHTML = `
         <div style="display:flex;align-items:center;gap:4px;width:100%;margin-bottom:2px;">
           <span style="flex:1;color:var(--text);font-size:12px;">${h.name_ko} (${h.name_en||''})</span>
         </div>
         <div class="feat-src"><span style="color:var(--text2);font-size:10px;">Lv 1</span></div>
-        <div class="feat-detail">${typeof formatDescActions==='function'?formatDescActions(desc,h):desc}</div>`;
+        <div class="feat-detail">
+          <div style="margin-bottom:6px;"><span class="tag-meta">유산</span> <span class="tag-meta">${hAncestry}</span></div>
+          <div style="line-height:1.6;">${typeof formatDescActions==='function'?formatDescActions(desc,h):desc}</div>
+        </div>`;
       div.addEventListener('click', () => _toggleFeatAccordion(div));
       herDisplay.innerHTML = '';
       herDisplay.appendChild(div);
@@ -1467,13 +1471,25 @@ function renderFeats() {
       // DB에서 설명 가져오기
       const featData = (typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(fd => fd.name_ko === f.name.split(' (')[0].trim()) : null;
       const desc = featData?.desc || featData?.summary || '';
+      // 아코디언 내 메타 + 특성 뱃지
+      const fTraits = (featData?.traits||[]).map(t2 => typeof traitTag==='function' ? traitTag(t2) : `<span class="tag">${t2}</span>`).join(' ');
+      const fMeta = `<span class="tag-meta">${featData?.feat_level||f.level||1}레벨</span> <span class="tag-meta">${featData?.category||t}</span>`;
+      let fPrereq = '';
+      if (featData?.prerequisites) {
+        const prParts = featData.prerequisites.split(/(?<=\.)\s+/);
+        fPrereq = `<div style="margin-top:4px;"><b style="color:var(--accent);">선행:</b> ${prParts[0].replace(/\.$/,'')}</div>`;
+      }
       div.innerHTML = `
         <div style="display:flex;align-items:center;gap:4px;width:100%;margin-bottom:2px;">
           <span style="flex:1;color:var(--text);font-size:12px;">${f.name || labels[t] + ' 재주'}</span>
           ${choiceBadge ? `<span style="font-size:10px;color:var(--accent);flex-shrink:0;">[${choiceBadge}]</span>` : ''}
         </div>
         <div class="feat-src"><span style="color:var(--text2);font-size:10px;">${srcLabel}</span></div>
-        <div class="feat-detail">${typeof formatDescActions==='function'?formatDescActions(desc,featData):desc}</div>`;
+        <div class="feat-detail">
+          <div style="margin-bottom:6px;">${fMeta} ${fTraits}</div>
+          ${fPrereq}
+          <div style="line-height:1.6;">${typeof formatDescActions==='function'?formatDescActions(desc,featData):desc}</div>
+        </div>`;
       div.addEventListener('click', () => _toggleFeatAccordion(div));
       el.appendChild(div);
     });
