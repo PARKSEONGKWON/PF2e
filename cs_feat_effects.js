@@ -907,7 +907,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'신격 선호 무기(d6 이하 단순/비무장)의 피해 주사위 한 단계 증가'}]
   },
   'Divine Castigation': {
-    effects: [{type:'display_note', text:'해로움/치유로 반대 특질 생물에 추가 영혼 피해 (= 주문 랭크)'}]
+    effects: [{type:'display_note', text:'해로움/치유로 반대 특성 생물에 추가 영혼 피해 (= 주문 랭크)'}]
   },
   'Domain Initiate': {
     choice: {
@@ -999,7 +999,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[반응] 인접 생물의 마법에 대한 아군 내성 직전, 선호 무기로 타격. 명중 시 내성 +2 (치명타 +3)'}]
   },
   'Divine Weapon': {
-    effects: [{type:'display_note', text:'[자유행동] 신성 주문 시전 완료 시 턴 종료까지 무기에 추가 1d4 영혼 피해 (반대 특질 2d4)'}]
+    effects: [{type:'display_note', text:'[자유행동] 신성 주문 시전 완료 시 턴 종료까지 무기에 추가 1d4 영혼 피해 (반대 특성 2d4)'}]
   },
   'Magic Hands': {
     effects: [{type:'display_note', text:'상처 치료 시 d8→d10. 치유에 레벨만큼 상태 보너스'}]
@@ -1033,7 +1033,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'치유 글꼴 슬롯을 희생하여 고통 정화/맑은 마음/건강한 몸/확실한 발놀림 시전'}]
   },
   'Sanctify Armament': {
-    effects: [{type:'display_note', text:'[1행동] 무기에 1라운드 신성/불경 특질 부여. 반대 특질 생물에 추가 2d6 영혼 피해'}]
+    effects: [{type:'display_note', text:'[1행동] 무기에 1라운드 신성/불경 특성 부여. 반대 특성 생물에 추가 2d6 영혼 피해'}]
   },
   'Surging Focus': {
     effects: [{type:'display_note', text:'[반응] 하루 1회. 아군 HP 0 시 집중 포인트 1점 즉시 회복'}]
@@ -1047,7 +1047,7 @@ const FEAT_EFFECTS = {
 
   // ── 10레벨 ──
   'Castigating Weapon': {
-    effects: [{type:'display_note', text:'신성 응징 후 턴 종료까지 무기에 신성/불경 특질 + 추가 영혼 피해 (랭크만큼)'}]
+    effects: [{type:'display_note', text:'신성 응징 후 턴 종료까지 무기에 신성/불경 특성 + 추가 영혼 피해 (랭크만큼)'}]
   },
   'Heroic Recovery': {
     effects: [{type:'display_note', text:'[주문변형] 단일 대상 치유로 HP 회복 시: 이동 +5피트, 공격 +1, 피해 +1. 엎드림 즉시 해제'}]
@@ -1124,7 +1124,7 @@ const FEAT_EFFECTS = {
 
   // ── 18레벨 ──
   'Divine Apex': {
-    effects: [{type:'display_note', text:'일일 준비 시 아이템에 정점 특질 부여. 신성 속성 수정치 +1 또는 +4'}]
+    effects: [{type:'display_note', text:'일일 준비 시 아이템에 정점 특성 부여. 신성 속성 수정치 +1 또는 +4'}]
   },
   'Echoing Channel': {
     effects: [{type:'display_note', text:'[주문변형] 2행동 해로움/치유로 단일 대상 시 추가 1명에 1행동 버전 적용 (슬롯 불필요)'}]
@@ -1236,7 +1236,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[반응] 인접 적의 근접 치명타 시 폭풍 급습 시전. 실패 시 5피트 밀어냄'}]
   },
   'Deimatic Display': {
-    effects: [{type:'display_note', text:'15피트 원뿔 내 동물/균류/식물에게 사기 꺾기. 시각 특질, 언어 페널티 없음'}]
+    effects: [{type:'display_note', text:'15피트 원뿔 내 동물/균류/식물에게 사기 꺾기. 시각 특성, 언어 페널티 없음'}]
   },
   'Ferocious Shape': {
     effects: [{type:'display_note', text:'공룡 형태를 야생 형태 목록에 추가. 운동 부여 형태 시 +1 상태 보너스'}]
@@ -1309,7 +1309,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'save_bonus', save:'all', value:2, bonus_type:'status', condition:'질병/근원 마법'}, {type:'display_note', text:'노화 정지. 질병/근원 마법 내성 +2 상태 보너스'}]
   },
   'Verdant Metamorphosis': {
-    effects: [{type:'display_note', text:'식물 특질 획득. 녹색 휴식으로 나무 변신 (AC 30). 햇빛 10분 쉬면 HP 절반 회복'}]
+    effects: [{type:'display_note', text:'식물 특성 획득. 녹색 휴식으로 나무 변신 (AC 30). 햇빛 10분 쉬면 HP 절반 회복'}]
   },
   'Effortless Concentration': {
     effects: [{type:'display_note', text:'[자유] 턴 시작 시 유지 주문 1개 자동 연장'}]
@@ -1412,7 +1412,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[자유] 주도권 굴림 직전 아군 모두 주도권 +1 상황 보너스'}]
   },
   'Twin Parry': {
-    effects: [{type:'ac_bonus', value:1, bonus_type:'circumstance', condition:'양손 근접 무기'}, {type:'display_note', text:'[1행동] 양손 근접 무기로 AC +1 상황 보너스 (방어 특질 +2). 다음 턴까지'}]
+    effects: [{type:'ac_bonus', value:1, bonus_type:'circumstance', condition:'양손 근접 무기'}, {type:'display_note', text:'[1행동] 양손 근접 무기로 AC +1 상황 보너스 (방어 특성 +2). 다음 턴까지'}]
   },
   'Additional Recollection': {
     effects: [{type:'display_note', text:'[반응] 사냥감 지식 회상 성공 시 다른 보이는 생물에 추가 지식 회상'}]
@@ -1542,7 +1542,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[1행동] 주문 사거리 30피트 증가 (접촉→30피트)'}]
   },
   'Conceal Spell': {
-    effects: [{type:'display_note', text:'[1행동] 다음 주문에 미묘한 특질 부여. 기만 DC로 시전 징후 은닉'}]
+    effects: [{type:'display_note', text:'[1행동] 다음 주문에 미묘한 특성 부여. 기만 DC로 시전 징후 은닉'}]
   },
   'Steady Spellcasting': {
     effects: [{type:'display_note', text:'반응이 주문시전 방해 시 DC 15 단순 판정 성공하면 방해 안 됨'}]
@@ -1651,7 +1651,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[반응] 주문 피해 시, 대상 1명에게 다음 턴까지 해당 에너지 약점 부여 (레벨별 1~5)'}]
   },
   'Nonlethal Spell': {
-    effects: [{type:'display_note', text:'[1행동] 다음 주문에 비치명 특질 부여. 대상을 죽이지 않고 기절시킴'}]
+    effects: [{type:'display_note', text:'[1행동] 다음 주문에 비치명 특성 부여. 대상을 죽이지 않고 기절시킴'}]
   },
   'Bespell Strikes': {
     effects: [{type:'display_note', text:'캔트립 외 주문 시전 후 턴 종료까지 무기/비무장 타격에 추가 1d6 피해'}]
@@ -1838,7 +1838,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[2행동] 인접한 최대 2명에게 한 번의 공격 굴림으로 타격'}]
   },
   'Twin Parry': {
-    effects: [{type:'display_note', text:'[1행동] 각 손의 근접 무기로 방어. AC +1 상황 보너스 (방어 특질이면 +2)'}]
+    effects: [{type:'display_note', text:'[1행동] 각 손의 근접 무기로 방어. AC +1 상황 보너스 (방어 특성이면 +2)'}]
   },
 
   // ── 6레벨 ──
@@ -1995,7 +1995,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'쌍검 방어 없이도 쌍검 반격 사용 가능. 전용 추가 반응 1회'}]
   },
   'Opening Stance': {
-    effects: [{type:'display_note', text:'[반응] 주도권 굴림 시 자세 특질 행동 1개를 즉시 사용'}]
+    effects: [{type:'display_note', text:'[반응] 주도권 굴림 시 자세 특성 행동 1개를 즉시 사용'}]
   },
   'Two-Weapon Flurry': {
     effects: [{type:'display_note', text:'[1행동] 각 손의 무기로 1회씩 타격 (이전 모멘텀 활용)'}]

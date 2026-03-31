@@ -210,7 +210,7 @@ const BACKGROUNDS = [
 const HERITAGE_DB = [
   // 드워프
   {id:'ancient-blooded-dwarf',name_ko:'고대혈 드워프',name_en:'Ancient-Blooded Dwarf',ancestry:'dwarf',summary:'옛 드워프 영웅들은 적의 마법을 떨쳐낼 수 있었고, 그 저항의 일부가 당신에게 나타납니다. 고대의 피에 호소(Call on Ancient Blood) 반응을 얻습니다. 고대의 피에 호소 [반응] 유발 조건: 마법 효과에 대한 내성 굴림을 시도하지만 아직 굴리지 않았습니다. 효과: 조상의 타고난 마법 저항이 잠시 솟아올랐다가 서서히 가라앉습니다. 유발 내성과 이 턴 종료까지 마법 효과에 대한 다른 내성에 +1 상황 보너스를 얻습니다.'},
-  {id:'death-warden-dwarf',name_ko:'사신 수호 드워프',name_en:'Death Warden Dwarf',ancestry:'dwarf',summary:'조상이 무덤 수호자였으며, 죽음을 물리치는 힘이 당신에게 전해졌습니다. 공허(void) 특질이 있거나 언데드 생물이 만든 효과에 대한 내성 굴림에서 성공을 굴리면 대성공이 됩니다.'},
+  {id:'death-warden-dwarf',name_ko:'죽음 감시자 드워프',name_en:'Death Warden Dwarf',ancestry:'dwarf',summary:'조상이 무덤 수호자였으며, 죽음을 물리치는 힘이 당신에게 전해졌습니다. 공허(void) 특성이 있거나 언데드 생물이 만든 효과에 대한 내성 굴림에서 성공을 굴리면 대성공이 됩니다.'},
   {id:'forge-dwarf',name_ko:'단조 드워프',name_en:'Forge Dwarf',ancestry:'dwarf',summary:'뜨거운 환경에 대한 놀라운 적응력이 있습니다. 레벨 절반만큼의 화염 저항(최소 1)을 얻고, 환경 열 효과를 한 단계 낮게 취급합니다(극심한 열은 극한으로, 극한 열은 심한으로, 등).'},
   {id:'rock-dwarf',name_ko:'바위 드워프',name_en:'Rock Dwarf',ancestry:'dwarf',summary:'조상이 산의 고대 돌 사이나 대지의 깊은 곳에서 살고 일했습니다. 이것은 발을 딛고 서면 바위처럼 단단하게 만듭니다. 재배치(Reposition), 밀기(Shove), 넘어뜨리기(Trip) 시도에 대한 인내 또는 반사 DC에 +2 상황 보너스를 얻습니다. 이 보너스는 이동시키거나 엎드리게 하려는 주문이나 효과에 대한 내성 굴림에도 적용됩니다. 추가로, 어떤 효과가 당신을 10피트 이상 강제 이동시키면, 절반 거리만 이동합니다.'},
   {id:'strong-blooded-dwarf',name_ko:'강혈 드워프',name_en:'Strong-Blooded Dwarf',ancestry:'dwarf',summary:'피가 강하고 건강하여 독소를 떨쳐낼 수 있습니다. 레벨 절반만큼의 독 저항(최소 1)을 얻고, 독 고통에 대한 성공적인 내성 굴림은 단계를 2만큼 감소시킵니다(맹독(virulent poison)은 1). 독에 대한 대성공은 단계를 3만큼 감소시킵니다(맹독은 2).'},
@@ -223,14 +223,14 @@ const HERITAGE_DB = [
   {id:'woodland-elf',name_ko:'삼림 엘프',name_en:'Woodland Elf',ancestry:'elf',summary:'숲, 깊은 정글, 또는 유사한 환경에서의 삶에 적응하여 나무를 오르고 잎사귀를 활용하는 법을 알고 있습니다. 나무, 덩굴, 기타 식물을 오를 때, 성공 시 절반 속도로, 대성공 시 전체 속도로 이동합니다(빠른 등반(Quick Climb)이 있으면 성공 시에도 전체 속도). 등반 속도가 있으면 영향받지 않습니다. 숲 지형 내에 있을 때, 장애물 뒤에 있지 않더라도 항상 엄폐 행동(Take Cover)을 사용하여 엄폐를 얻을 수 있습니다.'},
   // 노움
   {id:'chameleon-gnome',name_ko:'카멜레온 노움',name_en:'Chameleon Gnome',ancestry:'gnome',summary:'머리카락과 피부의 색이 변할 수 있으며, 아마도 첫 번째 세계의 영향이나 남아있는 환영 효과 때문입니다. 생동감과 정확한 색상을 천천히 바꿀 수 있고, 몸 전체에서 다르게 하여 패턴이나 다른 화려한 디자인을 만들 수 있습니다. 사소한 국소 변화에는 단일 행동이, 몸 전체의 극적인 변화에는 최대 1시간이 걸립니다. 잠자는 동안 색상이 꿈에 맞춰 저절로 변하여, 매일 아침 독특한 색상이 됩니다. 색상이 환경과 대략 유사한 지역(예: 숲에서 숲의 초록)에 있을 때, 단일 행동으로 주변 환경에 섞이도록 사소한 국소 변화를 할 수 있습니다. 이것은 주변 환경의 색상이나 패턴이 바뀔 때까지 은신(Stealth) 판정에 +2 상황 보너스를 줍니다.'},
-  {id:'fey-touched-gnome',name_ko:'페이혈 노움',name_en:'Fey-Touched Gnome',ancestry:'gnome',summary:'페이의 피가 혈관을 흐르며, 마법으로 포화시켜 진정으로 그들 중 하나로 만듭니다. 노움과 인간형 특질에 더하여 페이(fey) 특질을 얻습니다. 근원 주문 목록(311페이지)에서 캔트립 1개를 선택합니다. 이 주문을 근원 선천 주문으로 자유롭게 시전할 수 있습니다. 캔트립은 레벨 절반(올림)과 같은 주문 랭크로 고양됩니다. 하루에 1회, 10분간의 명상(집중 특질 있는 활동)으로 첫 번째 세계와 재정렬하여 이 캔트립을 같은 목록의 다른 것으로 변경할 수 있습니다.'},
+  {id:'fey-touched-gnome',name_ko:'페이혈 노움',name_en:'Fey-Touched Gnome',ancestry:'gnome',summary:'페이의 피가 혈관을 흐르며, 마법으로 포화시켜 진정으로 그들 중 하나로 만듭니다. 노움과 인간형 특성에 더하여 페이(fey) 특성을 얻습니다. 근원 주문 목록(311페이지)에서 캔트립 1개를 선택합니다. 이 주문을 근원 선천 주문으로 자유롭게 시전할 수 있습니다. 캔트립은 레벨 절반(올림)과 같은 주문 랭크로 고양됩니다. 하루에 1회, 10분간의 명상(집중 특성 있는 활동)으로 첫 번째 세계와 재정렬하여 이 캔트립을 같은 목록의 다른 것으로 변경할 수 있습니다.'},
   {id:'sensate-gnome',name_ko:'감각 노움',name_en:'Sensate Gnome',ancestry:'gnome',summary:'모든 색을 더 밝게, 모든 소리를 더 풍부하게, 특히 모든 냄새를 놀라운 세부 사항으로 느낍니다. 특수 감각을 얻습니다: 30피트 범위의 부정확 후각(imprecise scent). 이것은 후각으로 생물의 정확한 위치를 결정할 수 있다는 의미입니다(434페이지 설명). GM은 일반적으로 바람이 생물로부터 불어오면 범위를 두 배로, 생물로 불어가면 절반으로 합니다. 추가로, 후각 범위 내에서 미탐지(undetected) 생물을 찾으려 할 때 감지 판정에 +2 상황 보너스를 얻습니다.'},
   {id:'umbral-gnome',name_ko:'암영 노움',name_en:'Umbral Gnome',ancestry:'gnome',summary:'어둡거나 그림자의 페이와의 연결이든, 드라트넬라르(drathnelar)로 알려진 지하 노움이든, 다른 원천이든, 완전한 어둠에서도 볼 수 있습니다. 암시야(darkvision)를 얻습니다.'},
   {id:'wellspring-gnome',name_ko:'원천 노움',name_en:'Wellspring Gnome',ancestry:'gnome',summary:'다른 마법 원천이 페이 혈통의 근원 마법보다 당신을 더 강하게 붙잡고 있습니다. 이 연결은 비학 차원이나 고대 비학 노래, 신격/천상/마귀, 마법사 전쟁이 남긴 마법 유출물, 또는 고대 룬 마법에서 올 수 있습니다. 비전, 신성, 비학 중 하나를 선택합니다. 해당 마법 전통의 주문 목록에서 캔트립 1개를 얻습니다. 이 주문을 선택한 전통의 선천 주문으로 자유롭게 시전할 수 있습니다. 캔트립은 레벨 절반(올림)과 같은 주문 랭크로 고양됩니다. 노움 혈통 특기에서 근원 선천 주문을 얻을 때마다, 그 전통을 근원에서 선택한 전통으로 변경합니다.'},
   // 고블린
   {id:'charhide-goblin',name_ko:'숯가죽 고블린',name_en:'Charhide Goblin',ancestry:'goblin',summary:'조상은 항상 불과의 연결과 더 두꺼운 피부를 가져 화상에 저항할 수 있었습니다. 레벨 절반만큼의 화염 저항(최소 1)을 얻습니다. 지속 화염 피해를 제거하기 위한 단순 판정이 DC 15 대신 DC 10이며, 다른 생물이 도우면 DC 5로 줄어듭니다.'},
   {id:'irongut-goblin',name_ko:'철위장 고블린',name_en:'Irongut Goblin',ancestry:'goblin',summary:'대부분의 사람이 상한 것으로 여기는 음식으로 살아갈 수 있습니다. 쓰레기가 쉽게 구할 수 있다면, 생존 활동 없이도 정착지에서 빈곤한 식사로 살아갈 수 있습니다. 구역질 상태일 때도 먹고 마실 수 있습니다. 고통에 대한 내성, 구역질 상태 얻기/제거에 +2 상황 보너스를 얻습니다. 이 보너스의 영향을 받는 인내 내성에서 성공 시 대성공이 됩니다. 섭취한 것에서 비롯된 경우에만 적용됩니다.'},
-  {id:'razortooth-goblin',name_ko:'면도이빨 고블린',name_en:'Razortooth Goblin',ancestry:'goblin',summary:'가족의 이빨은 무시무시한 무기입니다. 1d6 관통 피해의 턱(jaws) 비무장 공격을 얻습니다. 격투 그룹이며 기교와 비무장 특질을 가집니다.'},
+  {id:'razortooth-goblin',name_ko:'면도이빨 고블린',name_en:'Razortooth Goblin',ancestry:'goblin',summary:'가족의 이빨은 무시무시한 무기입니다. 1d6 관통 피해의 턱(jaws) 비무장 공격을 얻습니다. 격투 그룹이며 기교와 비무장 특성을 가집니다.'},
   {id:'snow-goblin',name_ko:'눈 고블린',name_en:'Snow Goblin',ancestry:'goblin',summary:'혹한 지역에 적응하여 하늘색~남색 피부와 파란 털을 가집니다. 레벨 절반만큼의 냉기 저항(최소 1)을 얻고, 환경 추위 효과를 한 단계 낮게 취급합니다.'},
   {id:'unbreakable-goblin',name_ko:'부서지지 않는 고블린',name_en:'Unbreakable Goblin',ancestry:'goblin',summary:'두꺼운 두개골, 연골성 뼈, 또는 다른 양날의 축복 덕분에 부상에서 쉽게 회복합니다. 혈통에서 6 대신 10 HP를 얻습니다. 추락 시, 절반 거리에서 떨어진 것처럼 피해를 줄입니다.'},
   // 하플링
@@ -243,8 +243,8 @@ const HERITAGE_DB = [
   {id:'skilled-human',name_ko:'숙련된 인간',name_en:'Skilled Human',ancestry:'human',summary:'독창성이 다양한 기술에 숙련되게 합니다. 선택한 기술 1개에 숙련됩니다. 5레벨에서 해당 기술에 전문가가 됩니다.'},
   {id:'versatile-human',name_ko:'다재다능한 인간',name_en:'Versatile Human',ancestry:'human',summary:'인류의 다재다능함과 야망이 대부분의 나라에서 가장 흔한 혈통으로 부상하게 했습니다. 전제조건을 충족하는 일반 특기 1개를 선택합니다(혈통 특기처럼 캐릭터 생성 중 어느 시점에서든 선택 가능).'},
   // 레쉬
-  {id:'fungus-leshy',name_ko:'균류 레쉬',name_en:'Fungus Leshy',ancestry:'leshy',summary:'동굴과 나무 그늘에서 자라는 균류로 만들어졌으며, 어둠 동굴과 터널이 편합니다. 암시야(darkvision)를 얻습니다. 식물 특질을 잃고 균류(fungus) 특질을 얻습니다.'},
-  {id:'gourd-leshy',name_ko:'호박 레쉬',name_en:'Gourd Leshy',ancestry:'leshy',summary:'큰 호박이 두개골입니다. 물리적 뇌가 없어 머리 안의 공간을 사용할 수 있습니다. 머리 안에 최대 1 부피의 물건을 저장할 수 있습니다. 머리에서 물건을 훔치려는 판정 DC가 4 증가합니다. 물건을 하나만 저장하면, 다른 행동의 일부로 손에 쉽게 꺼낼 수 있습니다(조작 특질 추가).'},
+  {id:'fungus-leshy',name_ko:'균류 레쉬',name_en:'Fungus Leshy',ancestry:'leshy',summary:'동굴과 나무 그늘에서 자라는 균류로 만들어졌으며, 어둠 동굴과 터널이 편합니다. 암시야(darkvision)를 얻습니다. 식물 특성을 잃고 균류(fungus) 특성을 얻습니다.'},
+  {id:'gourd-leshy',name_ko:'호박 레쉬',name_en:'Gourd Leshy',ancestry:'leshy',summary:'큰 호박이 두개골입니다. 물리적 뇌가 없어 머리 안의 공간을 사용할 수 있습니다. 머리 안에 최대 1 부피의 물건을 저장할 수 있습니다. 머리에서 물건을 훔치려는 판정 DC가 4 증가합니다. 물건을 하나만 저장하면, 다른 행동의 일부로 손에 쉽게 꺼낼 수 있습니다(조작 특성 추가).'},
   {id:'leaf-leshy',name_ko:'잎 레쉬',name_en:'Leaf Leshy',ancestry:'leshy',summary:'몸이 대부분 자연 잎으로 만들어져, 나무에서 떨어지는 잎처럼 특히 우아하게 추락합니다. 추락 거리에 관계없이 추락 피해를 받지 않습니다.'},
   {id:'vine-leshy',name_ko:'덩굴 레쉬',name_en:'Vine Leshy',ancestry:'leshy',summary:'잡을 수 있는 덩굴이 등반에 비할 데 없는 기술을 부여합니다. 등반에 빈 손이 필요하지 않습니다. 등반 운동 판정에서 성공을 굴리면 대성공.'},
   // 오크
