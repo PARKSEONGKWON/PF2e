@@ -1497,10 +1497,14 @@ function filterFeats() {
       if (q && !f.name_ko.includes(q) && !(f.name_en||'').toLowerCase().includes(q) && !(f.summary||'').includes(q)) return false;
       if (f.feat_level > maxLv) return false;
       if (ft === 'ancestry') {
-        // 혈통 재주: ancestry 카테고리 + 선택된 혈통 trait 일치
+        // 혈통 재주: ancestry 카테고리 + 선택된 혈통 trait 일치 + 유산 extraFeats
         if (f.category !== 'ancestry') return false;
         if (state.selectedAncestry) {
-          const ancTraits = state.selectedAncestry.traits || [];
+          const ancTraits = [...(state.selectedAncestry.traits || [])];
+          // 유산이 추가하는 재주 카테고리 (체인질링, 네피림, 엘프, 오크 등)
+          if (state.selectedHeritage?.extraFeats) {
+            ancTraits.push(...state.selectedHeritage.extraFeats);
+          }
           return f.traits && f.traits.some(t => ancTraits.includes(t));
         }
         return true;
@@ -2169,6 +2173,7 @@ function confirmModal() {
     state.selectedHeritage = modalSelected;
     const btn = document.getElementById('btn-heritage');
     if (btn) { btn.textContent = modalSelected.name_ko; btn.classList.add('filled'); }
+    applyHeritageEffects(modalSelected);
     renderGrowthPlan();
   } else if (modalType==='armor') {
     const a = modalSelected;
@@ -2402,6 +2407,25 @@ function applyAncestryDefaults(anc) {
   state.boosts.ancFlaw = flaws;
   state.boosts.ancFree = []; // reset free boost
   updateHP();
+}
+
+function applyHeritageEffects(h) {
+  if (!h) return;
+  // 시야 적용
+  if (h.vision === 'upgrade') {
+    // 저광 시야 부여, 이미 저광이면 암시야로 업그레이드
+    const curVision = state.vision || state.selectedAncestry?.vision || '없음';
+    if (curVision === '저광 시야') state.vision = '암시야';
+    else if (curVision === '암시야') { /* 이미 암시야 */ }
+    else state.vision = '저광 시야';
+  } else if (h.vision) {
+    // 특정 시야 부여 (저광 시야 등)
+    const curVision = state.vision || state.selectedAncestry?.vision || '없음';
+    if (curVision === '없음' || !curVision) state.vision = h.vision;
+    // 이미 같거나 더 좋은 시야면 유지
+  }
+  recalcAll();
+  renderFeats();
 }
 
 function applyBackgroundInfo(bg) {

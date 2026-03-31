@@ -45,10 +45,14 @@ function syncAllProfRanks() {
     const baseSpeed = parseInt(speedVal.value || '25') + (state._fb?.speed || 0);
     speedDisp.textContent = baseSpeed;
   }
-  // 감각 표시
+  // 감각 표시 (유산 vision이 혈통 vision보다 우선)
   const sensesEl = document.getElementById('char-senses');
   if (sensesEl) {
-    const vision = state.selectedAncestry?.vision || state.vision || '';
+    const ancVision = state.selectedAncestry?.vision || '없음';
+    const stateVision = state.vision || '없음';
+    // 더 좋은 시야를 사용 (암시야 > 저광 시야 > 없음)
+    const visionRank = {'암시야':2,'저광 시야':1,'없음':0};
+    const vision = (visionRank[stateVision]||0) >= (visionRank[ancVision]||0) ? stateVision : ancVision;
     const visionMap = {'암시야':'암시야 (Darkvision)','저광 시야':'저광 시야 (Low-Light Vision)','없음':''};
     sensesEl.textContent = visionMap[vision] || vision || '—';
   }
