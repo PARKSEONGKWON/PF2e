@@ -1485,8 +1485,8 @@ function renderFeats() {
           ${choiceBadge ? `<span style="font-size:10px;color:var(--accent);flex-shrink:0;">[${choiceBadge}]</span>` : ''}
         </div>
         <div class="feat-src"><span style="color:var(--text2);font-size:10px;">${fMeta}</span></div>
+        ${fTraits ? `<div class="feat-traits-row">${fTraits}</div>` : ''}
         <div class="feat-detail">
-          ${fTraits ? `<div style="margin-bottom:6px;">${fTraits}</div>` : ''}
           ${fPrereq}
           <div style="line-height:1.6;">${typeof formatDescActions==='function'?formatDescActions(desc,featData):desc}</div>
         </div>`;
