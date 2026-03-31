@@ -1810,7 +1810,7 @@ function formatDescActions(text, item) {
 function _buildActionCard(costKey, nameKo, nameEn, traits, summary) {
   const costIcon = getActionCostIcon(costKey);
   const traitsHtml = (traits||[]).map(t => `<span class="tag">${t}</span>`).join('');
-  return `<div class="action-card" style="margin:8px 0;">
+  return `<div class="action-card" style="margin:8px 0;max-width:320px;">
     <div class="action-card-head">
       <span class="action-cost">${costIcon}</span>
       <div style="flex:1;min-width:0;">

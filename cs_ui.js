@@ -1419,11 +1419,9 @@ function renderFeats() {
           <div style="display:flex;align-items:center;gap:4px;width:100%;margin-bottom:2px;">
             <span style="flex:1;color:var(--text);font-size:12px;">${f.name || labels[t] + ' 재주'}</span>
             ${choiceBadge ? `<span style="font-size:10px;color:var(--accent);flex-shrink:0;">[${choiceBadge}]</span>` : ''}
-            <span class="spell-del" style="flex-shrink:0;">✕</span>
           </div>
           <div class="feat-src"><span style="color:var(--text2);font-size:10px;">Lv ${f.level||1}</span></div>`;
-        div.addEventListener('click', (e) => { if (!e.target.classList.contains('spell-del')) showInfo('feat', f.name); });
-        div.querySelector('.spell-del').addEventListener('click', (e) => { e.stopPropagation(); removeFeat(t, i); });
+        div.addEventListener('click', () => showInfo('feat', f.name));
       }
       el.appendChild(div);
     });
