@@ -1714,7 +1714,7 @@ function selectOption(item, row) {
       else if (item.ac_bonus !== undefined) tags = `<span class="tag hl">AC+${item.ac_bonus}</span>`;
       const mSpellNotes = (item.rank !== undefined && typeof getSpellFeatNotes === 'function') ? getSpellFeatNotes(item.name||item.name_ko||'') : '';
       detailHtml = `${tags?'<div style="margin-bottom:6px;">'+tags+'</div>':''}
-        <div style="font-size:12px;line-height:1.6;">${mDesc}${mSpellNotes}</div>`;
+        <div style="font-size:12px;line-height:1.6;">${formatDescActions(mDesc)}${mSpellNotes}</div>`;
     }
     // Insert or reuse detail div after row
     if (row) {
@@ -1744,6 +1744,54 @@ function selectOption(item, row) {
   if (row) row.classList.add('selected');
   if (modalType === 'equip-browse' || modalType === 'formula-pick') showEquipDetail(item);
   else showItemDetail(item);
+}
+
+// 설명 텍스트에서 행동 블록([반응], [1행동] 등)을 카드 형태로 변환
+function formatActionBlocks(text) {
+  if (!text) return text;
+  // 패턴: "행동이름(영문이름) [행동타입]" 또는 "[행동타입]"으로 시작하는 문장 블록
+  // 유산 패턴: "이름(English Name) [반응] 유발 조건: ... 효과: ..."
+  const actionPattern = /([^\.\n]*?\([A-Za-z\s']+\)\s*)?(\[(?:반응|1행동|2행동|3행동|자유 행동)\])\s*(유발 조건:\s*.+?)?\s*(효과:\s*.+?)(?=$|\n|<br>)/g;
+
+  return text.replace(actionPattern, (match, namePart, costPart, triggerPart, effectPart) => {
+    const costMap = {'[반응]':'↩','[1행동]':'◆','[2행동]':'◆◆','[3행동]':'◆◆◆','[자유 행동]':'⟡'};
+    const costIcon = costMap[costPart] || costPart;
+    const actionName = namePart ? namePart.trim() : '';
+    const trigger = triggerPart ? `<div style="margin-top:4px;"><b>유발 조건:</b> ${triggerPart.replace(/^유발 조건:\s*/,'')}</div>` : '';
+    const effect = effectPart ? `<div style="margin-top:4px;"><b>효과:</b> ${effectPart.replace(/^효과:\s*/,'')}</div>` : '';
+
+    return `<div style="margin:8px 0;padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:4px;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+        <span style="font-size:16px;color:var(--accent);">${costIcon}</span>
+        <b style="font-size:13px;">${actionName}</b>
+      </div>
+      ${trigger}${effect}
+    </div>`;
+  });
+}
+
+// 간이 패턴: "[행동타입] 설명..." 형태 (이름 없이 바로 행동)
+function formatSimpleActionBlocks(text) {
+  if (!text) return text;
+  return text.replace(/(\[(?:반응|1행동|2행동|3행동|자유 행동)\])\s+([^<\[]+)/g, (match, costPart, rest) => {
+    // 이미 formatActionBlocks에서 변환된 경우 스킵
+    if (rest.includes('border-left')) return match;
+    const costMap = {'[반응]':'↩','[1행동]':'◆','[2행동]':'◆◆','[3행동]':'◆◆◆','[자유 행동]':'⟡'};
+    const costIcon = costMap[costPart] || costPart;
+    return `<div style="margin:8px 0;padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:4px;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+        <span style="font-size:16px;color:var(--accent);">${costIcon}</span>
+      </div>
+      <div style="font-size:12px;line-height:1.6;">${rest.trim()}</div>
+    </div>`;
+  });
+}
+
+function formatDescActions(text) {
+  if (!text) return text;
+  let result = formatActionBlocks(text);
+  result = formatSimpleActionBlocks(result);
+  return result;
 }
 
 function showItemDetail(item) {
@@ -1809,7 +1857,7 @@ function showItemDetail(item) {
     <div class="modal-detail-title">${nameKo}</div>
     <div class="modal-detail-en">${nameEn}</div>
     <div class="modal-detail-tags">${tags}</div>
-    <div class="modal-detail-desc">${desc}${spellNotes}</div>`;
+    <div class="modal-detail-desc">${formatDescActions(desc)}${spellNotes}</div>`;
 }
 
 function filterOptions() {
