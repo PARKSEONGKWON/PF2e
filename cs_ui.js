@@ -1550,73 +1550,61 @@ function _toggleFeatAccordion(div) {
   div.classList.toggle('expanded');
 }
 
-function removeFeat(t, i) {
-  const feat = state.feats[t][i];
-  const featName = feat?.name?.split(' (')[0].trim() || '';
-  // 재주로 얻은 선천 주문 제거
-  if (feat?.name && state.spells?.innate) {
-    state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== feat.name);
-  }
-  state.feats[t].splice(i,1);
-  alert('removeFeat 호출: ' + featName + ' / FEAT_DB: ' + (typeof FEAT_DB !== 'undefined'));
-  // 선행 연쇄 제거: 보유 재주 이름 목록을 만들고, 선행이 충족 안 되는 재주 반복 제거
-  if (typeof FEAT_DB !== 'undefined') {
-    const _getLearnedNames = () => {
-      const s = new Set();
-      for (const arr of Object.values(state.feats)) {
-        if (!Array.isArray(arr)) continue;
-        arr.forEach(f => { if (f.name) s.add(f.name.split(' (')[0].trim()); });
-      }
-      return s;
-    };
-    const _prereqMet = (prereqStr, learned) => {
-      if (!prereqStr) return true;
-      const prereq = prereqStr.split(/(?<=\.)\s+/)[0].replace(/\.$/,'').trim();
-      if (!prereq) return true;
-      const conds = prereq.split(/,\s*/);
-      for (const c of conds) {
-        const ct = c.trim();
-        if (!ct) continue;
-        // 혈통 체크
-        if (state.selectedAncestry?.traits?.includes(ct)) continue;
-        if (state.selectedHeritage?.extraFeats?.includes(ct)) continue;
-        // 클래스 체크
-        if (state.selectedClass && (state.selectedClass.name === ct || state.selectedClass.en === ct)) continue;
-        // 서브클래스 체크
-        if (state.selectedSubclass && (state.selectedSubclass.name_ko === ct || state.selectedSubclass.name_en === ct)) continue;
-        // 재주 보유 체크
-        if (learned.has(ct)) continue;
-        // DB에서 영문명으로도 체크
-        const fd = FEAT_DB.find(f => f.name_ko === ct || f.name_en === ct);
-        if (fd && (learned.has(fd.name_ko) || learned.has(fd.name_en))) continue;
-        // 기술/능력치/레벨 조건은 통과
-        if (/숙련|전문가|달인|전설/.test(ct)) continue;
-        if (/\+\d+$/.test(ct)) continue;
-        if (/\d+레벨/.test(ct)) continue;
-        if (/주문|글꼴|동물|사역마/.test(ct)) continue;
-        return false;
-      }
-      return true;
-    };
-    let changed = true;
-    while (changed) {
-      changed = false;
-      const learned = _getLearnedNames();
-      for (const type of Object.keys(state.feats)) {
-        const arr = state.feats[type];
-        if (!Array.isArray(arr)) continue;
-        for (let j = arr.length - 1; j >= 0; j--) {
-          const f = arr[j];
-          if (!f?.name) continue;
-          const fNameKo = f.name.split(' (')[0].trim();
-          const fData = FEAT_DB.find(fd => fd.name_ko === fNameKo);
-          if (fData?.prerequisites && !_prereqMet(fData.prerequisites, learned)) {
-            if (state.spells?.innate) {
-              state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== f.name);
+function cascadeRemoveFeats() {
+  if (typeof FEAT_DB === 'undefined') return;
+  const _getLearnedNames = () => {
+    const s = new Set();
+    for (const arr of Object.values(state.feats)) {
+      if (!Array.isArray(arr)) continue;
+      arr.forEach(f => { if (f.name) s.add(f.name.split(' (')[0].trim()); });
+    }
+    return s;
+  };
+  const _prereqMet = (prereqStr, learned) => {
+    if (!prereqStr) return true;
+    const prereq = prereqStr.split(/(?<=\.)\s+/)[0].replace(/\.$/,'').trim();
+    if (!prereq) return true;
+    const conds = prereq.split(/,\s*/);
+    for (const c of conds) {
+      const ct = c.trim();
+      if (!ct) continue;
+      if (state.selectedAncestry?.traits?.includes(ct)) continue;
+      if (state.selectedHeritage?.extraFeats?.includes(ct)) continue;
+      if (state.selectedClass && (state.selectedClass.name === ct || state.selectedClass.en === ct)) continue;
+      if (state.selectedSubclass && (state.selectedSubclass.name_ko === ct || state.selectedSubclass.name_en === ct)) continue;
+      if (learned.has(ct)) continue;
+      const fd = FEAT_DB.find(f => f.name_ko === ct || f.name_en === ct);
+      if (fd && (learned.has(fd.name_ko) || learned.has(fd.name_en))) continue;
+      if (/숙련|전문가|달인|전설/.test(ct)) continue;
+      if (/\+\d+$/.test(ct)) continue;
+      if (/\d+레벨/.test(ct)) continue;
+      if (/주문|글꼴|동물|사역마/.test(ct)) continue;
+      return false;
+    }
+    return true;
+  };
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const learned = _getLearnedNames();
+    for (const type of Object.keys(state.feats)) {
+      const arr = state.feats[type];
+      if (!Array.isArray(arr)) continue;
+      for (let j = arr.length - 1; j >= 0; j--) {
+        const f = arr[j];
+        if (!f?.name) continue;
+        const fNameKo = f.name.split(' (')[0].trim();
+        const fData = FEAT_DB.find(fd => fd.name_ko === fNameKo);
+        if (fData?.prerequisites && !_prereqMet(fData.prerequisites, learned)) {
+          if (state.spells?.innate) state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== f.name);
+          // 성장에서도 제거
+          for (const lv of Object.keys(state.growth || {})) {
+            for (const k of Object.keys(state.growth[lv] || {})) {
+              if (state.growth[lv][k] === f.name) delete state.growth[lv][k];
             }
-            arr.splice(j, 1);
-            changed = true;
           }
+          arr.splice(j, 1);
+          changed = true;
         }
       }
     }
@@ -1629,6 +1617,17 @@ function removeFeat(t, i) {
     }
     state.spells.innate = state.spells.innate.filter(s => !s._sourceFeat || allFeatNames.has(s._sourceFeat));
   }
+}
+
+function removeFeat(t, i) {
+  const feat = state.feats[t][i];
+  const featName = feat?.name?.split(' (')[0].trim() || '';
+  // 재주로 얻은 선천 주문 제거
+  if (feat?.name && state.spells?.innate) {
+    state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== feat.name);
+  }
+  state.feats[t].splice(i,1);
+  cascadeRemoveFeats();
   recalcAll(); renderFeats(); save();
 }
 

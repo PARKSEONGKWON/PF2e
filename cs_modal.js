@@ -1196,14 +1196,21 @@ function growthClearFeat(lv, key, featType) {
   if (!state.growth[lv]) return;
   const oldName = state.growth[lv][key];
   if (oldName) {
-    // Remove from state.feats as well
+    // Remove from state.feats
     const arr = state.feats[featType];
     if (arr) {
       const idx = arr.findIndex(f => f.name === oldName && f.level === lv);
       if (idx >= 0) arr.splice(idx, 1);
     }
+    // 선천 주문 제거
+    if (state.spells?.innate) {
+      state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== oldName);
+    }
   }
   delete state.growth[lv][key];
+  // 선행 연쇄 제거 + 선천 주문 정리
+  if (typeof cascadeRemoveFeats === 'function') cascadeRemoveFeats();
+  recalcAll();
   renderGrowthPlan();
   renderFeats();
   save();
@@ -2250,6 +2257,10 @@ function confirmModal() {
       if (oldName) {
         const arr = state.feats[gType];
         if (arr) { const idx = arr.findIndex(f => f.name === oldName && f.level === gLv); if (idx >= 0) arr.splice(idx, 1); }
+        // 선천 주문 제거
+        if (state.spells?.innate) state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== oldName);
+        // 연쇄 제거
+        if (typeof cascadeRemoveFeats === 'function') cascadeRemoveFeats();
       }
       state.growth[gLv][gKey] = featName;
       state.feats[type].push({name: featName, level: gLv});
