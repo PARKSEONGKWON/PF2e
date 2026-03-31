@@ -1659,8 +1659,7 @@ function _checkPrereqs(prereqStr) {
     if (state.selectedHeritage?.extraFeats?.includes(c)) continue;
     if (state.selectedHeritage && state.selectedHeritage.name_ko === c) continue;
     // 양자 혈통으로 얻은 혈통도 체크
-    const _adoptedCheck = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
-    const _isAdopted = Object.values(state.feats).flat().some(ff => ff && ff.name && ff.name.includes('양자 혈통') && ff.choice && (_adoptedCheck[ff.choice] === c));
+    const _isAdopted = Object.values(state.feats).flat().some(ff => ff && ff.name && ff.name.includes('양자 혈통') && ff.choice && (ANCESTRY_NAME_MAP[ff.choice] === c));
     if (_isAdopted) continue;
 
     // 뮤즈/교리/교단 체크
@@ -1709,10 +1708,9 @@ function filterFeats() {
       _ancestryTraits = [...(state.selectedAncestry.traits || [])];
       if (state.selectedHeritage?.extraFeats) _ancestryTraits.push(...state.selectedHeritage.extraFeats);
       if (state._fb?.adoptedAncestries) _ancestryTraits.push(...state._fb.adoptedAncestries);
-      const _am = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
       Object.values(state.feats).flat().forEach(ff => {
         if (ff && ff.name && ff.name.includes('양자 혈통') && ff.choice) {
-          const t = _am[ff.choice] || ff.choice;
+          const t = ANCESTRY_NAME_MAP[ff.choice] || ff.choice;
           if (!_ancestryTraits.includes(t)) _ancestryTraits.push(t);
         }
       });

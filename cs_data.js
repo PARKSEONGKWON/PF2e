@@ -2,6 +2,9 @@
 //  DATA — from Player Core Korean translation
 // ═══════════════════════════════════════════════
 
+// 혈통 영문→한글 매핑 (양자 혈통/선행 조건 등에서 공용)
+const ANCESTRY_NAME_MAP = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
+
 const CLASSES = [
   {id:'bard', name:'바드', en:'Bard', hp:8,
    keyAttr:'매력 (CHA)', tradition:'occult', casting:'spontaneous',

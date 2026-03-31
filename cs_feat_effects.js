@@ -2903,8 +2903,7 @@ function _applyOneEffect(fb, eff, feat, level) {
     case 'adopted_ancestry': {
       // 양자 혈통 — 선택한 혈통의 재주에 접근
       if (feat.choice) {
-        const ancMap = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
-        const traitName = ancMap[feat.choice] || feat.choice;
+        const traitName = ANCESTRY_NAME_MAP[feat.choice] || feat.choice;
         if (!fb.adoptedAncestries) fb.adoptedAncestries = [];
         if (!fb.adoptedAncestries.includes(traitName)) fb.adoptedAncestries.push(traitName);
       }
@@ -3274,8 +3273,7 @@ function _applyFeatChoice(choiceId) {
 }
 
 function _openAdoptedFeatPicker(ancestryId, parentFeatName) {
-  const ancMap = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
-  const traitName = ancMap[ancestryId] || ancestryId;
+  const traitName = ANCESTRY_NAME_MAP[ancestryId] || ancestryId;
   if (typeof FEAT_DB === 'undefined') return;
   const candidates = FEAT_DB.filter(f => f && f.category === 'ancestry' && f.feat_level === 1 && f.traits && f.traits.includes(traitName));
   if (!candidates.length) return;

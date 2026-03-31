@@ -1565,50 +1565,10 @@ function _toggleFeatAccordion(div) {
 
 function cascadeRemoveFeats() {
   if (typeof FEAT_DB === 'undefined') return;
-  const _getLearnedNames = () => {
-    const s = new Set();
-    for (const arr of Object.values(state.feats)) {
-      if (!Array.isArray(arr)) continue;
-      arr.forEach(f => { if (f.name) s.add(f.name.split(' (')[0].trim()); });
-    }
-    return s;
-  };
-  const _prereqMet = (prereqStr, learned) => {
-    if (!prereqStr) return true;
-    const prereq = prereqStr.split(/(?<=\.)\s+/)[0].replace(/\.$/,'').trim();
-    if (!prereq) return true;
-    const conds = prereq.split(/,\s*/);
-    for (const c of conds) {
-      const ct = c.trim();
-      if (!ct) continue;
-      if (ct === '암시야' || ct === '저광 시야') {
-        const cv = state.vision || state.selectedAncestry?.vision || '없음';
-        const vr = {'암시야':2,'저광 시야':1,'없음':0};
-        if ((vr[cv]||0) >= (vr[ct]||0)) continue; else return false;
-      }
-      if (state.selectedAncestry?.traits?.includes(ct)) continue;
-      if (state.selectedHeritage?.extraFeats?.includes(ct)) continue;
-      if (state.selectedHeritage && state.selectedHeritage.name_ko === ct) continue;
-      // 양자 혈통으로 얻은 혈통
-      const _ac = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
-      if (Object.values(state.feats).flat().some(ff => ff && ff.name && ff.name.includes('양자 혈통') && ff.choice && (_ac[ff.choice] === ct))) continue;
-      if (state.selectedClass && (state.selectedClass.name === ct || state.selectedClass.en === ct)) continue;
-      if (state.selectedSubclass && (state.selectedSubclass.name_ko === ct || state.selectedSubclass.name_en === ct)) continue;
-      if (learned.has(ct)) continue;
-      const fd = FEAT_DB.find(f => f && (f.name_ko === ct || f.name_en === ct));
-      if (fd && (learned.has(fd.name_ko) || learned.has(fd.name_en))) continue;
-      if (/숙련|전문가|달인|전설/.test(ct)) continue;
-      if (/\+\d+$/.test(ct)) continue;
-      if (/\d+레벨/.test(ct)) continue;
-      if (/주문|글꼴|동물|사역마/.test(ct)) continue;
-      return false;
-    }
-    return true;
-  };
+  // _checkPrereqs는 cs_modal.js에 정의 — state.feats 현재 상태 기반으로 판정
   let changed = true;
   while (changed) {
     changed = false;
-    const learned = _getLearnedNames();
     for (const type of Object.keys(state.feats)) {
       const arr = state.feats[type];
       if (!Array.isArray(arr)) continue;
@@ -1617,7 +1577,7 @@ function cascadeRemoveFeats() {
         if (!f?.name) continue;
         const fNameKo = f.name.split(' (')[0].trim();
         const fData = FEAT_DB.find(fd => fd && fd.name_ko === fNameKo);
-        if (fData?.prerequisites && !_prereqMet(fData.prerequisites, learned)) {
+        if (fData?.prerequisites && !_checkPrereqs(fData.prerequisites)) {
           if (state.spells?.innate) state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== f.name);
           // 성장에서도 제거
           for (const lv of Object.keys(state.growth || {})) {
