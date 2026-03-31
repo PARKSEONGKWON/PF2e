@@ -1722,8 +1722,8 @@ const SPELL_DB = [
 
   { name_ko: "민첩한 발", name_en: "Agile Feet", rank: 1, is_cantrip: false, is_focus: true,
     traditions: [], actions: "1행동", traits: ["클레릭", "조작"],
-    summary: "신의 축복이 발을 빠르게 합니다. 이동 속도에 +5피트 상태 보너스+험지 무시. 시전의 일부로 한 걸음(Step)/보폭(Stride)/통과(Tumble Through) 가능. 적절한 속도가 있으면 굴파기/등반/비행/...",
-    desc: "신의 축복이 발을 빠르게 합니다. 이동 속도에 <strong>+5피트 상태 보너스</strong>+<strong>험지 무시</strong>. 시전의 일부로 한 걸음(Step)/보폭(Stride)/통과(Tumble Through) 가능. 적절한 속도가 있으면 굴파기/등반/비행/수영도 가능." },
+    summary: "신의 축복이 발을 빠르게 합니다. 이동 속도에 +5피트 상태 보너스+험지 무시. 시전의 일부로 한 걸음(Step)/보폭(Stride)/통과(Tumble Through) 가능. 적절한 속도가 있으면 굴착/등반/비행/...",
+    desc: "신의 축복이 발을 빠르게 합니다. 이동 속도에 <strong>+5피트 상태 보너스</strong>+<strong>험지 무시</strong>. 시전의 일부로 한 걸음(Step)/보폭(Stride)/통과(Tumble Through) 가능. 적절한 속도가 있으면 굴착/등반/비행/수영도 가능." },
 
   { name_ko: "예술적 장식", name_en: "Artistic Flourish", rank: 4, is_cantrip: false, is_focus: true,
     traditions: [], actions: "2행동", traits: ["클레릭", "조작"],

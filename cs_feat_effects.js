@@ -432,6 +432,12 @@ const FEAT_EFFECTS = {
   'Defy the Darkness': {
     effects: [{type:'vision_upgrade', vision:'상위 암시야'}]
   },
+  'Stonegate': {
+    effects: [{type:'grant_innate_spell', spell:'마법 통로', tradition:'신성', spellType:'spell', uses:'하루 1회'}]
+  },
+  'Stonewalker': {
+    effects: [{type:'grant_innate_spell', spell:'돌과 하나', tradition:'신성', spellType:'spell', uses:'하루 1회'}]
+  },
   "Stonemason's Eye": {
     effects: [{type:'skill_trained', skill:'crafting'}]
   },

@@ -213,7 +213,7 @@ var CLASS_FEATURE_NAMES = {
     {lv:13, name_ko:'군용 무기 달인', name_en:'Weapon Mastery'},
     {lv:15, name_ko:'상위 자연 반사', name_en:'Greater Evasion'},
     {lv:15, name_ko:'상위 무기 전문화', name_en:'Greater Weapon Specialization'},
-    {lv:15, name_ko:'감지 전설', name_en:'Incredible Senses'},
+    {lv:15, name_ko:'지각 전설', name_en:'Incredible Senses'},
     {lv:17, name_ko:'달인 사냥꾼', name_en:'Masterful Hunter'},
     {lv:19, name_ko:'평갑 달인', name_en:'Medium Armor Mastery'},
     {lv:19, name_ko:'신속 사냥감', name_en:'Swift Prey'},
