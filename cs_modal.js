@@ -1608,7 +1608,7 @@ function _checkPrereqs(prereqStr) {
     if (state.selectedSubclass && (state.selectedSubclass.name_ko === c || state.selectedSubclass.name_en === c)) continue;
 
     // 최소 100세 등 특수 조건은 통과
-    if (c.includes('세') || c.includes('레벨')) continue;
+    if (/최소\s*\d+세/.test(c) || /\d+레벨/.test(c)) continue;
 
     // 재주 보유 체크
     if (learnedFeats.has(c)) continue;
