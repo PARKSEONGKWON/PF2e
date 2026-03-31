@@ -265,14 +265,18 @@ function hasWeaponTrait(w, traitKey) {
 // ── Hit & Damage Calculation ──
 function calcWeaponHit(w) {
   let cat = getWeaponCategory(w);
-  // 무기 친숙: 해당 무기를 한 카테고리 낮춰 취급 (군용→단순, 고급→군용)
   const wpName = w.name || w._dbData?.name_ko || '';
+  // 무기 친숙: 해당 무기를 한 카테고리 낮춰 취급 (군용→단순, 고급→군용)
   if (state._fb?.familiarWeapons?.includes(wpName)) {
     if (cat === 'martial') cat = 'simple';
     else if (cat === 'advanced') cat = 'martial';
   }
   const profSelId = 'prof-weapon-' + cat;
-  const rank = parseInt(document.getElementById(profSelId)?.value || 0);
+  let rank = parseInt(document.getElementById(profSelId)?.value || 0);
+  // 개별 무기 훈련됨: 해당 무기에 최소 훈련됨(2) 보장
+  if (state._fb?.trainedWeapons?.includes(wpName) && rank < 2) {
+    rank = 2;
+  }
   const lv = getLevel();
   const profBonus = rank > 0 ? (rank + lv) : 0;
 
@@ -479,14 +483,15 @@ function renderWeapons() {
       runeInfo = `<span style="font-size:9px;color:var(--accent);margin-left:6px;">[${parts.join(', ')}]</span>`;
     }
 
-    // 개별 무기 숙련도 표시 (TEML 뱃지) — 무기 친숙 반영
+    // 개별 무기 숙련도 표시 (TEML 뱃지) — 무기 친숙/훈련 반영
     let wpCat = getWeaponCategory(w);
     const wpNameForFam = w.name || w._dbData?.name_ko || '';
     if (state._fb?.familiarWeapons?.includes(wpNameForFam)) {
       if (wpCat === 'martial') wpCat = 'simple';
       else if (wpCat === 'advanced') wpCat = 'martial';
     }
-    const wpProfVal = parseInt(document.getElementById('prof-weapon-'+wpCat)?.value||0);
+    let wpProfVal = parseInt(document.getElementById('prof-weapon-'+wpCat)?.value||0);
+    if (state._fb?.trainedWeapons?.includes(wpNameForFam) && wpProfVal < 2) wpProfVal = 2;
     const wpTemlMap = {0:['U','미숙련',''],2:['T','숙련','trained'],4:['E','전문가','expert'],6:['M','대가','master'],8:['L','전설','legendary']};
     const [wpTemlLetter, wpProfName, wpProfCls] = wpTemlMap[wpProfVal]||['U','미숙련',''];
     const wpCatLabel = {simple:'단순',martial:'군용',advanced:'고급',unarmed:'비무장'}[wpCat]||wpCat;

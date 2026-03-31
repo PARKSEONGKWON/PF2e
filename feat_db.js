@@ -805,7 +805,7 @@ const FEAT_DB = [
 
   // ── 엘프 Elf ──
   {name_ko:'엘프 지식', name_en:'Elven Lore', feat_level:1, prerequisites:'엘프', traits:['엘프'], category:'ancestry', summary:'주문학과 자연학에 숙련됨. 엘프 관련 지식(Lore)에 숙련됨.', desc:'엘프 문화와 역사에 정통합니다. <strong>주문학</strong>과 <strong>자연학</strong>에 숙련됨을 얻고, <strong>엘프 지식(Elven Lore)</strong>에 숙련됨을 얻습니다.'},
-  {name_ko:'엘프 무기 친숙', name_en:'Elven Weapon Familiarity', feat_level:1, prerequisites:'엘프', traits:['엘프'], category:'ancestry', summary:'장궁, 단궁, 합성 장궁, 합성 단궁, 롱소드, 레이피어에 친숙. 군용→단순 취급.', desc:'엘프 특성 무기와 장궁, 합성 장궁, 단궁, 합성 단궁, 롱소드, 레이피어에 친숙합니다 — <strong>군용 무기는 단순 무기</strong>로, <strong>고급 무기는 군용 무기</strong>로 취급합니다. 5레벨에서 치명 특성 효과 적용.'},
+  {name_ko:'엘프 무기 친숙', name_en:'Elven Weapon Familiarity', feat_level:1, prerequisites:'엘프', traits:['엘프'], category:'ancestry', summary:'장궁, 단궁, 롱소드, 레이피어에 훈련됨 획득. 엘프 특성 무기는 군용→단순, 고급→군용 취급.', desc:'장궁(longbow), 단궁(shortbow), 롱소드(longsword), 레이피어(rapier)에 대해 <strong>훈련됨(trained)</strong> 숙련도를 얻습니다. 엘프 특성을 가진 모든 비일반 무기에 접근합니다. 모든 군용 무기에 훈련됨 이상이면, 엘프 특성 <strong>군용 무기는 단순 무기</strong>로, <strong>고급 무기는 군용 무기</strong>로 취급합니다. 5레벨에서 치명 특성 효과 적용.'},
   {name_ko:'예지자', name_en:'Forlorn', feat_level:1, prerequisites:'엘프', traits:['엘프'], category:'ancestry', summary:'감정 효과에 대한 내성 +1 상황 보너스.', desc:'긴 수명으로 많은 이별을 겪었습니다. 감정(Emotion) 효과에 대한 내성에 +1 상황 보너스를 얻습니다.'},
   {name_ko:'님블 엘프', name_en:'Nimble Elf', feat_level:1, prerequisites:'엘프', traits:['엘프'], category:'ancestry', summary:'다른 엘프보다 더 날쌘합니다.', desc:'다른 엘프보다 더 날쌘합니다. 이동 속도가 5피트 증가합니다.'},
   {name_ko:'자발적 동맹', name_en:'Unwavering Mien', feat_level:1, prerequisites:'엘프', traits:['엘프'], category:'ancestry', summary:'매혹/수면 효과 지속시간 절반. 정신 효과에 대한 내성 보너스.', desc:'엘프의 정신적 강인함으로 정신 조종에 저항합니다. 매혹/수면 효과의 지속시간이 절반으로 줄어듭니다.'},

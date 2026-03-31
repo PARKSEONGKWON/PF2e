@@ -463,7 +463,10 @@ const FEAT_EFFECTS = {
     effects: [{type:'skill_trained', skill:'arcana'}, {type:'skill_trained', skill:'nature'}, {type:'grant_lore', name:'엘프'}]
   },
   'Elven Weapon Familiarity': {
-    effects: [{type:'weapon_familiarity', weapons:['장궁','단궁','합성 장궁','합성 단궁','롱소드','레이피어']}]
+    effects: [
+      {type:'weapon_trained', weapons:['장궁','단궁','롱소드','레이피어']},
+      {type:'weapon_familiarity', weapons:['합성 장궁','합성 단궁']}
+    ]
   },
   'Forlorn': {
     effects: [{type:'save_bonus', save:'will', value:1, bonus_type:'circumstance', condition:'감정 효과'}]
@@ -2849,6 +2852,12 @@ function _applyOneEffect(fb, eff, feat, level) {
     case 'weapon_familiarity': {
       // 해당 무기를 한 카테고리 낮춰 취급 (군용→단순)
       if (eff.weapons) eff.weapons.forEach(w => { if (!fb.familiarWeapons.includes(w)) fb.familiarWeapons.push(w); });
+      break;
+    }
+    case 'weapon_trained': {
+      // 특정 무기에 직접 훈련됨(trained) 부여
+      if (!fb.trainedWeapons) fb.trainedWeapons = [];
+      if (eff.weapons) eff.weapons.forEach(w => { if (!fb.trainedWeapons.includes(w)) fb.trainedWeapons.push(w); });
       break;
     }
     case 'grant_lore': {
