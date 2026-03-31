@@ -1767,7 +1767,6 @@ const FEAT_DB = [
 ,
   {name_ko:'고블린 지식', name_en:'Goblin Lore', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'자연학과 은신에 숙련됩니다. 이미 숙련이면 대신 다른 기술에 숙련. 고블린 지식에 대한 추가 지식 재주를 얻습니다.', desc:'<strong>자연학과 은신에 숙련</strong>됩니다. 이미 숙련이면 대신 다른 기술에 숙련. <strong>고블린 지식</strong>에 대한 추가 지식 재주를 얻습니다.'}
 ,
-  {name_ko:'꼬리 물기', name_en:'Tail Spin', feat_level:5, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'넘어뜨리기(Trip)에 +2 상황 보너스. 꼬리를 이용한 넘어뜨리기.', desc:'크기가 작지만 재빠르게 적의 발을 걸 수 있습니다.'}
 ,
   {name_ko:'무릎치기', name_en:'Kneecap', feat_level:5, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'근접 타격을 하되 피해를 주지 않습니다. 명중 시 대상의 이동 속도에 -10피트 상태 페널티(치명타 시 -15피트)를 1라운드간 부여합니다. 지', desc:'근접 타격을 하되 피해를 주지 않습니다. 명중 시 대상의 이동 속도에 <strong>-10피트 상태 페널티</strong>(치명타 시 -15피트)를 1라운드간 부여합니다. 지상 이동 속도가 있고 다리에 의존하는 대상에게만 적용. 최소 5피트.'}
 ,
