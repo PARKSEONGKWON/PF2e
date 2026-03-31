@@ -905,6 +905,11 @@ function recalcSkill(id) {
   const featSkill = state._fb?.skills?.[id];
   if (featSkill && featSkill.min_rank > rank) {
     rank = featSkill.min_rank;
+    // UI select도 업데이트
+    const sel = document.getElementById('sk-prof-'+id);
+    if (sel) sel.value = rank;
+    // 뱃지도 업데이트
+    if (typeof syncProfRankBadge === 'function') syncProfRankBadge('rank-sk-'+id, 'sk-prof-'+id);
   }
   const lv = getLevel();
   const base = getMod(sk.attr) + (rank>0?rank+lv:0);

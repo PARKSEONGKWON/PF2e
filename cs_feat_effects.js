@@ -662,6 +662,47 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'오크 무기 숙련도 전문가로 증가'}]
   },
 
+  // ── 체인질링 ──
+  'Changeling Lore': {
+    effects: [{type:'skill_trained', skill:'deception'}, {type:'skill_trained', skill:'occultism'}]
+  },
+  "Hag's Sight": {
+    effects: [{type:'display_note', text:'암시야(darkvision) 획득'}]
+  },
+
+  // ── 네피림 ──
+  'Angelkin': {
+    effects: [{type:'skill_trained', skill:'society'}, {type:'display_note', text:'천상어 습득. 다국어(Multilingual) 재주 획득'}]
+  },
+  'Hellspawn': {
+    effects: [{type:'skill_trained', skill:'deception'}, {type:'display_note', text:'법률 지식 숙련. 거짓 간파(Lie to Me) 재주 획득'}]
+  },
+  'Pitborn': {
+    effects: [{type:'skill_trained', skill:'athletics'}, {type:'display_note', text:'운동 숙련 전제조건 1레벨 기술 재주 1개 추가'}]
+  },
+  'Nephilim Lore': {
+    effects: [{type:'skill_trained', skill:'religion'}, {type:'display_note', text:'외교 또는 위협 숙련 (선택). 차원 관련 지식 재주'}]
+  },
+  'Nephilim Eyes': {
+    effects: [{type:'display_note', text:'암시야(darkvision) 획득'}]
+  },
+  'Nimble Hooves': {
+    effects: [{type:'speed_bonus', value:5}]
+  },
+
+  // ── 아이우바린 ──
+  'Earned Glory': {
+    effects: [{type:'skill_trained', skill:'performance'}, {type:'display_note', text:'인상적 공연(Impressive Performance) 재주 획득'}]
+  },
+
+  // ── 드로마르 ──
+  'Monstrous Peacemaker': {
+    effects: [{type:'display_note', text:'비인간형 지적 생물/소외된 인간형에 외교 +1 상황 보너스'}]
+  },
+  'Orc Sight': {
+    effects: [{type:'display_note', text:'암시야(darkvision) 획득'}]
+  },
+
   // ═══════════════════════════════════════
   //  바드 클래스 재주 (Bard Class Feats)
   // ═══════════════════════════════════════
