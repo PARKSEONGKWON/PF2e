@@ -1880,7 +1880,7 @@ function selectOption(item, row) {
       else if (item.ac_bonus !== undefined) tags = `<span class="tag-meta">AC+${item.ac_bonus}</span>`;
       const mSpellNotes = (item.rank !== undefined && typeof getSpellFeatNotes === 'function') ? getSpellFeatNotes(item.name||item.name_ko||'') : '';
       detailHtml = `${tags?'<div style="margin-bottom:6px;">'+tags+'</div>':''}
-        <div style="font-size:12px;line-height:1.6;">${_buildFeatActionCard(item)}${formatDescActions(mDesc, item)}${mSpellNotes}</div>`;
+        <div style="font-size:12px;line-height:1.6;">${formatDescActions(mDesc, item)}${mSpellNotes}${_buildFeatActionCard(item)}</div>`;
     }
     // Insert or reuse detail div after row
     if (row) {
@@ -2069,7 +2069,7 @@ function showItemDetail(item) {
     <div class="modal-detail-en">${nameEn}</div>
     <div class="modal-detail-tags">${tags}</div>
     <hr style="border:none;border-top:1px solid var(--border);margin:0 0 10px 0;">
-    <div class="modal-detail-desc">${_buildFeatActionCard(item)}${formatDescActions(desc, item)}${spellNotes}</div>`;
+    <div class="modal-detail-desc">${formatDescActions(desc, item)}${spellNotes}${_buildFeatActionCard(item)}</div>`;
 }
 
 function filterOptions() {
