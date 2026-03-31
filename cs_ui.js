@@ -1559,18 +1559,21 @@ function removeFeat(t, i) {
   }
   state.feats[t].splice(i,1);
   // 선행 연쇄 제거: 이 재주를 선행으로 요구하는 다른 재주도 제거
-  if (featName && typeof FEAT_DB !== 'undefined') {
+  if (typeof FEAT_DB !== 'undefined' && typeof _checkPrereqs === 'function') {
     let changed = true;
     while (changed) {
       changed = false;
-      for (const [type, arr] of Object.entries(state.feats)) {
+      for (const type of Object.keys(state.feats)) {
+        const arr = state.feats[type];
+        if (!Array.isArray(arr)) continue;
         for (let j = arr.length - 1; j >= 0; j--) {
           const f = arr[j];
-          const fNameKo = f.name?.split(' (')[0].trim() || '';
+          if (!f?.name) continue;
+          const fNameKo = f.name.split(' (')[0].trim();
           const fData = FEAT_DB.find(fd => fd.name_ko === fNameKo);
-          if (fData?.prerequisites && typeof _checkPrereqs === 'function' && !_checkPrereqs(fData.prerequisites)) {
+          if (fData?.prerequisites && !_checkPrereqs(fData.prerequisites)) {
             // 선천 주문도 정리
-            if (f.name && state.spells?.innate) {
+            if (state.spells?.innate) {
               state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== f.name);
             }
             arr.splice(j, 1);
@@ -1579,6 +1582,12 @@ function removeFeat(t, i) {
         }
       }
     }
+  }
+  // 선천 주문 최종 정리 — grant_innate_spell로 추가된 것도 재주 없으면 제거
+  if (state.spells?.innate) {
+    const allFeatNames = new Set();
+    Object.values(state.feats).forEach(arr => { if (Array.isArray(arr)) arr.forEach(f => { if (f.name) allFeatNames.add(f.name); }); });
+    state.spells.innate = state.spells.innate.filter(s => !s._sourceFeat || allFeatNames.has(s._sourceFeat));
   }
   recalcAll(); renderFeats(); save();
 }
