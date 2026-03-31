@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=74"></script>
-<script src="feat_db.js?v=74"></script>
-<script src="SPELL_DB.js?v=74"></script>
-<script src="class_features_db.js?v=74"></script>
+<script src="equipment_db.js?v=75"></script>
+<script src="feat_db.js?v=75"></script>
+<script src="SPELL_DB.js?v=75"></script>
+<script src="class_features_db.js?v=75"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1421,6 +1421,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
       <div class="spell-subtabs">
         <span class="spell-subtab active" id="spell-subtab-class" onclick="switchSpellSubtab('class')">주문</span>
         <span class="spell-subtab" id="spell-subtab-focus" onclick="switchSpellSubtab('focus')">집중 주문</span>
+        <span class="spell-subtab" id="spell-subtab-innate" onclick="switchSpellSubtab('innate')">선천적 주문</span>
         <span class="spell-subtab" id="spell-subtab-ritual" onclick="switchSpellSubtab('ritual')">의식</span>
       </div>
 
@@ -1524,6 +1525,14 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
           </div>
           <div id="divine-font-body" style="padding:8px 12px;"></div>
         </div>
+      </div>
+
+      <!-- Innate spells content (hidden by default) -->
+      <div id="spell-content-innate" style="display:none;">
+        <div style="padding:8px 12px;font-size:11px;color:var(--text2);border-bottom:1px solid var(--border);">
+          유산, 혈통, 재주 등에 의해 부여된 선천적 주문입니다. 자유롭게 시전하거나 하루 횟수 제한이 있습니다.
+        </div>
+        <div id="spells-innate"></div>
       </div>
 
       <!-- Rituals content (hidden by default) -->
@@ -1679,12 +1688,12 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=74"></script>
-<script src="cs_calc.js?v=74"></script>
-<script src="cs_ui.js?v=74"></script>
-<script src="cs_modal.js?v=74"></script>
-<script src="cs_feat_effects.js?v=74"></script>
-<script src="cs_save.js?v=74"></script>
+<script src="cs_data.js?v=75"></script>
+<script src="cs_calc.js?v=75"></script>
+<script src="cs_ui.js?v=75"></script>
+<script src="cs_modal.js?v=75"></script>
+<script src="cs_feat_effects.js?v=75"></script>
+<script src="cs_save.js?v=75"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

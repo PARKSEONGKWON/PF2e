@@ -1981,6 +1981,8 @@ function resetFromAncestry() {
   state.size = '중형';
   const speedEl = document.getElementById('speed');
   if (speedEl) speedEl.value = 25;
+  // 유산 부여 선천적 주문 제거
+  if (state.spells.innate) state.spells.innate = state.spells.innate.filter(s => !s._heritage);
   // Clear languages/traits textarea
   const langEl = document.getElementById('f-languages');
   if (langEl) langEl.value = '';
@@ -2424,8 +2426,17 @@ function applyHeritageEffects(h) {
     const visionRank = {'암시야':2,'저광 시야':1,'없음':0};
     if ((visionRank[h.vision]||0) > (visionRank[curVision]||0)) state.vision = h.vision;
   }
+  // 선천적 주문 부여
+  if (h.innateSpells) {
+    // 기존 유산 부여 선천 주문 제거
+    state.spells.innate = (state.spells.innate||[]).filter(s => !s._heritage);
+    h.innateSpells.forEach(sp => {
+      state.spells.innate.push({name: sp.name, tradition: sp.tradition, type: sp.type, uses: sp.uses, _heritage: true, _source: h.name_ko});
+    });
+  }
   recalcAll();
   renderFeats();
+  if (typeof renderSpells === 'function') renderSpells();
 }
 
 function applyBackgroundInfo(bg) {

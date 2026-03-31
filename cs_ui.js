@@ -1054,7 +1054,7 @@ function getActionIcons(actions) {
 }
 
 function switchSpellSubtab(tab) {
-  ['class','focus','ritual'].forEach(t => {
+  ['class','focus','innate','ritual'].forEach(t => {
     const tabEl = document.getElementById('spell-subtab-'+t);
     const contentEl = document.getElementById('spell-content-'+t);
     if (tabEl) tabEl.classList.toggle('active', tab===t);
@@ -1288,6 +1288,33 @@ function renderSpells() {
     }
 
     ranksContainer.appendChild(section);
+  }
+
+  // ── 선천적 주문 렌더링 ──
+  const innateList = document.getElementById('spells-innate');
+  const innateTab = document.getElementById('spell-subtab-innate');
+  const innateArr = state.spells.innate || [];
+  if (innateTab) innateTab.style.display = innateArr.length > 0 ? '' : 'none';
+  if (innateList) {
+    innateList.innerHTML = '';
+    innateArr.forEach((s, i) => {
+      const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === s.name) : null;
+      const actions = getActionIcons(spellData?.actions);
+      const isCantrip = s.type === 'cantrip';
+      const rankLabel = isCantrip ? `[캔트립 ${heightenedLevel}랭크]` : (s.rank ? `[${s.rank}랭크]` : '');
+      const usesLabel = s.uses === '자유' ? '자유 시전' : s.uses || '';
+      const row = document.createElement('div');
+      row.className = 'spell-slot-row';
+      row.innerHTML = `
+        <span class="spell-slot-name" onclick="showInfo('spell','${(s.name||'').replace(/'/g,"\\'")}')">${s.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+        <span style="font-size:10px;color:var(--accent);margin-left:4px;">${rankLabel}</span>
+        <span style="font-size:10px;color:var(--text2);margin-left:auto;">${s.tradition || ''} · ${usesLabel}</span>
+        ${s._source ? `<span style="font-size:9px;color:var(--text2);margin-left:4px;">(${s._source})</span>` : ''}`;
+      innateList.appendChild(row);
+    });
+    if (innateArr.length === 0) {
+      innateList.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text2);font-size:12px;">선천적 주문이 없습니다.</div>';
+    }
   }
 }
 
