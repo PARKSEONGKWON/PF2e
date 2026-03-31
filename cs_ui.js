@@ -1534,6 +1534,7 @@ function renderFeats() {
         ${fTraits ? `<div class="feat-traits-row">${fTraits}</div>` : ''}
         <div class="feat-detail">
           ${fPrereq}
+          ${typeof _buildFeatActionCard==='function'?_buildFeatActionCard(featData):''}
           <div style="line-height:1.6;">${typeof formatDescActions==='function'?formatDescActions(desc,featData):desc}</div>
         </div>`;
       div.addEventListener('click', () => _toggleFeatAccordion(div));

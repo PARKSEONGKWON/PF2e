@@ -1880,7 +1880,7 @@ function selectOption(item, row) {
       else if (item.ac_bonus !== undefined) tags = `<span class="tag-meta">AC+${item.ac_bonus}</span>`;
       const mSpellNotes = (item.rank !== undefined && typeof getSpellFeatNotes === 'function') ? getSpellFeatNotes(item.name||item.name_ko||'') : '';
       detailHtml = `${tags?'<div style="margin-bottom:6px;">'+tags+'</div>':''}
-        <div style="font-size:12px;line-height:1.6;">${formatDescActions(mDesc, item)}${mSpellNotes}</div>`;
+        <div style="font-size:12px;line-height:1.6;">${_buildFeatActionCard(item)}${formatDescActions(mDesc, item)}${mSpellNotes}</div>`;
     }
     // Insert or reuse detail div after row
     if (row) {
@@ -1913,6 +1913,30 @@ function selectOption(item, row) {
 }
 
 // 설명 텍스트에서 행동 블록([반응], [1행동] 등)을 행동 탭과 완전히 동일한 카드로 변환
+// 재주가 행동인 경우 행동 카드 생성
+function _buildFeatActionCard(item) {
+  if (!item || item.feat_level === undefined) return '';
+  const summ = item.summary || '';
+  const costMatch = summ.match(/^\[(반응|1행동|2행동|3행동|자유 행동)\]/);
+  if (!costMatch) return '';
+  const costMap = {'반응':'reaction','1행동':'1','2행동':'2','3행동':'3','자유 행동':'free'};
+  const costKey = costMap[costMatch[1]] || '1';
+  const costIcon = (typeof getActionCostIcon==='function') ? getActionCostIcon(costKey) : costMatch[0];
+  const traits = (item.traits||[]).map(t => typeof traitTag==='function' ? traitTag(t) : `<span class="tag">${t}</span>`).join(' ');
+  const desc = (item.desc||item.summary||'').replace(/^\[(?:반응|1행동|2행동|3행동|자유 행동)\]\s*/, '');
+  return `<div class="action-card" style="margin:8px 0;max-width:320px;">
+    <div class="action-card-head">
+      <span class="action-cost">${costIcon}</span>
+      <div style="flex:1;min-width:0;">
+        <div class="action-name-ko">${item.name_ko||item.name||''}</div>
+        <div class="action-name-en">${item.name_en||item.en||''}</div>
+      </div>
+    </div>
+    ${traits ? `<div class="action-traits">${traits}</div>` : ''}
+    <div class="action-summary">${desc.substring(0, 150)}${desc.length > 150 ? '...' : ''}</div>
+  </div>`;
+}
+
 function formatDescActions(text, item) {
   if (!text) return text;
   const actionCostRe = /\[(?:반응|1행동|2행동|3행동|자유 행동)\]/;
@@ -2045,7 +2069,7 @@ function showItemDetail(item) {
     <div class="modal-detail-en">${nameEn}</div>
     <div class="modal-detail-tags">${tags}</div>
     <hr style="border:none;border-top:1px solid var(--border);margin:0 0 10px 0;">
-    <div class="modal-detail-desc">${formatDescActions(desc, item)}${spellNotes}</div>`;
+    <div class="modal-detail-desc">${_buildFeatActionCard(item)}${formatDescActions(desc, item)}${spellNotes}</div>`;
 }
 
 function filterOptions() {
