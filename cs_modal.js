@@ -2665,6 +2665,7 @@ function applyAncestryDefaults(anc) {
 
 function applyHeritageEffects(h) {
   if (!h) return;
+  try {
   // 시야 적용
   if (h.vision === 'upgrade') {
     // 저광 시야 부여, 이미 저광이면 암시야로 업그레이드
@@ -2721,6 +2722,7 @@ function applyHeritageEffects(h) {
   recalcAll();
   renderFeats();
   if (typeof renderSpells === 'function') renderSpells();
+  } catch(e) { console.error('applyHeritageEffects error:', e); }
 }
 
 function applyBackgroundInfo(bg) {
