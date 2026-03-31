@@ -517,6 +517,9 @@ const FEAT_EFFECTS = {
   'Fey Fellowship': {
     effects: [{type:'display_note', text:'페이와의 외교/지각에 +2 상황 보너스'}]
   },
+  'Homeward Bound': {
+    effects: [{type:'grant_innate_spell', spell:'차원간 순간이동', tradition:'원시', spellType:'spell', uses:'주 2회'}]
+  },
   'Gnome Weapon Familiarity': {
     effects: [{type:'weapon_familiarity', weapons:['글레이브']}]
   },

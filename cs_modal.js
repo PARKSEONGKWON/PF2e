@@ -1655,6 +1655,7 @@ function _checkPrereqs(prereqStr) {
     // 혈통 체크: "엘프", "드워프" 등
     if (state.selectedAncestry?.traits?.includes(c)) continue;
     if (state.selectedHeritage?.extraFeats?.includes(c)) continue;
+    if (state.selectedHeritage && state.selectedHeritage.name_ko === c) continue;
 
     // 뮤즈/교리/교단 체크
     if (state.selectedSubclass && (state.selectedSubclass.name_ko === c || state.selectedSubclass.name_en === c)) continue;

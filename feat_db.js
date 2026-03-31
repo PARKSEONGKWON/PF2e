@@ -1743,7 +1743,7 @@ const FEAT_DB = [
 ,
   {name_ko:'노움 무기 전문가', name_en:'Gnome Weapon Expertise', feat_level:13, prerequisites:'노움, 노움 무기 친숙', traits:['노움'], category:'ancestry', summary:'노움 무기에 대한 숙련도가 전문가로 증가합니다.', desc:'노움 무기에 대한 숙련도가 전문가로 증가합니다.'}
 ,
-  {name_ko:'본능적 은폐', name_en:'Instinctive Obfuscation', feat_level:13, prerequisites:'노움', traits:['노움'], category:'ancestry', summary:'전제조건: 노움 유산이나 혈통 재주에서 얻은 비전 또는 비학 선천 주문 최소 1개', desc:'<strong>전제조건:</strong> 노움 유산이나 혈통 재주에서 얻은 비전 또는 비학 선천 주문 최소 1개<br><br>내면의 마법이 위협에 대한 자연적 반응으로 나타납니다. 당신의 공간에 잠시 환영의 분신이 나타납니다. 유발 공격자는 <strong>DC 10 단순 판정</strong>을 굴려야 합니다; 성공하면 공격이 정상적으로 당신을 대상으로 하고, 실패하면 공격이 분신을 대상으로 하여 파괴합니다. 이 행동의 전통은 노움 혈통 옵션의 전통과 일치합니다.'}
+  {name_ko:'본능적 은폐', name_en:'Instinctive Obfuscation', feat_level:13, prerequisites:'노움, 원천 노움', traits:['노움'], category:'ancestry', summary:'[반응] 공격 시 환영 분신 생성. DC 10 단순 판정 실패 시 분신이 대신 맞음.', desc:'<strong>전제조건:</strong> 노움 유산이나 혈통 재주에서 얻은 비전 또는 비학 선천 주문 최소 1개<br><br>내면의 마법이 위협에 대한 자연적 반응으로 나타납니다. 당신의 공간에 잠시 환영의 분신이 나타납니다. 유발 공격자는 <strong>DC 10 단순 판정</strong>을 굴려야 합니다; 성공하면 공격이 정상적으로 당신을 대상으로 하고, 실패하면 공격이 분신을 대상으로 하여 파괴합니다. 이 행동의 전통은 노움 혈통 옵션의 전통과 일치합니다.'}
 ,
   {name_ko:'고향 귀환', name_en:'Homeward Bound', feat_level:17, prerequisites:'노움', traits:['노움'], category:'ancestry', summary:'빈도: 주 2회', desc:'<strong>빈도:</strong> 주 2회<br>당신과 첫 번째 세계 사이의 연결이 대부분의 노움보다 몸속에서 강하게 울려, 우주와 첫 번째 세계 사이의 문턱을 넘을 수 있습니다. <em>차원간 순간이동(interplanar teleport)</em>을 <strong>원시 선천 주문으로 주 2회</strong> 시전할 수 있습니다. 이것은 첫 번째 세계와 우주 사이를 왕래하는 데만 사용할 수 있습니다. 몸의 자연적 공명으로 주문의 초점(locus) 역할을 할 수 있으며, 특별히 조율된 차원 열쇠가 필요하지 않습니다.'}
 ,

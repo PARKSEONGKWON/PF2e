@@ -1588,6 +1588,7 @@ function cascadeRemoveFeats() {
       }
       if (state.selectedAncestry?.traits?.includes(ct)) continue;
       if (state.selectedHeritage?.extraFeats?.includes(ct)) continue;
+      if (state.selectedHeritage && state.selectedHeritage.name_ko === ct) continue;
       if (state.selectedClass && (state.selectedClass.name === ct || state.selectedClass.en === ct)) continue;
       if (state.selectedSubclass && (state.selectedSubclass.name_ko === ct || state.selectedSubclass.name_en === ct)) continue;
       if (learned.has(ct)) continue;
