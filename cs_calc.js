@@ -1204,7 +1204,7 @@ function updateHP() {
     const ancHP = state.selectedAncestry.hp;
     const clsHP = state.selectedClass.hp;
     const conMod = getMod('con');
-    const max = ancHP + (clsHP + conMod) * lv + (state._fb?.hp || 0);
+    const max = ancHP + (state._heritageHpBonus || 0) + (clsHP + conMod) * lv + (state._fb?.hp || 0);
     const maxEl = document.getElementById('hp-max');
     const curEl = document.getElementById('hp-cur');
     const oldMax = parseInt(maxEl.value || 0);

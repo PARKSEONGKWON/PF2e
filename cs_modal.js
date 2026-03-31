@@ -2274,6 +2274,10 @@ function clearCoreSelection(type) {
     if (state.spells?.innate) state.spells.innate = state.spells.innate.filter(s => !s._heritage);
     // 유산 캔트립 임시 재주 제거
     if (state.feats.other) state.feats.other = state.feats.other.filter(f => !f._heritageCantrip);
+    // 유산 무기 제거
+    state.weapons = (state.weapons||[]).filter(w => !w._fromHeritage);
+    // 유산 HP 보너스 제거
+    state._heritageHpBonus = 0;
     const btn = document.getElementById('btn-heritage');
     if (btn) { btn.textContent = '유산...'; btn.classList.remove('filled'); }
     recalcAll();
@@ -2695,6 +2699,21 @@ function applyHeritageEffects(h) {
         state.spells.innate.push({name: sp.name, tradition: sp.tradition, type: sp.type, uses: sp.uses, _heritage: true, _source: h.name_ko});
       });
     }
+  }
+  // 유산 무기 부여 (면도이빨 고블린 등)
+  if (h.grantWeapon) {
+    // 기존 유산 무기 제거
+    state.weapons = (state.weapons||[]).filter(w => !w._fromHeritage);
+    const w = h.grantWeapon;
+    if (typeof addWeapon === 'function') {
+      addWeapon({name: w.name, dmg: w.dmg, traits: w.traits, category: w.category, _fromHeritage: true});
+    }
+  }
+  // 유산 HP 보너스 (부서지지 않는 고블린 등)
+  if (h.hpBonus) {
+    state._heritageHpBonus = h.hpBonus;
+  } else {
+    state._heritageHpBonus = 0;
   }
   recalcAll();
   renderFeats();

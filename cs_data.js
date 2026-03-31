@@ -230,9 +230,9 @@ const HERITAGE_DB = [
   // 고블린
   {id:'charhide-goblin',name_ko:'숯가죽 고블린',name_en:'Charhide Goblin',ancestry:'goblin',resistances:[{type:'화염',formula:'half'}],summary:'조상은 항상 불과의 연결과 더 두꺼운 피부를 가져 화상에 저항할 수 있었습니다. 레벨 절반만큼의 화염 저항(최소 1)을 얻습니다. 지속 화염 피해를 제거하기 위한 단순 판정이 DC 15 대신 DC 10이며, 다른 생물이 도우면 DC 5로 줄어듭니다.'},
   {id:'irongut-goblin',name_ko:'철위장 고블린',name_en:'Irongut Goblin',ancestry:'goblin',summary:'대부분의 사람이 상한 것으로 여기는 음식으로 살아갈 수 있습니다. 쓰레기가 쉽게 구할 수 있다면, 생존 활동 없이도 정착지에서 빈곤한 식사로 살아갈 수 있습니다. 구역질 상태일 때도 먹고 마실 수 있습니다.<br>고통에 대한 내성, 구역질 상태 얻기/제거에 <strong>+2 상황 보너스</strong>를 얻습니다. 이 보너스의 영향을 받는 인내 내성에서 <strong>성공 시 대성공</strong>이 됩니다. 섭취한 것에서 비롯된 경우에만 적용됩니다.'},
-  {id:'razortooth-goblin',name_ko:'면도이빨 고블린',name_en:'Razortooth Goblin',ancestry:'goblin',summary:'가족의 이빨은 무시무시한 무기입니다. <strong>1d6 관통 피해</strong>의 턱(jaws) 비무장 공격을 얻습니다. 격투 그룹이며 기교와 비무장 특성을 가집니다.'},
+  {id:'razortooth-goblin',name_ko:'면도이빨 고블린',name_en:'Razortooth Goblin',ancestry:'goblin',grantWeapon:{name:'턱',dmg:'1d6 P',traits:'기교, 비무장',category:'비무장 근접'},summary:'가족의 이빨은 무시무시한 무기입니다. <strong>1d6 관통 피해</strong>의 턱(jaws) 비무장 공격을 얻습니다. 격투 그룹이며 기교와 비무장 특성을 가집니다.'},
   {id:'snow-goblin',name_ko:'눈 고블린',name_en:'Snow Goblin',ancestry:'goblin',resistances:[{type:'냉기',formula:'half'}],summary:'혹한 지역에 적응하여 하늘색~남색 피부와 파란 털을 가집니다. 레벨 절반만큼의 냉기 저항(최소 1)을 얻고, 환경 추위 효과를 한 단계 낮게 취급합니다.'},
-  {id:'unbreakable-goblin',name_ko:'부서지지 않는 고블린',name_en:'Unbreakable Goblin',ancestry:'goblin',summary:'두꺼운 두개골, 연골성 뼈, 또는 다른 양날의 축복 덕분에 부상에서 쉽게 회복합니다. 혈통에서 6 대신 <strong>10 HP</strong>를 얻습니다. 추락 시, 절반 거리에서 떨어진 것처럼 피해를 줄입니다.'},
+  {id:'unbreakable-goblin',name_ko:'부서지지 않는 고블린',name_en:'Unbreakable Goblin',ancestry:'goblin',hpBonus:4,summary:'두꺼운 두개골, 연골성 뼈, 또는 다른 양날의 축복 덕분에 부상에서 쉽게 회복합니다. 혈통에서 6 대신 <strong>10 HP</strong>를 얻습니다. 추락 시, 절반 거리에서 떨어진 것처럼 피해를 줄입니다.'},
   // 하플링
   {id:'gutsy-halfling',name_ko:'대담한 하플링',name_en:'Gutsy Halfling',ancestry:'halfling',summary:'가문은 위기 상황에서 냉정을 유지하고 공포를 떨쳐내는 것으로 알려져 있습니다. 감정(emotion) 효과에 대한 내성에서 <strong>성공을 굴리면 대성공</strong>이 됩니다.'},
   {id:'hillock-halfling',name_ko:'언덕 하플링',name_en:'Hillock Halfling',ancestry:'halfling',summary:'언덕의 평화로운 삶에 익숙하여, 특히 안락한 생활을 즐길 때 휴식과 이완이 특히 회복적입니다. 밤새 HP를 회복할 때, <strong>회복된 HP에 레벨을 더합니다</strong>. 누군가 의학으로 상처 치료를 할 때, 간식을 먹으면 <strong>치료로 회복되는 HP에 레벨을 더합니다</strong>.'},
