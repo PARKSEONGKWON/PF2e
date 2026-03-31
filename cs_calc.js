@@ -81,17 +81,37 @@ function syncAllTeml() { syncAllProfRanks(); }
 function traitTag(name) {
   const desc = TRAIT_DB[name] || TRAIT_DB[name.replace(/\s*\d+.*$/, '')] || null;
   if (desc) {
-    return `<span class="trait-tag" ontouchstart="toggleTraitTip(event,this)">${name}<span class="trait-balloon">${desc}</span></span>`;
+    return `<span class="trait-tag" onmouseenter="posTraitTip(this)" onmouseleave="hideTraitTip(this)" ontouchstart="toggleTraitTip(event,this)">${name}<span class="trait-balloon">${desc}</span></span>`;
   }
   return `<span class="tag">${name}</span>`;
+}
+
+function posTraitTip(el) {
+  const balloon = el.querySelector('.trait-balloon');
+  if (!balloon) return;
+  balloon.style.display = 'block';
+  const rect = el.getBoundingClientRect();
+  const bRect = balloon.getBoundingClientRect();
+  let left = rect.left + rect.width/2 - bRect.width/2;
+  let top = rect.top - bRect.height - 6;
+  if (left < 4) left = 4;
+  if (left + bRect.width > window.innerWidth - 4) left = window.innerWidth - bRect.width - 4;
+  if (top < 4) top = rect.bottom + 6;
+  balloon.style.left = left + 'px';
+  balloon.style.top = top + 'px';
+}
+
+function hideTraitTip(el) {
+  const balloon = el.querySelector('.trait-balloon');
+  if (balloon && !el.classList.contains('tip-open')) balloon.style.display = 'none';
 }
 
 function toggleTraitTip(e, el) {
   e.preventDefault();
   e.stopPropagation();
   const isOpen = el.classList.contains('tip-open');
-  document.querySelectorAll('.trait-tag.tip-open').forEach(t => t.classList.remove('tip-open'));
-  if (!isOpen) el.classList.add('tip-open');
+  document.querySelectorAll('.trait-tag.tip-open').forEach(t => { t.classList.remove('tip-open'); hideTraitTip(t); });
+  if (!isOpen) { el.classList.add('tip-open'); posTraitTip(el); }
 }
 // 아무 곳이나 터치/클릭하면 열린 태그 풍선 닫기
 document.addEventListener('click', () => {

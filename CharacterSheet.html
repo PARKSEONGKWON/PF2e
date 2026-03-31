@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=90"></script>
-<script src="feat_db.js?v=90"></script>
-<script src="SPELL_DB.js?v=90"></script>
-<script src="class_features_db.js?v=90"></script>
+<script src="equipment_db.js?v=91"></script>
+<script src="feat_db.js?v=91"></script>
+<script src="SPELL_DB.js?v=91"></script>
+<script src="class_features_db.js?v=91"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -919,16 +919,13 @@ body{
 }
 .trait-tag:hover{border-color:var(--accent);color:var(--accent);}
 .trait-tag .trait-balloon{
-  display:none;position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);
-  background:var(--bg2);border:1px solid var(--accent);border-radius:4px;
-  padding:6px 8px;font-size:11px;color:var(--text);width:180px;z-index:400;
-  line-height:1.5;white-space:normal;text-align:left;pointer-events:none;
+  display:none;position:fixed;background:var(--bg2);border:1px solid var(--accent);border-radius:4px;
+  padding:6px 10px;font-size:11px;color:var(--text);max-width:280px;width:max-content;z-index:99999;
+  line-height:1.5;white-space:normal;text-align:center;pointer-events:none;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);
 }
-.trait-tag:hover .trait-balloon,.trait-tag.tip-open .trait-balloon{display:block;}
-.trait-tag .trait-balloon::after{
-  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:var(--accent);
-}
+.trait-tag.tip-open .trait-balloon{display:block;}
+.trait-tag .trait-balloon::after{display:none;}
 .info-btn{
   color:var(--text2);cursor:pointer;font-size:10px;padding:1px 5px;
   user-select:none;flex-shrink:0;border:1px solid var(--border2);border-radius:3px;
@@ -1690,12 +1687,12 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=90"></script>
-<script src="cs_calc.js?v=90"></script>
-<script src="cs_ui.js?v=90"></script>
-<script src="cs_modal.js?v=90"></script>
-<script src="cs_feat_effects.js?v=90"></script>
-<script src="cs_save.js?v=90"></script>
+<script src="cs_data.js?v=91"></script>
+<script src="cs_calc.js?v=91"></script>
+<script src="cs_ui.js?v=91"></script>
+<script src="cs_modal.js?v=91"></script>
+<script src="cs_feat_effects.js?v=91"></script>
+<script src="cs_save.js?v=91"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
