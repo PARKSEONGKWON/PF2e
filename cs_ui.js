@@ -1628,13 +1628,27 @@ function cascadeRemoveFeats() {
       }
     }
   }
+  // grant_feat로 부여된 재주 정리 (_grantedBy가 없는 재주이면 제거)
+  const allFeatNames = new Set();
+  for (const arr of Object.values(state.feats)) {
+    if (Array.isArray(arr)) arr.forEach(f => { if (f.name) allFeatNames.add(f.name); });
+  }
+  for (const type of Object.keys(state.feats)) {
+    const arr = state.feats[type];
+    if (!Array.isArray(arr)) continue;
+    for (let j = arr.length - 1; j >= 0; j--) {
+      if (arr[j]._grantedBy && !allFeatNames.has(arr[j]._grantedBy)) {
+        arr.splice(j, 1);
+      }
+    }
+  }
   // 선천 주문 최종 정리
   if (state.spells?.innate) {
-    const allFeatNames = new Set();
+    const allNames2 = new Set();
     for (const arr of Object.values(state.feats)) {
-      if (Array.isArray(arr)) arr.forEach(f => { if (f.name) allFeatNames.add(f.name); });
+      if (Array.isArray(arr)) arr.forEach(f => { if (f.name) allNames2.add(f.name); });
     }
-    state.spells.innate = state.spells.innate.filter(s => !s._sourceFeat || allFeatNames.has(s._sourceFeat));
+    state.spells.innate = state.spells.innate.filter(s => !s._sourceFeat || allNames2.has(s._sourceFeat));
   }
 }
 

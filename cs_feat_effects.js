@@ -556,7 +556,10 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'폐자재로 간이 무기/장비 제작 가능'}]
   },
   'Rough Rider': {
-    effects: [{type:'display_note', text:'탈것 관련 자연(Nature) 판정에 +1 상황 보너스'}]
+    effects: [{type:'grant_feat', feat:'기마 (Ride)'}, {type:'display_note', text:'고블린 개/늑대 탈것에 동물 명령 +1 상황 보너스'}]
+  },
+  'Goblin Lore': {
+    effects: [{type:'skill_trained', skill:'nature'}, {type:'skill_trained', skill:'stealth'}, {type:'grant_lore', name:'고블린'}]
   },
   'Very Sneaky': {
     effects: [{type:'display_note', text:'험한 지형에서 은신 +1 상황 보너스'}]
@@ -2883,6 +2886,18 @@ function _applyOneEffect(fb, eff, feat, level) {
       // 특정 무기에 직접 훈련됨(trained) 부여
       if (!fb.trainedWeapons) fb.trainedWeapons = [];
       if (eff.weapons) eff.weapons.forEach(w => { if (!fb.trainedWeapons.includes(w)) fb.trainedWeapons.push(w); });
+      break;
+    }
+    case 'grant_feat': {
+      // 재주 자동 부여
+      if (eff.feat && feat.name) {
+        const grantName = eff.feat;
+        const alreadyHas = Object.values(state.feats).flat().some(f => f.name && f.name.includes(grantName.split(' (')[0]));
+        if (!alreadyHas) {
+          if (!state.feats.general) state.feats.general = [];
+          state.feats.general.push({name: grantName, level: 1, _auto: true, _grantedBy: feat.name});
+        }
+      }
       break;
     }
     case 'extra_sense': {

@@ -1751,17 +1751,17 @@ const FEAT_DB = [
   // ── 고블린 Goblin ──
   {name_ko:'화염 뿜기', name_en:'Burn It!', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'화염 피해에 +1 상태 보너스. 불붙은 대상에 명중 시 지속 화염 피해.', desc:'불이 당신을 매혹합니다. 화염 피해를 입히는 주문과 연금술 아이템이 <strong>주문 랭크의 절반 또는 아이템 레벨의 4분의 1만큼 상태 보너스</strong>(최소 +1)를 피해에 얻습니다. 지속 화염 피해에도 <strong>+1 상태 보너스</strong>를 얻습니다.'}
 ,
-  {name_ko:'고블린 노래', name_en:'Goblin Song', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'1행동으로 적에게 노래하여 판정에 -1 상태 페널티 부여.', desc:'짜증나는 노래를 부르며 적의 주의를 분산시킵니다. 30피트 내 적 1명의 의지 DC에 대해 <strong>공연 판정</strong>을 시도합니다. 전문가이면 대상 2명, 대가 4명, 전설 8명.<br><strong>대성공:</strong> 1분간 지각 판정과 의지 내성에 -1 상태 페널티.<br>'}
+  {name_ko:'고블린 노래', name_en:'Goblin Song', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'[1행동] 공연 판정으로 적의 지각/의지에 -1 상태 페널티.', desc:'짜증나는 노래를 부르며 적의 주의를 분산시킵니다. 30피트 내 적 1명의 의지 DC에 대해 <strong>공연 판정</strong>을 시도합니다. 전문가이면 대상 2명, 대가 4명, 전설 8명.<br><strong>대성공:</strong> 1분간 지각 판정과 의지 내성에 -1 상태 페널티.<br>'}
 ,
   {name_ko:'고블린 쓰레기 뒤지기', name_en:'Goblin Scuttle', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'[반응] 아군이 인접한 칸으로 이동하면 비틀거림(Step) 가능.', desc:'<strong>유발 조건:</strong> 아군이 인접한 곳에서 이동 행동을 종료합니다.<br>아군의 이동을 이용하여 위치를 조정합니다. <strong>한 걸음(Step)</strong>.'}
 ,
-  {name_ko:'정크 폭탄', name_en:'Junk Tinker', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'쓰레기에서 쓸만한 도구를 제작. 간이 무기/장비 제작 가능.', desc:'폐품으로 <strong>0레벨 아이템</strong>(무기/갑옷 포함)을 제작 가능. 가격 1/4이지만 허접(shoddy). 자신이 만든 허접 아이템 사용 시 페널티 없음. 일반 제작 시에도 폐품을 포함시켜 1일 추가 작업한 것과 같은 할인.'}
+  {name_ko:'폐품 수선공', name_en:'Junk Tinker', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'쓰레기에서 쓸만한 도구를 제작. 간이 무기/장비 제작 가능.', desc:'폐품으로 <strong>0레벨 아이템</strong>(무기/갑옷 포함)을 제작 가능. 가격 1/4이지만 허접(shoddy). 자신이 만든 허접 아이템 사용 시 페널티 없음. 일반 제작 시에도 폐품을 포함시켜 1일 추가 작업한 것과 같은 할인.'}
 ,
   {name_ko:'거친 놀이', name_en:'Rough Rider', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'고블린독(Goblin Dog)이나 울프 탈것에 +1 상황 보너스.', desc:'전제조건 없이 <strong>기마(Ride) 재주</strong>를 얻습니다. 고블린 개나 늑대 탈것에 동물 명령 시 <strong>+1 상황 보너스</strong>. 늑대를 동물 동료로 얻으면 탑승 특수 능력을 얻습니다.'}
 ,
   {name_ko:'무모한 포기', name_en:'Very Sneaky', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'은신(Stealth) 판정에 +1 상황 보너스 (험한 지형에서). 빠른 몰래 이동.', desc:'잠행 시 <strong>5피트 더 멀리</strong>(이동 속도까지) 이동 가능. 잠행 행동을 계속 사용하고 은신 판정에 성공하는 한, 잠행 종료 시 엄폐/은폐 없어도 관측되지 않음(단 턴 종료 시 엄폐/은폐 필요).'}
 ,
-  {name_ko:'톱니 공격', name_en:'Goblin Weapon Familiarity', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'고블린 전통 무기에 숙련됩니다.', desc:'고블린 특성의 모든 비일반 무기에 접근합니다. 고블린 특성 무기에 친숙 — <strong>군용→단순, 고급→군용</strong>으로 취급. 5레벨에서 치명 특성 효과 적용.'}
+  {name_ko:'고블린 무기 친숙', name_en:'Goblin Weapon Familiarity', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'고블린 전통 무기에 숙련됩니다.', desc:'고블린 특성의 모든 비일반 무기에 접근합니다. 고블린 특성 무기에 친숙 — <strong>군용→단순, 고급→군용</strong>으로 취급. 5레벨에서 치명 특성 효과 적용.'}
 ,
   {name_ko:'도시 수집가', name_en:'City Scavenger', feat_level:1, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'생존(Subsist) 판정에 +1 상황 보너스를 얻고, 정착지에서 사회나 생존으로 생존할 수 있습니다. 도시에서 생존 시, 추가 휴식일 없이 사', desc:'생존(Subsist) 판정에 <strong>+1 상황 보너스</strong>를 얻고, 정착지에서 사회나 생존으로 생존할 수 있습니다. 도시에서 생존 시, 추가 휴식일 없이 사회나 생존으로 수입 벌기도 가능하며 +1 보너스를 얻습니다.<br><strong>특수:</strong> 철위장 고블린 유산이면 보너스가 +2.'}
 ,
@@ -1781,7 +1781,7 @@ const FEAT_DB = [
 ,
   {name_ko:'매달리기', name_en:'Cling', feat_level:9, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'요구사항: 마지막 행동이 성공한 타격이었고 빈 손이 있어야 합니다.', desc:'<strong>요구사항:</strong> 마지막 행동이 성공한 타격이었고 빈 손이 있어야 합니다.<br>적에 매달려 괴롭힙니다. 대상 이동 시 함께 이동 가능. 다음 턴 시작, 함께 이동하지 않기로 선택, 또는 대상이 탈출하면 해제. 탈출은 당신의 곡예 DC에 대해 시도.<br><strong>특수:</strong> 턱이나 유사한 비무장 공격으로 이전 타격을 했다면 빈 손 없이 사용 가능.'}
 ,
-  {name_ko:'고블린 무기 전문가', name_en:'Goblin Weapon Frenzy', feat_level:13, prerequisites:'고블린, 톱니 공격', traits:['고블린'], category:'ancestry', summary:'고블린 무기 숙련도가 전문가로 증가.', desc:'고블린 무기에 대한 숙련도가 전문가로 증가합니다.'}
+  {name_ko:'고블린 무기 전문가', name_en:'Goblin Weapon Frenzy', feat_level:13, prerequisites:'고블린, 고블린 무기 친숙', traits:['고블린'], category:'ancestry', summary:'고블린 무기 숙련도가 전문가로 증가.', desc:'고블린 무기에 대한 숙련도가 전문가로 증가합니다.'}
 ,
   {name_ko:'매우 매우 은밀한', name_en:'Very, Very Sneaky', feat_level:13, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'전제조건: 매우 은밀한. 잠행 시 이동 속도까지 이동 가능. 숨기나 잠행에 엄폐/은폐가 더 이상 불필요.', desc:'<strong>전제조건:</strong> 매우 은밀한. 잠행 시 <strong>이동 속도까지 이동</strong> 가능. 숨기나 잠행에 엄폐/은폐가 <strong>더 이상 불필요</strong>.'}
 ,
