@@ -3042,10 +3042,31 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
       const actions = typeof getActionIcons==='function' ? getActionIcons(sp.actions) : (sp.actions||'');
       row.innerHTML = `<span class="opt-row-icon">📄</span><span class="opt-row-name">${sp.name_ko}</span>${actions?`<span class="opt-row-actions">${actions}</span>`:''}`;
       row.onclick = () => {
-        container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
-        row.classList.add('selected');
         modalContext._selectedSpell = sp.name_ko;
-        if (typeof showItemDetail === 'function') showItemDetail(sp);
+        if (window.innerWidth <= 900) {
+          // 모바일: 아코디언
+          document.querySelectorAll('.opt-row-detail.open').forEach(d => d.classList.remove('open'));
+          document.querySelectorAll('.opt-row.expanded').forEach(r => r.classList.remove('expanded'));
+          row.classList.add('expanded');
+          let detailDiv = row.nextElementSibling;
+          if (!detailDiv || !detailDiv.classList.contains('opt-row-detail')) {
+            detailDiv = document.createElement('div'); detailDiv.className = 'opt-row-detail'; row.after(detailDiv);
+          }
+          const rankStr = sp.is_cantrip ? '캔트립' : `랭크 ${sp.rank}`;
+          const spTraits = [...(sp.traditions||[]),...(sp.traits||[])].map(t => typeof traitTag==='function' ? traitTag(t) : `<span class="tag">${t}</span>`).join('');
+          const spDesc = sp.desc || sp.summary || '';
+          detailDiv.innerHTML = `
+            <div style="margin-bottom:4px;"><span class="tag-meta">${rankStr}</span></div>
+            ${spTraits ? '<div style="margin-bottom:6px;">'+spTraits+'</div>' : ''}
+            <div style="font-size:12px;line-height:1.6;">${spDesc}</div>
+            <button onclick="if(modalContext._selectedSpell)_applyFeatChoice(modalContext._selectedSpell)" style="width:100%;margin-top:8px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">선택</button>`;
+          detailDiv.classList.add('open');
+        } else {
+          // PC: 우측 패널
+          container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+          row.classList.add('selected');
+          if (typeof showItemDetail === 'function') showItemDetail(sp);
+        }
       };
       container.appendChild(row);
     });
