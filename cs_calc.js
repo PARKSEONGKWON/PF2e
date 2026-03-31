@@ -929,7 +929,7 @@ function recalcSkill(id) {
     if (sel) sel.value = rank;
     if (typeof syncProfRankBadge === 'function') syncProfRankBadge('rank-sk-'+id, 'sk-prof-'+id);
   }
-  // 임시 숙련 (조상의 장수 등)
+  // 임시 숙련 (조상의 장수 등) — 실제 등급이 이미 숙련 이상이면 무시
   let isTemp = false;
   if (state.tempSkillTrained === id && rank < 2) {
     rank = 2;

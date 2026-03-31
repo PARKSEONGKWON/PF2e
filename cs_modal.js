@@ -50,7 +50,12 @@ function openRestModal() {
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">준비 시 선택한 기술 1개에 임시 숙련됨을 부여합니다. 다음 휴식까지 지속됩니다.</div>
       <select id="rest-ancestral-skill" style="width:100%;padding:6px;background:var(--bg4);color:var(--text);border:1px solid var(--border2);border-radius:4px;font-size:12px;">
         <option value="">기술 선택...</option>
-        ${SKILLS.filter(s => !s.isLore && parseInt(document.getElementById('sk-prof-'+s.id)?.value||0) < 2).map(s => `<option value="${s.id}" ${state.tempSkillTrained===s.id?'selected':''}>${s.name}</option>`).join('')}
+        ${SKILLS.filter(s => {
+          if (s.isLore) return false;
+          const baseRank = parseInt(document.getElementById('sk-prof-'+s.id)?.value||0);
+          const featRank = state._fb?.skills?.[s.id]?.min_rank || 0;
+          return Math.max(baseRank, featRank) < 2;
+        }).map(s => `<option value="${s.id}" ${state.tempSkillTrained===s.id?'selected':''}>${s.name}</option>`).join('')}
       </select>
     </div>` : ''}
     <div style="display:flex;gap:8px;margin-top:16px;">
