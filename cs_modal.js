@@ -2702,7 +2702,7 @@ function applyHeritageEffects(h) {
       state.feats.other.push({name: tempFeatName, level:1, _auto:true, _heritageCantrip:true});
       const fi = state.feats.other.length - 1;
       if (typeof openFeatChoiceModal === 'function') {
-        setTimeout(() => openFeatChoiceModal('other', fi, {type:'spell_cantrip', tradition: trad, label}), 100);
+        setTimeout(() => openFeatChoiceModal('other', fi, {type:'spell_cantrip', tradition: trad, label}), 0);
       }
     } else {
       h.innateSpells.forEach(sp => {

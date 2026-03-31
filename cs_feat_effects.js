@@ -2894,66 +2894,7 @@ function _applyOneEffect(fb, eff, feat, level) {
       break;
     }
     case 'grant_adopted_feat': {
-      // 문화 적응: 양자 혈통으로 선택한 혈통의 1레벨 재주 1개 획득
-      // 이미 이 재주로 혈통 재주를 부여했으면 스킵
-      const alreadyGranted = (state.feats.ancestry||[]).some(f => f && f._grantedBy === feat.name);
-      if (alreadyGranted) break;
-      setTimeout(() => {
-        const adoptedFeat = Object.values(state.feats).flat().find(f => f && f.name && f.name.includes('양자 혈통') && f.choice && f._grantedBy === feat.name);
-        if (!adoptedFeat) return;
-        const ancMap = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
-        const traitName = ancMap[adoptedFeat.choice] || adoptedFeat.choice;
-        // 해당 혈통의 1레벨 재주 목록
-        if (typeof FEAT_DB === 'undefined') return;
-        const candidates = FEAT_DB.filter(f => f && f.category === 'ancestry' && f.feat_level === 1 && f.traits && f.traits.includes(traitName));
-        if (!candidates.length) return;
-        // 모달로 선택
-        const overlay = document.getElementById('modal-overlay');
-        overlay.classList.remove('hidden');
-        modalType = 'feat-choice';
-        document.getElementById('modal-title').textContent = traitName + ' 1레벨 혈통 재주 선택';
-        const searchEl = document.getElementById('modal-search');
-        if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; }
-        const det = document.getElementById('modal-detail');
-        if (det) { det.style.display = ''; det.innerHTML = '<div class="modal-detail-empty">재주를 선택하면 상세 정보가 표시됩니다.</div>'; }
-        const listEl = document.querySelector('.modal-list');
-        if (listEl) { listEl.style.display = ''; listEl.style.width = ''; }
-        const closeBtn = document.querySelector('.modal-close');
-        const closeBtnM = document.getElementById('modal-close-m');
-        const footer = document.querySelector('.modal-footer');
-        if (closeBtn) closeBtn.style.display = 'none';
-        if (closeBtnM) closeBtnM.style.display = 'none';
-        if (footer) footer.style.display = 'none';
-        const container = document.getElementById('modal-options');
-        container.innerHTML = '';
-        candidates.forEach(cf => {
-          const row = document.createElement('div');
-          row.className = 'opt-row';
-          row.style.cursor = 'pointer';
-          row.innerHTML = `<span class="opt-row-icon">📄</span><span class="opt-row-name">${cf.name_ko}</span><span style="font-size:10px;color:var(--text2);margin-left:auto;">${cf.name_en}</span>`;
-          row.onclick = () => {
-            container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
-            row.classList.add('selected');
-            if (typeof showItemDetail === 'function') showItemDetail(cf);
-            const detEl = document.getElementById('modal-detail');
-            if (detEl) {
-              const btn = document.createElement('button');
-              btn.textContent = '이 재주 선택';
-              btn.style.cssText = 'width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;';
-              btn.onclick = () => {
-                const fullName = cf.name_ko + (cf.name_en ? ' (' + cf.name_en + ')' : '');
-                state.feats.ancestry.push({name: fullName, level: 1, _grantedBy: feat.name});
-                closeModal();
-                recalcAll();
-                renderFeats();
-                save();
-              };
-              detEl.appendChild(btn);
-            }
-          };
-          container.appendChild(row);
-        });
-      }, 500);
+      // _applyFeatChoice에서 직접 처리 — 여기서는 아무것도 안 함
       break;
     }
     case 'adopted_ancestry': {
@@ -2978,7 +2919,7 @@ function _applyOneEffect(fb, eff, feat, level) {
           const grantedIdx = state.feats.general.length - 1;
           const grantedFeat = state.feats.general[grantedIdx];
           if (!grantedFeat.choice && typeof checkFeatChoice === 'function') {
-            setTimeout(() => checkFeatChoice(grantName, 'general', grantedIdx), 200);
+            setTimeout(() => checkFeatChoice(grantName, 'general', grantedIdx), 0);
           }
         }
       }
@@ -3311,9 +3252,78 @@ function _applyFeatChoice(choiceId) {
   }
 
   renderFeats();
-  recalcAll();
+  try { recalcAll(); } catch(e) { console.error(e); }
   save();
   closeModal();
+
+  // 양자 혈통 선택 완료 후 — 문화 적응의 grant_adopted_feat 트리거
+  if (choiceDef?.type === 'ancestry_pick') {
+    const grantedByFeat = state.feats[featType]?.[featIndex];
+    if (grantedByFeat?._grantedBy) {
+      // 문화 적응이 grant한 양자 혈통 → 혈통 재주 선택 모달
+      const parentFeatName = grantedByFeat._grantedBy;
+      const alreadyGranted = (state.feats.ancestry||[]).some(f => f && f._grantedBy === parentFeatName);
+      if (!alreadyGranted) {
+        _openAdoptedFeatPicker(choiceId, parentFeatName);
+      }
+    }
+  }
+}
+
+function _openAdoptedFeatPicker(ancestryId, parentFeatName) {
+  const ancMap = {dwarf:'드워프',elf:'엘프',gnome:'노움',goblin:'고블린',halfling:'하플링',human:'인간',leshy:'레쉬',orc:'오크'};
+  const traitName = ancMap[ancestryId] || ancestryId;
+  if (typeof FEAT_DB === 'undefined') return;
+  const candidates = FEAT_DB.filter(f => f && f.category === 'ancestry' && f.feat_level === 1 && f.traits && f.traits.includes(traitName));
+  if (!candidates.length) return;
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'feat-choice';
+  document.getElementById('modal-title').textContent = traitName + ' 1레벨 혈통 재주 선택';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; searchEl.oninput = () => {
+    const q = searchEl.value.toLowerCase();
+    document.getElementById('modal-options').querySelectorAll('.opt-row').forEach(r => { r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+  };}
+  const det = document.getElementById('modal-detail');
+  if (det) { det.style.display = ''; det.innerHTML = '<div class="modal-detail-empty">재주를 선택하면 상세 정보가 표시됩니다.</div>'; }
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) { listEl.style.display = ''; listEl.style.width = ''; }
+  const closeBtn = document.querySelector('.modal-close');
+  const closeBtnM = document.getElementById('modal-close-m');
+  const footer = document.querySelector('.modal-footer');
+  if (closeBtn) closeBtn.style.display = 'none';
+  if (closeBtnM) closeBtnM.style.display = 'none';
+  if (footer) footer.style.display = 'none';
+  const container = document.getElementById('modal-options');
+  container.innerHTML = '';
+  candidates.forEach(cf => {
+    const row = document.createElement('div');
+    row.className = 'opt-row';
+    row.style.cursor = 'pointer';
+    row.innerHTML = `<span class="opt-row-icon">📄</span><span class="opt-row-name">${cf.name_ko}</span><span style="font-size:10px;color:var(--text2);margin-left:auto;">${cf.name_en}</span>`;
+    row.onclick = () => {
+      container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+      row.classList.add('selected');
+      if (typeof showItemDetail === 'function') showItemDetail(cf);
+      const detEl = document.getElementById('modal-detail');
+      if (detEl) {
+        const btn = document.createElement('button');
+        btn.textContent = '이 재주 선택';
+        btn.style.cssText = 'width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;';
+        btn.onclick = () => {
+          const fullName = cf.name_ko + (cf.name_en ? ' (' + cf.name_en + ')' : '');
+          state.feats.ancestry.push({name: fullName, level: 1, _grantedBy: parentFeatName});
+          closeModal();
+          try { recalcAll(); } catch(e) { console.error(e); }
+          renderFeats();
+          save();
+        };
+        detEl.appendChild(btn);
+      }
+    };
+    container.appendChild(row);
+  });
 }
 
 // ── 재주 추가 시 선택 필요 여부 체크 ──
