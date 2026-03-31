@@ -1933,7 +1933,7 @@ function _buildFeatActionCard(item) {
       </div>
     </div>
     ${traits ? `<div class="action-traits">${traits}</div>` : ''}
-    <div class="action-summary">${desc.substring(0, 150)}${desc.length > 150 ? '...' : ''}</div>
+    <div class="action-summary">${desc}</div>
   </div>`;
 }
 
@@ -2829,7 +2829,7 @@ function renderActions() {
       visible.push({
         id, cat:'feat', cat_label:'재주 행동', name_ko: fd.name_ko, name_en: fd.name_en,
         cost, traits: fd.traits||[], req_skill:null, req_rank:0, req_feat: fd.name_ko,
-        summary: desc.substring(0, 120) + (desc.length > 120 ? '...' : '')
+        summary: desc
       });
     });
   }
