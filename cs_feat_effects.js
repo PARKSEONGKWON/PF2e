@@ -2912,10 +2912,16 @@ function _applyOneEffect(fb, eff, feat, level) {
       // 재주 자동 부여
       if (eff.feat && feat.name) {
         const grantName = eff.feat;
-        const alreadyHas = Object.values(state.feats).flat().some(f => f.name && f.name.includes(grantName.split(' (')[0]));
+        const alreadyHas = Object.values(state.feats).flat().some(f => f && f.name && f.name.includes(grantName.split(' (')[0]));
         if (!alreadyHas) {
           if (!state.feats.general) state.feats.general = [];
           state.feats.general.push({name: grantName, level: 1, _auto: true, _grantedBy: feat.name});
+          // 부여된 재주에 choice가 필요하면 모달 열기
+          const grantedIdx = state.feats.general.length - 1;
+          const grantedFeat = state.feats.general[grantedIdx];
+          if (!grantedFeat.choice && typeof checkFeatChoice === 'function') {
+            setTimeout(() => checkFeatChoice(grantName, 'general', grantedIdx), 200);
+          }
         }
       }
       break;
