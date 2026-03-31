@@ -28,7 +28,7 @@ function openRestModal() {
     <div style="display:flex;flex-direction:column;gap:8px;">
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
         <input type="checkbox" id="rest-hp" checked style="accent-color:var(--accent);width:18px;height:18px;">
-        HP를 건강 수정치 × 레벨만큼 회복 (${hpRecover} HP)
+        HP를 건강 수정치 × 레벨만큼 회복 (${hpRecover} HP)${state.selectedHeritage?.restBonusHp ? ` + 언덕 하플링 보너스 (${lv} HP)` : ''}
       </label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
         <input type="checkbox" id="rest-fatigue" checked style="accent-color:var(--accent);width:18px;height:18px;">
@@ -137,7 +137,8 @@ function applyRest() {
   if (document.getElementById('rest-hp')?.checked) {
     const conMod = Math.max(1, getMod('con'));
     const lv = getLevel();
-    const recover = conMod * lv;
+    const hillockBonus = state.selectedHeritage?.restBonusHp ? lv : 0;
+    const recover = conMod * lv + hillockBonus;
     const curEl = document.getElementById('hp-cur');
     const maxEl = document.getElementById('hp-max');
     if (curEl && maxEl) {
@@ -2702,6 +2703,13 @@ function applyHeritageEffects(h) {
       h.innateSpells.forEach(sp => {
         state.spells.innate.push({name: sp.name, tradition: sp.tradition, type: sp.type, uses: sp.uses, _heritage: true, _source: h.name_ko});
       });
+    }
+  }
+  // 추가 언어 (유목 하플링 등)
+  if (h.extraLanguages) {
+    const langEl = document.getElementById('f-languages');
+    if (langEl && !langEl.value.includes('추가 언어')) {
+      langEl.value = (langEl.value ? langEl.value + '\n' : '') + `[${h.name_ko}] 추가 언어 ${h.extraLanguages}개 선택`;
     }
   }
   // 유산 무기 부여 (면도이빨 고블린 등)

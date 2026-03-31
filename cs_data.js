@@ -235,9 +235,9 @@ const HERITAGE_DB = [
   {id:'unbreakable-goblin',name_ko:'부서지지 않는 고블린',name_en:'Unbreakable Goblin',ancestry:'goblin',hpBonus:4,summary:'두꺼운 두개골, 연골성 뼈, 또는 다른 양날의 축복 덕분에 부상에서 쉽게 회복합니다. 혈통에서 6 대신 <strong>10 HP</strong>를 얻습니다. 추락 시, 절반 거리에서 떨어진 것처럼 피해를 줄입니다.'},
   // 하플링
   {id:'gutsy-halfling',name_ko:'대담한 하플링',name_en:'Gutsy Halfling',ancestry:'halfling',summary:'가문은 위기 상황에서 냉정을 유지하고 공포를 떨쳐내는 것으로 알려져 있습니다. 감정(emotion) 효과에 대한 내성에서 <strong>성공을 굴리면 대성공</strong>이 됩니다.'},
-  {id:'hillock-halfling',name_ko:'언덕 하플링',name_en:'Hillock Halfling',ancestry:'halfling',summary:'언덕의 평화로운 삶에 익숙하여, 특히 안락한 생활을 즐길 때 휴식과 이완이 특히 회복적입니다. 밤새 HP를 회복할 때, <strong>회복된 HP에 레벨을 더합니다</strong>. 누군가 의학으로 상처 치료를 할 때, 간식을 먹으면 <strong>치료로 회복되는 HP에 레벨을 더합니다</strong>.'},
-  {id:'nomadic-halfling',name_ko:'유목 하플링',name_en:'Nomadic Halfling',ancestry:'halfling',summary:'조상이 세대에 걸쳐 이곳저곳을 여행하며 정착하는 데 만족하지 않았습니다. 사용 가능한 일반/비일반 언어에서 <strong>추가 언어 2개</strong>를 얻고, 다국어(Multilingual) 재주를 가질 때마다 <strong>추가 1개</strong>를 더 얻습니다.'},
-  {id:'twilight-halfling',name_ko:'황혼 하플링',name_en:'Twilight Halfling',ancestry:'halfling',summary:'조상이 해질녘의 은폐 속에서 많은 비밀스러운 행동을 했으며, 시간이 지나며 하플링의 일반적인 예리한 시야를 넘어 황혼에서도 볼 수 있는 능력을 발달시켰습니다. <strong>저광 시야(low-light vision)</strong>를 얻습니다.'},
+  {id:'hillock-halfling',name_ko:'언덕 하플링',name_en:'Hillock Halfling',ancestry:'halfling',restBonusHp:true,summary:'언덕의 평화로운 삶에 익숙하여, 특히 안락한 생활을 즐길 때 휴식과 이완이 특히 회복적입니다. 밤새 HP를 회복할 때, <strong>회복된 HP에 레벨을 더합니다</strong>. 누군가 의학으로 상처 치료를 할 때, 간식을 먹으면 <strong>치료로 회복되는 HP에 레벨을 더합니다</strong>.'},
+  {id:'nomadic-halfling',name_ko:'유목 하플링',name_en:'Nomadic Halfling',ancestry:'halfling',extraLanguages:2,summary:'조상이 세대에 걸쳐 이곳저곳을 여행하며 정착하는 데 만족하지 않았습니다. 사용 가능한 일반/비일반 언어에서 <strong>추가 언어 2개</strong>를 얻고, 다국어(Multilingual) 재주를 가질 때마다 <strong>추가 1개</strong>를 더 얻습니다.'},
+  {id:'twilight-halfling',name_ko:'황혼 하플링',name_en:'Twilight Halfling',ancestry:'halfling',vision:'저광 시야',summary:'조상이 해질녘의 은폐 속에서 많은 비밀스러운 행동을 했으며, 시간이 지나며 하플링의 일반적인 예리한 시야를 넘어 황혼에서도 볼 수 있는 능력을 발달시켰습니다. <strong>저광 시야(low-light vision)</strong>를 얻습니다.'},
   {id:'wildwood-halfling',name_ko:'야생림 하플링',name_en:'Wildwood Halfling',ancestry:'halfling',summary:'정글이나 숲 깊숙이 출신이며, 작은 체구로 덤불과 다른 장애물 사이를 비집고 지나가는 법을 배웠습니다. 식물과 곰팡이로 인한 <strong>험지를 무시</strong>합니다(덤불, 덩굴, 수풀 등).'},
   // 인간
   {id:'skilled-human',name_ko:'숙련된 인간',name_en:'Skilled Human',ancestry:'human',summary:'독창성이 다양한 기술에 숙련되게 합니다. 선택한 <strong>기술 1개에 숙련</strong>됩니다. 5레벨에서 해당 기술에 <strong>전문가</strong>가 됩니다.'},
