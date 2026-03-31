@@ -2996,14 +2996,14 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
   if (confirmBtn) confirmBtn.style.display = 'none';
   const detail = document.getElementById('modal-detail');
   if (detail) { detail.style.display = 'none'; }
-  // spell_cantrip: 닫기/취소 숨김 (선택 필수)
-  const closeBtn = document.querySelector('.modal-close');
-  const closeBtnM = document.getElementById('modal-close-m');
-  const cancelBtn = document.querySelector('.modal-footer .btn-cancel');
+  // spell_cantrip: 닫기/취소/선택 전부 숨김 (선택 필수, detail 내 버튼만 사용)
   if (isSpellChoice) {
+    const closeBtn = document.querySelector('.modal-close');
+    const closeBtnM = document.getElementById('modal-close-m');
+    const footer = document.querySelector('.modal-footer');
     if (closeBtn) closeBtn.style.display = 'none';
     if (closeBtnM) closeBtnM.style.display = 'none';
-    if (cancelBtn) cancelBtn.style.display = 'none';
+    if (footer) footer.style.display = 'none';
   }
 
   const listEl = document.querySelector('.modal-list');
@@ -3142,7 +3142,6 @@ function _applyFeatChoice(choiceId) {
   state.feats[featType][featIndex].choice = choiceId;
 
   // spell_cantrip 선택 시 선천적 주문에 추가
-  alert('_applyFeatChoice 호출됨: ' + choiceId + ' / type: ' + (choiceDef?.type||'none'));
   if (choiceDef?.type === 'spell_cantrip') {
     const tradition = choiceDef.tradition || 'arcane';
     const tradKo = {arcane:'비전',divine:'신성',occult:'비의',primal:'근원'}[tradition] || tradition;
