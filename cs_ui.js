@@ -1472,8 +1472,9 @@ function renderFeats() {
       const featData = (typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(fd => fd.name_ko === f.name.split(' (')[0].trim()) : null;
       const desc = featData?.desc || featData?.summary || '';
       // 아코디언 내 메타 + 특성 뱃지
+      const catLabels = {ancestry:'혈통',class:'클래스',general:'일반',skill:'기술',archetype:'원형',special:'클래스 특성',other:'기타'};
       const fTraits = (featData?.traits||[]).map(t2 => typeof traitTag==='function' ? traitTag(t2) : `<span class="tag">${t2}</span>`).join(' ');
-      const fMeta = `<span class="tag-meta">${featData?.feat_level||f.level||1}레벨</span> <span class="tag-meta">${featData?.category||t}</span>`;
+      const fMeta = `<span class="tag-meta">${featData?.feat_level||f.level||1}레벨</span> <span class="tag-meta">${catLabels[featData?.category]||catLabels[t]||t}</span>`;
       let fPrereq = '';
       if (featData?.prerequisites) {
         const prParts = featData.prerequisites.split(/(?<=\.)\s+/);
@@ -1486,7 +1487,8 @@ function renderFeats() {
         </div>
         <div class="feat-src"><span style="color:var(--text2);font-size:10px;">${srcLabel}</span></div>
         <div class="feat-detail">
-          <div style="margin-bottom:6px;">${fMeta} ${fTraits}</div>
+          <div style="margin-bottom:4px;">${fMeta}</div>
+          ${fTraits ? `<div style="margin-bottom:6px;">${fTraits}</div>` : ''}
           ${fPrereq}
           <div style="line-height:1.6;">${typeof formatDescActions==='function'?formatDescActions(desc,featData):desc}</div>
         </div>`;
