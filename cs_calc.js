@@ -232,7 +232,7 @@ function showInfo(type, name) {
         <div style="font-size:16px;font-weight:700;margin-bottom:2px;">${nameKoD}</div>
         <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">${nameEnD}</div>
         <div style="margin-bottom:10px;">${tags}</div>
-        <div style="font-size:13px;line-height:1.7;">${typeof formatDescActions==='function'?formatDescActions(desc):desc}${spellNotes}</div>
+        <div style="font-size:13px;line-height:1.7;">${typeof formatDescActions==='function'?formatDescActions(desc,item):desc}${spellNotes}</div>
       </div>`;
     }
   } else {
