@@ -429,6 +429,9 @@ const FEAT_EFFECTS = {
   'Mountain Roots': {
     effects: [{type:'display_note', text:'밀기/넘어뜨리기에 대한 DC +2 상황 보너스. 강제 이동 거리 절반'}]
   },
+  "Stonemason's Eye": {
+    effects: [{type:'skill_trained', skill:'crafting'}]
+  },
   'Dwarven Weapon Familiarity': {
     effects: [{type:'weapon_familiarity', weapons:['전투 도끼','픽','워해머']}]
   },
