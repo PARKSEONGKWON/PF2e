@@ -558,9 +558,6 @@ const FEAT_EFFECTS = {
   'Tail Spin': {
     effects: [{type:'display_note', text:'넘어뜨리기(Trip)에 +2 상황 보너스'}]
   },
-  'Tree Climber': {
-    effects: [{type:'speed_extra', key:'climb', value:10}]
-  },
   'Goblin Weapon Frenzy': {
     effects: [{type:'display_note', text:'고블린 무기 숙련도 전문가로 증가'}]
   },
