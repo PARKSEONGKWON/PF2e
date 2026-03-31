@@ -6,26 +6,26 @@ const ARMOR_DB = [
   {name_ko:'갑옷 없음', name_en:'No Armor', category:'비무장', price:'—', ac_bonus:0, dex_cap:null, check_penalty:0, speed_penalty:0, strength:0, bulk:'—', group:'—', traits:[]},
   {name_ko:'탐험가 의복', name_en:"Explorer's Clothing", category:'비무장', price:'1sp', ac_bonus:0, dex_cap:5, check_penalty:0, speed_penalty:0, strength:0, bulk:'L', group:'천', traits:['편안']},
   // ── 경갑 ──
-  {name_ko:'패딩 갑옷', name_en:'Padded Armor', category:'경갑', price:'2sp', ac_bonus:1, dex_cap:3, check_penalty:0, speed_penalty:0, strength:0, bulk:'L', group:'천', traits:['편안']},
+  {name_ko:'누비 갑옷', name_en:'Padded Armor', category:'경갑', price:'2sp', ac_bonus:1, dex_cap:3, check_penalty:0, speed_penalty:0, strength:0, bulk:'L', group:'천', traits:['편안']},
   {name_ko:'가죽 갑옷', name_en:'Leather Armor', category:'경갑', price:'2gp', ac_bonus:1, dex_cap:4, check_penalty:-1, speed_penalty:0, strength:0, bulk:1, group:'가죽', traits:[]},
-  {name_ko:'장식 가죽', name_en:'Studded Leather', category:'경갑', price:'3gp', ac_bonus:2, dex_cap:3, check_penalty:-1, speed_penalty:0, strength:1, bulk:1, group:'가죽', traits:[]},
+  {name_ko:'징 박힌 가죽 갑옷', name_en:'Studded Leather', category:'경갑', price:'3gp', ac_bonus:2, dex_cap:3, check_penalty:-1, speed_penalty:0, strength:1, bulk:1, group:'가죽', traits:[]},
   {name_ko:'사슬 셔츠', name_en:'Chain Shirt', category:'경갑', price:'5gp', ac_bonus:2, dex_cap:3, check_penalty:-1, speed_penalty:0, strength:1, bulk:1, group:'사슬', traits:['유연','시끄러운']},
   // ── 평갑 ──
-  {name_ko:'수피 갑옷', name_en:'Hide Armor', category:'평갑', price:'2gp', ac_bonus:3, dex_cap:2, check_penalty:-2, speed_penalty:-5, strength:2, bulk:2, group:'가죽', traits:[]},
-  {name_ko:'비늘 갑옷', name_en:'Scale Mail', category:'평갑', price:'4gp', ac_bonus:3, dex_cap:2, check_penalty:-2, speed_penalty:-5, strength:2, bulk:2, group:'합성', traits:[]},
+  {name_ko:'하이드', name_en:'Hide Armor', category:'평갑', price:'2gp', ac_bonus:3, dex_cap:2, check_penalty:-2, speed_penalty:-5, strength:2, bulk:2, group:'가죽', traits:[]},
+  {name_ko:'미늘 갑옷', name_en:'Scale Mail', category:'평갑', price:'4gp', ac_bonus:3, dex_cap:2, check_penalty:-2, speed_penalty:-5, strength:2, bulk:2, group:'합성', traits:[]},
   {name_ko:'사슬 갑옷', name_en:'Chain Mail', category:'평갑', price:'6gp', ac_bonus:4, dex_cap:1, check_penalty:-2, speed_penalty:-5, strength:3, bulk:2, group:'사슬', traits:['유연','시끄러운']},
-  {name_ko:'흉갑', name_en:'Breastplate', category:'평갑', price:'8gp', ac_bonus:4, dex_cap:1, check_penalty:-2, speed_penalty:-5, strength:3, bulk:2, group:'판금', traits:[]},
+  {name_ko:'브레스트플레이트', name_en:'Breastplate', category:'평갑', price:'8gp', ac_bonus:4, dex_cap:1, check_penalty:-2, speed_penalty:-5, strength:3, bulk:2, group:'판금', traits:[]},
   // ── 중갑 ──
-  {name_ko:'쇄판 갑옷', name_en:'Splint Mail', category:'중갑', price:'13gp', ac_bonus:5, dex_cap:1, check_penalty:-3, speed_penalty:-10, strength:3, bulk:3, group:'합성', traits:[]},
-  {name_ko:'반판 갑옷', name_en:'Half Plate', category:'중갑', price:'18gp', ac_bonus:5, dex_cap:1, check_penalty:-3, speed_penalty:-10, strength:3, bulk:3, group:'판금', traits:[]},
-  {name_ko:'전판 갑옷', name_en:'Full Plate', category:'중갑', price:'30gp', ac_bonus:6, dex_cap:0, check_penalty:-3, speed_penalty:-10, strength:4, bulk:4, group:'판금', traits:['방벽']},
+  {name_ko:'스플린트', name_en:'Splint Mail', category:'중갑', price:'13gp', ac_bonus:5, dex_cap:1, check_penalty:-3, speed_penalty:-10, strength:3, bulk:3, group:'합성', traits:[]},
+  {name_ko:'하프 플레이트', name_en:'Half Plate', category:'중갑', price:'18gp', ac_bonus:5, dex_cap:1, check_penalty:-3, speed_penalty:-10, strength:3, bulk:3, group:'판금', traits:[]},
+  {name_ko:'풀 플레이트', name_en:'Full Plate', category:'중갑', price:'30gp', ac_bonus:6, dex_cap:0, check_penalty:-3, speed_penalty:-10, strength:4, bulk:4, group:'판금', traits:['방벽']},
 ];
 
 const SHIELD_DB = [
   {name_ko:'버클러', name_en:'Buckler', price:'1gp', ac_bonus:1, speed_penalty:0, bulk:'L', hardness:3, hp:6, bt:3},
   {name_ko:'나무 방패', name_en:'Wooden Shield', price:'1gp', ac_bonus:2, speed_penalty:0, bulk:1, hardness:3, hp:12, bt:6},
   {name_ko:'강철 방패', name_en:'Steel Shield', price:'2gp', ac_bonus:2, speed_penalty:0, bulk:1, hardness:5, hp:20, bt:10},
-  {name_ko:'탑 방패', name_en:'Tower Shield', price:'10gp', ac_bonus:2, speed_penalty:-5, bulk:4, hardness:5, hp:20, bt:10},
+  {name_ko:'타워 실드', name_en:'Tower Shield', price:'10gp', ac_bonus:2, speed_penalty:-5, bulk:4, hardness:5, hp:20, bt:10},
 ];
 
 const WEAPON_DB = [

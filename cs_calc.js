@@ -42,8 +42,9 @@ function syncAllProfRanks() {
   const speedDisp = document.getElementById('speed-display');
   const speedVal = document.getElementById('speed');
   if (speedDisp && speedVal) {
-    const baseSpeed = parseInt(speedVal.value || '25') + (state._fb?.speed || 0);
-    speedDisp.textContent = baseSpeed;
+    const armorPen = getArmorPenalties();
+    const baseSpeed = parseInt(speedVal.value || '25') + (state._fb?.speed || 0) + armorPen.speed;
+    speedDisp.textContent = Math.max(5, baseSpeed);
   }
   // 감각 표시 (유산 vision이 혈통 vision보다 우선)
   const sensesEl = document.getElementById('char-senses');
@@ -915,6 +916,23 @@ function recalcSpellStats() {
   if (mirrorDc) mirrorDc.textContent = dc;
 }
 
+function getArmorPenalties() {
+  const checkPen = parseInt(document.getElementById('armor-check-pen')?.value||0);
+  const speedPen = parseInt(document.getElementById('armor-speed-pen')?.value||0);
+  const strReq = parseInt(document.getElementById('armor-str-req')?.value||0);
+  const strMod = getMod('str');
+  const stowed = state.armorStowed || false;
+  // 보관 중이면 페널티 없음
+  if (stowed) return {check:0, speed:0};
+  // 근력 충족 시 속도 페널티 면제 (판정 페널티는 항상 적용)
+  const meetsStr = strMod >= strReq;
+  // 가혹한 근면 (Unburdened Iron): 속도 페널티 무시 + 다른 속도 페널티 5피트 경감
+  const hasUnburdenedIron = state._fb?.unburdenedIron || false;
+  let finalSpeed = meetsStr ? 0 : speedPen;
+  if (hasUnburdenedIron) finalSpeed = 0; // 갑옷 속도 페널티 완전 무시
+  return {check: checkPen, speed: finalSpeed};
+}
+
 function recalcSkills() {
   SKILLS.forEach(sk => recalcSkill(sk.id));
 }
@@ -949,7 +967,12 @@ function recalcSkill(id) {
   if (sk.attr === 'str') extraPen = pen.enfeebled;
   if (sk.attr === 'dex') extraPen = pen.clumsy;
   if (['int','wis','cha'].includes(sk.attr)) extraPen = pen.stupefied;
-  applyPenaltyColor(document.getElementById('sk-val-'+id), base, pen.all + extraPen);
+  // 갑옷 판정 페널티 (STR/DEX 기반 기술에 적용)
+  let armorCheckPen = 0;
+  if (sk.attr === 'str' || sk.attr === 'dex') {
+    armorCheckPen = getArmorPenalties().check;
+  }
+  applyPenaltyColor(document.getElementById('sk-val-'+id), base, pen.all + extraPen + armorCheckPen);
   // 임시 숙련 표시
   const nameEl = document.querySelector(`#skills-list .skill-row:nth-child(${SKILLS.indexOf(sk)+1}) .skill-name`);
   const tempLabel = nameEl?.querySelector('.temp-trained-label');

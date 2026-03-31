@@ -678,6 +678,12 @@ function toggleEquip(i) {
     if (nameEl) nameEl.value = a.name_ko;
     if (acEl) acEl.value = a.ac_bonus||0;
     if (dexEl) dexEl.value = a.dex_cap!==null && a.dex_cap!==undefined ? a.dex_cap : '-';
+    const cpEl = document.getElementById('armor-check-pen');
+    const spEl = document.getElementById('armor-speed-pen');
+    const srEl = document.getElementById('armor-str-req');
+    if (cpEl) cpEl.value = a.check_penalty||0;
+    if (spEl) spEl.value = a.speed_penalty||0;
+    if (srEl) srEl.value = a.strength||0;
     state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
     renderArmorCard();
     recalcAC();
@@ -706,6 +712,12 @@ function toggleEquip(i) {
     const dexEl = document.getElementById('armor-dex');
     if (nameEl) nameEl.value = '';
     if (acEl) acEl.value = 0;
+    const cpEl = document.getElementById('armor-check-pen');
+    const spEl = document.getElementById('armor-speed-pen');
+    const srEl = document.getElementById('armor-str-req');
+    if (cpEl) cpEl.value = 0;
+    if (spEl) spEl.value = 0;
+    if (srEl) srEl.value = 0;
     if (dexEl) dexEl.value = '-';
     state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
     renderArmorCard();

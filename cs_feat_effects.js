@@ -436,7 +436,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'바위/흙 험한 지형 이동 페널티 없음'}]
   },
   'Unburdened Iron': {
-    effects: [{type:'display_note', text:'방어구 이동 속도 감소 5피트 줄임'}]
+    effects: [{type:'unburdened_iron'}]
   },
   'Vengeful Hatred': {
     choice: {
@@ -2781,6 +2781,7 @@ function applyFeatEffects() {
     actions: [],
     familiarWeapons: [],
     martialExperience: false,
+    unburdenedIron: false,
     damage_notes: [],
     notes: [],
     cantrip_bonus: 0,
@@ -2899,6 +2900,10 @@ function _applyOneEffect(fb, eff, feat, level) {
       // 특정 무기에 직접 훈련됨(trained) 부여
       if (!fb.trainedWeapons) fb.trainedWeapons = [];
       if (eff.weapons) eff.weapons.forEach(w => { if (!fb.trainedWeapons.includes(w)) fb.trainedWeapons.push(w); });
+      break;
+    }
+    case 'unburdened_iron': {
+      fb.unburdenedIron = true;
       break;
     }
     case 'martial_experience': {
