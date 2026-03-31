@@ -1581,6 +1581,11 @@ function cascadeRemoveFeats() {
     for (const c of conds) {
       const ct = c.trim();
       if (!ct) continue;
+      if (ct === '암시야' || ct === '저광 시야') {
+        const cv = state.vision || state.selectedAncestry?.vision || '없음';
+        const vr = {'암시야':2,'저광 시야':1,'없음':0};
+        if ((vr[cv]||0) >= (vr[ct]||0)) continue; else return false;
+      }
       if (state.selectedAncestry?.traits?.includes(ct)) continue;
       if (state.selectedHeritage?.extraFeats?.includes(ct)) continue;
       if (state.selectedClass && (state.selectedClass.name === ct || state.selectedClass.en === ct)) continue;

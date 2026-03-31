@@ -1609,6 +1609,14 @@ function _checkPrereqs(prereqStr) {
       continue;
     }
 
+    // 시야 체크: "암시야", "저광 시야"
+    if (c === '암시야' || c === '저광 시야') {
+      const curVision = state.vision || state.selectedAncestry?.vision || '없음';
+      const visionRank = {'암시야':2,'저광 시야':1,'없음':0};
+      if ((visionRank[curVision]||0) < (visionRank[c]||0)) return false;
+      continue;
+    }
+
     // 혈통 체크: "엘프", "드워프" 등
     if (state.selectedAncestry?.traits?.includes(c)) continue;
     if (state.selectedHeritage?.extraFeats?.includes(c)) continue;
