@@ -1170,7 +1170,9 @@ function isOverloaded() {
 function recalcSpeed(isEncumbered) {
   const speedEl = document.getElementById('speed');
   const baseSpeed = parseInt(speedEl?.value||25);
-  const effSpeed = isEncumbered ? Math.max(0, baseSpeed - 10) : baseSpeed;
+  const hasUI = state._fb?.unburdenedIron || false;
+  const encPenalty = isEncumbered ? (hasUI ? 5 : 10) : 0;
+  const effSpeed = Math.max(5, baseSpeed - encPenalty);
   const dispEl = document.getElementById('speed-display');
   if (dispEl) {
     dispEl.textContent = effSpeed;
@@ -1178,8 +1180,13 @@ function recalcSpeed(isEncumbered) {
   }
   const effLabel = document.getElementById('speed-enc-label');
   if (effLabel) {
-    effLabel.textContent = isEncumbered ? '(과적 -10)' : '';
-    effLabel.style.display = isEncumbered ? 'inline' : 'none';
+    if (isEncumbered) {
+      effLabel.textContent = hasUI ? '(과적 -5, 가혹한 근면)' : '(과적 -10)';
+      effLabel.style.display = 'inline';
+    } else {
+      effLabel.textContent = '';
+      effLabel.style.display = 'none';
+    }
   }
 }
 
