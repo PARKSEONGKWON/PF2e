@@ -1429,6 +1429,13 @@ function addFeat(type) {
     if (found?.name_en) fullName = `${found.name_ko} (${found.name_en})`;
   }
   state.feats[type].push({name: fullName, level:getLevel()});
+  // 선택이 필요한 재주면 선택 모달 열기
+  if (typeof checkFeatChoice === 'function' && checkFeatChoice(fullName, type, state.feats[type].length - 1)) {
+    recalcAll();
+    renderFeats();
+    save();
+    return;
+  }
   recalcAll();
   renderFeats();
   save();
