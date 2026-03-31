@@ -1,3 +1,5 @@
+const _catKo = {ancestry:'혈통',class:'클래스',general:'일반',skill:'기술',archetype:'원형',bard:'바드',cleric:'클레릭',druid:'드루이드',fighter:'파이터',ranger:'레인저',rogue:'로그',witch:'위치',wizard:'위자드'};
+
 // ═══════════════════════════════════════════════
 //  REST & CONDITION MODALS
 // ═══════════════════════════════════════════════
@@ -1701,7 +1703,8 @@ function selectOption(item, row) {
       let mDesc = item.desc || item.summary || '';
       let tags = '';
       if (item.feat_level !== undefined) {
-        tags = `<span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${item.category||''}</span>`;
+        const mfTraits = (item.traits||[]).map(t2=>traitTag(t2)).join('');
+        tags = `<div><span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${_catKo[item.category]||item.category||''}</span></div>${mfTraits?'<div style="margin-top:4px;">'+mfTraits+'</div>':''}`;
         if (item.prerequisites) {
           const parts = item.prerequisites.split(/(?<=\.)\s+/);
           const prereqName = parts[0].replace(/\.$/,'');
@@ -1836,7 +1839,8 @@ function showItemDetail(item) {
 
   let tags = '';
   if (item.feat_level !== undefined) {
-    tags = `<span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${item.category||''}</span> ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    const traitsHtml = (item.traits||[]).map(t=>traitTag(t)).join('');
+    tags = `<div><span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${_catKo[item.category]||item.category||''}</span></div>${traitsHtml?'<div style="margin-top:4px;">'+traitsHtml+'</div>':''}`;
     // 선행 요소: 첫 문장만 선행으로, 나머지는 본문에 합침
     if (item.prerequisites) {
       const parts = item.prerequisites.split(/(?<=\.)\s+/);
@@ -1850,16 +1854,18 @@ function showItemDetail(item) {
     }
   } else if (item.rank !== undefined) {
     const rankStr = item.is_cantrip?'캔트립':item.is_focus?'집중':`랭크 ${item.rank}`;
-    tags = `<span class="tag-meta">${rankStr}</span> <span class="spell-actions">${item.actions||''}</span> ${(item.traditions||[]).map(t=>traitTag(t)).join('')} ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    const spTraits = [...(item.traditions||[]),...(item.traits||[])].map(t=>traitTag(t)).join('');
+    tags = `<div><span class="tag-meta">${rankStr}</span> <span class="spell-actions">${item.actions||''}</span></div>${spTraits?'<div style="margin-top:4px;">'+spTraits+'</div>':''}`;
   } else if (item.damage !== undefined) {
-    tags = `<span class="tag-meta">${item.damage||''}</span> <span class="tag-meta">${item.category||''}</span> <span class="tag-meta">가격: ${item.price||'-'}</span> ${(item.traits||[]).map(t=>traitTag(t)).join('')}`;
+    const wpTraits = (item.traits||[]).map(t=>traitTag(t)).join('');
+    tags = `<div><span class="tag-meta">${item.damage||''}</span> <span class="tag-meta">${item.category||''}</span> <span class="tag-meta">가격: ${item.price||'-'}</span></div>${wpTraits?'<div style="margin-top:4px;">'+wpTraits+'</div>':''}`;
   } else if (item.ac_bonus !== undefined) {
-    tags = `<span class="tag-meta">AC+${item.ac_bonus}</span> <span class="tag-meta">${item.category||''}</span>
+    tags = `<div><span class="tag-meta">AC+${item.ac_bonus}</span> <span class="tag-meta">${item.category||''}</span>
             ${item.dex_cap!==null&&item.dex_cap!==undefined?`<span class="tag-meta">DEX상한: ${item.dex_cap}</span>`:''}
             ${item.hardness!==undefined?`<span class="tag-meta">경도: ${item.hardness}</span>`:''}
             ${item.hp!==undefined&&item.bt!==undefined?`<span class="tag-meta">HP: ${item.hp} (BT: ${item.bt})</span>`:''}
             ${item.speed_penalty?`<span class="tag-meta" style="color:var(--red-light);">속도: ${item.speed_penalty}</span>`:''}
-            <span class="tag-meta">가격: ${item.price||'-'}</span>`;
+            <span class="tag-meta">가격: ${item.price||'-'}</span></div>`;
   } else if (item.hp !== undefined && item.keyAttr !== undefined) {
     tags = `<span class="tag-meta">HP ${item.hp}+CON</span> <span class="tag-meta">${item.keyAttr}</span>
             ${item.tradition?`<span class="tag">${item.tradition} 주문</span>`:''}`;
