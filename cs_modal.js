@@ -1488,6 +1488,7 @@ function openSkillPickModal(title, availableIds) {
 let modalContext = null;
 
 function openModal(type, ctx) {
+  console.log('[openModal]', type, ctx);
   modalType = type;
   modalContext = ctx || null;
   modalSelected = null;
