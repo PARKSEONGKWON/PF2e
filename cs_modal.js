@@ -1253,6 +1253,11 @@ function growthClearFeat(lv, key, featType) {
     if (state.spells?.innate) {
       state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== oldName);
     }
+    // 재주로 부여된 무기 제거 (grant_weapon)
+    const _fEN = oldName?.match(/\(([^)]+)\)$/)?.[1] || '';
+    if (_fEN) {
+      state.weapons = state.weapons.filter(w => w._fromFeat !== _fEN);
+    }
   }
   delete state.growth[lv][key];
   // 선행 연쇄 제거 + 선천 주문 정리

@@ -685,7 +685,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'비무장 공격 도달 범위 10피트'}]
   },
   'Seedpod': {
-    effects: [{type:'display_note', text:'씨앗 투척 원거리 비무장 공격 (1d4 B, 사거리 30피트)'}]
+    effects: [{type:'grant_weapon', weapon_name:'씨앗 꼬투리', weapon_category:'unarmed', damage:'1d4 B', range:30, traits:['비무장','원거리']}]
   },
   'Solar Rejuvenation': {
     effects: [{type:'display_note', text:'직사광선 10분 휴식 시 HP = 레벨 × CON 회복'}]
@@ -3034,6 +3034,27 @@ function _applyOneEffect(fb, eff, feat, level) {
           fb.skills[sid].min_rank = Math.max(fb.skills[sid].min_rank, 2);
           break;
         }
+      }
+      break;
+    }
+
+    case 'grant_weapon': {
+      // 재주가 부여하는 무기를 state.weapons에 추가 (중복 방지)
+      const wName = eff.weapon_name || '';
+      if (!wName) break;
+      const _fEN = _extractEnName(feat.name);
+      const already = state.weapons.some(w => w._fromFeat === _fEN);
+      if (!already) {
+        const wData = {
+          name: wName,
+          category: eff.weapon_category || 'unarmed',
+          dmg: eff.damage || '',
+          range: eff.range || 0,
+          traits: eff.traits || [],
+          _fromFeat: _fEN,
+          _potency: 0, _striking: 0, _propertyRunes: [], _stowed: false, _twoHand: false
+        };
+        state.weapons.push({id:'w-'+Date.now(), ...wData});
       }
       break;
     }

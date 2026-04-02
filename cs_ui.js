@@ -1637,6 +1637,13 @@ function removeFeat(t, i) {
   if (feat?.name && state.spells?.innate) {
     state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== feat.name);
   }
+  // 재주로 부여된 무기 제거 (grant_weapon)
+  if (feat?.name) {
+    const _fEN = (typeof _extractEnName === 'function') ? _extractEnName(feat.name) : '';
+    if (_fEN) {
+      state.weapons = state.weapons.filter(w => w._fromFeat !== _fEN);
+    }
+  }
   // 재주로 부여된 지식 슬롯 정리 (grant_lore)
   if (feat?.choice && typeof FEAT_DB !== 'undefined') {
     const nameEn = (typeof _extractEnName === 'function') ? _extractEnName(feat.name) : '';
