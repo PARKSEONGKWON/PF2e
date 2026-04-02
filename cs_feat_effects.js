@@ -703,7 +703,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'도시 외 환경에서 항상 흔적 감추기 상태'}]
   },
   'Anchoring Roots': {
-    effects: [{type:'grant_feat', feat:'안정된 균형 (Steady Balance)'}, {type:'grant_action', actionName:'고정', actionNameEn:'Anchor'}]
+    effects: [{type:'grant_feat', feat:'안정된 균형 (Steady Balance)'}, {type:'grant_action', actionName:'고정'}]
   },
   'Leshy Glide': {
     effects: [{type:'display_note', text:'[1행동] 5피트 아래로 최대 25피트 앞으로 활공'}]
@@ -2932,7 +2932,7 @@ function _applyOneEffect(fb, eff, feat, level) {
       // actionName 기반: desc에서 자동 추출 (정본 = feat_db.desc)
       if (eff.actionName && feat.name) {
         if (!fb._customActions) fb._customActions = [];
-        fb._customActions.push({featName: feat.name, actionName: eff.actionName, actionNameEn: eff.actionNameEn || ''});
+        fb._customActions.push({featName: feat.name, actionName: eff.actionName});
       }
       break;
     case 'damage_note':

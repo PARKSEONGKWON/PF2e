@@ -3035,24 +3035,27 @@ function renderActions() {
 
       // actionName 기반: desc에서 자동 추출 (정본 = feat_db.desc)
       if (ca.actionName) {
-        const id = 'custom-' + (ca.actionNameEn||ca.actionName).replace(/\s/g,'-');
-        if (existingIds2.has(id)) return;
-        existingIds2.add(id);
         // 부모 재주의 desc에서 행동 섹션 추출
         const fd = typeof FEAT_DB !== 'undefined' ? FEAT_DB.find(f => f && f.name_ko === featNameKo) : null;
         if (!fd?.desc) return;
         const marker = '<strong>' + ca.actionName + '</strong>';
         const idx = fd.desc.indexOf(marker);
         if (idx < 0) return;
-        const section = fd.desc.substring(idx);
+        const section = fd.desc.substring(idx + marker.length);
+        // 영문명 추출: (EnglishName) 패턴
+        const enMatch = section.match(/^\(([^)]+)\)/);
+        const nameEn = enMatch ? enMatch[1] : '';
         // 비용 파싱
         const costMatch = section.match(/\[([^\]]+)\]/);
         const costMap = {'반응':'reaction','1행동':'1','2행동':'2','3행동':'3','자유 행동':'free'};
         const cost = costMatch ? (costMap[costMatch[1]] || 'free') : 'free';
         // 본문: [N행동] 이후 <br> 다음부터
         const body = section.replace(/^[^]*?\[.+?\]\s*(?:<br\s*\/?>)?\s*/, '');
+        const id = 'custom-' + (nameEn||ca.actionName).replace(/\s/g,'-');
+        if (existingIds2.has(id)) return;
+        existingIds2.add(id);
         visible.push({
-          id, cat:'feat', cat_label:'재주 행동', name_ko: ca.actionName, name_en: ca.actionNameEn||'',
+          id, cat:'feat', cat_label:'재주 행동', name_ko: ca.actionName, name_en: nameEn,
           cost, traits:[], req_skill:null, req_rank:0, req_feat: featNameKo,
           summary: body
         });
