@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=181"></script>
-<script src="feat_db.js?v=181"></script>
-<script src="SPELL_DB.js?v=181"></script>
-<script src="class_features_db.js?v=181"></script>
+<script src="equipment_db.js?v=182"></script>
+<script src="feat_db.js?v=182"></script>
+<script src="SPELL_DB.js?v=182"></script>
+<script src="class_features_db.js?v=182"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1131,6 +1131,97 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 }
 /* desktop: 하단 내비 숨김 */
 #mobile-bottom-nav{display:none;}
+
+/* ══ 주사위 시스템 ══ */
+#dice-fab{position:fixed;bottom:80px;right:16px;z-index:9000;width:48px;height:48px;border-radius:50%;border:none;background:var(--accent,#d4a04a);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:transform .2s,box-shadow .2s;}
+#dice-fab:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(0,0,0,.5);}
+#dice-tray{position:fixed;bottom:80px;right:16px;z-index:9001;width:280px;background:var(--bg2,#1e1e1e);border:1px solid var(--border,#444);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.6);transform:translateY(20px) scale(.95);opacity:0;pointer-events:none;transition:all .25s ease;}
+#dice-tray.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto;}
+#dice-tray.open+#dice-fab{opacity:0;pointer-events:none;}
+.dice-tray-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:14px;font-weight:700;color:var(--accent,#d4a04a);border-bottom:1px solid var(--border,#444);}
+.dice-tray-close{background:none;border:none;color:var(--text2,#999);font-size:16px;cursor:pointer;}
+#dice-tray-body{padding:10px 12px;}
+.dice-buttons{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px;}
+.dice-btn-wrap{position:relative;display:inline-flex;flex-direction:column;align-items:center;}
+.dice-btn{width:46px;height:52px;border:2px solid var(--border,#444);background:var(--bg3,#2a2a2a);border-radius:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:all .15s;color:var(--text,#eee);}
+.dice-btn:hover{border-color:var(--dice-color);background:color-mix(in srgb,var(--dice-color) 15%,var(--bg3,#2a2a2a));}
+.dice-btn.active{border-color:var(--dice-color);box-shadow:0 0 8px color-mix(in srgb,var(--dice-color) 50%,transparent);}
+.dice-icon{width:22px;height:22px;color:var(--dice-color);}
+.dice-btn-label{font-size:9px;font-weight:700;color:var(--text2,#999);}
+.dice-count{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;background:var(--accent,#d4a04a);color:#000;font-size:10px;font-weight:800;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.dice-pool-info{display:flex;align-items:center;gap:6px;margin:8px 0;padding:6px 8px;background:var(--bg3,#2a2a2a);border-radius:6px;}
+.dice-pool-label{flex:1;font-size:13px;font-weight:700;color:var(--accent,#d4a04a);}
+.dice-roll-btn{padding:6px 14px;background:var(--accent,#d4a04a);color:#000;border:none;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;transition:background .15s;}
+.dice-roll-btn:hover{filter:brightness(1.15);}
+.dice-clear-btn{width:24px;height:24px;background:none;border:1px solid var(--border,#444);color:var(--text2,#999);border-radius:4px;font-size:12px;cursor:pointer;}
+.dice-quick{display:flex;gap:4px;margin-top:6px;}
+.dice-quick-btn{flex:1;padding:5px 0;background:var(--bg3,#2a2a2a);border:1px solid var(--border,#444);color:var(--text,#eee);border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+.dice-quick-btn:hover,.dice-quick-btn.active{border-color:var(--accent,#d4a04a);color:var(--accent,#d4a04a);}
+
+/* 토스트 */
+#dice-toast-container{position:fixed;top:12px;right:12px;z-index:9010;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-height:60vh;overflow:hidden;}
+.dice-toast{pointer-events:auto;min-width:180px;max-width:260px;background:var(--bg2,#1e1e1e);border:1px solid var(--border,#444);border-radius:10px;padding:10px 14px;box-shadow:0 6px 24px rgba(0,0,0,.5);transform:translateX(120%);opacity:0;transition:all .35s cubic-bezier(.22,1,.36,1);}
+.dice-toast.show{transform:translateX(0);opacity:1;}
+.dice-toast.hide{transform:translateX(120%);opacity:0;}
+.dice-toast.nat20{border-color:#f1c40f;box-shadow:0 0 20px rgba(241,196,15,.4);}
+.dice-toast.nat1{border-color:#e74c3c;box-shadow:0 0 20px rgba(231,76,60,.3);}
+.dice-toast-header{display:flex;justify-content:space-between;align-items:center;}
+.dice-toast-label{font-size:11px;color:var(--text2,#999);font-weight:600;}
+.dice-toast-total{font-size:22px;font-weight:900;color:var(--accent,#d4a04a);}
+.dice-toast.nat20 .dice-toast-total{color:#f1c40f;}
+.dice-toast.nat1 .dice-toast-total{color:#e74c3c;}
+.dice-toast-detail{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;}
+.dice-result-chip{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:700;color:#fff;}
+.dice-result-chip.dice-max{box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);}
+.dice-result-chip.dice-min{opacity:.6;}
+
+/* 3D 애니메이션 오버레이 */
+#dice-anim-overlay{position:fixed;inset:0;z-index:9020;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;}
+#dice-anim-overlay.active{opacity:1;pointer-events:auto;}
+#dice-anim-overlay.hidden{opacity:0;pointer-events:none;}
+.dice-3d{width:64px;height:64px;position:relative;animation:diceRoll .8s cubic-bezier(.17,.67,.32,1.2) both;perspective:400px;}
+.dice-3d-face{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;background:var(--color,#9b59b6);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.4),inset 0 2px 4px rgba(255,255,255,.2);animation:diceSpin .7s cubic-bezier(.17,.67,.32,1.2) both;animation-delay:inherit;}
+.dice-3d-label{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--color,#999);opacity:.7;}
+@keyframes diceRoll{0%{transform:translateY(-80px) scale(0.3);opacity:0}40%{transform:translateY(10px) scale(1.1);opacity:1}60%{transform:translateY(-5px) scale(0.98)}100%{transform:translateY(0) scale(1)}}
+@keyframes diceSpin{0%{transform:rotateX(720deg) rotateZ(360deg)}100%{transform:rotateX(0) rotateZ(0)}}
+.dice-anim-total{position:absolute;bottom:24%;left:50%;transform:translateX(-50%);text-align:center;animation:totalPop .4s .6s both;}
+.dice-anim-total-num{display:block;font-size:48px;font-weight:900;color:var(--accent,#d4a04a);text-shadow:0 2px 16px rgba(0,0,0,.6);}
+.dice-anim-total.nat20 .dice-anim-total-num{color:#f1c40f;text-shadow:0 0 24px rgba(241,196,15,.6);}
+.dice-anim-total.nat1 .dice-anim-total-num{color:#e74c3c;}
+.dice-anim-total-label{font-size:12px;color:var(--text2,#999);}
+@keyframes totalPop{0%{transform:translateX(-50%) scale(0);opacity:0}60%{transform:translateX(-50%) scale(1.15)}100%{transform:translateX(-50%) scale(1);opacity:1}}
+
+/* 로그 패널 */
+#dice-log-panel{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+#dice-log-panel.open{max-height:300px;overflow-y:auto;border-top:1px solid var(--border,#444);}
+.dice-log-header{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:12px;font-weight:700;color:var(--text2,#999);}
+.dice-log-clear{background:none;border:none;color:var(--red-light,#e74c3c);font-size:10px;cursor:pointer;}
+.dice-log-list{padding:0 8px 8px;}
+.dice-log-entry{padding:5px 8px;border-radius:6px;margin-bottom:3px;background:var(--bg3,#2a2a2a);}
+.dice-log-entry.nat20{border-left:3px solid #f1c40f;}
+.dice-log-entry.nat1{border-left:3px solid #e74c3c;}
+.dice-log-top{display:flex;justify-content:space-between;align-items:center;}
+.dice-log-label{font-size:11px;color:var(--text,#eee);font-weight:600;}
+.dice-log-total{font-size:16px;font-weight:900;color:var(--accent,#d4a04a);}
+.dice-log-bottom{display:flex;justify-content:space-between;margin-top:1px;}
+.dice-log-detail{font-size:9px;color:var(--text2,#999);}
+.dice-log-time{font-size:9px;color:var(--text2,#999);}
+.dice-log-empty{padding:16px;text-align:center;font-size:12px;color:var(--text2,#999);}
+
+/* 판정 클릭 가능 표시 */
+#val-fort,#val-ref,#val-will,#val-perc,#val-init,.skill-total,.weapon-stat{cursor:pointer;}
+.weapon-stat:hover .stat-val,.skill-total:hover,#val-fort:hover,#val-ref:hover,#val-will:hover,#val-perc:hover,#val-init:hover{color:var(--accent,#d4a04a)!important;text-decoration:underline;text-decoration-style:dotted;}
+
+/* 모바일 대응 */
+@media(max-width:900px){
+  #dice-fab{bottom:70px;right:10px;width:42px;height:42px;font-size:20px;}
+  #dice-tray{bottom:70px;right:8px;width:calc(100vw - 16px);max-width:320px;}
+  #dice-toast-container{top:8px;right:8px;left:8px;}
+  .dice-toast{max-width:none;}
+  .dice-3d{width:52px;height:52px;}
+  .dice-3d-face{font-size:22px;}
+  .dice-anim-total-num{font-size:36px;}
+}
 </style>
 </head>
 <body>
@@ -1140,7 +1231,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v181</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v182</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1695,12 +1786,13 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=181"></script>
-<script src="cs_calc.js?v=181"></script>
-<script src="cs_ui.js?v=181"></script>
-<script src="cs_modal.js?v=181"></script>
-<script src="cs_feat_effects.js?v=181"></script>
-<script src="cs_save.js?v=181"></script>
+<script src="cs_data.js?v=182"></script>
+<script src="cs_calc.js?v=182"></script>
+<script src="cs_ui.js?v=182"></script>
+<script src="cs_modal.js?v=182"></script>
+<script src="cs_feat_effects.js?v=182"></script>
+<script src="cs_save.js?v=182"></script>
+<script src="cs_dice.js?v=182"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
