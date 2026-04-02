@@ -1722,6 +1722,34 @@ function _checkPrereqs(prereqStr) {
   return true;
 }
 
+// 헌신 재주 특수 조건: 기존 헌신이 있으면 해당 원형 비헌신 재주 2개 이상 필요
+function canTakeDedication(f) {
+  if (!f.traits || !f.traits.includes('헌신')) return true;
+  // 이미 보유한 헌신 재주 목록
+  const allFeats = Object.values(state.feats).flat().filter(ff => ff?.name);
+  const ownedDedications = allFeats.filter(ff => {
+    const nameKo = ff.name.split(' (')[0].trim();
+    const dbEntry = typeof FEAT_DB !== 'undefined' ? FEAT_DB.find(fd => fd && fd.name_ko === nameKo) : null;
+    return dbEntry?.traits?.includes('헌신');
+  });
+  if (ownedDedications.length === 0) return true; // 첫 헌신은 자유
+
+  // 각 보유 헌신에 대해: 해당 원형의 비헌신 재주 2개 이상 있는지 확인
+  for (const ded of ownedDedications) {
+    const dedNameKo = ded.name.split(' (')[0].trim();
+    // 해당 원형의 비헌신 재주 수 (같은 원형 = name_ko에 같은 클래스명 포함)
+    const classWord = dedNameKo.replace(' 헌신', '');
+    const archFeats = allFeats.filter(ff => {
+      if (ff.name === ded.name) return false; // 헌신 자체 제외
+      const fNameKo = ff.name.split(' (')[0].trim();
+      const fDb = typeof FEAT_DB !== 'undefined' ? FEAT_DB.find(fd => fd && fd.name_ko === fNameKo) : null;
+      return fDb?.category === 'archetype' && fDb?.prerequisites?.includes(classWord);
+    });
+    if (archFeats.length < 2) return false;
+  }
+  return true;
+}
+
 function filterFeats() {
   if (typeof FEAT_DB==='undefined') return [];
   const q = document.getElementById('modal-search')?.value.toLowerCase()||'';
@@ -1754,6 +1782,8 @@ function filterFeats() {
       if (q && !f.name_ko.includes(q) && !(f.name_en||'').toLowerCase().includes(q) && !(f.summary||'').includes(q)) return false;
       if (f.feat_level > maxLv) return false;
       if (f.prerequisites && !_checkPrereqs(f.prerequisites)) return false;
+      // 헌신 재주 특수 조건
+      if (f.traits?.includes('헌신') && !canTakeDedication(f)) return false;
       if (ft === 'ancestry') {
         if (f.category !== 'ancestry') return false;
         if (_ancestryTraits) {

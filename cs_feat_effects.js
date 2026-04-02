@@ -655,7 +655,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'bulk_bonus', value:1}]
   },
   'Multitalented': {
-    choice: {type:'feat_pick', label:'2레벨 멀티클래스 헌신 재주 선택', pickCategory:'archetype', pickMaxLevel:2, pickTraits:['헌신'], grantTo:'archetype', skipPrereqIfAiuvarin:true},
+    choice: {type:'feat_pick', label:'2레벨 멀티클래스 헌신 재주 선택', pickCategory:'archetype', pickMaxLevel:2, pickTraits:['헌신'], grantTo:'archetype', skipPrereqIfAiuvarin:true, skipDedicationLimit:true},
     effects: []
   },
   'Advanced General Training': {
@@ -2665,7 +2665,8 @@ const FEAT_EFFECTS = {
 
   // ── 파이터 멀티클래스 ──
   'Fighter Dedication': {
-    effects: [{type:'skill_trained', skill:'athletics'}, {type:'display_note', text:'군용 무기 숙련됨. 곡예 또는 운동 숙련. 파이터 클래스 DC 숙련'}]
+    choice: {type:'skill', label:'곡예 또는 운동 중 숙련시킬 기술 선택', filter:{custom:['acrobatics','athletics']}},
+    effects: [{type:'skill_trained', skill:'$choice'}, {type:'display_note', text:'군용 무기 숙련됨. 파이터 클래스 DC 숙련'}]
   },
   'Basic Maneuver': {
     effects: [{type:'display_note', text:'1~2레벨 파이터 재주 1개 습득'}]
@@ -2685,7 +2686,7 @@ const FEAT_EFFECTS = {
 
   // ── 레인저 멀티클래스 ──
   'Ranger Dedication': {
-    effects: [{type:'skill_trained', skill:'survival'}, {type:'display_note', text:'생존 숙련. 레인저 클래스 DC 숙련. 사냥감 추적(Hunt Prey) 행동 획득'}]
+    effects: [{type:'skill_trained', skill:'survival'}, {type:'grant_action', summary:'[1행동] 사냥감 추적 (Hunt Prey) — 시야 내 생물 1명을 사냥감으로 지정. 사냥감에 대해 무시(Ignore) 지형을 사용하여 추적하고, 추적 속도가 전체 속도가 됩니다.'}, {type:'display_note', text:'레인저 클래스 DC 숙련'}]
   },
   "Basic Hunter's Trick": {
     effects: [{type:'display_note', text:'1~2레벨 레인저 재주 1개 습득'}]
@@ -2702,7 +2703,7 @@ const FEAT_EFFECTS = {
 
   // ── 로그 멀티클래스 ──
   'Rogue Dedication': {
-    effects: [{type:'skill_trained', skill:'stealth'}, {type:'skill_trained', skill:'thievery'}, {type:'display_note', text:'기술 재주 1개 + 기습 공격. 경갑 숙련됨. 로그 클래스 DC 숙련'}]
+    effects: [{type:'skill_trained', skill:'stealth'}, {type:'skill_trained', skill:'thievery'}, {type:'grant_action', summary:'기습 공격 (Surprise Attack) — 전투 시작 시 선제를 굴리기 전에 행동한 적이 아닌 모든 생물은 당신에게 무방비(flat-footed)입니다. 첫 턴이 끝나면 해제.'}, {type:'display_note', text:'기술 재주 1개 습득. 경갑 숙련됨. 로그 클래스 DC 숙련'}]
   },
   'Basic Trickery': {
     effects: [{type:'display_note', text:'1~2레벨 로그 재주 1개 습득'}]
@@ -3093,6 +3094,7 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
   if (choiceDef.type === 'skill' || choiceDef.type === 'skill_trained') {
     SKILLS.forEach(sk => {
       if (sk.isLore) return; // 지식 기술은 별도 처리
+      if (choiceDef.filter?.custom && !choiceDef.filter.custom.includes(sk.id)) return;
       const rank = parseInt(document.getElementById('sk-prof-' + sk.id)?.value || 0);
       if (choiceDef.filter?.min_rank && rank < choiceDef.filter.min_rank) return;
       if (choiceDef.filter?.exclude_trained && rank >= 2) return;
@@ -3406,6 +3408,8 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
       }
       // 전제조건 체크 (아이우바린이면 생략 가능)
       if (f.prerequisites && !skipPrereq && typeof _checkPrereqs === 'function' && !_checkPrereqs(f.prerequisites)) return false;
+      // 헌신 재주 특수 조건 (다재다능은 skipDedicationLimit으로 무시)
+      if (f.traits?.includes('헌신') && !choiceDef.skipDedicationLimit && typeof canTakeDedication === 'function' && !canTakeDedication(f)) return false;
       if (ownedNames.has(f.name_ko)) return false;
       return true;
     });
