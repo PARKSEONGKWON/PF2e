@@ -724,16 +724,16 @@ const FEAT_EFFECTS = {
     effects: [{type:'damage_note', text:'씨앗 꼬투리 대성공 시 1d4 지속 관통 피해'}]
   },
   'Call of the Green Man': {
-    effects: [{type:'display_note', text:'식물 형태: 5랭크 근원 선천 주문 하루 1회 (17레벨 6랭크)'}]
+    effects: [{type:'grant_innate_spell', spell:'식물 형태', tradition:'원시', spellType:'spell', uses:'하루 1회'}]
   },
   'Cloak of Poison': {
     effects: [{type:'display_note', text:'[2행동] 하루 1회, 1분간 접촉/근접 공격자에게 3d6 독 피해'}]
   },
   'Flourish and Ruin': {
-    effects: [{type:'display_note', text:'생명의 들판 + 얽히는 넝쿨: 6랭크 근원 선천 주문 하루 1회씩'}]
+    effects: [{type:'grant_innate_spell', spell:'생명의 장', tradition:'원시', spellType:'spell', uses:'하루 1회'}, {type:'grant_innate_spell', spell:'덩굴 뒤엉킴', tradition:'원시', spellType:'spell', uses:'하루 1회'}]
   },
   'Regrowth': {
-    effects: [{type:'display_note', text:'재생: 7랭크 근원 선천 주문 하루 1회'}]
+    effects: [{type:'grant_innate_spell', spell:'재생', tradition:'원시', spellType:'spell', uses:'하루 1회'}]
   },
 
   // ── 오크 ──
