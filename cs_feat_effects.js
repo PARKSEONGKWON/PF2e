@@ -645,6 +645,9 @@ const FEAT_EFFECTS = {
   'Adaptive Adept': {
     effects: [{type:'display_note', text:'1랭크 주문 1개를 타고난 주문으로 획득'}]
   },
+  'Clever Improviser': {
+    effects: [{type:'grant_feat', feat:'비숙련 즉흥연기 (Untrained Improvisation)'}]
+  },
   'Stubborn Persistence': {
     effects: [{type:'display_note', text:'의지 내성 대실패→실패'}]
   },
