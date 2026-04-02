@@ -1869,7 +1869,7 @@ const FEAT_DB = [
 ,
   {name_ko:'고정 뿌리', name_en:'Anchoring Roots', feat_level:5, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'안정된 균형 재주 획득. 고정(Anchor) 행동 사용 가능.', desc:'발에서 작은 뿌리가 솟아 이동할 때 안정시킵니다. 곡예에 숙련이 아니어도 <strong>안정된 균형(Steady Balance)</strong> 기술 재주를 얻고, 고정(Anchor) 행동을 사용할 수 있습니다.<br><strong>고정</strong>(Anchor) [1행동]<br><strong>요구사항:</strong> 단단한 표면 위에 있어야 합니다.<br>뿌리를 땅에 박거나 지면을 가로질러 보내 비틀거리기 어렵게 합니다. 이동할 때까지 재배치, 밀기, 넘어뜨리기에 대한 인내/반사 DC에 <strong>+2 상황 보너스</strong>(뿌리 레쉬면 +4). 이동시키거나 엎드리게 하는 주문/효과에 대한 내성에도 적용. 강제 이동 시 <strong>절반 거리만</strong> 이동합니다.'}
 ,
-  {name_ko:'레쉬 활공', name_en:'Leshy Glide', feat_level:5, prerequisites:'레쉬, 잎 레쉬 유산 또는 고양이 착지', traits:['레쉬'], category:'ancestry', summary:'[1행동] 활공: 5피트 아래로 최대 25피트 앞으로 이동.', desc:'<strong>전제조건:</strong> 잎 레쉬 유산 또는 고양이 착지(Cat Fall) 기술 재주<br>자신의 잎을 사용하여 하강을 제어합니다. 천천히 땅을 향해 활공하며, <strong>5피트 아래로 최대 25피트 앞으로</strong> 이동합니다. 매 라운드 최소 1행동을 활공에 소비하고 아직 지면에 도달하지 않았다면, 턴 종료 시 공중에 남아 있습니다.'}
+  {name_ko:'레쉬 활공', name_en:'Leshy Glide', feat_level:5, prerequisites:'레쉬, 잎 레쉬 또는 고양이 착지', traits:['레쉬'], category:'ancestry', summary:'[1행동] 활공: 5피트 아래로 최대 25피트 앞으로 이동.', desc:'<strong>전제조건:</strong> 잎 레쉬 유산 또는 고양이 착지(Cat Fall) 기술 재주<br>자신의 잎을 사용하여 하강을 제어합니다. 천천히 땅을 향해 활공하며, <strong>5피트 아래로 최대 25피트 앞으로</strong> 이동합니다. 매 라운드 최소 1행동을 활공에 소비하고 아직 지면에 도달하지 않았다면, 턴 종료 시 공중에 남아 있습니다.'}
 ,
   {name_ko:'의식 귀환', name_en:'Ritual Reversion', feat_level:5, prerequisites:'레쉬', traits:['레쉬','변신','근원'], category:'ancestry', summary:'[2행동] 식물/균류 표본 형태로 변신 (식물과 하나 효과).', desc:'감각을 줄이지 않고 일시적으로 덜 눈에 띄는 형태로 돌아갈 수 있습니다. 영혼이 합류하기 직전의 몸 외관으로 돌아가, 가장 닮은 식물이나 균류의 일반 표본 형태를 취합니다. 이것은 크기가 소형으로 유지되는 점을 제외하면 <em>식물과 하나(one with plants)</em>의 효과를 가집니다.'}
 ,

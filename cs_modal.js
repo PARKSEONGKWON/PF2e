@@ -1653,6 +1653,14 @@ function _checkPrereqs(prereqStr) {
     const c = cond.trim();
     if (!c) continue;
 
+    // "또는" OR 조건: "A 또는 B" → A 또는 B 중 하나만 통과하면 OK
+    if (c.includes(' 또는 ')) {
+      const orParts = c.split(/\s+또는\s+/);
+      const anyPass = orParts.some(part => _checkPrereqs(part.trim()));
+      if (!anyPass) return false;
+      continue;
+    }
+
     // 기술 숙련도 체크: "곡예 숙련", "은신 전문가" 등
     const skillRankMatch = c.match(/^(.+?)\s+(숙련|전문가|달인|전설)$/);
     if (skillRankMatch) {
