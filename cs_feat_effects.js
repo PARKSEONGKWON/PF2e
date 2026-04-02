@@ -702,14 +702,38 @@ const FEAT_EFFECTS = {
   'Shadow of the Wilds': {
     effects: [{type:'display_note', text:'도시 외 환경에서 항상 흔적 감추기 상태'}]
   },
-  'Leshy Familiar': {
-    effects: [{type:'display_note', text:'식물 특성 사역마 1마리 획득'}]
+  'Anchoring Roots': {
+    effects: [{type:'grant_feat', feat:'안정된 균형 (Steady Balance)'}, {type:'display_note', text:'고정 [1행동]: 재배치/밀기/넘어뜨리기 DC +2 상황 보너스 (뿌리 레쉬 +4). 강제 이동 절반'}]
   },
-  'Ritual of Regrowth': {
-    effects: [{type:'display_note', text:'1일 1회 10분 의식: HP = 레벨 × 4 회복, 상태이상 1개 해제'}]
+  'Leshy Glide': {
+    effects: [{type:'display_note', text:'[1행동] 5피트 아래로 최대 25피트 앞으로 활공'}]
   },
-  'Bark Shield': {
-    effects: [{type:'display_note', text:'[반응] 피격 시 나무껍질 방패 생성 (경도 3, HP 12)'}]
+  'Ritual Reversion': {
+    effects: [{type:'display_note', text:'[2행동] 식물/균류 표본 형태로 변신 (식물과 하나 효과)'}]
+  },
+  'Speak with Kindred': {
+    effects: [{type:'display_note', text:'식물/균류에게 외교 사용 가능. 자신의 종류에 +2 상황 보너스'}]
+  },
+  'Bark and Tendril': {
+    effects: [{type:'display_note', text:'얽히는 식물 + 참나무 회복력: 2랭크 근원 선천 주문 하루 1회씩'}]
+  },
+  'Lucky Keepsake': {
+    effects: [{type:'save_bonus', save:'all', value:1, bonus_type:'circumstance', condition:'주문/마법 효과'}]
+  },
+  'Thorned Seedpod': {
+    effects: [{type:'damage_note', text:'씨앗 꼬투리 대성공 시 1d4 지속 관통 피해'}]
+  },
+  'Call of the Green Man': {
+    effects: [{type:'display_note', text:'식물 형태: 5랭크 근원 선천 주문 하루 1회 (17레벨 6랭크)'}]
+  },
+  'Cloak of Poison': {
+    effects: [{type:'display_note', text:'[2행동] 하루 1회, 1분간 접촉/근접 공격자에게 3d6 독 피해'}]
+  },
+  'Flourish and Ruin': {
+    effects: [{type:'display_note', text:'생명의 들판 + 얽히는 넝쿨: 6랭크 근원 선천 주문 하루 1회씩'}]
+  },
+  'Regrowth': {
+    effects: [{type:'display_note', text:'재생: 7랭크 근원 선천 주문 하루 1회'}]
   },
 
   // ── 오크 ──
