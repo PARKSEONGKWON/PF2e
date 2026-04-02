@@ -1644,28 +1644,36 @@ function removeFeat(t, i) {
       state.weapons = state.weapons.filter(w => w._fromFeat !== _fEN);
     }
   }
-  // 재주로 부여된 지식 슬롯 정리 (grant_lore)
-  if (feat?.choice && typeof FEAT_DB !== 'undefined') {
+  // 재주로 부여된 지식/기술 숙련 정리
+  if (feat?.name && typeof FEAT_EFFECTS !== 'undefined') {
     const nameEn = (typeof _extractEnName === 'function') ? _extractEnName(feat.name) : '';
-    const def = nameEn ? (typeof FEAT_EFFECTS !== 'undefined' ? FEAT_EFFECTS[nameEn] : null) : null;
-    const hasGrantLore = def?.effects?.some(e => e.type === 'grant_lore');
-    if (hasGrantLore) {
-      const loreName = feat.choice;
-      ['lore1','lore2'].forEach(sid => {
-        const el = document.getElementById('lore-name-'+sid);
-        const profEl = document.getElementById('sk-prof-'+sid);
-        if (el && el.value === loreName) { el.value = ''; if (profEl) profEl.value = '0'; }
-      });
-    }
-    // skill_trained / skill_multi: 재주로 부여된 기술 숙련 원복
-    const hasSkillTrained = def?.effects?.some(e => e.type === 'skill_trained');
-    if (hasSkillTrained && feat.choice) {
-      const ids = feat.choice.includes(',') ? feat.choice.split(',') : [feat.choice];
-      ids.forEach(sid => {
-        const s = sid.trim();
-        if (!s) return;
-        const profEl = document.getElementById('sk-prof-' + s);
-        if (profEl && parseInt(profEl.value || 0) === 2) profEl.value = '0';
+    const def = nameEn ? FEAT_EFFECTS[nameEn] : null;
+    if (def?.effects) {
+      def.effects.forEach(eff => {
+        // grant_lore: 고정 이름 또는 $choice
+        if (eff.type === 'grant_lore') {
+          const loreName = (eff.name === '$choice') ? feat.choice : eff.name;
+          if (loreName) {
+            ['lore1','lore2'].forEach(sid => {
+              const el = document.getElementById('lore-name-'+sid);
+              const profEl = document.getElementById('sk-prof-'+sid);
+              if (el && el.value === loreName) { el.value = ''; if (profEl) profEl.value = '0'; }
+            });
+          }
+        }
+        // skill_trained: 고정 skill ID 또는 $choice
+        if (eff.type === 'skill_trained') {
+          const skillId = (eff.skill === '$choice') ? feat.choice : eff.skill;
+          if (skillId) {
+            const ids = skillId.includes(',') ? skillId.split(',') : [skillId];
+            ids.forEach(sid => {
+              const s = sid.trim();
+              if (!s) return;
+              const profEl = document.getElementById('sk-prof-' + s);
+              if (profEl && parseInt(profEl.value || 0) === 2) profEl.value = '0';
+            });
+          }
+        }
       });
     }
   }

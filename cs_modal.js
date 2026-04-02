@@ -1223,26 +1223,35 @@ function growthClearFeat(lv, key, featType) {
     if (arr) {
       const idx = arr.findIndex(f => f.name === oldName && f.level === lv);
       if (idx >= 0) {
-        // grant_lore로 부여된 지식 슬롯 정리
+        // 재주로 부여된 지식/기술 숙련 정리
         const removedFeat = arr[idx];
-        if (removedFeat?.choice && typeof FEAT_EFFECTS !== 'undefined') {
+        if (removedFeat?.name && typeof FEAT_EFFECTS !== 'undefined') {
           const en = removedFeat.name?.match(/\(([^)]+)\)$/)?.[1] || '';
           const def = en ? FEAT_EFFECTS[en] : null;
-          if (def?.effects?.some(e => e.type === 'grant_lore')) {
-            ['lore1','lore2'].forEach(sid => {
-              const el = document.getElementById('lore-name-'+sid);
-              const profEl = document.getElementById('sk-prof-'+sid);
-              if (el && el.value === removedFeat.choice) { el.value = ''; if (profEl) profEl.value = '0'; }
-            });
-          }
-          // skill_trained / skill_multi: 재주로 부여된 기술 숙련 원복
-          if (def?.effects?.some(e => e.type === 'skill_trained') && removedFeat.choice) {
-            const ids = removedFeat.choice.includes(',') ? removedFeat.choice.split(',') : [removedFeat.choice];
-            ids.forEach(sid => {
-              const s = sid.trim();
-              if (!s) return;
-              const profEl = document.getElementById('sk-prof-' + s);
-              if (profEl && parseInt(profEl.value || 0) === 2) profEl.value = '0';
+          if (def?.effects) {
+            def.effects.forEach(eff => {
+              if (eff.type === 'grant_lore') {
+                const loreName = (eff.name === '$choice') ? removedFeat.choice : eff.name;
+                if (loreName) {
+                  ['lore1','lore2'].forEach(sid => {
+                    const el = document.getElementById('lore-name-'+sid);
+                    const profEl = document.getElementById('sk-prof-'+sid);
+                    if (el && el.value === loreName) { el.value = ''; if (profEl) profEl.value = '0'; }
+                  });
+                }
+              }
+              if (eff.type === 'skill_trained') {
+                const skillId = (eff.skill === '$choice') ? removedFeat.choice : eff.skill;
+                if (skillId) {
+                  const ids = skillId.includes(',') ? skillId.split(',') : [skillId];
+                  ids.forEach(sid => {
+                    const s = sid.trim();
+                    if (!s) return;
+                    const profEl = document.getElementById('sk-prof-' + s);
+                    if (profEl && parseInt(profEl.value || 0) === 2) profEl.value = '0';
+                  });
+                }
+              }
             });
           }
         }
