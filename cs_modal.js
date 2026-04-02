@@ -2845,10 +2845,13 @@ function applyHeritageEffects(h) {
   }
   // 유산 재주 부여
   if (h.grantFeats) {
-    if (!state.feats.skill) state.feats.skill = [];
     h.grantFeats.forEach(featName => {
-      const already = state.feats.skill.some(f => f.name === featName);
-      if (!already) state.feats.skill.push({name: featName, level: 1, _fromHeritage: true});
+      const nameKo = featName.split(' (')[0].trim();
+      const fd = typeof FEAT_DB !== 'undefined' ? FEAT_DB.find(f => f && f.name_ko === nameKo) : null;
+      const cat = fd?.category === 'general' ? 'general' : 'skill';
+      if (!state.feats[cat]) state.feats[cat] = [];
+      const already = state.feats[cat].some(f => f.name === featName);
+      if (!already) state.feats[cat].push({name: featName, level: 1, _fromHeritage: true});
     });
   }
   // 유산 HP 보너스 (부서지지 않는 고블린 등)
