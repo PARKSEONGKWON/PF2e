@@ -652,6 +652,10 @@ const FEAT_EFFECTS = {
     choice: {type:'feat_pick', label:'7레벨 이하 일반 재주 선택', pickCategory:'general', pickMaxLevel:7, grantTo:'general'},
     effects: []
   },
+  'Unconventional Weaponry': {
+    choice: {type:'weapon_pick', label:'비일반 무기 선택'},
+    effects: [{type:'weapon_familiarity', weapons:['$choice']}]
+  },
   'Unconventional Expertise': {
     effects: [{type:'display_note', text:'비관습 무기 숙련도 전문가로 증가'}]
   },
@@ -2898,8 +2902,11 @@ function _applyOneEffect(fb, eff, feat, level) {
       // 숙련도 변경 — syncAllProfRanks에서 처리 예정
       break;
     case 'weapon_familiarity': {
-      // 해당 무기를 한 카테고리 낮춰 취급 (군용→단순)
-      if (eff.weapons) eff.weapons.forEach(w => { if (!fb.familiarWeapons.includes(w)) fb.familiarWeapons.push(w); });
+      // 해당 무기를 한 카테고리 낮춰 취급 (군용→단순, 고급→군용)
+      if (eff.weapons) eff.weapons.forEach(w => {
+        const resolved = (w === '$choice') ? (feat.choice || '') : w;
+        if (resolved && !fb.familiarWeapons.includes(resolved)) fb.familiarWeapons.push(resolved);
+      });
       break;
     }
     case 'weapon_trained': {
@@ -3058,7 +3065,7 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
   const detail = document.getElementById('modal-detail');
   if (detail) { detail.style.display = 'none'; }
   // spell_cantrip: 닫기/취소/선택 전부 숨김 (선택 필수, detail 내 버튼만 사용)
-  if (isSpellChoice || choiceDef.type === 'lore' || choiceDef.type === 'custom' || choiceDef.type === 'ancestry_pick' || choiceDef.type === 'feat_pick' || choiceDef.type === 'skill_multi') {
+  if (isSpellChoice || choiceDef.type === 'lore' || choiceDef.type === 'custom' || choiceDef.type === 'ancestry_pick' || choiceDef.type === 'feat_pick' || choiceDef.type === 'skill_multi' || choiceDef.type === 'weapon_pick') {
     const closeBtn = document.querySelector('.modal-close');
     const closeBtnM = document.getElementById('modal-close-m');
     const footer = document.querySelector('.modal-footer');
@@ -3302,6 +3309,57 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
               <div><b>특성:</b> ${anc.traits.join(', ')}</div>
             </div>
             <button onclick="_applyFeatChoice(modalContext._selectedSpell)" style="width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">이 혈통 선택</button>`;
+        }
+      };
+      container.appendChild(row);
+    });
+  } else if (choiceDef.type === 'weapon_pick' && typeof WEAPON_DB !== 'undefined') {
+    // ── 비일반 무기 선택 모달 ──
+    // 군용 무기 전체 숙련 여부 확인
+    const martialProf = parseInt(document.getElementById('prof-weapon-martial')?.value || 0);
+    const allMartialTrained = martialProf >= 2;
+
+    const candidates = WEAPON_DB.filter(w => {
+      if (!w.category || !w.category.includes('비일반')) return false;
+      if (allMartialTrained) {
+        // 고급 비일반도 허용
+        return true;
+      } else {
+        // 단순/군용 비일반만
+        return w.category.startsWith('단순') || w.category.startsWith('군용');
+      }
+    });
+
+    if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; searchEl.oninput = () => {
+      const q = searchEl.value.toLowerCase();
+      container.querySelectorAll('.opt-row').forEach(r => { r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+    };}
+    if (detail) { detail.style.display = ''; detail.innerHTML = '<div class="modal-detail-empty">무기를 선택하면 상세 정보가 표시됩니다.</div>'; }
+    if (listEl) { listEl.style.width = ''; listEl.style.borderRight = ''; }
+
+    candidates.forEach(w => {
+      const catLabel = w.category.replace('(비일반)','').trim();
+      const row = document.createElement('div');
+      row.className = 'opt-row';
+      row.style.cursor = 'pointer';
+      row.innerHTML = `<span class="opt-row-icon">⚔</span><span class="opt-row-name">${w.name_ko}</span><span style="font-size:10px;color:var(--text2);margin-left:auto;">${catLabel} · ${w.damage||''}</span>`;
+      row.onclick = () => {
+        container.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+        row.classList.add('selected');
+        // 상세 정보
+        const detEl = document.getElementById('modal-detail');
+        if (detEl) {
+          const traitsHtml = (w.traits||[]).map(t => typeof traitTag==='function' ? traitTag(t) : `<span class="tag">${t}</span>`).join(' ');
+          detEl.innerHTML = `
+            <div class="modal-detail-title">${w.name_ko}</div>
+            <div class="modal-detail-en">${w.name_en||''}</div>
+            <div style="margin:8px 0;font-size:13px;">
+              <div><b>분류:</b> ${w.category}</div>
+              <div><b>피해:</b> ${w.damage||'—'} | <b>부피:</b> ${w.bulk||'—'} | <b>가격:</b> ${w.price||'—'}</div>
+              ${w.range ? '<div><b>사거리:</b> '+w.range+'ft.</div>' : ''}
+            </div>
+            ${traitsHtml ? '<div style="margin:6px 0;">'+traitsHtml+'</div>' : ''}
+            <button onclick="_applyFeatChoice('${(w.name_ko||'').replace(/'/g,"\\'")}')" style="width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">이 무기 선택</button>`;
         }
       };
       container.appendChild(row);
