@@ -1643,7 +1643,7 @@ const FEAT_DB = [
 ,
   {name_ko:'바위 달리기', name_en:'Rock Runner', feat_level:1, prerequisites:'드워프', traits:['드워프'], category:'ancestry', summary:'바위/흙 험한 지형에서 이동 속도 페널티 없음.', desc:'돌과의 타고난 연결로 울퉁불퉁한 표면을 민첩하게 이동합니다. 돌로 인한 <strong>험지(잔해나 자갈 등)와 돌과 흙으로 된 고르지 않은 지면을 무시</strong>할 수 있습니다. 추가로, 곡예(Acrobatics) 기술로 돌이나 흙으로 된 좁은 표면이나 고르지 않은 지면에서 균형 잡기(Balance)를 할 때, <strong>무방비(off-guard) 상태가 되지 않으며</strong>, 이 곡예 판정에서 <strong>성공을 굴리면 대성공</strong>이 됩니다.'}
 ,
-  {name_ko:'가혹한 근면', name_en:'Unburdened Iron', feat_level:1, prerequisites:'드워프', traits:['드워프'], category:'ancestry', summary:'방어구 착용으로 인한 이동 속도 감소를 5피트 줄임.', desc:'고대 전쟁 중 조상이 처음 고안한 기법을 배워, 거대한 갑옷을 편하게 착용할 수 있습니다. 착용한 갑옷으로 인한 <strong>이동 속도 감소를 무시</strong>합니다.<br>추가로, 다른 이유(예: 과적(encumbered) 상태나 주문)로 이동 속도에 페널티를 받을 때, 페널티에서 <strong>5피트를 차감</strong>합니다. 예를 들어, 과적 상태는 일반적으로 이동 속도에 -10피트 페널티를 주지만, 이 재주로 -5피트 페널티로 줄어듭니다. 이동 속도에 여러 페널티가 있으면 하나만 선택하여 줄입니다.'}
+  {name_ko:'부담 없는 철갑', name_en:'Unburdened Iron', feat_level:1, prerequisites:'드워프', traits:['드워프'], category:'ancestry', summary:'방어구 착용으로 인한 이동 속도 감소를 5피트 줄임.', desc:'고대 전쟁 중 조상이 처음 고안한 기법을 배워, 거대한 갑옷을 편하게 착용할 수 있습니다. 착용한 갑옷으로 인한 <strong>이동 속도 감소를 무시</strong>합니다.<br>추가로, 다른 이유(예: 과적(encumbered) 상태나 주문)로 이동 속도에 페널티를 받을 때, 페널티에서 <strong>5피트를 차감</strong>합니다. 예를 들어, 과적 상태는 일반적으로 이동 속도에 -10피트 페널티를 주지만, 이 재주로 -5피트 페널티로 줄어듭니다. 이동 속도에 여러 페널티가 있으면 하나만 선택하여 줄입니다.'}
 ,
   {name_ko:'보복의 맹세', name_en:'Vengeful Hatred', feat_level:1, prerequisites:'드워프', traits:['드워프'], category:'ancestry', summary:'선택한 적 유형에 대해 근접 무기 피해 +1. 전문화 시 +2.', desc:'오랜 적에 대한 드워프의 복수심. 특정 적 유형을 선택하고 해당 유형에 대한 근접 무기 피해에 +1 상황 보너스를 얻습니다.'}
 ,
@@ -1774,7 +1774,7 @@ const FEAT_DB = [
   {name_ko:'동굴 등반가', name_en:'Cave Climber', feat_level:9, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'등반 속도 10피트 획득.', desc:'수년간 동굴을 기어오른 덕분에 어디든 쉽게 오를 수 있습니다. <strong>등반 속도가 10피트</strong> 증가합니다.'},
   {name_ko:'매달리기', name_en:'Cling', feat_level:9, prerequisites:'고블린', traits:['고블린'], category:'ancestry', summary:'[1행동] 타격 성공 후 적에 매달려 이동 시 함께 이동.', desc:'<strong>요구사항:</strong> 마지막 행동이 성공한 타격이었고 빈 손이 있어야 합니다.<br>적에 매달려 괴롭힙니다. 대상 이동 시 함께 이동 가능. 다음 턴 시작, 함께 이동하지 않기로 선택, 또는 대상이 탈출하면 해제. 탈출은 당신의 곡예 DC에 대해 시도.<br><strong>특수:</strong> 턱이나 유사한 비무장 공격으로 이전 타격을 했다면 빈 손 없이 사용 가능.'}
 ,
-  {name_ko:'고블린 무기 전문가', name_en:'Goblin Weapon Frenzy', feat_level:13, prerequisites:'고블린, 고블린 무기 친숙', traits:['고블린'], category:'ancestry', summary:'고블린 무기 숙련도가 전문가로 증가.', desc:'고블린 무기에 대한 숙련도가 전문가로 증가합니다.'}
+  {name_ko:'고블린 무기 광란', name_en:'Goblin Weapon Frenzy', feat_level:13, prerequisites:'고블린, 고블린 무기 친숙', traits:['고블린'], category:'ancestry', summary:'고블린 무기 숙련도가 전문가로 증가.', desc:'고블린 무기에 대한 숙련도가 전문가로 증가합니다.'}
 ,
   {name_ko:'매우 매우 은밀한', name_en:'Very, Very Sneaky', feat_level:13, prerequisites:'고블린, 매우 은밀한', traits:['고블린'], category:'ancestry', summary:'전제조건: 매우 은밀한. 잠행 시 이동 속도까지 이동 가능. 숨기나 잠행에 엄폐/은폐가 더 이상 불필요.', desc:'<strong>전제조건:</strong> 매우 은밀한. 잠행 시 <strong>이동 속도까지 이동</strong> 가능. 숨기나 잠행에 엄폐/은폐가 <strong>더 이상 불필요</strong>.'}
 ,
@@ -1824,13 +1824,13 @@ const FEAT_DB = [
   // ── 인간 Human ──
   {name_ko:'적응력', name_en:'General Training', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'인간의 다재다능함. 1레벨 일반 재주 1개를 추가로 얻습니다.', desc:'적응력이 다양한 유용한 능력의 숙달로 나타납니다. <strong>1레벨 일반 재주 1개</strong>를 얻습니다. 전제조건을 충족해야 하지만, 캐릭터 생성 중에 선택하면 나중에 전제조건을 결정할 수 있습니다.<br><strong>특수:</strong> 이 재주를 여러 번 선택할 수 있으며, 매번 다른 재주를 선택합니다.'}
 ,
-  {name_ko:'기교의 솜씨', name_en:'Haughty Obstinacy', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'정신 효과에 대한 내성에서 성공은 대성공. 명령/지배에 +2.', desc:'강력한 자존심이 다른 이가 당신에게 명령하기 어렵게 합니다. 행동을 직접 지배하려는 정신 효과에 대한 내성에서 <strong>성공을 굴리면 대성공</strong>. 생물이 위협(Intimidation)으로 강요(Coerce)하려는 판정에서 <strong>실패하면 대실패</strong>가 됩니다(따라서 1주일간 다시 강요할 수 없음).'}
+  {name_ko:'오만한 완고함', name_en:'Haughty Obstinacy', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'정신 효과에 대한 내성에서 성공은 대성공. 명령/지배에 +2.', desc:'강력한 자존심이 다른 이가 당신에게 명령하기 어렵게 합니다. 행동을 직접 지배하려는 정신 효과에 대한 내성에서 <strong>성공을 굴리면 대성공</strong>. 생물이 위협(Intimidation)으로 강요(Coerce)하려는 판정에서 <strong>실패하면 대실패</strong>가 됩니다(따라서 1주일간 다시 강요할 수 없음).'}
 ,
-  {name_ko:'자연 야심', name_en:'Natural Ambition', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'1레벨 클래스 재주 1개 추가 획득.', desc:'야망적으로 자라 항상 별을 향해 나아가, 선택한 분야에서 빠르게 진전합니다. <strong>1레벨 클래스 재주 1개</strong>를 얻습니다. 전제조건을 충족해야 하지만, 캐릭터 생성 중 나중에 선택 가능.'}
+  {name_ko:'타고난 야망', name_en:'Natural Ambition', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'1레벨 클래스 재주 1개 추가 획득.', desc:'야망적으로 자라 항상 별을 향해 나아가, 선택한 분야에서 빠르게 진전합니다. <strong>1레벨 클래스 재주 1개</strong>를 얻습니다. 전제조건을 충족해야 하지만, 캐릭터 생성 중 나중에 선택 가능.'}
 ,
-  {name_ko:'자연 기술', name_en:'Natural Skill', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'인간의 다재다능함. 숙련된 기술 1개를 추가로 얻습니다.', desc:'독창성으로 다양한 기술을 배울 수 있습니다. 선택한 <strong>기술 2개에 숙련</strong>됩니다.'}
+  {name_ko:'타고난 기술', name_en:'Natural Skill', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'인간의 다재다능함. 숙련된 기술 1개를 추가로 얻습니다.', desc:'독창성으로 다양한 기술을 배울 수 있습니다. 선택한 <strong>기술 2개에 숙련</strong>됩니다.'}
 ,
-  {name_ko:'사교계 촉수', name_en:'Cooperative Nature', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'도움(Aid) 반응 판정에 +4 상황 보너스.', desc:'짧은 인간 수명이 관점을 주고, 어린 나이부터 차이를 제쳐두고 다른 이와 함께 위대함을 달성하는 법을 가르쳤습니다. 도움(Aid) 판정에 <strong>+4 상황 보너스</strong>.'}
+  {name_ko:'협력적 본성', name_en:'Cooperative Nature', feat_level:1, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'도움(Aid) 반응 판정에 +4 상황 보너스.', desc:'짧은 인간 수명이 관점을 주고, 어린 나이부터 차이를 제쳐두고 다른 이와 함께 위대함을 달성하는 법을 가르쳤습니다. 도움(Aid) 판정에 <strong>+4 상황 보너스</strong>.'}
 ,
   {name_ko:'적응된 캔트립', name_en:'Adapted Cantrip', feat_level:1, prerequisites:'인간, 주문시전 클래스 특성', traits:['인간'], category:'ancestry', summary:'다른 전통에서 캔트립 1개를 선택하여 클래스 전통으로 시전.', desc:'<strong>전제조건:</strong> 주문시전 클래스 특성<br>여러 마법 전통을 공부하여 주문시전 양식에 맞게 주문을 변경했습니다. 자신의 것이 아닌 마법 전통에서 <strong>캔트립 1개</strong>를 선택합니다. 이 캔트립을 클래스 전통의 주문으로 시전할 수 있습니다.<br>나중에 이 캔트립을 교환하거나 재훈련하면, 같은 대안 전통이나 다른 전통에서 교체를 선택할 수 있습니다.'}
 ,
@@ -1844,7 +1844,7 @@ const FEAT_DB = [
 ,
   {name_ko:'동맹 감지', name_en:'Sense Allies', feat_level:5, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'긴밀한 공동체에서 자라 다른 이의 존재에 강하게 동조되어 있습니다. 60피트 내 인식하고 있는 동의하는 아군이 미탐지일 경우, 대신 숨겨진(hi', desc:'긴밀한 공동체에서 자라 다른 이의 존재에 강하게 동조되어 있습니다. 60피트 내 인식하고 있는 동의하는 아군이 미탐지일 경우, 대신 <strong>숨겨진(hidden)</strong> 상태가 됩니다. 60피트 내 숨겨진 동의하는 아군을 대상으로 하는 단순 판정 DC가 11 대신 <strong>5</strong>입니다.'}
 ,
-  {name_ko:'불굴의 의지', name_en:'Stubborn Persistence', feat_level:9, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'의지 내성에서 대실패를 실패로 변환.', desc:'인간은 다른 이가 포기할 만한 가장 혹독한 시련도 견뎌내는 능력으로 유명합니다. 피로(fatigued) 상태가 될 때, <strong>DC 17 단순 판정</strong>을 시도합니다. 성공하면 피로 상태가 되지 않습니다. 피로의 근본 원인(휴식 부족 등)을 해결하지 않으면, GM이 정한 간격으로 실패할 때까지 다시 판정해야 합니다.'}
+  {name_ko:'완강한 인내', name_en:'Stubborn Persistence', feat_level:9, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'의지 내성에서 대실패를 실패로 변환.', desc:'인간은 다른 이가 포기할 만한 가장 혹독한 시련도 견뎌내는 능력으로 유명합니다. 피로(fatigued) 상태가 될 때, <strong>DC 17 단순 판정</strong>을 시도합니다. 성공하면 피로 상태가 되지 않습니다. 피로의 근본 원인(휴식 부족 등)을 해결하지 않으면, GM이 정한 간격으로 실패할 때까지 다시 판정해야 합니다.'}
 ,
   {name_ko:'협력의 영혼', name_en:'Cooperative Soul', feat_level:9, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'동료와 영혼 깊이의 유대를 발전시켜 더 큰 수준의 협력을 유지합니다. 도움하는 기술에 최소 전문가이면, 기술 판정 도움에서 실패나 대실패를 굴리', desc:'동료와 영혼 깊이의 유대를 발전시켜 더 큰 수준의 협력을 유지합니다. 도움하는 기술에 최소 전문가이면, 기술 판정 도움에서 <strong>실패나 대실패를 굴리면 성공</strong>이 됩니다.'}
 ,
@@ -1856,7 +1856,7 @@ const FEAT_DB = [
 ,
   {name_ko:'다재다능', name_en:'Multitalented', feat_level:9, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'여러 클래스 사이에 집중을 나누는 법을 쉽게 배웠습니다. 2레벨 멀티클래스 헌신 재주를 얻으며, 현재 아키타입에서 더 많은 재주를 가져야 하는 ', desc:'여러 클래스 사이에 집중을 나누는 법을 쉽게 배웠습니다. <strong>2레벨 멀티클래스 헌신 재주</strong>를 얻으며, 현재 아키타입에서 더 많은 재주를 가져야 하는 일반 제한에도 불구하고 가능합니다.<br>아이우바린(aiuvarin) 다재다능한 유산이 있으면, 재주의 속성 수정치 전제조건을 충족할 필요가 없습니다.'}
 ,
-  {name_ko:'무조건 생존', name_en:'Unconventional Expertise', feat_level:13, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'비관습 무기 숙련도가 전문가로 증가.', desc:'선택한 비관습 무기의 숙련도가 전문가로 증가합니다.'}
+  {name_ko:'비관습 무기 전문성', name_en:'Unconventional Expertise', feat_level:13, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'비관습 무기 숙련도가 전문가로 증가.', desc:'선택한 비관습 무기의 숙련도가 전문가로 증가합니다.'}
 ,
   {name_ko:'고급 일반 훈련', name_en:'Advanced General Training', feat_level:13, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'긴 모험 생활에서 적응력이 수많은 유용한 능력을 습득하게 했습니다. 7레벨 이하 일반 재주 1개를 얻습니다. 전제조건을 충족해야 합니다.', desc:'긴 모험 생활에서 적응력이 수많은 유용한 능력을 습득하게 했습니다. <strong>7레벨 이하 일반 재주 1개</strong>를 얻습니다. 전제조건을 충족해야 합니다.<br><strong>특수:</strong> 여러 번 선택 가능, 매번 다른 재주.'}
 ,
@@ -1865,15 +1865,15 @@ const FEAT_DB = [
   {name_ko:'영웅적 존재감', name_en:'Heroic Presence', feat_level:17, prerequisites:'인간', traits:['인간'], category:'ancestry', summary:'빈도: 하루 1회', desc:'<strong>빈도:</strong> 하루 1회<br>영웅의 피가 혈관을 흐르며, 동료들이 깊이 파고들어 새로운 수준의 결의를 찾도록 영감을 줍니다. 30피트 내 최대 <strong>10명의 동의하는 생물</strong>에게 6랭크 <em>열정적 확신(zealous conviction)</em>의 효과를 부여합니다. 단, 대상에게 일반적으로 혐오스럽다고 여길 명령을 내리면 효과가 자동으로 종료됩니다. 이 행동은 동맹에게 영감을 주는 방식에 따라 청각 또는 시각 특성을 가집니다.'}
 ,
   // ── 레쉬 Leshy ──
-  {name_ko:'목질 외피', name_en:'Leshy Superstition', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'마법 효과에 대한 내성에 +1 상황 보너스.', desc:'<strong>유발 조건:</strong> 주문이나 마법 효과에 대한 내성 굴림을 시도하지만 아직 굴리지 않았습니다.<br>물체에 깃든 영혼을 알아채며, 어떤 것이 행운을 가져오고 어떤 것이 불운인지 배웁니다. 행운의 물체에 집중하여 유발 효과에 대한 내성에 <strong>+1 상황 보너스</strong>.'}
+  {name_ko:'레쉬의 미신', name_en:'Leshy Superstition', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'마법 효과에 대한 내성에 +1 상황 보너스.', desc:'<strong>유발 조건:</strong> 주문이나 마법 효과에 대한 내성 굴림을 시도하지만 아직 굴리지 않았습니다.<br>물체에 깃든 영혼을 알아채며, 어떤 것이 행운을 가져오고 어떤 것이 불운인지 배웁니다. 행운의 물체에 집중하여 유발 효과에 대한 내성에 <strong>+1 상황 보너스</strong>.'}
 ,
-  {name_ko:'식물 마법', name_en:'Grasping Reach', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'덩굴이나 가지를 뻗어 공격합니다.', desc:'덩굴이나 만의 다발을 뻗어 팔을 지지하고 도달을 연장합니다. 양손이 필요하고, 도달이 없으며, 최소 1d6 피해를 주는 근접 무기를 사용할 때, 상호작용 행동으로 일반 양손 잡기와 확장된 양손 잡기 사이를 전환할 수 있습니다. 확장된 잡기로 사용하면 <strong>도달 10피트</strong>를 얻지만, 안정성과 힘이 떨어져 무기 피해 주사위가 <strong>한 단계 감소</strong>합니다.'}
+  {name_ko:'뻗어잡는 손길', name_en:'Grasping Reach', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'덩굴이나 가지를 뻗어 공격합니다.', desc:'덩굴이나 만의 다발을 뻗어 팔을 지지하고 도달을 연장합니다. 양손이 필요하고, 도달이 없으며, 최소 1d6 피해를 주는 근접 무기를 사용할 때, 상호작용 행동으로 일반 양손 잡기와 확장된 양손 잡기 사이를 전환할 수 있습니다. 확장된 잡기로 사용하면 <strong>도달 10피트</strong>를 얻지만, 안정성과 힘이 떨어져 무기 피해 주사위가 <strong>한 단계 감소</strong>합니다.'}
 ,
   {name_ko:'씨앗 투사', name_en:'Seedpod', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'씨앗 투척 원거리 비무장 공격 (1d4 B, 사거리 30피트).', desc:'몸이 거의 끝없는 단단한 씨앗 꼬투리를 생산합니다. 사거리 30피트, <strong>1d4 둔기 피해</strong>의 씨앗 꼬투리(seedpod) 원거리 비무장 공격을 얻습니다. 치명타 시 덩굴이 터져 대상의 이동 속도에 다음 턴 시작까지 <strong>-10피트 상황 페널티</strong>. 치명 특성 효과는 추가되지 않습니다.'}
 ,
   {name_ko:'태양 양분', name_en:'Solar Rejuvenation', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'직사광선에서 10분 휴식 시 HP = 레벨 × CON 회복.', desc:'낮 동안 야외에서 10분 쉬면, 건강 수정치 × 레벨 절반만큼 <strong>HP를 회복</strong>합니다. 상처 치료의 치유와 별도로 추가됩니다. 광합성에 의존하지 않는 레시는 유사하게 적합한 환경이 필요합니다(균류 레시는 어둡고 습한 환경과 썩은 식물 더미).'}
 ,
-  {name_ko:'은밀 위장', name_en:'Undaunted', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'식물/자연환경에서 은신 판정에 +2 상황 보너스.', desc:'긴 존재를 통해 많은 도전을 견뎌왔습니다. 감정 효과에 대한 내성에 <strong>+1 상황 보너스</strong>. 감정 효과에 대한 내성에서 <strong>성공을 굴리면 대성공</strong>.'}
+  {name_ko:'굴하지 않는', name_en:'Undaunted', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'식물/자연환경에서 은신 판정에 +2 상황 보너스.', desc:'긴 존재를 통해 많은 도전을 견뎌왔습니다. 감정 효과에 대한 내성에 <strong>+1 상황 보너스</strong>. 감정 효과에 대한 내성에서 <strong>성공을 굴리면 대성공</strong>.'}
 ,
   {name_ko:'식물 동맹', name_en:'Leshy Familiar', feat_level:5, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'작은 식물 생물과 유대를 맺습니다.', desc:'작은 레시를 사역마로 얻습니다. 이 레시는 식물 형태의 사역마입니다.'}
 ,
@@ -1888,19 +1888,19 @@ const FEAT_DB = [
 ,
   {name_ko:'오크 흉포', name_en:'Orc Ferocity', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'[반응] HP 0 시 의식불명 대신 HP 1로 유지. 1일 1회.', desc:'<strong>빈도:</strong> 하루 1회<br><br>전투의 사나움이 피를 타고 흐르며, 부상이 아무리 끔찍해도 쓰러지기를 거부합니다. 기절을 피하고 <strong>1 HP에 남으며</strong>, 부상(wounded) 상태가 1 증가합니다.'}
 ,
-  {name_ko:'공포감 주입', name_en:'Bloody Blows', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'피가 튀는 공격으로 적을 겁에 질리게 합니다.', desc:'치명적 비무장 공격이 피투성이 자국을 남기거나 심각한 내부 출혈을 유발합니다. 비치명이 아닌 비무장 공격으로 <strong>치명타 시 1d4 지속 출혈 피해</strong>. 주먹의 치명 공격 페널티를 감수하거나 엄니 등의 비치명이 아닌 비무장 공격이 있을 때 적용.'}
+  {name_ko:'피투성이 타격', name_en:'Bloody Blows', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'피가 튀는 공격으로 적을 겁에 질리게 합니다.', desc:'치명적 비무장 공격이 피투성이 자국을 남기거나 심각한 내부 출혈을 유발합니다. 비치명이 아닌 비무장 공격으로 <strong>치명타 시 1d4 지속 출혈 피해</strong>. 주먹의 치명 공격 페널티를 감수하거나 엄니 등의 비치명이 아닌 비무장 공격이 있을 때 적용.'}
 ,
-  {name_ko:'불굴의 체력', name_en:'Iron Fists', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'비무장 주먹 공격 피해가 1d6으로 증가.', desc:'주먹이 전투로 단련되었습니다. 주먹 비무장 공격이 <strong>비치명(nonlethal) 특성을 잃고</strong>, <strong>밀기(shove) 무기 특성</strong>을 얻습니다.'}
+  {name_ko:'쇠주먹', name_en:'Iron Fists', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'비무장 주먹 공격 피해가 1d6으로 증가.', desc:'주먹이 전투로 단련되었습니다. 주먹 비무장 공격이 <strong>비치명(nonlethal) 특성을 잃고</strong>, <strong>밀기(shove) 무기 특성</strong>을 얻습니다.'}
 ,
   {name_ko:'야수 조련사', name_en:'Beast Trainer', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'사나운 야수를 길들이고 명령하는 인상적인 타고난 능력. 자연학에 숙련되고, 선택으로 반려동물(Pet) 일반 재주 또는 동물 훈련(Train An', desc:'사나운 야수를 길들이고 명령하는 인상적인 타고난 능력. <strong>자연학에 숙련</strong>되고, 선택으로 <strong>반려동물(Pet)</strong> 일반 재주 또는 <strong>동물 훈련(Train Animal)</strong> 기술 재주를 얻습니다.'}
 ,
   {name_ko:'오크 미신', name_en:'Orc Superstition', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'유발 조건: 주문이나 마법 효과에 대한 내성 굴림을 시도하지만 아직 굴리지 않았습니다.', desc:'<strong>유발 조건:</strong> 주문이나 마법 효과에 대한 내성 굴림을 시도하지만 아직 굴리지 않았습니다.<br>오크 문화적 미신에서 파생된 기법으로 마법에 대항합니다. 유발 주문이나 마법 효과에 대한 내성에 <strong>+1 상황 보너스</strong>.'}
 ,
-  {name_ko:'거점 표식', name_en:'Hold Mark', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'공동체의 무용의 표식으로 강화된 흉터나 문신을 지닙니다. 아래 표에서 하나를 선택합니다. 해당 기술에 숙련되고, 해당 전통의 주문에 대한 내성에', desc:'공동체의 무용의 표식으로 강화된 흉터나 문신을 지닙니다. 아래 표에서 하나를 선택합니다. 해당 기술에 숙련되고, 해당 전통의 주문에 대한 내성에 <strong>+1 상태 보너스</strong>. 선택한 상징이나 유사 개념의 큰 낙인이나 문신을 얻습니다.'}
+  {name_ko:'명예의 표식', name_en:'Hold Mark', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'공동체의 무용의 표식으로 강화된 흉터나 문신을 지닙니다. 아래 표에서 하나를 선택합니다. 해당 기술에 숙련되고, 해당 전통의 주문에 대한 내성에', desc:'공동체의 무용의 표식으로 강화된 흉터나 문신을 지닙니다. 아래 표에서 하나를 선택합니다. 해당 기술에 숙련되고, 해당 전통의 주문에 대한 내성에 <strong>+1 상태 보너스</strong>. 선택한 상징이나 유사 개념의 큰 낙인이나 문신을 얻습니다.'}
 ,
   {name_ko:'엄니', name_en:'Tusks', feat_level:1, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'특히 길고 들쭉날쭉한 엄니가 뼈에서 고기를 찢기에 완벽합니다. 1d6 관통 피해의 엄니(tusks) 비무장 공격을 얻습니다. 격투 그룹이며 기교', desc:'특히 길고 들쭉날쭉한 엄니가 뼈에서 고기를 찢기에 완벽합니다. <strong>1d6 관통 피해</strong>의 엄니(tusks) 비무장 공격을 얻습니다. 격투 그룹이며 기교와 비무장 특성.<br><strong>특수:</strong> 1레벨에서만 가질 수 있으며, 이 재주로 재훈련할 수 없습니다. 엄니를 부러뜨리거나 깎거나 뽑는 등 극단적 조치로만 재훈련 가능.'}
 ,
-  {name_ko:'수훈자', name_en:'Victorious Vigor', feat_level:5, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'적을 쓰러뜨리면 임시 HP 획득 (레벨 수치).', desc:'전투의 짜릿함으로 힘을 얻습니다. 적을 쓰러뜨리면 레벨만큼의 임시 HP를 얻습니다.'}
+  {name_ko:'승리의 활력', name_en:'Victorious Vigor', feat_level:5, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'적을 쓰러뜨리면 임시 HP 획득 (레벨 수치).', desc:'전투의 짜릿함으로 힘을 얻습니다. 적을 쓰러뜨리면 레벨만큼의 임시 HP를 얻습니다.'}
 ,
   {name_ko:'운동적 힘', name_en:'Athletic Might', feat_level:5, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'적대적 지형에서의 생존이 뛰어난 기동성을 부여했습니다. 등반(Climb)이나 수영(Swim) 운동 판정에서 성공을 굴리면 대성공.', desc:'적대적 지형에서의 생존이 뛰어난 기동성을 부여했습니다. 등반(Climb)이나 수영(Swim) 운동 판정에서 <strong>성공을 굴리면 대성공</strong>.'}
 ,
@@ -1908,7 +1908,7 @@ const FEAT_DB = [
 ,
   {name_ko:'흉터 두꺼운 피부', name_en:'Scar-Thick Skin', feat_level:5, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'영광스럽고 전설적인 흉터가 몸을 덮고 보호합니다. 지속 출혈 피해를 끝내는 단순 판정 DC가 15에서 10으로(적절한 도움 후 10에서 5로) ', desc:'영광스럽고 전설적인 흉터가 몸을 덮고 보호합니다. 지속 출혈 피해를 끝내는 단순 판정 DC가 15에서 <strong>10으로</strong>(적절한 도움 후 10에서 5로) 줄어듭니다.'}
 ,
-  {name_ko:'불멸의 오크', name_en:'Pervasive Superstition', feat_level:9, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'마법 효과에 대한 내성에 +1 상황 보너스.', desc:'<strong>전제조건:</strong> 오크 미신<br>미신에 몸을 담그고 고대 오크 정신 수련을 연습합니다. <strong>항상</strong> 주문과 마법 효과에 대한 내성에 <strong>+1 상황 보너스</strong>.'}
+  {name_ko:'만연한 미신', name_en:'Pervasive Superstition', feat_level:9, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'마법 효과에 대한 내성에 +1 상황 보너스.', desc:'<strong>전제조건:</strong> 오크 미신<br>미신에 몸을 담그고 고대 오크 정신 수련을 연습합니다. <strong>항상</strong> 주문과 마법 효과에 대한 내성에 <strong>+1 상황 보너스</strong>.'}
 ,
   {name_ko:'불사의 흉포', name_en:'Undying Ferocity', feat_level:9, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'전제조건: 오크의 흉포', desc:'<strong>전제조건:</strong> 오크의 흉포<br>초자연적 활력으로 죽음의 손아귀에 저항합니다. 오크의 흉포 사용 시 <strong>레벨만큼의 임시 HP</strong>를 얻습니다.'}
 ,
