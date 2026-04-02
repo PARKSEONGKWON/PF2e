@@ -2370,6 +2370,7 @@ function clearCoreSelection(type) {
     renderGrowthPlan();
     save();
   } else if (type === 'heritage') {
+    const oldHeritage = state.selectedHeritage;
     state.selectedHeritage = null;
     // 시야를 혈통 기본값으로 복원
     state.vision = state.selectedAncestry?.vision || '없음';
@@ -2379,6 +2380,19 @@ function clearCoreSelection(type) {
     if (state.feats.other) state.feats.other = state.feats.other.filter(f => !f._heritageCantrip);
     // 유산 무기 제거
     state.weapons = (state.weapons||[]).filter(w => !w._fromHeritage);
+    // 유산 기술 숙련 제거
+    if (oldHeritage?.grantSkills) {
+      oldHeritage.grantSkills.forEach(sid => {
+        const profEl = document.getElementById('sk-prof-' + sid);
+        if (profEl && parseInt(profEl.value || 0) === 2) profEl.value = '0';
+      });
+    }
+    // 유산 재주 제거
+    Object.values(state.feats).forEach(arr => {
+      for (let i = arr.length - 1; i >= 0; i--) {
+        if (arr[i]._fromHeritage) arr.splice(i, 1);
+      }
+    });
     // 유산 HP 보너스 제거
     state._heritageHpBonus = 0;
     const btn = document.getElementById('btn-heritage');
@@ -2821,6 +2835,21 @@ function applyHeritageEffects(h) {
     if (typeof addWeapon === 'function') {
       addWeapon({name: w.name, dmg: w.dmg, traits: w.traits, category: w.category, _fromHeritage: true});
     }
+  }
+  // 유산 기술 숙련 부여
+  if (h.grantSkills) {
+    h.grantSkills.forEach(sid => {
+      const profEl = document.getElementById('sk-prof-' + sid);
+      if (profEl && parseInt(profEl.value || 0) < 2) profEl.value = '2';
+    });
+  }
+  // 유산 재주 부여
+  if (h.grantFeats) {
+    if (!state.feats.skill) state.feats.skill = [];
+    h.grantFeats.forEach(featName => {
+      const already = state.feats.skill.some(f => f.name === featName);
+      if (!already) state.feats.skill.push({name: featName, level: 1, _fromHeritage: true});
+    });
   }
   // 유산 HP 보너스 (부서지지 않는 고블린 등)
   if (h.hpBonus) {
