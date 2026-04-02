@@ -1861,7 +1861,7 @@ const FEAT_DB = [
 ,
   {name_ko:'레쉬 지식', name_en:'Leshy Lore', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'자연학과 은신에 숙련. 레쉬 지식(Lore) 획득.', desc:'<strong>자연학과 은신에 숙련</strong>. 이미 숙련이면 다른 기술. <strong>레쉬 지식</strong>에 대한 추가 지식 재주를 얻습니다.'}
 ,
-  {name_ko:'야생의 그림자', name_en:'Shadow of the Wilds', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'도시 외 환경에서 항상 흔적 감추기 상태로 간주.', desc:'야생 지역에서 당신의 통과를 알아채기 어렵습니다. 도시 환경이 아닌 한, 탐험 모드에서 다른 활동을 선택했어도 항상 <strong>흔적 감추기(Covering Tracks)</strong> 상태로 간주됩니다.'}
+  {name_ko:'야생의 그림자', name_en:'Shadow of the Wilds', feat_level:1, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'도시 외 환경에서 항상 흔적 감추기 상태로 간주.', desc:'야생 지역에서 당신의 통과를 알아채기 어렵습니다. 도시 환경이 아닌 한, 탐험 모드에서 다른 활동을 선택했어도 항상 <span class="spell-tip" data-tip="흔적 감추기 [집중/탐험/이동] — 절반 이동 속도로 이동하며 흔적을 감춥니다. 추적자는 일반 DC 대신 당신의 생존 DC에 대해 성공해야 합니다."><strong>흔적 감추기(Covering Tracks)</strong></span> 상태로 간주됩니다.'}
 ,
   {name_ko:'태양 양분', name_en:'Solar Rejuvenation', feat_level:9, prerequisites:'레쉬', traits:['레쉬'], category:'ancestry', summary:'직사광선에서 10분 휴식 시 HP = 레벨 × CON 회복.', desc:'낮 동안 야외에서 10분 쉬면, 건강 수정치 × 레벨 절반만큼 <strong>HP를 회복</strong>합니다. 상처 치료의 치유와 별도로 추가됩니다. 광합성에 의존하지 않는 레시는 유사하게 적합한 환경이 필요합니다(균류 레시는 어둡고 습한 환경과 썩은 식물 더미).'}
 ,
