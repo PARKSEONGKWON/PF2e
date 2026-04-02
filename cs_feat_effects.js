@@ -623,7 +623,7 @@ const FEAT_EFFECTS = {
     effects: []
   },
   'Adapted Cantrip': {
-    choice: {type:'spell_cantrip', tradition:'any', label:'다른 전통에서 캔트립 선택'},
+    choice: {type:'spell_cantrip', tradition:'$other', label:'다른 전통에서 캔트립 선택'},
     effects: []
   },
   'Supernatural Charm': {
@@ -3196,7 +3196,7 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
     let cantrips;
     if (isRankSpell) {
       cantrips = SPELL_DB.filter(sp => !sp.is_cantrip && !sp.is_focus && sp.rank && sp.rank <= targetRank && sp.traditions && sp.traditions.includes(tradition));
-    } else if (tradition === 'any') {
+    } else if (tradition === 'any' || tradition === '$other') {
       const classTrad = state.selectedClass?.tradition || '';
       cantrips = SPELL_DB.filter(sp => sp.is_cantrip && sp.traditions && (!classTrad || !sp.traditions.includes(classTrad)));
     } else {
