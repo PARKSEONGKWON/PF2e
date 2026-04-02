@@ -3027,23 +3027,51 @@ function renderActions() {
     });
   }
 
-  // _fb._customActions: summary 기반 동적 행동 카드 추가
+  // _fb._customActions: 동적 행동 카드 추가
   if (state._fb?._customActions) {
     const existingIds2 = new Set(visible.map(a => a.id));
     state._fb._customActions.forEach(ca => {
+      const featNameKo = ca.featName.split(' (')[0].trim();
+
+      // actionName 기반: desc에서 자동 추출 (정본 = feat_db.desc)
+      if (ca.actionName) {
+        const id = 'custom-' + (ca.actionNameEn||ca.actionName).replace(/\s/g,'-');
+        if (existingIds2.has(id)) return;
+        existingIds2.add(id);
+        // 부모 재주의 desc에서 행동 섹션 추출
+        const fd = typeof FEAT_DB !== 'undefined' ? FEAT_DB.find(f => f && f.name_ko === featNameKo) : null;
+        if (!fd?.desc) return;
+        const marker = '<strong>' + ca.actionName + '</strong>';
+        const idx = fd.desc.indexOf(marker);
+        if (idx < 0) return;
+        const section = fd.desc.substring(idx);
+        // 비용 파싱
+        const costMatch = section.match(/\[([^\]]+)\]/);
+        const costMap = {'반응':'reaction','1행동':'1','2행동':'2','3행동':'3','자유 행동':'free'};
+        const cost = costMatch ? (costMap[costMatch[1]] || 'free') : 'free';
+        // 본문: [N행동] 이후 <br> 다음부터
+        const body = section.replace(/^[^]*?\[.+?\]\s*(?:<br\s*\/?>)?\s*/, '');
+        visible.push({
+          id, cat:'feat', cat_label:'재주 행동', name_ko: ca.actionName, name_en: ca.actionNameEn||'',
+          cost, traits:[], req_skill:null, req_rank:0, req_feat: featNameKo,
+          summary: body
+        });
+        return;
+      }
+
+      // 레거시: summary 기반 (하위 호환)
       const id = 'custom-' + (ca.featName||'').replace(/\s/g,'-');
       if (existingIds2.has(id)) return;
       existingIds2.add(id);
       const costMatch = ca.summary.match(/^\[(.+?)\]/);
-      const costMap = {'반응':'reaction','1행동':'1','2행동':'2','3행동':'3','자유행동':'free'};
+      const costMap = {'반응':'reaction','1행동':'1','2행동':'2','3행동':'3','자유행동':'free','자유 행동':'free'};
       const cost = costMatch ? (costMap[costMatch[1]] || 'free') : 'free';
-      const nameKo = ca.featName.split(' (')[0].trim();
       const nameEnMatch = ca.featName.match(/\(([^)]+)\)$/);
       const nameEn = nameEnMatch ? nameEnMatch[1] : '';
       const desc = ca.summary.replace(/^\[.+?\]\s*/, '').replace(/^[^—]*—\s*/, '');
       visible.push({
-        id, cat:'feat', cat_label:'재주 행동', name_ko: nameKo, name_en: nameEn,
-        cost, traits:[], req_skill:null, req_rank:0, req_feat: nameKo,
+        id, cat:'feat', cat_label:'재주 행동', name_ko: featNameKo, name_en: nameEn,
+        cost, traits:[], req_skill:null, req_rank:0, req_feat: featNameKo,
         summary: desc
       });
     });

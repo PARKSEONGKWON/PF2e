@@ -703,7 +703,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'도시 외 환경에서 항상 흔적 감추기 상태'}]
   },
   'Anchoring Roots': {
-    effects: [{type:'grant_feat', feat:'안정된 균형 (Steady Balance)'}, {type:'grant_action', summary:'[1행동] 고정 (Anchor) — <strong>요구사항:</strong> 단단한 표면 위에 있어야 합니다.<br>뿌리를 땅에 박거나 지면을 가로질러 보내 비틀거리기 어렵게 합니다. 이동할 때까지 재배치, 밀기, 넘어뜨리기에 대한 인내/반사 DC에 <strong>+2 상황 보너스</strong>(뿌리 레쉬면 +4). 이동시키거나 엎드리게 하는 주문/효과에 대한 내성에도 적용. 강제 이동 시 <strong>절반 거리만</strong> 이동합니다.'}]
+    effects: [{type:'grant_feat', feat:'안정된 균형 (Steady Balance)'}, {type:'grant_action', actionName:'고정', actionNameEn:'Anchor'}]
   },
   'Leshy Glide': {
     effects: [{type:'display_note', text:'[1행동] 5피트 아래로 최대 25피트 앞으로 활공'}]
@@ -2924,10 +2924,15 @@ function _applyOneEffect(fb, eff, feat, level) {
     }
     case 'grant_action':
       if (eff.action && !fb.actions.includes(eff.action)) fb.actions.push(eff.action);
-      // summary 기반 동적 행동 (ACTION_DB에 없는 행동)
+      // summary 기반 동적 행동 (ACTION_DB에 없는 행동) — 레거시
       if (eff.summary && feat.name) {
         if (!fb._customActions) fb._customActions = [];
         fb._customActions.push({featName: feat.name, summary: eff.summary});
+      }
+      // actionName 기반: desc에서 자동 추출 (정본 = feat_db.desc)
+      if (eff.actionName && feat.name) {
+        if (!fb._customActions) fb._customActions = [];
+        fb._customActions.push({featName: feat.name, actionName: eff.actionName, actionNameEn: eff.actionNameEn || ''});
       }
       break;
     case 'damage_note':
