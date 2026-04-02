@@ -1235,6 +1235,16 @@ function growthClearFeat(lv, key, featType) {
               if (el && el.value === removedFeat.choice) { el.value = ''; if (profEl) profEl.value = '0'; }
             });
           }
+          // skill_trained / skill_multi: 재주로 부여된 기술 숙련 원복
+          if (def?.effects?.some(e => e.type === 'skill_trained') && removedFeat.choice) {
+            const ids = removedFeat.choice.includes(',') ? removedFeat.choice.split(',') : [removedFeat.choice];
+            ids.forEach(sid => {
+              const s = sid.trim();
+              if (!s) return;
+              const profEl = document.getElementById('sk-prof-' + s);
+              if (profEl && parseInt(profEl.value || 0) === 2) profEl.value = '0';
+            });
+          }
         }
         arr.splice(idx, 1);
       }

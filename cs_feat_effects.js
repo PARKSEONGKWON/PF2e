@@ -631,7 +631,7 @@ const FEAT_EFFECTS = {
   },
   'Natural Skill': {
     choice: {
-      type:'skill', label:'추가로 숙련시킬 기술을 선택하세요',
+      type:'skill_multi', label:'숙련시킬 기술 2개를 선택하세요', count:2,
       filter:{exclude_trained:true},
     },
     effects: [{type:'skill_trained', skill:'$choice'}]
@@ -2834,8 +2834,14 @@ function _applyOneEffect(fb, eff, feat, level) {
     case 'skill_trained': {
       const sid = _resolveChoice(eff.skill, feat);
       if (sid) {
-        if (!fb.skills[sid]) fb.skills[sid] = {min_rank:0, bonus:0};
-        fb.skills[sid].min_rank = Math.max(fb.skills[sid].min_rank, 2);
+        // skill_multi: 쉼표 구분된 다중 ID 지원
+        const ids = sid.includes(',') ? sid.split(',') : [sid];
+        ids.forEach(id => {
+          const s = id.trim();
+          if (!s) return;
+          if (!fb.skills[s]) fb.skills[s] = {min_rank:0, bonus:0};
+          fb.skills[s].min_rank = Math.max(fb.skills[s].min_rank, 2);
+        });
       }
       break;
     }
@@ -3052,7 +3058,7 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
   const detail = document.getElementById('modal-detail');
   if (detail) { detail.style.display = 'none'; }
   // spell_cantrip: 닫기/취소/선택 전부 숨김 (선택 필수, detail 내 버튼만 사용)
-  if (isSpellChoice || choiceDef.type === 'lore' || choiceDef.type === 'custom' || choiceDef.type === 'ancestry_pick' || choiceDef.type === 'feat_pick') {
+  if (isSpellChoice || choiceDef.type === 'lore' || choiceDef.type === 'custom' || choiceDef.type === 'ancestry_pick' || choiceDef.type === 'feat_pick' || choiceDef.type === 'skill_multi') {
     const closeBtn = document.querySelector('.modal-close');
     const closeBtnM = document.getElementById('modal-close-m');
     const footer = document.querySelector('.modal-footer');
@@ -3079,6 +3085,72 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
       row.style.cursor = 'pointer';
       row.innerHTML = `<span class="opt-row-name">${sk.name} (${sk.en})</span>`;
       row.onclick = () => _applyFeatChoice(sk.id);
+      container.appendChild(row);
+    });
+  } else if (choiceDef.type === 'skill_multi') {
+    // ── 기술 다중 선택 (체크 형태) ──
+    const maxPick = choiceDef.count || 2;
+    const selected = new Set();
+    modalContext._multiSelected = selected;
+
+    // 하단에 확정 버튼 표시
+    const footer = document.querySelector('.modal-footer');
+    if (footer) {
+      footer.style.display = '';
+      footer.innerHTML = `<button class="btn btn-confirm" id="skill-multi-confirm" disabled style="opacity:.4;cursor:not-allowed;">0/${maxPick}개 선택됨 — 선택 완료</button>`;
+      document.getElementById('skill-multi-confirm').onclick = () => {
+        if (selected.size === maxPick) _applyFeatChoice([...selected].join(','));
+      };
+    }
+
+    function updateMultiBtn() {
+      const btn = document.getElementById('skill-multi-confirm');
+      if (!btn) return;
+      const done = selected.size === maxPick;
+      btn.textContent = `${selected.size}/${maxPick}개 선택됨 — 선택 완료`;
+      btn.disabled = !done;
+      btn.style.opacity = done ? '1' : '.4';
+      btn.style.cursor = done ? 'pointer' : 'not-allowed';
+    }
+
+    SKILLS.forEach(sk => {
+      if (sk.isLore) return;
+      const rank = parseInt(document.getElementById('sk-prof-' + sk.id)?.value || 0);
+      if (choiceDef.filter?.exclude_trained && rank >= 2) return;
+
+      const row = document.createElement('div');
+      row.className = 'opt-row';
+      row.style.cursor = 'pointer';
+      row.style.display = 'flex';
+      row.style.alignItems = 'center';
+      row.style.gap = '8px';
+      const check = document.createElement('span');
+      check.className = 'skill-multi-check';
+      check.style.cssText = 'width:18px;height:18px;border:2px solid var(--border,#555);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .15s;';
+      row.appendChild(check);
+      const label = document.createElement('span');
+      label.className = 'opt-row-name';
+      label.textContent = `${sk.name} (${sk.en})`;
+      row.appendChild(label);
+
+      row.onclick = () => {
+        if (selected.has(sk.id)) {
+          selected.delete(sk.id);
+          check.textContent = '';
+          check.style.background = '';
+          check.style.borderColor = 'var(--border,#555)';
+          row.classList.remove('selected');
+        } else {
+          if (selected.size >= maxPick) return; // 최대 도달
+          selected.add(sk.id);
+          check.textContent = '✓';
+          check.style.background = 'var(--accent,#d4a04a)';
+          check.style.borderColor = 'var(--accent,#d4a04a)';
+          check.style.color = '#000';
+          row.classList.add('selected');
+        }
+        updateMultiBtn();
+      };
       container.appendChild(row);
     });
   } else if (choiceDef.type === 'lore') {
@@ -3293,6 +3365,16 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
 function _applyFeatChoice(choiceId) {
   if (!modalContext) return;
   const {featType, featIndex, choiceDef} = modalContext;
+
+  // ── skill_multi: 다중 기술 선택 ──
+  if (choiceDef?.type === 'skill_multi') {
+    state.feats[featType][featIndex].choice = choiceId; // "athletics,stealth" 형태
+    renderFeats();
+    try { recalcAll(); } catch(e) { console.error(e); }
+    save();
+    closeModal();
+    return;
+  }
 
   // ── feat_pick: 재주 부여 + 연쇄 모달 ──
   if (choiceDef?.type === 'feat_pick') {

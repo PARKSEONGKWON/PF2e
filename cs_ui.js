@@ -1650,6 +1650,17 @@ function removeFeat(t, i) {
         if (el && el.value === loreName) { el.value = ''; if (profEl) profEl.value = '0'; }
       });
     }
+    // skill_trained / skill_multi: 재주로 부여된 기술 숙련 원복
+    const hasSkillTrained = def?.effects?.some(e => e.type === 'skill_trained');
+    if (hasSkillTrained && feat.choice) {
+      const ids = feat.choice.includes(',') ? feat.choice.split(',') : [feat.choice];
+      ids.forEach(sid => {
+        const s = sid.trim();
+        if (!s) return;
+        const profEl = document.getElementById('sk-prof-' + s);
+        if (profEl && parseInt(profEl.value || 0) === 2) profEl.value = '0';
+      });
+    }
   }
   state.feats[t].splice(i,1);
   cascadeRemoveFeats();
