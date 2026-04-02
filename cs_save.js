@@ -171,9 +171,8 @@ function loadData(d) {
       ['cur','max','temp'].forEach(t => {
         if (d.hp[t]!==undefined) document.getElementById('hp-'+t).value = d.hp[t];
       });
-      // 로드된 HP를 updateHP()가 덮어쓰지 않도록 플래그
-      const maxEl = document.getElementById('hp-max');
-      if (maxEl && parseInt(maxEl.value) > 0) maxEl._userEdited = true;
+      // HP max는 항상 recalcAll → updateHP()에서 재계산
+      // 현재 HP만 로드값 유지
     }
     if (d.dying !== undefined) document.getElementById('dying').value = d.dying;
     if (d.wounded !== undefined) document.getElementById('wounded').value = d.wounded;

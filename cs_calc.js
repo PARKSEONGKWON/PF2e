@@ -1274,10 +1274,14 @@ function updateHP() {
     const maxEl = document.getElementById('hp-max');
     const curEl = document.getElementById('hp-cur');
     const oldMax = parseInt(maxEl.value || 0);
-    if (oldMax === 0 || !maxEl._userEdited) {
-      maxEl.value = max;
-      // 최대치가 바뀌면 현재 HP도 최대치로 설정 (초기 또는 레벨업)
-      if (curEl && (parseInt(curEl.value || 0) === 0 || parseInt(curEl.value) === oldMax)) {
+    maxEl.value = max;
+    // 현재 HP: 이전 최대치와 같았거나 0이면 → 새 최대치로 갱신
+    // 그렇지 않으면 (피해를 입은 상태) 유지하되 새 최대치 초과 방지
+    if (curEl) {
+      const curHP = parseInt(curEl.value || 0);
+      if (curHP === 0 || curHP === oldMax) {
+        curEl.value = max;
+      } else if (curHP > max) {
         curEl.value = max;
       }
     }
