@@ -1696,8 +1696,19 @@ function _checkPrereqs(prereqStr) {
     // 클래스 체크
     if (state.selectedClass && (state.selectedClass.name === c || state.selectedClass.en === c || state.selectedClass.id === c)) continue;
 
-    // "주문시전 클래스 특성" 등 일반적 조건은 통과
-    if (c.includes('주문') || c.includes('원천') || c.includes('동물') || c.includes('사역마')) continue;
+    // "주문시전 클래스 특성" — 실제 주문시전 클래스인지 확인
+    if (c === '주문시전 클래스 특성') {
+      if (!state.selectedClass?.tradition) return false;
+      continue;
+    }
+
+    // 원천/동물/사역마 등 일반적 조건은 통과
+    if (c.includes('원천') || c.includes('동물') || c.includes('사역마')) continue;
+    // "N랭크 주문 시전 가능" 등 주문 관련 조건 — 주문시전 클래스가 아니면 실패
+    if (c.includes('주문')) {
+      if (!state.selectedClass?.tradition) return false;
+      continue;
+    }
 
     // 매칭 안 되면 실패
     return false;
