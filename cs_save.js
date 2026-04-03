@@ -158,10 +158,10 @@ function importJSON(event) {
 }
 
 function loadData(d) {
+  const wasLoadComplete = _loadComplete;
   try {
     if (!d) return;
     // 로드 중 자동저장 방지
-    const wasLoadComplete = _loadComplete;
     _loadComplete = false;
 
     // Fields

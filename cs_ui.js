@@ -1204,6 +1204,8 @@ function renderSpells() {
 
   // ── "주문 기억" 버튼 표시/숨김 ──
   const isPrepared = state.selectedClass?.casting === 'prepared';
+  const isPreparedCaster = isPrepared && (typeof CLASS_SPELL_TABLE !== 'undefined') && CLASS_SPELL_TABLE[state.selectedClass?.id];
+  const isSpontaneous = state.selectedClass?.casting === 'spontaneous';
   const memBtn = document.getElementById('btn-memorize-spells');
   if (memBtn) memBtn.style.display = isPrepared ? '' : 'none';
 
@@ -1323,9 +1325,6 @@ function renderSpells() {
   const ranksContainer = document.getElementById('spell-ranks-container');
   if (!ranksContainer) return;
   ranksContainer.innerHTML = '';
-
-  const isSpontaneous = state.selectedClass?.casting === 'spontaneous';
-  const isPreparedCaster = isPrepared && (typeof CLASS_SPELL_TABLE !== 'undefined') && CLASS_SPELL_TABLE[state.selectedClass?.id];
 
   for (let r = 1; r <= maxRank; r++) {
     const slotMax = parseInt(state.spellSlots?.[r] || 0);
