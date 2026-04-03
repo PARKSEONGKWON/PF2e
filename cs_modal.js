@@ -721,10 +721,7 @@ function applyClassFeatures() {
   if (typeof initArmorProfBadges === 'function') initArmorProfBadges();
   if (typeof syncAllTeml === 'function') syncAllTeml();
   recalcAll();
-  } catch(e) {
-    console.error('[applyClassFeatures] ERROR:', e);
-    alert('[applyClassFeatures] 에러: ' + e.message);
-  }
+  } catch(e) { console.error('[applyClassFeatures] ERROR:', e); }
 }
 
 // ═══════════════════════════════════════════════
@@ -2590,7 +2587,8 @@ function confirmModal() {
     const _dbgSub = typeof SUBCLASS_AUTO_FEATS !== 'undefined' ? SUBCLASS_AUTO_FEATS[modalSelected.id] : 'UNDEF';
     const _dbgSpell = typeof SUBCLASS_AUTO_SPELLS !== 'undefined' ? SUBCLASS_AUTO_SPELLS[modalSelected.id] : 'UNDEF';
     applyClassFeatures();
-    alert(`[DEBUG after apply]\nspecial: ${JSON.stringify(state.feats.special.map(f=>f.name))}\nfocus: ${JSON.stringify(state.spells.focus.map(s=>s.name))}\nknown: ${JSON.stringify(state.spells.known.map(s=>s.name))}`);
+    renderFeats();
+    renderSpells();
     renderGrowthPlan();
   } else if (modalType==='heritage') {
     state.selectedHeritage = modalSelected;
@@ -2637,6 +2635,9 @@ function confirmModal() {
   }
   try { recalcAll(); } catch(e) { console.error('confirmModal recalcAll error:', e); }
   closeModal();
+  // 모달 닫은 후 최종 렌더링 보장
+  if (typeof renderFeats === 'function') renderFeats();
+  if (typeof renderSpells === 'function') renderSpells();
   save();
 }
 
