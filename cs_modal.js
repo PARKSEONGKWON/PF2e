@@ -721,7 +721,10 @@ function applyClassFeatures() {
   if (typeof initArmorProfBadges === 'function') initArmorProfBadges();
   if (typeof syncAllTeml === 'function') syncAllTeml();
   recalcAll();
-  } catch(e) { console.error('[applyClassFeatures] ERROR:', e); }
+  } catch(e) {
+    console.error('[applyClassFeatures] ERROR:', e);
+    alert('[applyClassFeatures] 에러: ' + e.message);
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -2584,6 +2587,9 @@ function confirmModal() {
     state.selectedSubclass = modalSelected;
     const btn = document.getElementById('btn-subclass');
     if (btn) { btn.textContent = `${modalSelected.subclass_type}: ${modalSelected.name_ko}`; btn.classList.add('filled'); }
+    const _dbgSub = typeof SUBCLASS_AUTO_FEATS !== 'undefined' ? SUBCLASS_AUTO_FEATS[modalSelected.id] : 'UNDEF';
+    const _dbgSpell = typeof SUBCLASS_AUTO_SPELLS !== 'undefined' ? SUBCLASS_AUTO_SPELLS[modalSelected.id] : 'UNDEF';
+    alert(`[DEBUG] 뮤즈 선택: ${modalSelected.id}\nAutoFeats: ${JSON.stringify(_dbgSub)}\nAutoSpells: ${JSON.stringify(_dbgSpell)}`);
     applyClassFeatures();
     renderGrowthPlan();
   } else if (modalType==='heritage') {
