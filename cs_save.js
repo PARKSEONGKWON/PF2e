@@ -152,6 +152,9 @@ function importJSON(event) {
 function loadData(d) {
   try {
     if (!d) return;
+    // 로드 중 자동저장 방지
+    const wasLoadComplete = _loadComplete;
+    _loadComplete = false;
 
     // Fields
     if (d.boosts) {
@@ -370,6 +373,9 @@ function loadData(d) {
     if (d.divineFontUsed !== undefined) state.divineFontUsed = d.divineFontUsed;
     if (d.signatureSpells) state.signatureSpells = d.signatureSpells;
   } catch(e) { console.warn('Load failed',e); }
+  // 로드 완료 — 자동저장 복원 + 진행 중인 debounce 취소
+  _loadComplete = wasLoadComplete;
+  if (_autoSaveDebounce) { clearTimeout(_autoSaveDebounce); _autoSaveDebounce = null; }
 }
 
 // ── PATHBUILDER STYLE: switchTab override ──
