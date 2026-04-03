@@ -1916,9 +1916,9 @@ const FEAT_DB = [
 ,
   {name_ko:'흉터 두꺼운 피부', name_en:'Scar-Thick Skin', feat_level:5, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'영광스럽고 전설적인 흉터가 몸을 덮고 보호합니다. 지속 출혈 피해를 끝내는 단순 판정 DC가 15에서 10으로(적절한 도움 후 10에서 5로) ', desc:'영광스럽고 전설적인 흉터가 몸을 덮고 보호합니다. 지속 출혈 피해를 끝내는 단순 판정 DC가 15에서 <strong>10으로</strong>(적절한 도움 후 10에서 5로) 줄어듭니다.'}
 ,
-  {name_ko:'만연한 미신', name_en:'Pervasive Superstition', feat_level:9, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'마법 효과에 대한 내성에 +1 상황 보너스.', desc:'<strong>전제조건:</strong> 오크 미신<br>미신에 몸을 담그고 고대 오크 정신 수련을 연습합니다. <strong>항상</strong> 주문과 마법 효과에 대한 내성에 <strong>+1 상황 보너스</strong>.'}
+  {name_ko:'만연한 미신', name_en:'Pervasive Superstition', feat_level:9, prerequisites:'오크, 오크 미신', traits:['오크'], category:'ancestry', summary:'마법 효과에 대한 내성에 +1 상황 보너스.', desc:'<strong>전제조건:</strong> 오크 미신<br>미신에 몸을 담그고 고대 오크 정신 수련을 연습합니다. <strong>항상</strong> 주문과 마법 효과에 대한 내성에 <strong>+1 상황 보너스</strong>.'}
 ,
-  {name_ko:'불사의 흉포', name_en:'Undying Ferocity', feat_level:9, prerequisites:'오크', traits:['오크'], category:'ancestry', summary:'전제조건: 오크의 흉포', desc:'<strong>전제조건:</strong> 오크의 흉포<br>초자연적 활력으로 죽음의 손아귀에 저항합니다. 오크의 흉포 사용 시 <strong>레벨만큼의 임시 HP</strong>를 얻습니다.'}
+  {name_ko:'불사의 흉포', name_en:'Undying Ferocity', feat_level:9, prerequisites:'오크, 오크 흉포', traits:['오크'], category:'ancestry', summary:'오크 흉포 사용 시 레벨만큼의 임시 HP 획득.', desc:'<strong>전제조건:</strong> 오크 흉포<br>초자연적 활력으로 죽음의 손아귀에 저항합니다. 오크 흉포 사용 시 <strong>레벨만큼의 임시 HP</strong>를 얻습니다.'}
 ,
   {name_ko:'오크 무기 전문가', name_en:'Orc Weapon Expertise', feat_level:13, prerequisites:'오크, 오크 무기 친숙', traits:['오크'], category:'ancestry', summary:'오크 무기에 대한 숙련도가 전문가로 증가합니다.', desc:'오크 무기에 대한 숙련도가 전문가로 증가합니다.'}
 ,
