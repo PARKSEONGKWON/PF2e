@@ -2219,6 +2219,12 @@ const SPELL_DB = [
     summary: "특질: 집중, 조작, 투시 | 전통: 비전, 비학시전: 1분 | 사거리: 500피트 | 지속 시간: 10분사거리 내 위치에 보이지 않는 떠다니는 눈을 만듭니다. 움직일 수 없지만 ",
     desc: "<strong>특성:</strong> 집중, 조작, 투시 | <strong>전통:</strong> 비전, 비학<br><strong>시전:</strong> 1분 | <strong>사거리:</strong> 500피트 | <strong>지속 시간:</strong> 10분<br>사거리 내 위치에 보이지 않는 떠다니는 눈을 만듭니다. 움직일 수 없지만 해당 지점에서 모든 방향을 정상적인 시각으로 볼 수 있습니다.</div>" },
 
+  // ── 바드 합주 주문 ──
+  { name_ko: "치유의 찬송", name_en: "Hymn of Healing", rank: 1, is_cantrip: false, is_focus: true,
+    traditions: [], actions: "1행동", traits: ['바드','캔트립','작곡','집중','조작'],
+    summary: "특성: 바드, 캔트립, 작곡, 집중, 조작 | 사거리: 30피트 | 대상: 아군 1 또는 자신 | 지속 시간: 유지. 치유의 선율로 아군을 회복시킵니다. 대상은 유지하는 동안 턴 시작 시 HP를 회복합니다.",
+    desc: "<strong>특성:</strong> 바드, 캔트립, 작곡, 집중, 조작<br><strong>사거리:</strong> 30피트 | <strong>대상:</strong> 아군 1 또는 자신 | <strong>지속 시간:</strong> 유지<br>치유의 선율로 아군을 회복시킵니다. 첫 라운드에 대상이 <strong>1d4 HP</strong>를 회복합니다. 유지할 때마다 다시 1d4 HP 회복. 유지를 멈추면 효과가 끝납니다.<br><strong>강화(3랭크):</strong> 회복량 2d4.<br><strong>강화(5랭크):</strong> 회복량 3d4.<br><strong>강화(7랭크):</strong> 회복량 4d4.<br><strong>강화(9랭크):</strong> 회복량 5d4." },
+
   // ── 레쉬 혈통 선천 주문 ──
   { name_ko: "방해 식물", name_en: "Entangling Flora", rank: 2, is_cantrip: false, is_focus: false,
     traditions: ['비전','원시'], actions: "2행동", traits: ['집중','조작','식물'],

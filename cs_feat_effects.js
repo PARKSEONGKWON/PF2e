@@ -859,7 +859,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'바드 지식(Bardic Lore) 숙련. 어떤 주제든 지식 회상 가능. 비학 전설 시 전문가'}]
   },
   'Hymn of Healing': {
-    effects: [{type:'display_note', text:'집중 주문: 치유의 찬송 습득. 집중 포인트 풀 +1 (최대 3)'}]
+    effects: [{type:'grant_focus_spell', spell:'치유의 찬송'}]
   },
   'Lingering Composition': {
     effects: [{type:'display_note', text:'집중 주문: 잔향 합주 습득. 합주 지속 시간 연장. 집중 포인트 풀 +1 (최대 3)'}]
@@ -3065,6 +3065,16 @@ function _applyOneEffect(fb, eff, feat, level) {
             name: eff.spell, tradition: eff.tradition || '', type: eff.spellType || 'spell',
             uses: eff.uses || '하루 1회', _sourceFeat: feat.name, _source: feat.name
           });
+        }
+      }
+      break;
+    }
+    case 'grant_focus_spell': {
+      if (eff.spell && feat.name) {
+        if (!state.spells.focus) state.spells.focus = [];
+        const existing = state.spells.focus.find(s => s._sourceFeat === feat.name && s.name === eff.spell);
+        if (!existing) {
+          state.spells.focus.push({name: eff.spell, _auto: true, _sourceFeat: feat.name, _source: feat.name.split(' (')[0].trim()});
         }
       }
       break;

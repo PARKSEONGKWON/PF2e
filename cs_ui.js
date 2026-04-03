@@ -1649,9 +1649,10 @@ function cascadeRemoveFeats() {
 function removeFeat(t, i) {
   const feat = state.feats[t][i];
   const featName = feat?.name?.split(' (')[0].trim() || '';
-  // 재주로 얻은 선천 주문 제거
-  if (feat?.name && state.spells?.innate) {
-    state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== feat.name);
+  // 재주로 얻은 선천 주문 + 집중 주문 제거
+  if (feat?.name) {
+    if (state.spells?.innate) state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== feat.name);
+    if (state.spells?.focus) state.spells.focus = state.spells.focus.filter(s => s._sourceFeat !== feat.name);
   }
   // 재주로 부여된 무기 제거 (grant_weapon)
   if (feat?.name) {

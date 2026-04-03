@@ -1261,10 +1261,9 @@ function growthClearFeat(lv, key, featType) {
         arr.splice(idx, 1);
       }
     }
-    // 선천 주문 제거
-    if (state.spells?.innate) {
-      state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== oldName);
-    }
+    // 선천 주문 + 집중 주문 제거
+    if (state.spells?.innate) state.spells.innate = state.spells.innate.filter(s => s._sourceFeat !== oldName);
+    if (state.spells?.focus) state.spells.focus = state.spells.focus.filter(s => s._sourceFeat !== oldName);
     // 재주로 부여된 무기 제거 (grant_weapon)
     const _fEN = oldName?.match(/\(([^)]+)\)$/)?.[1] || '';
     if (_fEN) {
