@@ -1300,6 +1300,9 @@ function _renderSpellsInner() {
   if (!ranksContainer) return;
   ranksContainer.innerHTML = '';
 
+  if (state.spells.known.length > 0) {
+    alert(`[renderSpells] known 배열: ${JSON.stringify(state.spells.known)}\nmaxRank: ${maxRank}`);
+  }
   for (let r = 1; r <= maxRank; r++) {
     const slotMax = parseInt(state.spellSlots?.[r] || 0);
     const spellsAtRank = state.spells.known.filter(s => s.rank === r);
