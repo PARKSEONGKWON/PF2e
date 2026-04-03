@@ -1161,6 +1161,11 @@ function renderGrowthPlan() {
     if (state.selectedClass?.casting === 'spontaneous') {
       html += growthSpellCardHTML(lv);
     }
+
+    // Signature Spells (3레벨에 등장, 이후 새 랭크 얻을 때마다)
+    if (lv >= 3 && state.selectedClass?.casting === 'spontaneous') {
+      html += growthSignatureCardHTML(lv);
+    }
   }
 
   container.innerHTML = html;
@@ -1666,6 +1671,100 @@ function growthSpellCardHTML(lv) {
 function toggleGrowthSpellExpand(lv) {
   _growthSpellExpanded[lv] = !_growthSpellExpanded[lv];
   renderGrowthPlan();
+}
+
+// 시그니처 주문 카드 — 3레벨에 전체, 이후 새 랭크 얻는 레벨에만 표시
+function growthSignatureCardHTML(lv) {
+  const cid = state.selectedClass?.id;
+  if (!cid || typeof CLASS_SPELL_TABLE === 'undefined' || !CLASS_SPELL_TABLE[cid]) return '';
+
+  const curData = CLASS_SPELL_TABLE[cid][Math.min(lv,20)];
+  if (!curData) return '';
+
+  // 이 레벨에서 접근 가능한 랭크 목록
+  const accessibleRanks = [];
+  for (let r = 1; r <= 10; r++) {
+    if ((curData.slots[r-1] || 0) > 0) accessibleRanks.push(r);
+  }
+  if (accessibleRanks.length === 0) return '';
+
+  // 3레벨에 전체 표시, 이후에는 새 랭크가 생기는 레벨에만 표시
+  if (lv > 3) {
+    const prevData = CLASS_SPELL_TABLE[cid][Math.min(lv-1,20)];
+    if (!prevData) return '';
+    const hasNewRank = accessibleRanks.some(r => (prevData.slots[r-1] || 0) === 0);
+    if (!hasNewRank) return '';
+  }
+
+  // 현재 알고 있는 주문 목록 (growth + auto)
+  const knownByRank = {};
+  // auto known
+  const allAutoKnown = [];
+  for (let l = 1; l <= lv; l++) {
+    getAutoKnownAtLevel(l).forEach(a => {
+      if (!a.isCantrip) allAutoKnown.push(a);
+    });
+  }
+  allAutoKnown.forEach(a => {
+    if (!knownByRank[a.rank]) knownByRank[a.rank] = [];
+    if (!knownByRank[a.rank].includes(a.name)) knownByRank[a.rank].push(a.name);
+  });
+  // growth known
+  for (let l = 1; l <= lv; l++) {
+    const gs = state.growth[l]?.spells;
+    if (!gs) continue;
+    for (let r = 1; r <= 10; r++) {
+      const arr = gs['rank'+r];
+      if (!arr) continue;
+      arr.forEach(name => {
+        if (!name) return;
+        if (!knownByRank[r]) knownByRank[r] = [];
+        if (!knownByRank[r].includes(name)) knownByRank[r].push(name);
+      });
+    }
+  }
+
+  const sigs = state.signatureSpells || {};
+  const totalRanks = accessibleRanks.length;
+  const filledCount = accessibleRanks.filter(r => sigs[r]).length;
+  const allFilled = filledCount >= totalRanks;
+
+  let html = `<div class="growth-slot ${allFilled ? 'filled' : ''}" style="flex-wrap:wrap;cursor:default;">
+    <div class="growth-slot-icon">★</div>
+    <div class="growth-slot-body">
+      <div class="growth-slot-label">시그니처 주문 Signature Spells</div>
+      <div class="growth-slot-value">${filledCount}/${totalRanks} 랭크 지정</div>
+    </div>
+    ${!allFilled ? `<div class="growth-slot-badge">${totalRanks - filledCount}</div>` : ''}
+  </div>`;
+
+  // 항상 펼쳐서 표시 (랭크별 드롭다운)
+  html += '<div style="margin-left:32px;margin-bottom:8px;">';
+  accessibleRanks.forEach(r => {
+    const spells = knownByRank[r] || [];
+    const curSig = sigs[r] || '';
+    html += `<div style="display:flex;align-items:center;gap:6px;margin:3px 0;font-size:12px;">
+      <span style="min-width:50px;color:var(--accent);font-weight:600;">${r}랭크</span>
+      <select onchange="setSignatureSpell(${r},this.value)" style="flex:1;font-size:12px;background:var(--bg2);color:var(--text1);border:1px solid var(--border);border-radius:4px;padding:2px 4px;">
+        <option value="">— 선택 안 됨 —</option>
+        ${spells.map(name => `<option value="${name.replace(/"/g,'&quot;')}"${curSig===name?' selected':''}>${name}</option>`).join('')}
+      </select>
+    </div>`;
+  });
+  html += '</div>';
+
+  return html;
+}
+
+function setSignatureSpell(rank, spellName) {
+  if (!state.signatureSpells) state.signatureSpells = {};
+  if (spellName) {
+    state.signatureSpells[rank] = spellName;
+  } else {
+    delete state.signatureSpells[rank];
+  }
+  renderSpells();
+  save();
 }
 
 // 성장 주문 선택 모달

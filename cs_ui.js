@@ -1366,13 +1366,12 @@ function renderSpells() {
         const globalIdx = state.spells.known.indexOf(spell);
         const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
         const actions = getActionIcons(spellData?.actions);
-        // 시그니처 주문 ★ (3레벨+, spontaneous caster)
-        const canSig = lv >= 3 && state.selectedClass?.casting === 'spontaneous';
+        // 시그니처 주문 표시 (빌더에서 지정)
         const isSig = state.signatureSpells?.[r] === spell.name;
-        const sigStar = canSig ? `<span class="sig-star${isSig?' active':''}" onclick="event.stopPropagation();toggleSignatureSpell(${r},'${spell.name.replace(/'/g,"\\'")}')" title="시그니처 주문" style="cursor:pointer;font-size:14px;margin-right:4px;${isSig?'color:var(--accent);':'color:var(--text2);opacity:0.4;'}">${isSig?'★':'☆'}</span>` : '';
+        const sigLabel = isSig ? '<span style="font-size:9px;color:var(--accent);margin-right:4px;">★ 시그니처</span>' : '';
         row.innerHTML = `
           <span class="spell-cast-label${isCast?' cast-used':''}" onclick="toggleSpellCast(${r},${i})">Cast</span>
-          ${sigStar}<span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${isSig?' <span style="font-size:9px;color:var(--accent);">(시그니처)</span>':''}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+          ${sigLabel}<span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
           <span class="spell-slot-dur">\u2014</span>
           <span class="spell-slot-range">\u2014</span>
           <span class="spell-slot-del" onclick="removeSpell('known',${globalIdx})">✕</span>`;
@@ -1481,17 +1480,6 @@ function renderSpellSlotList(elId, arr, type, heightenedLevel) {
 
 function renderSpellSlotChecks(parentEl, rank) {
   renderSpells();
-}
-
-function toggleSignatureSpell(rank, spellName) {
-  if (!state.signatureSpells) state.signatureSpells = {};
-  if (state.signatureSpells[rank] === spellName) {
-    delete state.signatureSpells[rank];
-  } else {
-    state.signatureSpells[rank] = spellName;
-  }
-  renderSpells();
-  save();
 }
 
 function removeSpell(type, i) {
