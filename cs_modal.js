@@ -715,7 +715,8 @@ function applyClassFeatures() {
     }
   });
   console.log('[applyClassFeatures] auto spells added — focus:', state.spells.focus.length, 'known:', state.spells.known.length, 'cantrip:', state.spells.cantrip.length, 'allAutoSpells:', allAutoSpells);
-  console.log('[applyClassFeatures] state.feats.special:', state.feats.special.map(f=>f.name));
+  // growth 주문 동기화 (auto 주문 재설정 후 growth 주문 병합)
+  if (typeof syncGrowthSpellsToState === 'function') syncGrowthSpellsToState();
   if (typeof renderSpells === 'function') renderSpells();
 
   // Update UI badges
@@ -915,6 +916,7 @@ function getDivineFontSlots() {
 
 function onLevelChange() {
   applyClassFeatures();
+  if (typeof syncGrowthSpellsToState === 'function') syncGrowthSpellsToState();
   renderGrowthPlan();
   updateSpellSlotsForClass();
   save();

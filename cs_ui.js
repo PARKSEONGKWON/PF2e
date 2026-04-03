@@ -1299,21 +1299,26 @@ function renderSpells() {
   if (!ranksContainer) return;
   ranksContainer.innerHTML = '';
 
+  const isSpontaneous = state.selectedClass?.casting === 'spontaneous';
+
   for (let r = 1; r <= maxRank; r++) {
     const slotMax = parseInt(state.spellSlots?.[r] || 0);
-    const spellsAtRank = state.spells.known.filter(s => s.rank === r && !s._auto);
-    const autoAtRank = state.spells.known.filter(s => s.rank === r && s._auto);
+    // 이 랭크의 모든 known 주문 (auto + growth + 재주 부여 등)
+    const allAtRank = state.spells.known.filter(s => s.rank === r);
+
+    // spontaneous: 주문이나 슬롯이 하나도 없으면 섹션 스킵
+    if (isSpontaneous && allAtRank.length === 0 && slotMax === 0) continue;
 
     const section = document.createElement('div');
     section.className = 'spell-rank-section';
 
-    // Rank header with slot count (auto-managed or manual editor)
-    const hasAutoSlots = typeof getClassSpellData === 'function' && getClassSpellData();
+    // ── Rank header ──
     const header = document.createElement('div');
     header.className = 'spell-rank-header';
-    if (hasAutoSlots) {
-      header.innerHTML = `주문 랭크 ${r}
-        <span style="float:right;font-size:11px;color:var(--text2);">슬롯: ${slotMax}</span>`;
+    if (isSpontaneous) {
+      // 레퍼토리 방식: 슬롯 수 표시 (편집 불가)
+      header.innerHTML = `${r}랭크 주문
+        <span style="float:right;font-size:11px;color:var(--text2);">슬롯 ${slotMax}개</span>`;
     } else {
       header.innerHTML = `주문 랭크 ${r}
         <span style="float:right;font-size:11px;color:var(--text2);">
@@ -1323,7 +1328,7 @@ function renderSpells() {
     }
     section.appendChild(header);
 
-    // Fire icons for slot tracking
+    // ── Fire icons for slot usage ──
     if (slotMax > 0) {
       const firesDiv = document.createElement('div');
       firesDiv.className = 'spell-slots-used';
@@ -1343,62 +1348,93 @@ function renderSpells() {
       section.appendChild(firesDiv);
     }
 
-    // Column headers
-    const colHeader = document.createElement('div');
-    colHeader.className = 'spell-slot-col-header';
-    colHeader.innerHTML = `
-      <span style="width:40px;text-align:center;">시전</span>
-      <span style="flex:1;">주문</span>
-      <span style="width:70px;text-align:center;">지속</span>
-      <span style="width:70px;text-align:center;">사거리</span>
-      <span style="width:20px;"></span>`;
-    section.appendChild(colHeader);
-
-    // Render spell slots (manual spells only — _auto는 별도 섹션)
-    const totalSlots = Math.max(slotMax, spellsAtRank.length);
-    for (let i = 0; i < totalSlots; i++) {
-      const spell = spellsAtRank[i] || null;
-      const row = document.createElement('div');
-      const isCast = !!(state.spellSlotsUsed?.[r]?.[i]);
-      row.className = 'spell-slot-row' + (isCast ? ' slot-used' : '');
-
-      if (spell) {
-        const globalIdx = state.spells.known.indexOf(spell);
+    if (isSpontaneous) {
+      // ═══ SPONTANEOUS: 레퍼토리 나열 방식 ═══
+      if (allAtRank.length === 0) {
+        const emptyRow = document.createElement('div');
+        emptyRow.className = 'spell-slot-row';
+        emptyRow.style.opacity = '0.5';
+        emptyRow.innerHTML = '<span class="spell-slot-name" style="color:var(--text2);font-size:12px;">빌더에서 주문을 선택하세요</span>';
+        section.appendChild(emptyRow);
+      }
+      allAtRank.forEach(spell => {
         const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
         const actions = getActionIcons(spellData?.actions);
-        // 시그니처 주문 표시 (빌더에서 지정)
+        const isAuto = spell._auto;
         const isSig = state.signatureSpells?.[r] === spell.name;
-        const sigLabel = isSig ? '<span style="font-size:9px;color:var(--accent);margin-right:4px;">★ 시그니처</span>' : '';
-        row.innerHTML = `
-          <span class="spell-cast-label${isCast?' cast-used':''}" onclick="toggleSpellCast(${r},${i})">Cast</span>
-          ${sigLabel}<span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
-          <span class="spell-slot-dur">\u2014</span>
-          <span class="spell-slot-range">\u2014</span>
-          <span class="spell-slot-del" onclick="removeSpell('known',${globalIdx})">✕</span>`;
-      } else {
-        row.innerHTML = `
-          <span class="spell-cast-label">Cast</span>
-          <span class="spell-slot-name empty" onclick="pickSpellForSlot('known',${r},${i})">선택 안 됨</span>
-          <span class="spell-slot-dur"></span>
-          <span class="spell-slot-range"></span>
-          <span style="width:20px;"></span>`;
-      }
-      section.appendChild(row);
-    }
+        const row = document.createElement('div');
+        row.className = 'spell-slot-row';
+        if (isAuto) row.style.cssText = 'border-left:3px solid var(--accent);background:rgba(100,160,255,0.06);';
 
-    // _auto 주문 (클래스/뮤즈 부여) — 슬롯과 별도로 항상 표시
-    autoAtRank.forEach(spell => {
-      const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
-      const actions = getActionIcons(spellData?.actions);
-      const row = document.createElement('div');
-      row.className = 'spell-slot-row';
-      row.style.cssText = 'border-left:3px solid var(--accent);background:rgba(100,160,255,0.06);';
-      const srcName = spell._source ? spell._source.split(' (')[0].trim() : '';
-      row.innerHTML = `
-        <span class="spell-slot-name" onclick="showInfo('spell','${(spell.name||'').replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
-        <span style="font-size:9px;color:var(--accent);margin-left:auto;">${srcName || '클래스 부여'}</span>`;
-      section.appendChild(row);
-    });
+        let badges = '';
+        if (isSig) badges += '<span style="font-size:9px;color:var(--accent);margin-right:4px;">★ 시그니처</span>';
+        if (isAuto) {
+          const srcName = spell._source ? spell._source.split(' (')[0].trim() : '클래스 부여';
+          badges += `<span style="font-size:9px;color:var(--accent);margin-left:auto;">${srcName}</span>`;
+        }
+        const srcFeat = spell._sourceFeat ? `<span style="font-size:9px;color:var(--accent);margin-left:auto;">${spell._sourceFeat.split(' (')[0]}</span>` : '';
+
+        row.innerHTML = `
+          <span class="spell-slot-name" onclick="showInfo('spell','${(spell.name||'').replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+          ${badges}${srcFeat}`;
+        section.appendChild(row);
+      });
+    } else {
+      // ═══ PREPARED / FALLBACK: 기존 슬롯 방식 ═══
+      const spellsAtRank = allAtRank.filter(s => !s._auto);
+      const autoAtRank = allAtRank.filter(s => s._auto);
+
+      // Column headers
+      const colHeader = document.createElement('div');
+      colHeader.className = 'spell-slot-col-header';
+      colHeader.innerHTML = `
+        <span style="width:40px;text-align:center;">시전</span>
+        <span style="flex:1;">주문</span>
+        <span style="width:70px;text-align:center;">지속</span>
+        <span style="width:70px;text-align:center;">사거리</span>
+        <span style="width:20px;"></span>`;
+      section.appendChild(colHeader);
+
+      const totalSlots = Math.max(slotMax, spellsAtRank.length);
+      for (let i = 0; i < totalSlots; i++) {
+        const spell = spellsAtRank[i] || null;
+        const row = document.createElement('div');
+        const isCast = !!(state.spellSlotsUsed?.[r]?.[i]);
+        row.className = 'spell-slot-row' + (isCast ? ' slot-used' : '');
+        if (spell) {
+          const globalIdx = state.spells.known.indexOf(spell);
+          const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
+          const actions = getActionIcons(spellData?.actions);
+          row.innerHTML = `
+            <span class="spell-cast-label${isCast?' cast-used':''}" onclick="toggleSpellCast(${r},${i})">Cast</span>
+            <span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+            <span class="spell-slot-dur">\u2014</span>
+            <span class="spell-slot-range">\u2014</span>
+            <span class="spell-slot-del" onclick="removeSpell('known',${globalIdx})">✕</span>`;
+        } else {
+          row.innerHTML = `
+            <span class="spell-cast-label">Cast</span>
+            <span class="spell-slot-name empty" onclick="pickSpellForSlot('known',${r},${i})">선택 안 됨</span>
+            <span class="spell-slot-dur"></span>
+            <span class="spell-slot-range"></span>
+            <span style="width:20px;"></span>`;
+        }
+        section.appendChild(row);
+      }
+      // _auto 주문
+      autoAtRank.forEach(spell => {
+        const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
+        const actions = getActionIcons(spellData?.actions);
+        const row = document.createElement('div');
+        row.className = 'spell-slot-row';
+        row.style.cssText = 'border-left:3px solid var(--accent);background:rgba(100,160,255,0.06);';
+        const srcName = spell._source ? spell._source.split(' (')[0].trim() : '';
+        row.innerHTML = `
+          <span class="spell-slot-name" onclick="showInfo('spell','${(spell.name||'').replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+          <span style="font-size:9px;color:var(--accent);margin-left:auto;">${srcName || '클래스 부여'}</span>`;
+        section.appendChild(row);
+      });
+    }
 
     ranksContainer.appendChild(section);
   }
