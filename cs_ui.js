@@ -1142,9 +1142,6 @@ function pickSpellForSlot(type, rank, slotIndex) {
 }
 
 function renderSpells() {
-  try { _renderSpellsInner(); } catch(e) { console.error('renderSpells ERROR:', e); alert('renderSpells 에러: '+e.message); }
-}
-function _renderSpellsInner() {
   const lv = getLevel() || 1;
   const maxRank = Math.min(10, Math.ceil(lv / 2)) || 1;
   const heightenedLevel = Math.max(1, Math.ceil(lv / 2)) || 1;
@@ -1300,11 +1297,35 @@ function _renderSpellsInner() {
   if (!ranksContainer) return;
   ranksContainer.innerHTML = '';
 
+  // _auto(클래스/뮤즈) 주문을 먼저 모아서 별도 섹션으로 렌더링
+  const autoKnown = state.spells.known.filter(s => s._auto);
+  const manualKnown = state.spells.known.filter(s => !s._auto);
+
+  if (autoKnown.length > 0) {
+    const autoSection = document.createElement('div');
+    autoSection.className = 'spell-rank-section';
+    autoSection.style.cssText = 'border-left:3px solid var(--accent);background:rgba(100,160,255,0.04);';
+    const autoHeader = document.createElement('div');
+    autoHeader.className = 'spell-rank-header';
+    autoHeader.innerHTML = '클래스 부여 주문';
+    autoSection.appendChild(autoHeader);
+    autoKnown.forEach(spell => {
+      const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
+      const actions = getActionIcons(spellData?.actions);
+      const row = document.createElement('div');
+      row.className = 'spell-slot-row';
+      row.innerHTML = `
+        <span class="spell-slot-name" onclick="showInfo('spell','${(spell.name||'').replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+        <span style="font-size:10px;color:var(--accent);margin-left:4px;">[${spell.rank}랭크]</span>
+        <span style="font-size:10px;color:var(--text2);margin-left:auto;">뮤즈 부여</span>`;
+      autoSection.appendChild(row);
+    });
+    ranksContainer.appendChild(autoSection);
+  }
+
   for (let r = 1; r <= maxRank; r++) {
     const slotMax = parseInt(state.spellSlots?.[r] || 0);
-    const spellsAtRank = state.spells.known.filter(s => s.rank === r);
-    // _auto 주문이 있으면 슬롯에 최소 1 보장
-    const autoAtRank = spellsAtRank.filter(s => s._auto);
+    const spellsAtRank = manualKnown.filter(s => s.rank === r);
 
     const section = document.createElement('div');
     section.className = 'spell-rank-section';
@@ -1319,12 +1340,11 @@ function _renderSpellsInner() {
       </span>`;
     section.appendChild(header);
 
-    // Fire icons for slot tracking (star-rating: click Nth = fill 1..N, click filled = unfill from N)
+    // Fire icons for slot tracking
     if (slotMax > 0) {
       const firesDiv = document.createElement('div');
       firesDiv.className = 'spell-slots-used';
       firesDiv.innerHTML = '<span style="font-size:10px;color:var(--text2);margin-right:4px;">슬롯:</span>';
-      // Count how many are used (progressive from left)
       const usedCount = getSpellSlotUsedCount(r, slotMax);
       for (let c = 0; c < slotMax; c++) {
         const isUsed = c < usedCount;
@@ -1351,12 +1371,11 @@ function _renderSpellsInner() {
       <span style="width:20px;"></span>`;
     section.appendChild(colHeader);
 
-    // Render spell slots (max of slotMax or actual spells count)
+    // Render spell slots (manual spells only — _auto는 별도 섹션)
     const totalSlots = Math.max(slotMax, spellsAtRank.length);
     for (let i = 0; i < totalSlots; i++) {
       const spell = spellsAtRank[i] || null;
       const row = document.createElement('div');
-      // Cast label (clickable to toggle)
       const isCast = !!(state.spellSlotsUsed?.[r]?.[i]);
       row.className = 'spell-slot-row' + (isCast ? ' slot-used' : '');
 
@@ -1364,15 +1383,12 @@ function _renderSpellsInner() {
         const globalIdx = state.spells.known.indexOf(spell);
         const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
         const actions = getActionIcons(spellData?.actions);
-        const autoStyle = spell._auto ? 'background:#553;border-left:3px solid var(--accent);' : '';
-        const autoLabel = spell._auto ? ' <span style="font-size:9px;color:var(--accent);">[뮤즈]</span>' : '';
-        row.style.cssText = autoStyle;
         row.innerHTML = `
           <span class="spell-cast-label${isCast?' cast-used':''}" onclick="toggleSpellCast(${r},${i})">Cast</span>
-          <span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${autoLabel}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+          <span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
           <span class="spell-slot-dur">\u2014</span>
           <span class="spell-slot-range">\u2014</span>
-          ${spell._auto ? '<span style="width:20px;"></span>' : `<span class="spell-slot-del" onclick="removeSpell('known',${globalIdx})">✕</span>`}`;
+          <span class="spell-slot-del" onclick="removeSpell('known',${globalIdx})">✕</span>`;
       } else {
         row.innerHTML = `
           <span class="spell-cast-label">Cast</span>
@@ -1494,9 +1510,6 @@ function addFeat(type) {
 }
 
 function renderFeats() {
-  try { _renderFeatsInner(); } catch(e) { console.error('renderFeats ERROR:', e); alert('renderFeats 에러: '+e.message+'\n'+e.stack); }
-}
-function _renderFeatsInner() {
   // 유산 표시 — 아코디언
   const herDisplay = document.getElementById('heritage-display');
   if (herDisplay) {
