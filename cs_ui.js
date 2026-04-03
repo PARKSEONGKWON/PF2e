@@ -1202,8 +1202,12 @@ function renderSpells() {
   // Update breakdown
   updateSpellBreakdown();
 
-  // ── Cantrips ──
+  // ── "주문 기억" 버튼 표시/숨김 ──
   const isPrepared = state.selectedClass?.casting === 'prepared';
+  const memBtn = document.getElementById('btn-memorize-spells');
+  if (memBtn) memBtn.style.display = (isPrepared && state.familiarSpells) ? '' : 'none';
+
+  // ── Cantrips ──
   const cantripHeader = document.getElementById('cantrip-header');
   if (cantripHeader) cantripHeader.textContent = `캔트립 (강화 랭크 ${heightenedLevel})`;
 
@@ -1322,14 +1326,6 @@ function renderSpells() {
 
   const isSpontaneous = state.selectedClass?.casting === 'spontaneous';
   const isPreparedCaster = isPrepared && state.familiarSpells;
-
-  // ── Prepared caster: 휴식 버튼 ──
-  if (isPreparedCaster) {
-    const restDiv = document.createElement('div');
-    restDiv.style.cssText = 'text-align:center;padding:6px;border-bottom:1px solid var(--border);';
-    restDiv.innerHTML = `<button onclick="longRest()" style="background:var(--accent);color:#000;border:none;padding:4px 16px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">🌙 휴식 — 슬롯 복원</button>`;
-    ranksContainer.appendChild(restDiv);
-  }
 
   for (let r = 1; r <= maxRank; r++) {
     const slotMax = parseInt(state.spellSlots?.[r] || 0);

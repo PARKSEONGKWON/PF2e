@@ -2111,6 +2111,89 @@ function syncFamiliarSpellsToState() {
 //  PREPARED SPELL SLOT MANAGEMENT
 // ═══════════════════════════════════════════════
 
+function openMemorizeModal() {
+  if (!state.familiarSpells || !state.selectedClass) return;
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  modalType = 'memorize';
+  document.getElementById('modal-title').textContent = '📖 주문 기억 — 일일 준비';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) searchEl.style.display = 'none';
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) fbar.innerHTML = '';
+  const confirmBtn = document.querySelector('.btn-confirm');
+  if (confirmBtn) { confirmBtn.style.display = ''; confirmBtn.textContent = '준비 완료'; }
+
+  const container = document.getElementById('modal-options');
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.innerHTML = '';
+  container.innerHTML = '';
+
+  if (!state.preparedSpells) state.preparedSpells = {cantrip: []};
+
+  const lv = getLevel();
+  const maxRank = Math.min(10, Math.ceil(lv / 2)) || 1;
+  const cantripSlots = state.cantripSlots || 5;
+  const fs = state.familiarSpells;
+
+  let html = '';
+
+  // ── 캔트립 섹션 ──
+  const knownCantrips = fs.cantrip || [];
+  html += `<div style="padding:8px 12px;border-bottom:1px solid var(--border);">`;
+  html += `<div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:6px;">캔트립 (${cantripSlots}개 준비)</div>`;
+  for (let i = 0; i < cantripSlots; i++) {
+    const cur = (state.preparedSpells.cantrip || [])[i] || '';
+    html += `<div style="display:flex;align-items:center;gap:6px;margin:3px 0;">
+      <span style="min-width:24px;font-size:10px;color:var(--text2);">${i+1}.</span>
+      <select onchange="memorizeSlotChanged(0,${i},this.value)" style="flex:1;font-size:12px;background:var(--bg2);color:var(--text1);border:1px solid var(--border);border-radius:4px;padding:3px 4px;">
+        <option value="">— 선택 —</option>
+        ${knownCantrips.map(n => `<option value="${n.replace(/"/g,'&quot;')}"${cur===n?' selected':''}>${n}</option>`).join('')}
+      </select>
+    </div>`;
+  }
+  html += `</div>`;
+
+  // ── 랭크별 섹션 ──
+  for (let r = 1; r <= maxRank; r++) {
+    const slotMax = parseInt(state.spellSlots?.[r] || 0);
+    if (slotMax === 0) continue;
+    // 사역마가 아는 주문: 해당 랭크 + 낮은 랭크 (고양 가능)
+    const available = [];
+    for (let sr = 1; sr <= r; sr++) {
+      (fs[sr] || []).forEach(name => {
+        const suffix = sr < r ? ` (${sr}랭크 고양)` : '';
+        available.push({name, display: name + suffix, originalRank: sr});
+      });
+    }
+
+    html += `<div style="padding:8px 12px;border-bottom:1px solid var(--border);">`;
+    html += `<div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:6px;">${r}랭크 주문 (슬롯 ${slotMax}개)</div>`;
+    for (let i = 0; i < slotMax; i++) {
+      const cur = (state.preparedSpells[r] || [])[i] || '';
+      html += `<div style="display:flex;align-items:center;gap:6px;margin:3px 0;">
+        <span style="min-width:24px;font-size:10px;color:var(--text2);">${i+1}.</span>
+        <select onchange="memorizeSlotChanged(${r},${i},this.value)" style="flex:1;font-size:12px;background:var(--bg2);color:var(--text1);border:1px solid var(--border);border-radius:4px;padding:3px 4px;">
+          <option value="">— 선택 —</option>
+          ${available.map(a => `<option value="${a.name.replace(/"/g,'&quot;')}"${cur===a.name?' selected':''}>${a.display}</option>`).join('')}
+        </select>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+  const listEl = document.querySelector('.modal-list');
+  if (listEl) listEl.style.display = '';
+}
+
+function memorizeSlotChanged(rank, slotIdx, value) {
+  if (!state.preparedSpells) state.preparedSpells = {cantrip: []};
+  const key = rank === 0 ? 'cantrip' : rank;
+  if (!state.preparedSpells[key]) state.preparedSpells[key] = [];
+  state.preparedSpells[key][slotIdx] = value || null;
+}
+
 function openPrepareSpellForSlot(rank, slotIdx) {
   // 사역마가 아는 주문 목록에서 선택 → 슬롯에 준비
   if (!state.familiarSpells) return;
@@ -3186,7 +3269,15 @@ function clearCoreSelection(type) {
 }
 
 function confirmModal() {
-  if (modalType === 'skill-multi') { closeModal(); return; } // multi-select handled inline
+  if (modalType === 'skill-multi') { closeModal(); return; }
+  if (modalType === 'memorize') {
+    // 주문 기억 완료 — 슬롯도 복원
+    state.spellSlotsUsed = {};
+    renderSpells();
+    save();
+    closeModal();
+    return;
+  }
   if (!modalSelected) { closeModal(); return; }
   if (modalType==='class') {
     // Cascade reset if changing class
