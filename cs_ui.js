@@ -1300,12 +1300,11 @@ function _renderSpellsInner() {
   if (!ranksContainer) return;
   ranksContainer.innerHTML = '';
 
-  if (state.spells.known.length > 0) {
-    alert(`[renderSpells] known 배열: ${JSON.stringify(state.spells.known)}\nmaxRank: ${maxRank}`);
-  }
   for (let r = 1; r <= maxRank; r++) {
     const slotMax = parseInt(state.spellSlots?.[r] || 0);
     const spellsAtRank = state.spells.known.filter(s => s.rank === r);
+    // _auto 주문이 있으면 슬롯에 최소 1 보장
+    const autoAtRank = spellsAtRank.filter(s => s._auto);
 
     const section = document.createElement('div');
     section.className = 'spell-rank-section';
@@ -1365,12 +1364,15 @@ function _renderSpellsInner() {
         const globalIdx = state.spells.known.indexOf(spell);
         const spellData = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(sp => sp.name_ko === spell.name) : null;
         const actions = getActionIcons(spellData?.actions);
+        const autoStyle = spell._auto ? 'background:#553;border-left:3px solid var(--accent);' : '';
+        const autoLabel = spell._auto ? ' <span style="font-size:9px;color:var(--accent);">[뮤즈]</span>' : '';
+        row.style.cssText = autoStyle;
         row.innerHTML = `
           <span class="spell-cast-label${isCast?' cast-used':''}" onclick="toggleSpellCast(${r},${i})">Cast</span>
-          <span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
+          <span class="spell-slot-name" onclick="showInfo('spell','${spell.name.replace(/'/g,"\\'")}')">${spell.name}${autoLabel}${actions ? ' <span class="spell-actions-inline">'+actions+'</span>' : ''}</span>
           <span class="spell-slot-dur">\u2014</span>
           <span class="spell-slot-range">\u2014</span>
-          <span class="spell-slot-del" onclick="removeSpell('known',${globalIdx})">✕</span>`;
+          ${spell._auto ? '<span style="width:20px;"></span>' : `<span class="spell-slot-del" onclick="removeSpell('known',${globalIdx})">✕</span>`}`;
       } else {
         row.innerHTML = `
           <span class="spell-cast-label">Cast</span>
