@@ -132,7 +132,7 @@ var SUBCLASS_PROF_TABLE = {
 
 var CLASS_FEATURE_NAMES = {
   bard: [
-    {lv:1, name_ko:'비학 주문시전', name_en:'Occult Spellcasting'},
+    {lv:1, name_ko:'오컬트 주문시전', name_en:'Occult Spellcasting'},
     {lv:1, name_ko:'합주 주문', name_en:'Composition Spells'},
     {lv:3, name_ko:'번개 반사', name_en:'Lightning Reflexes'},
     {lv:3, name_ko:'시그니처 주문', name_en:'Signature Spells'},

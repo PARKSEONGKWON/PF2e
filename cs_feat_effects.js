@@ -789,13 +789,13 @@ const FEAT_EFFECTS = {
       {id:'sun',name:'타오르는 태양 (외교, 비전)'},
       {id:'skull',name:'죽음의 머리 (생존, 원시)'},
       {id:'corpse',name:'더럽혀진 시체 (종교학, 신성)'},
-      {id:'hand',name:'빈 손 (위협, 비학)'}
+      {id:'hand',name:'빈 손 (위협, 오컬트)'}
     ]},
     choiceEffects: {
       sun: [{type:'skill_trained', skill:'diplomacy'},{type:'save_bonus', save:'all', value:1, bonus_type:'status', condition:'비전 주문'}],
       skull: [{type:'skill_trained', skill:'survival'},{type:'save_bonus', save:'all', value:1, bonus_type:'status', condition:'원시 주문'}],
       corpse: [{type:'skill_trained', skill:'religion'},{type:'save_bonus', save:'all', value:1, bonus_type:'status', condition:'신성 주문'}],
-      hand: [{type:'skill_trained', skill:'intimidation'},{type:'save_bonus', save:'all', value:1, bonus_type:'status', condition:'비학 주문'}]
+      hand: [{type:'skill_trained', skill:'intimidation'},{type:'save_bonus', save:'all', value:1, bonus_type:'status', condition:'오컬트 주문'}]
     }
   },
   'Orc Ferocity': {
@@ -922,7 +922,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[반응] 적이 감정 주문 내성 실패 시, 대상이 다음 공격에 무방비(off-guard)'}]
   },
   'Esoteric Polymath': {
-    effects: [{type:'display_note', text:'비학 주문서 획득. 일일 준비 시 주문서에서 주문 1개를 레퍼토리에 추가'}]
+    effects: [{type:'display_note', text:'오컬트 주문서 획득. 일일 준비 시 주문서에서 주문 1개를 레퍼토리에 추가'}]
   },
   "Loremaster's Etude": {
     effects: [{type:'grant_focus_spell', spell:'대가의 에튀드'}, {type:'display_note', text:'지식 회상 보조. 집중 포인트 풀 +1 (최대 3)'}]
@@ -942,7 +942,7 @@ const FEAT_EFFECTS = {
 
   // ── 4레벨 ──
   'Combat Reading': {
-    effects: [{type:'display_note', text:'[1행동] 비학 판정으로 적의 약점/내성/면역/저항 파악'}]
+    effects: [{type:'display_note', text:'[1행동] 오컬티즘 판정으로 적의 약점/내성/면역/저항 파악'}]
   },
   'Courageous Advance': {
     effects: [{type:'display_note', text:'[주문변형] 용감한 찬가 시전 시 아군 1명이 반응으로 보폭'}]
@@ -957,7 +957,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'합주 캔트립: 결집의 찬가 습득. 아군 의지 내성 강화 및 정신 피해 저항'}]
   },
   'Ritual Researcher': {
-    effects: [{type:'display_note', text:'비학으로 의식 학습 가능. 보조 판정 성공도 한 단계 향상'}]
+    effects: [{type:'display_note', text:'오컬티즘으로 의식 학습 가능. 보조 판정 성공도 한 단계 향상'}]
   },
   'Triple Time': {
     effects: [{type:'display_note', text:'합주 캔트립: 세 박자 습득. 아군 이동 속도 증가'}]
@@ -1469,7 +1469,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'동물 동료 성장: 민첩(민첩+2, 피해+2) 또는 야만(힘+2, 피해+3). 마법 공격'}]
   },
   'Raise Menhir': {
-    effects: [{type:'display_note', text:'시간당 1회. 30피트 내 선돌/수호수 세움. 15피트 내 비전/신성/비학 내성 +2 상태 보너스'}]
+    effects: [{type:'display_note', text:'시간당 1회. 30피트 내 선돌/수호수 세움. 15피트 내 비전/신성/오컬트 내성 +2 상태 보너스'}]
   },
   'Soaring Shape': {
     effects: [{type:'display_note', text:'공중 형태(박쥐/새)를 야생 형태 목록에 추가. 곡예 부여 형태 시 +1 상태 보너스'}]
