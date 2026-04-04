@@ -119,18 +119,26 @@ function extractBody(startIdx) {
   const reqMatch = block.match(/<strong>요구사항[^<]*<\/strong>\s*(.*?)(?:<\/p>|<br)/);
   const requirements = reqMatch ? reqMatch[1].replace(/<[^>]*>/g, '').trim() : '';
 
-  // 전체 desc: 모든 <p> 내용 합침 (em 특성줄 제외)
+  // 전체 desc: 모든 <p> 내용 합침 (첫 번째 p의 em 특성줄만 제외)
   const pTags = [...block.matchAll(/<p>([\s\S]*?)<\/p>/g)];
   let descParts = [];
+  let isFirstP = true;
   for (const m of pTags) {
     let content = m[1].trim();
-    // 첫 번째 p가 특성만 있는 경우 스킵
-    if (content.match(/^<em>[^<]*<\/em>$/)) continue;
-    // 특성+전제조건 합쳐진 경우: em 줄 제거하고 나머지 유지
-    content = content.replace(/^<em>[^<]*<\/em>\s*(?:<br\s*\/?>)?/i, '').trim();
+    if (isFirstP) {
+      isFirstP = false;
+      // 첫 번째 p가 특성만 있는 경우 스킵
+      if (content.match(/^<em>[^<]*<\/em>$/)) continue;
+      // 첫 번째 p에서 특성+전제조건 합쳐진 경우: em 줄 제거하고 나머지 유지
+      if (traitsLine) {
+        content = content.replace(/^<em>[^<]*<\/em>\s*(?:<br\s*\/?>)?/i, '').trim();
+      }
+    }
     if (content) descParts.push(content);
   }
-  const desc = descParts.join('<br>');
+  let desc = descParts.join('<br>');
+  // desc에서 전제조건/빈도/유발조건/요구사항 메타데이터 제거 (별도 필드에 있으므로)
+  desc = desc.replace(/<strong>전제조건[^<]*<\/strong>\s*[^<]*(?:<br\s*\/?>)?/i, '').trim();
 
   // summary: desc에서 HTML 태그 제거
   let summary = desc.replace(/<br\s*\/?>/g, ' ').replace(/<[^>]*>/g, '').trim();
