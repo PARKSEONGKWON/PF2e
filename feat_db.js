@@ -617,7 +617,7 @@ const FEAT_DB = [
 ,
   {name_ko:"무한 반격", name_en:"Boundless Reprisals", feat_level:20, prerequisites:"", traits:["파이터"], category:"fighter", summary:"전투의 흐름에 대한 육감으로 어떤 상황에도 반응합니다. 각 적의 턴 시작에 추가 반응 1회(해당 턴 동안만, 파이터 재주나 클래스 요소의 반응에만 사용).", desc:'전투의 흐름에 대한 육감으로 어떤 상황에도 반응합니다. 각 <strong>적의 턴 시작에 추가 반응 1회</strong>(해당 턴 동안만, 파이터 재주나 클래스 특성의 반응에만 사용).' }
 ,
-  {name_ko:"궁극의 유연성", name_en:"Ultimate Flexibility", feat_level:20, prerequisites:"향상된 유연성. 전투 유연성으로 3개 재주를 얻습니다(8레벨 이하 1개, 14레벨 이하 1개, 18레벨 이하 1개). 서로의 전제조건 충족 가능. 1시간 훈련으로 전투 유연성 재주를 재선택할 수 있습니다.", traits:["파이터"], category:"fighter", summary:"전투 유연성으로 3개 특기를 얻습니다(8레벨 이하 1개, 14레벨 이하 1개, 18레벨 이하 1개).", desc:'<strong>전제조건:</strong> 향상된 유연성. 전투 유연성으로 <strong>3개 재주</strong>를 얻습니다(8레벨 이하 1개, 14레벨 이하 1개, 18레벨 이하 1개). 서로의 전제조건 충족 가능. 1시간 훈련으로 전투 유연성 재주를 재선택할 수 있습니다.' }
+  {name_ko:"궁극의 유연성", name_en:"Ultimate Flexibility", feat_level:20, prerequisites:"향상된 유연성. 전투 유연성으로 3개 재주를 얻습니다(8레벨 이하 1개, 14레벨 이하 1개, 18레벨 이하 1개). 서로의 전제조건 충족 가능. 1시간 훈련으로 전투 유연성 재주를 재선택할 수 있습니다.", traits:["파이터"], category:"fighter", summary:"전투 유연성으로 3개 재주를 얻습니다(8레벨 이하 1개, 14레벨 이하 1개, 18레벨 이하 1개).", desc:'<strong>전제조건:</strong> 향상된 유연성. 전투 유연성으로 <strong>3개 재주</strong>를 얻습니다(8레벨 이하 1개, 14레벨 이하 1개, 18레벨 이하 1개). 서로의 전제조건 충족 가능. 1시간 훈련으로 전투 유연성 재주를 재선택할 수 있습니다.' }
 ,
   {name_ko:"무기 지배", name_en:"Weapon Supremacy", feat_level:20, prerequisites:"", traits:["파이터"], category:"fighter", summary:"무기 기술이 현실 법칙을 구부립니다. 영구적으로 빠른(quickened) 상태. 추가 행동은 타격에만 사용 가능.", desc:'무기 기술이 현실 법칙을 구부립니다. <strong>영구적으로 빠른(quickened)</strong> 상태. 추가 행동은 <strong>타격에만</strong> 사용 가능.' }
 ,
@@ -1368,17 +1368,17 @@ const FEAT_DB = [
 ,
   {name_ko:"원시 주문시전", name_en:"Primal Spellcasting", cat:"feature", class_id:"druid", feat_level:1, summary:"야생 세계의 힘이 당신을 통해 흐릅니다. 원시(primal) 전통의 주문시전자입니다. 매일 아침 원시 주문 목록에서 주문을 준비합니다."}
 ,
-  {name_ko:"드루이드 결사", name_en:"Druidic Order", cat:"feature", class_id:"druid", feat_level:1, summary:"드루이드가 되면 결사와 자신을 맞추며, 클래스 특기, 결사 주문, 추가 숙련 기술을 얻습니다."}
+  {name_ko:"드루이드 결사", name_en:"Druidic Order", cat:"feature", class_id:"druid", feat_level:1, summary:"드루이드가 되면 결사와 자신을 맞추며, 클래스 재주, 결사 주문, 추가 숙련 기술을 얻습니다."}
 ,
-  {name_ko:"방패 막기", name_en:"Shield Block", cat:"feature", class_id:"druid", feat_level:1, summary:"방패 막기(Shield Block) 일반 특기를 얻습니다. [반응] 방패를 들고 물리 공격 피해를 받으면, 방패의 경도만큼 피해를 감소시키고 나머지 피해는 방패가 받습니다."}
+  {name_ko:"방패 막기", name_en:"Shield Block", cat:"feature", class_id:"druid", feat_level:1, summary:"방패 막기(Shield Block) 일반 재주를 얻습니다. [반응] 방패를 들고 물리 공격 피해를 받으면, 방패의 경도만큼 피해를 감소시키고 나머지 피해는 방패가 받습니다."}
 ,
-  {name_ko:"자연의 목소리", name_en:"Voice of Nature", cat:"feature", class_id:"druid", feat_level:1, summary:"동물 공감(Animal Empathy) 또는 식물 공감(Plant Empathy) 드루이드 특기 중 하나를 선택하여 얻습니다."}
+  {name_ko:"자연의 목소리", name_en:"Voice of Nature", cat:"feature", class_id:"druid", feat_level:1, summary:"동물 공감(Animal Empathy) 또는 식물 공감(Plant Empathy) 드루이드 재주 중 하나를 선택하여 얻습니다."}
 ,
   {name_ko:"야생노래", name_en:"Wildsong", cat:"feature", class_id:"druid", feat_level:1, summary:"드루이드 결사 내에서만 알려진 비밀 언어인 야생노래를 알고 있습니다. 이것은 동물 울음소리에 가까운 선율적이고 음조적인 언어이며, 그 알파벳은 조개껍데기의 방, 눈송이의 결정, 고사리의 잎처럼 프랙탈과 나선으로 이루어져 있습니다. 비드루이드에게 야생노래를 가르치는 것은 금기입니다."}
 ,
   {name_ko:"반격 타격", name_en:"Reactive Strike", cat:"feature", class_id:"fighter", feat_level:1, summary:"유발 조건: 도달 범위 내 생물이 조작 행동이나 이동 행동을 사용하거나, 원거리 공격을 하거나, 이동 중 칸을 떠납니다. 빈틈을 보이는 적을 신속히 공격합니다. 유발 생물에 근접 타격을 합니다. 치명타이고 유발이 조작 행동이면 행동을 방해합니다. 이 타격은 다중 공격 페널티에 포함되지 않으며, 다중 공격 페널티가 이 타격에 적용되지 않습니다."}
 ,
-  {name_ko:"방패 막기", name_en:"Shield Block", cat:"feature", class_id:"fighter", feat_level:1, summary:"방패 막기(Shield Block) 일반 특기를 얻습니다. [반응] 방패를 들고 물리 공격 피해를 받으면, 방패의 경도만큼 피해를 감소시키고 나머지 피해는 방패가 받습니다."}
+  {name_ko:"방패 막기", name_en:"Shield Block", cat:"feature", class_id:"fighter", feat_level:1, summary:"방패 막기(Shield Block) 일반 재주를 얻습니다. [반응] 방패를 들고 물리 공격 피해를 받으면, 방패의 경도만큼 피해를 감소시키고 나머지 피해는 방패가 받습니다."}
 ,
   {name_ko:"사냥감 추적", name_en:"Hunt Prey", cat:"feature", class_id:"ranger", feat_level:1, summary:"볼 수 있거나 추적 중인 생물 1명을 사냥감으로 지정합니다. 사냥감을 탐색(Seek)하기 위한 지각 판정에 +2 상황 보너스, 추적(Track)을 위한 생존 판정에 +2 상황 보너스. 사냥감에 대한 두 번째 사거리 증분 내 원거리 공격 페널티도 무시합니다. 한 번에 사냥감 1명만 가능. 다음 일일 준비까지 지속."}
 ,
@@ -1400,7 +1400,7 @@ const FEAT_DB = [
 ,
   {name_ko:"비전 유대", name_en:"Arcane Bond", cat:"feature", class_id:"wizard", feat_level:1, summary:"마법적 힘의 일부를 결합 아이템에 저장합니다. 매일 준비 시 소유한 아이템 1개를 지정. 결합 아이템 소진(Drain Bonded Item) [자유 행동]을 얻어, 이미 시전한 준비 주문 1개를 슬롯 소비 없이 하루 1회 추가 시전 가능."}
 ,
-  {name_ko:"비전 논제", name_en:"Arcane Thesis", cat:"feature", class_id:"wizard", feat_level:1, summary:"정식 위저드가 되는 과정에서 독자적 마법 연구의 논문을 작성했습니다. 논제에 따라 특별한 혜택을 얻습니다. 실험적 주문변형 Experimental Spellshaping — 주문변형의 마법 관행을 변수와 매개변수를 변경하여 더 효율적으로 실현할 수 있다는 논제입니다. 선택한 1레벨 주문변형 위저드 특기 1개를 얻습니다. 4레벨부터 일일 준비 시 레벨 절반 이하의 주문변형 위저드 특기를 추가로 얻을 수 있습니다. 향상된 사역마 동조 Improved Familiar Attunement — 위저드와 사역마의 마법적 유대를 미세 조정하면 더 큰 결과를 얻을 수 있다는 논제. 사역마(Familiar) 특기를 얻고, 사역마가 추가 능력 1개를 더 얻습니다(6, 12, 18레벨에 추가 1개씩). 비전 유대가 아이템 대신 사역마에 저장되어, 결합 아이템 소진(Drain Bonded Item) 대신 사역마 소진(Drain Familiar)을 얻습니다. 주문 혼합 Spell Blending — 주문 슬롯이 모든 주문시전에 힘을 공급하는 근본적 에너지의 약칭이라는 논제. 일일 준비 시, 같은 랭크의 주문 슬롯 2개를 최대 2랭크 높은 보너스 슬롯 1개로 교환할 수 있습니다. 주문 슬롯 1개를 캔트립 2개로 교환도 가능. 주문 대체 Spell Substitution — 준비된 주문은 다음 준비까지 변경할 수 없다는 사실을 거부합니다. 10분간 준비된 주문 슬롯 1개를 비우고 주문서에서 다른 주문을 준비할 수 있습니다. 지팡이 연결 Staff Nexus — 학습 초기부터 지팡이를 집중적으로 채택하면 주문시전자와 지팡이 사이에 공생적 유대를 만들 수 있다는 논제. 자작 지팡이로 시작(캔트립 1개 + 1랭크 주문 1개 포함). 일일 준비 시 주문 1개를 소비하여 해당 랭크만큼 지팡이에 충전. 8레벨에 주문 2개, 16레벨에 3개까지 소비 가능."}
+  {name_ko:"비전 논제", name_en:"Arcane Thesis", cat:"feature", class_id:"wizard", feat_level:1, summary:"정식 위저드가 되는 과정에서 독자적 마법 연구의 논문을 작성했습니다. 논제에 따라 특별한 혜택을 얻습니다. 실험적 주문변형 Experimental Spellshaping — 주문변형의 마법 관행을 변수와 매개변수를 변경하여 더 효율적으로 실현할 수 있다는 논제입니다. 선택한 1레벨 주문변형 위저드 재주 1개를 얻습니다. 4레벨부터 일일 준비 시 레벨 절반 이하의 주문변형 위저드 재주를 추가로 얻을 수 있습니다. 향상된 사역마 동조 Improved Familiar Attunement — 위저드와 사역마의 마법적 유대를 미세 조정하면 더 큰 결과를 얻을 수 있다는 논제. 사역마(Familiar) 재주를 얻고, 사역마가 추가 능력 1개를 더 얻습니다(6, 12, 18레벨에 추가 1개씩). 비전 유대가 아이템 대신 사역마에 저장되어, 결합 아이템 소진(Drain Bonded Item) 대신 사역마 소진(Drain Familiar)을 얻습니다. 주문 혼합 Spell Blending — 주문 슬롯이 모든 주문시전에 힘을 공급하는 근본적 에너지의 약칭이라는 논제. 일일 준비 시, 같은 랭크의 주문 슬롯 2개를 최대 2랭크 높은 보너스 슬롯 1개로 교환할 수 있습니다. 주문 슬롯 1개를 캔트립 2개로 교환도 가능. 주문 대체 Spell Substitution — 준비된 주문은 다음 준비까지 변경할 수 없다는 사실을 거부합니다. 10분간 준비된 주문 슬롯 1개를 비우고 주문서에서 다른 주문을 준비할 수 있습니다. 지팡이 연결 Staff Nexus — 학습 초기부터 지팡이를 집중적으로 채택하면 주문시전자와 지팡이 사이에 공생적 유대를 만들 수 있다는 논제. 자작 지팡이로 시작(캔트립 1개 + 1랭크 주문 1개 포함). 일일 준비 시 주문 1개를 소비하여 해당 랭크만큼 지팡이에 충전. 8레벨에 주문 2개, 16레벨에 3개까지 소비 가능."}
 ,
   {name_ko:"비전 학파", name_en:"Arcane School", cat:"feature", class_id:"wizard", feat_level:1, summary:"1레벨에 비전 학파를 선택하며, 교과과정 주문과 학파 주문(집중 주문)을 얻습니다. 시전 가능한 각 주문 랭크에 학파 교과에서 추가 슬롯 1개씩을 얻고, 그 슬롯에는 교과 주문만 준비 가능합니다. 학파에는 소환(Ars Grammatica), 창조(Civic Wizardry), 변환(School of Mentalism), 점술(School of Protean Form), 환영(School of the Boundary) 등 8개 학파가 있으며, 통합 마법 이론(School of Unified Magical Theory)은 특정 학파에 속하지 않는 유연한 접근입니다."}
 ,
@@ -1470,7 +1470,7 @@ const FEAT_DB = [
 ,
   {name_ko:"확고한 신앙", name_en:"Steadfast Faith", cat:"feature", class_id:"cleric", feat_level:9, summary:"의지 내성에서 대실패 시 실패가 됩니다."}
 ,
-  {name_ko:"전투 유연성", name_en:"Combat Flexibility", cat:"feature", class_id:"fighter", feat_level:9, summary:"일일 준비 시, 전제조건을 충족하는 8레벨 이하 파이터 특기 1개를 얻습니다. 다음 준비 시 다른 특기로 교체 가능."}
+  {name_ko:"전투 유연성", name_en:"Combat Flexibility", cat:"feature", class_id:"fighter", feat_level:9, summary:"일일 준비 시, 전제조건을 충족하는 8레벨 이하 파이터 재주 1개를 얻습니다. 다음 준비 시 다른 재주로 교체 가능."}
 ,
   {name_ko:"전투 단련", name_en:"Juggernaut", cat:"feature", class_id:"fighter", feat_level:9, summary:"의지 내성 숙련도가 전문가로 증가."}
 ,
@@ -1558,7 +1558,7 @@ const FEAT_DB = [
 ,
   {name_ko:"상위 무기 전문화", name_en:"Greater Weapon Specialization", cat:"feature", class_id:"fighter", feat_level:15, summary:"무기 전문화의 추가 피해가 증가합니다. 전문가 4, 대가 6, 전설 8."}
 ,
-  {name_ko:"향상된 유연성", name_en:"Improved Flexibility", cat:"feature", class_id:"fighter", feat_level:15, summary:"전투 유연성이 향상됩니다. 14레벨 이하 파이터 특기를 선택 가능. 2개의 특기를 선택하는 것으로도 변경 — 하나는 8레벨 이하, 다른 하나는 14레벨 이하."}
+  {name_ko:"향상된 유연성", name_en:"Improved Flexibility", cat:"feature", class_id:"fighter", feat_level:15, summary:"전투 유연성이 향상됩니다. 14레벨 이하 파이터 재주를 선택 가능. 2개의 재주를 선택하는 것으로도 변경 — 하나는 8레벨 이하, 다른 하나는 14레벨 이하."}
 ,
   {name_ko:"상위 자연 반사", name_en:"Greater Evasion", cat:"feature", class_id:"ranger", feat_level:15, summary:"반사 내성 숙련도가 대가로 증가. 반사 내성에서 대실패 시 실패. 피해를 주는 효과에 대한 반사 내성 실패 시 절반 피해."}
 ,
