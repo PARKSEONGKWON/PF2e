@@ -357,7 +357,7 @@ var SUBCLASS_AUTO_SPELLS = {
 var SUBCLASS_FEATURE_NAMES = {
   // ── 바드 뮤즈 ──
   'muse-enigma':  [{lv:1, name_ko:'바드 지식 (자유 지식 기술)', name_en:'Bardic Lore'}],
-  'muse-maestro': [{lv:1, name_ko:'여운 주문 재주', name_en:'Lingering Composition'}],
+  'muse-maestro': [{lv:1, name_ko:'잔향 합주', name_en:'Lingering Composition'}],
   'muse-warrior': [{lv:1, name_ko:'군용 무기 훈련', name_en:'Martial Weapon Training'}],
   'muse-polymath': [{lv:1, name_ko:'다재다능한 공연', name_en:'Versatile Performance'}],
   // ── 클레릭 교리 ──

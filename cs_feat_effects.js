@@ -898,7 +898,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'grant_focus_spell', spell:'치유의 찬송'}, {type:'grant_action'}]
   },
   'Lingering Composition': {
-    effects: [{type:'grant_focus_spell', spell:'작곡 연장'}, {type:'display_note', text:'합주 지속 시간 연장. 집중 포인트 풀 +1 (최대 3)'}]
+    effects: [{type:'grant_focus_spell', spell:'잔향 합주'}, {type:'display_note', text:'합주 지속 시간 연장. 집중 포인트 풀 +1 (최대 3)'}]
   },
   'Martial Performance': {
     effects: [{type:'display_note', text:'용감한 찬가 활성 중 타격 명중 시 합주 지속 1라운드 연장 (시전당 1회)'}]
