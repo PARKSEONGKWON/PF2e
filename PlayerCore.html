@@ -11918,6 +11918,59 @@ function goToResult(chId, idx) {
 document.addEventListener('DOMContentLoaded', function() {
   const inp = document.getElementById('searchInput');
   if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+  // ── EN original toggle system ──
+  // Add toggle button to each h2 section header
+  document.querySelectorAll('h2.sec').forEach(h2 => {
+    const btn = document.createElement('span');
+    btn.className = 'en-toggle';
+    btn.textContent = 'EN';
+    btn.title = '이 섹션의 영문 원문 표시/숨기기';
+    btn.onclick = function(e) {
+      e.stopPropagation();
+      const panel = h2.closest('.ch-panel') || h2.parentElement;
+      // Find all en-orig between this h2 and the next h2
+      let el = h2.nextElementSibling;
+      const nextH2 = h2.parentElement.querySelector('h2.sec:nth-of-type(' + (Array.from(h2.parentElement.querySelectorAll('h2.sec')).indexOf(h2) + 2) + ')');
+      let showing = false;
+      while (el && el !== nextH2) {
+        if (el.classList && el.classList.contains('en-orig')) {
+          el.classList.toggle('show');
+          showing = el.classList.contains('show');
+        }
+        // Also check inside note blocks
+        el.querySelectorAll && el.querySelectorAll('.en-orig').forEach(eo => {
+          eo.classList.toggle('show');
+          showing = eo.classList.contains('show');
+        });
+        el = el.nextElementSibling;
+      }
+      btn.style.color = showing ? 'var(--accent)' : '';
+      btn.style.borderColor = showing ? 'var(--accent)' : '';
+    };
+    h2.appendChild(btn);
+  });
+
+  // Global toggle in top nav
+  const globalBtn = document.createElement('button');
+  globalBtn.className = 'tab-btn';
+  globalBtn.textContent = 'EN 원문';
+  globalBtn.title = '전체 영문 원문 표시/숨기기';
+  globalBtn.style.cssText = 'color:#666;font-size:0.78em;';
+  let globalShow = false;
+  globalBtn.onclick = function() {
+    globalShow = !globalShow;
+    document.querySelectorAll('.en-orig').forEach(eo => {
+      eo.classList.toggle('show', globalShow);
+    });
+    globalBtn.style.color = globalShow ? 'var(--accent)' : '#666';
+    document.querySelectorAll('.en-toggle').forEach(t => {
+      t.style.color = globalShow ? 'var(--accent)' : '';
+      t.style.borderColor = globalShow ? 'var(--accent)' : '';
+    });
+  };
+  const topNav = document.querySelector('.top-nav');
+  if (topNav) topNav.appendChild(globalBtn);
 });
 </script>
 </body>
