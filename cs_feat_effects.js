@@ -898,7 +898,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'바드 지식(Bardic Lore) 숙련. 어떤 주제든 지식 회상 가능. 비학 전설 시 전문가'}]
   },
   'Hymn of Healing': {
-    effects: [{type:'grant_focus_spell', spell:'치유의 찬송'}]
+    effects: [{type:'grant_focus_spell', spell:'치유의 찬송'}, {type:'grant_action'}]
   },
   'Lingering Composition': {
     effects: [{type:'grant_focus_spell', spell:'작곡 연장'}, {type:'display_note', text:'합주 지속 시간 연장. 집중 포인트 풀 +1 (최대 3)'}]
