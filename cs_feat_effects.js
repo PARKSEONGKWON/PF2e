@@ -2939,14 +2939,18 @@ function applyFeatEffects() {
     state.spells.innate = state.spells.innate.filter(s => !s._sourceFeat);
   }
 
-  // grant_weapon: _fromFeat 있는 무기 제거
-  state.weapons = (state.weapons || []).filter(w => !w._fromFeat);
+  // grant_weapon: 부모 재주 생존 확인 — 부모 없으면 제거 (사용자 룬 설정 보존)
+  const allFeatNames = Object.values(state.feats).flat().filter(f => f).map(f => _extractEnName(f.name));
+  state.weapons = (state.weapons || []).filter(w => !w._fromFeat || allFeatNames.includes(w._fromFeat));
 
-  // grant_feat: _grantedBy 있는 재주 제거
+  // grant_feat: 부모 재주 생존 확인 — 부모 없으면 제거 (사용자 choice 보존)
+  const allFeatFullNames = Object.values(state.feats).flat().filter(f => f).map(f => f.name);
   Object.values(state.feats).forEach(arr => {
     if (!arr) return;
     for (let i = arr.length - 1; i >= 0; i--) {
-      if (arr[i]?._grantedBy) arr.splice(i, 1);
+      if (arr[i]?._grantedBy && !allFeatFullNames.includes(arr[i]._grantedBy)) {
+        arr.splice(i, 1);
+      }
     }
   });
 
