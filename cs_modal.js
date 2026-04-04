@@ -667,7 +667,7 @@ function applyClassFeatures() {
   const subFeatureNames = (state.selectedSubclass && typeof SUBCLASS_FEATURE_NAMES !== 'undefined')
     ? (SUBCLASS_FEATURE_NAMES[state.selectedSubclass.id]||[]) : [];
   [...featureNames, ...subFeatureNames].forEach(f => {
-    if (f.lv <= level && !allAutoFeats.some(a => a.name_ko === f.name_ko)) {
+    if (f.lv <= level && !allAutoFeats.some(a => a.name_ko === f.name_ko || a.name_en === f.name_en)) {
       allAutoFeats.push({lv: f.lv, name_ko: f.name_ko, name_en: f.name_en, category: 'special'});
     }
   });
