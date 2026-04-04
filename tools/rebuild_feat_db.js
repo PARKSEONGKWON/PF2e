@@ -92,8 +92,16 @@ function extractBody(startIdx) {
   const block = html.substring(searchFrom, endIdx).trim();
 
   // 특성(em) 줄 추출
+  // 특성 줄: <p><em>바드</em> 또는 <p><em>행운, 바드</em> — 짧은 키워드 나열
+  // 주문명: <em>치유의 찬송(hymn of healing)</em> — 괄호 안에 영문 소문자
   const emMatch = block.match(/<p>\s*<em>(.*?)<\/em>/);
-  const traitsLine = emMatch ? emMatch[1].trim() : '';
+  let traitsLine = '';
+  if (emMatch) {
+    const emText = emMatch[1].replace(/<[^>]*>/g, '').trim();
+    // 주문명 이탤릭은 특성 줄이 아님: (영문 소문자)가 포함되면 스킵
+    const isSpellName = /\([a-z]/.test(emText);
+    if (!isSpellName) traitsLine = emText;
+  }
 
   // 전제조건 추출
   const prereqMatch = block.match(/<strong>전제조건[^<]*<\/strong>\s*(.*?)(?:<\/p>|<br)/);
@@ -151,10 +159,17 @@ while ((match = h3Re.exec(html)) !== null) {
       if (!traits.includes(t)) traits.push(t);
     });
   }
-  // extraTraits from header
+  // extraTraits from header (비일반, 행운 등)
   header.extraTraits.forEach(t => {
     if (t && !traits.includes(t)) traits.push(t);
   });
+  // 특성 줄이 비어있으면 카테고리의 한글명을 기본 특성으로 추가
+  const CAT_KO = {bard:'바드',champion:'챔피언',cleric:'클레릭',druid:'드루이드',
+    fighter:'파이터',ranger:'레인저',rogue:'로그',wizard:'위저드',witch:'위치',
+    general:'일반',skill:'일반'};
+  if (traits.length === 0 && CAT_KO[header.category]) {
+    traits.push(CAT_KO[header.category]);
+  }
 
   // summary 구성 (행동 + 빈도/유발/요구 포함)
   let summaryPrefix = '';
