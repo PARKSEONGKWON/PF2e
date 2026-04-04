@@ -134,6 +134,8 @@ function extractBody(startIdx) {
         content = content.replace(/^<em>[^<]*<\/em>\s*(?:<br\s*\/?>)?/i, '').trim();
       }
     }
+    // 레벨 구분 헤더 스킵: <p><strong>2레벨</strong></p> 등
+    if (content.match(/^<strong>\d+레벨<\/strong>$/)) continue;
     if (content) descParts.push(content);
   }
   let desc = descParts.join('<br>');
