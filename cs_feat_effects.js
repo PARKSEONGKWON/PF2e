@@ -3498,14 +3498,63 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
       });
       filteredOpts = filteredOpts.filter(opt => initiatedDomains.has(opt.id));
     }
-    filteredOpts.forEach(opt => {
-      const row = document.createElement('div');
-      row.className = 'opt-row';
-      row.style.cursor = 'pointer';
-      row.innerHTML = `<span class="opt-row-name">${opt.name}</span>`;
-      row.onclick = () => _applyFeatChoice(opt.id);
-      container.appendChild(row);
-    });
+    // 영역 선택: 좌측 목록 + 우측 주문 설명 레이아웃
+    const isDomain = choiceDef.label && choiceDef.label.includes('영역');
+    if (isDomain && typeof DOMAIN_DB !== 'undefined') {
+      container.style.cssText = 'display:flex;gap:0;height:340px;overflow:hidden;';
+      const listPane = document.createElement('div');
+      listPane.style.cssText = 'flex:0 0 120px;overflow-y:auto;border-right:1px solid var(--border,#444);';
+      const detailPane = document.createElement('div');
+      detailPane.style.cssText = 'flex:1;overflow-y:auto;padding:12px;font-size:13px;color:var(--text,#ddd);';
+      detailPane.innerHTML = '<div style="color:#888;padding-top:40px;text-align:center;">영역을 선택하세요</div>';
+      let selectedDomainId = null;
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.textContent = '확정';
+      confirmBtn.style.cssText = 'display:none;position:absolute;bottom:12px;right:16px;padding:8px 24px;background:var(--accent,#c9a84c);color:#000;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:14px;';
+      confirmBtn.onclick = () => { if (selectedDomainId) _applyFeatChoice(selectedDomainId); };
+
+      filteredOpts.forEach(opt => {
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border,#333);font-size:13px;';
+        row.textContent = opt.name;
+        row.onmouseenter = () => { if (selectedDomainId !== opt.id) row.style.background = 'var(--bg3,#2a2a2a)'; };
+        row.onmouseleave = () => { if (selectedDomainId !== opt.id) row.style.background = ''; };
+        row.onclick = () => {
+          selectedDomainId = opt.id;
+          listPane.querySelectorAll('div').forEach(d => d.style.background = '');
+          row.style.background = 'var(--accent,#c9a84c)'; row.style.color = '#000';
+          const dom = DOMAIN_DB[opt.id];
+          const isAdvanced = choiceDef.filterByInitiated;
+          const spellName = dom ? (isAdvanced ? dom.advanced : dom.initial) : null;
+          const spell = spellName && typeof SPELL_DB !== 'undefined' ? SPELL_DB.find(s => s.name_ko === spellName) : null;
+          if (spell) {
+            detailPane.innerHTML = `<div style="font-size:15px;font-weight:bold;color:var(--accent,#c9a84c);margin-bottom:8px;">${spell.name_ko} <span style="font-size:11px;color:#888;">${spell.name_en}</span></div>`
+              + (spell.traits ? `<div style="margin-bottom:6px;">${spell.traits.map(t => '<span style="display:inline-block;background:#333;color:#ccc;padding:2px 6px;border-radius:3px;font-size:10px;margin:1px 2px;">'+t+'</span>').join('')}</div>` : '')
+              + `<div style="color:#bbb;line-height:1.6;">${spell.desc||'설명 없음'}</div>`;
+          } else if (spellName) {
+            detailPane.innerHTML = `<div style="font-size:15px;font-weight:bold;color:var(--accent);">${spellName}</div><div style="color:#888;margin-top:8px;">주문 상세 정보가 DB에 없습니다.</div>`;
+          } else {
+            detailPane.innerHTML = `<div style="color:#888;padding-top:40px;text-align:center;">${opt.name} 영역의 ${isAdvanced?'고급':'초기'} 주문이 아직 번역되지 않았습니다.</div>`;
+          }
+          confirmBtn.style.display = '';
+        };
+        listPane.appendChild(row);
+      });
+      container.appendChild(listPane);
+      container.appendChild(detailPane);
+      container.parentElement.style.position = 'relative';
+      container.parentElement.appendChild(confirmBtn);
+    } else {
+      filteredOpts.forEach(opt => {
+        const row = document.createElement('div');
+        row.className = 'opt-row';
+        row.style.cursor = 'pointer';
+        row.innerHTML = `<span class="opt-row-name">${opt.name}</span>`;
+        row.onclick = () => _applyFeatChoice(opt.id);
+        container.appendChild(row);
+      });
+    }
   } else if ((choiceDef.type === 'spell_cantrip' || choiceDef.type === 'spell_rank') && typeof SPELL_DB !== 'undefined') {
     const tradition = choiceDef.tradition || 'arcane';
     const isRankSpell = choiceDef.type === 'spell_rank';

@@ -691,6 +691,20 @@ function applyClassFeatures() {
   });
   if (typeof renderFeats === 'function') renderFeats();
 
+  // ── Auto-feat choice trigger (e.g. Domain Initiate) ──
+  if (typeof checkFeatChoice === 'function') {
+    ['special','class','general','skill','ancestry','other'].forEach(cat => {
+      (state.feats[cat]||[]).forEach((f, idx) => {
+        if (f._auto && !f.choice) {
+          const nameEn = typeof _extractEnName === 'function' ? _extractEnName(f.name) : '';
+          if (nameEn && typeof FEAT_EFFECTS !== 'undefined' && FEAT_EFFECTS[nameEn] && FEAT_EFFECTS[nameEn].choice) {
+            setTimeout(() => checkFeatChoice(f.name, cat, idx), 300);
+          }
+        }
+      });
+    });
+  }
+
   // ── Auto-granted spells (class + subclass) ──
   // Remove old auto spells (preserve null slots in cantrip)
   state.spells.cantrip = (state.spells.cantrip||[]).filter(s => s === null || !s?._auto);
