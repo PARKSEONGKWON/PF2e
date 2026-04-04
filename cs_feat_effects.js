@@ -1131,7 +1131,7 @@ const FEAT_EFFECTS = {
     choice: {
       type:'custom', label:'영역을 선택하세요', repeatable:true,
       options:[
-        {id:'ambition', name:'야망'}, {id:'change', name:'변화'}, {id:'cities', name:'도시'},
+        {id:'air', name:'공기'}, {id:'ambition', name:'야망'}, {id:'change', name:'변화'}, {id:'cities', name:'도시'},
         {id:'cold', name:'냉기'}, {id:'confidence', name:'자신감'}, {id:'creation', name:'창조'},
         {id:'darkness', name:'어둠'}, {id:'death', name:'죽음'}, {id:'decay', name:'부패'},
         {id:'delirium', name:'망상'}, {id:'destruction', name:'파괴'}, {id:'dreams', name:'꿈'},
@@ -1152,7 +1152,7 @@ const FEAT_EFFECTS = {
         {id:'zeal', name:'열의'},
       ]
     },
-    effects: [{type:'display_note', text:'집중 주문: $choice_name 영역 초기 주문 습득. 집중 포인트 풀 +1 (최대 3)'}]
+    effects: [{type:'grant_focus_spell', spell:'$domain_initial'}, {type:'display_note', text:'집중 주문: $choice_name 영역 초기 주문 습득. 집중 포인트 풀 +1 (최대 3)'}]
   },
   'Harming Hands': {
     effects: [{type:'display_note', text:'해로움 시전 시 d8 → d10'}]
@@ -1229,7 +1229,31 @@ const FEAT_EFFECTS = {
 
   // ── 8레벨 ──
   'Advanced Domain': {
-    effects: [{type:'display_note', text:'초기 영역 주문이 있는 영역의 고급 영역 주문 습득. 여러 번 선택 가능'}]
+    choice: {
+      type:'custom', label:'고급 영역을 선택하세요', repeatable:true, filterByInitiated:true,
+      options:[
+        {id:'air', name:'공기'}, {id:'ambition', name:'야망'}, {id:'change', name:'변화'}, {id:'cities', name:'도시'},
+        {id:'cold', name:'냉기'}, {id:'confidence', name:'자신감'}, {id:'creation', name:'창조'},
+        {id:'darkness', name:'어둠'}, {id:'death', name:'죽음'}, {id:'decay', name:'부패'},
+        {id:'delirium', name:'망상'}, {id:'destruction', name:'파괴'}, {id:'dreams', name:'꿈'},
+        {id:'dust', name:'먼지'}, {id:'duty', name:'의무'}, {id:'earth', name:'대지'},
+        {id:'family', name:'가족'}, {id:'fate', name:'운명'}, {id:'fire', name:'화염'},
+        {id:'freedom', name:'자유'}, {id:'glyph', name:'문양'}, {id:'healing', name:'치유'},
+        {id:'indulgence', name:'탐닉'}, {id:'knowledge', name:'지식'}, {id:'lightning', name:'번개'},
+        {id:'luck', name:'행운'}, {id:'magic', name:'마법'}, {id:'might', name:'힘'},
+        {id:'moon', name:'달'}, {id:'nature', name:'자연'}, {id:'nightmares', name:'악몽'},
+        {id:'pain', name:'고통'}, {id:'passion', name:'열정'}, {id:'perfection', name:'완벽'},
+        {id:'plague', name:'역병'}, {id:'protection', name:'보호'}, {id:'repose', name:'안식'},
+        {id:'secrecy', name:'비밀'}, {id:'sorrow', name:'슬픔'}, {id:'soul', name:'영혼'},
+        {id:'star', name:'별'}, {id:'sun', name:'태양'}, {id:'swarm', name:'떼'},
+        {id:'time', name:'시간'}, {id:'travel', name:'여행'}, {id:'trickery', name:'속임수'},
+        {id:'truth', name:'진실'}, {id:'tyranny', name:'폭정'}, {id:'undeath', name:'언데스'},
+        {id:'vigil', name:'경계'}, {id:'void', name:'공허'}, {id:'war', name:'전쟁'},
+        {id:'water', name:'물'}, {id:'wealth', name:'부'}, {id:'wyrmkin', name:'용족'},
+        {id:'zeal', name:'열의'},
+      ]
+    },
+    effects: [{type:'grant_focus_spell', spell:'$domain_advanced'}, {type:'display_note', text:'고급 영역 주문: $choice_name 습득'}]
   },
   'Cremate Undead': {
     effects: [{type:'display_note', text:'치유로 언데드 피해 시 주문 랭크만큼 지속 화염 피해 추가'}]
@@ -3161,11 +3185,19 @@ function _applyOneEffect(fb, eff, feat, level) {
       break;
     }
     case 'grant_focus_spell': {
-      if (eff.spell && feat.name) {
+      let spellName = eff.spell;
+      if (spellName === '$domain_initial' && feat.choice && typeof DOMAIN_DB !== 'undefined') {
+        const dom = DOMAIN_DB[feat.choice];
+        spellName = dom && dom.initial ? dom.initial : '';
+      } else if (spellName === '$domain_advanced' && feat.choice && typeof DOMAIN_DB !== 'undefined') {
+        const dom = DOMAIN_DB[feat.choice];
+        spellName = dom && dom.advanced ? dom.advanced : '';
+      }
+      if (spellName && feat.name) {
         if (!state.spells.focus) state.spells.focus = [];
-        const existing = state.spells.focus.find(s => s._sourceFeat === feat.name && s.name === eff.spell);
+        const existing = state.spells.focus.find(s => s._sourceFeat === feat.name && s.name === spellName);
         if (!existing) {
-          state.spells.focus.push({name: eff.spell, _auto: true, _sourceFeat: feat.name, _source: feat.name.split(' (')[0].trim()});
+          state.spells.focus.push({name: spellName, _auto: true, _sourceFeat: feat.name, _source: feat.name.split(' (')[0].trim()});
         }
       }
       break;
@@ -3448,6 +3480,23 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
         note.textContent = `${deity.name_ko}의 영역: ${deity.domains.join(', ')}`;
         container.appendChild(note);
       }
+    }
+    if (choiceDef.repeatable && choiceDef.label && choiceDef.label.includes('영역')) {
+      const featBaseName = feat.name ? feat.name.split(' (')[0] : '';
+      const alreadyChosen = new Set();
+      Object.values(state.feats).flat().forEach(f => {
+        if (f && f.name && f.name.split(' (')[0] === featBaseName && f.choice) alreadyChosen.add(f.choice);
+      });
+      filteredOpts = filteredOpts.filter(opt => !alreadyChosen.has(opt.id));
+    }
+    if (choiceDef.filterByInitiated) {
+      const initiatedDomains = new Set();
+      Object.values(state.feats).flat().forEach(f => {
+        if (f && f.name && (f.name.includes('Domain Initiate') || f.name.includes('영역 입문')) && f.choice) {
+          initiatedDomains.add(f.choice);
+        }
+      });
+      filteredOpts = filteredOpts.filter(opt => initiatedDomains.has(opt.id));
     }
     filteredOpts.forEach(opt => {
       const row = document.createElement('div');

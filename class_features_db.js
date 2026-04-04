@@ -305,6 +305,7 @@ var SUBCLASS_AUTO_FEATS = {
   'muse-enigma':  [{lv:1, name_ko:'바드 지식', name_en:'Bardic Lore', category:'special'}],
   'muse-warrior': [{lv:1, name_ko:'무예 공연', name_en:'Martial Performance', category:'special'}],
   'muse-polymath': [{lv:1, name_ko:'다재다능한 공연', name_en:'Versatile Performance', category:'special'}],
+  'doctrine-cloistered': [{lv:1, name_ko:'영역 입문', name_en:'Domain Initiate', category:'class'}],
 };
 
 // ═══════════════════════════════════════════════
@@ -420,7 +421,7 @@ var DEITY_DB = [
    title:'어둠의 왕자', desc:'필멸자를 타락에 굴복하도록 유혹하는 것을 즐깁니다. 모든 이가 자신의 위치를 아는 위계질서를 장려하며, 자신의 이기적 이익을 위해 질서를 이용합니다.<br><b>관심 영역:</b> 계약, 억압, 자만, 폭정<br><b>계율:</b> 최대한 유리하게 계약을 협상하라, 폭군적으로 통치하고 약한 존재를 고문하라, 윗사람에게 복종하라'},
   {id:'calistria',  name_ko:'칼리스트리아',   name_en:'Calistria',      weapon:'채찍',       skill:'deception', sanctification:['holy','unholy'],  domains:['고통','열정','비밀','속임수'],
    title:'맛보는 일침', desc:'다른 이를 속이고 자신을 경시한 자에게 복수를 구하는 장난기 많고 변덕스러운 매력의 신. 엘프에게 가장 널리 숭배됩니다.<br><b>관심 영역:</b> 정욕, 복수, 속임수<br><b>계율:</b> 개인의 자유를 추구하라, 쾌락주의적 스릴을 찾으라, 복수하라'},
-  {id:'cayden',     name_ko:'카이든 카일리언',name_en:'Cayden Cailean', weapon:'레이피어',   skill:'athletics', sanctification:['holy'],           domains:['도시','자유','방탕','힘'],
+  {id:'cayden',     name_ko:'카이든 카일리언',name_en:'Cayden Cailean', weapon:'레이피어',   skill:'athletics', sanctification:['holy'],           domains:['도시','자유','탐닉','힘'],
    title:'우연의 신', desc:'술에 취한 도전으로 필멸의 삶에서 승천했습니다. 자유를 촉진하고 다른 이들이 삶에서 자신만의 길을 찾도록 격려합니다.<br><b>관심 영역:</b> 맥주, 용기, 자유, 와인<br><b>계율:</b> 마셔라, 억압받는 이를 도우라, 영광과 모험을 추구하라'},
   {id:'desna',      name_ko:'데스나',         name_en:'Desna',          weapon:'대거',       skill:'acrobatics', sanctification:['holy'],          domains:['꿈','행운','달','여행'],
    title:'천구의 노래', desc:'하늘에 시선을 두고, 어둠 속 여행자를 인도하고 악몽 속 꿈꾸는 이를 이끌기 위해 하늘에 별을 놓았습니다. 자유와 미스터리를 즐깁니다.<br><b>관심 영역:</b> 꿈, 행운, 별, 여행자<br><b>계율:</b> 동료 여행자를 돕고, 새로운 장소를 탐험하고, 예술과 노래로 자신을 표현하라'},
@@ -428,7 +429,7 @@ var DEITY_DB = [
    title:'오래된 사냥꾼', desc:'오래전 뿔 달린 사냥의 신이었지만, 숭배는 농촌 공동체에 집중하는 것으로 진화했습니다. 추종자들의 평화로운 삶만을 바라며, 그 목가적 존재가 위협받을 때만 무기를 들도록 합니다.<br><b>관심 영역:</b> 가족, 농업, 사냥, 무역<br><b>계율:</b> 가정과 가족을 돌보라, 의무를 이행하라, 평화를 유지하라'},
   {id:'gorum',      name_ko:'고룸',           name_en:'Gorum',          weapon:'그레이트소드',skill:'athletics', sanctification:['holy','unholy'],  domains:['자신감','파괴','힘','열정'],
    title:'무쇠의 군주', desc:'전장에서 영광을 구하는 자라면 누구든 기도합니다. 무력을 강조하며, 추종자들에게 궁극적인 숭배 방법으로 전쟁과 전투를 추구하도록 권합니다.<br><b>관심 영역:</b> 전투, 근력, 무기<br><b>계율:</b> 공정한 전투에서 승리하라, 한계를 밀어붙여라, 전투에서 갑옷을 착용하라'},
-  {id:'gozreh',     name_ko:'고즈레',         name_en:'Gozreh',         weapon:'삼지창',     skill:'survival',  sanctification:['holy'],           domains:['공기','자연','바다','날씨'],
+  {id:'gozreh',     name_ko:'고즈레',         name_en:'Gozreh',         weapon:'삼지창',     skill:'survival',  sanctification:['holy'],           domains:['공기','자연','물','날씨'],
    title:'바람과 파도', desc:'두 측면을 가진 신격으로, 대지를 감싸는 바다이자 그 표면을 움직이는 바람입니다. 드루이드와 야생을 보존하려는 자들에게 인기 있습니다.<br><b>관심 영역:</b> 자연, 바다, 날씨<br><b>계율:</b> 모든 형태의 자연을 소중히 여기고, 보호하고, 존중하라'},
   {id:'iomedae',    name_ko:'아이오메다이',   name_en:'Iomedae',        weapon:'롱소드',     skill:'intimidation',sanctification:['holy'],          domains:['자신감','힘','진실','열정'],
    title:'상속자', desc:'승천 전, 언데드와의 전쟁에서 신성한 전사였습니다. 미덕의 가치를 지키며, 사악하고 부정한 자에 맞서 싸웁니다.<br><b>관심 영역:</b> 명예, 정의, 통치, 용기<br><b>계율:</b> 절제하라, 정의와 명예를 위해 싸우라, 마음에 용기를 품으라'},
@@ -450,11 +451,57 @@ var DEITY_DB = [
    title:'영원한 장미', desc:'평화와 사랑을 촉진하며, 때로 어두운 세계에서 아름다움을 창조하도록 추종자들을 격려합니다. 언젠가 타락한 오빠 존쿠손을 구원하려 합니다.<br><b>관심 영역:</b> 예술, 아름다움, 사랑, 음악<br><b>계율:</b> 평화롭게 지내라, 예술을 선택하고 완성하라, 모든 것에서 아름다움을 봐라'},
   {id:'torag',      name_ko:'토라그',         name_en:'Torag',          weapon:'워해머',     skill:'crafting',  sanctification:['holy'],           domains:['창조','대지','가족','보호'],
    title:'창조의 아버지', desc:'많은 드워프에게 창조의 아버지로 존경받으며, 숭배되는 모든 공동체를 보호하기 위해 노력합니다. 제작과 창조를 소중히 여기는 이들도 따릅니다.<br><b>관심 영역:</b> 대장간, 보호, 전략<br><b>계율:</b> 명예롭고 솔직하라, 약속을 지켜라, 대장간을 존중하라, 백성을 섬겨라'},
-  {id:'urgathoa',   name_ko:'우르가토아',     name_en:'Urgathoa',       weapon:'대낫',       skill:'intimidation',sanctification:['unholy'],        domains:['방탕','마법','힘','언데드'],
+  {id:'urgathoa',   name_ko:'우르가토아',     name_en:'Urgathoa',       weapon:'대낫',       skill:'intimidation',sanctification:['unholy'],        domains:['방탕','마법','힘','언데스'],
    title:'창백한 공주', desc:'살아있는 세계의 쾌락에 너무 매료된 나머지, 죽음과 사후세계의 속박에서 탈출하여 최초의 언데드가 되었습니다. 쾌락주의적 방식을 공유하고 언데드를 퍼뜨리는 것을 즐깁니다.<br><b>관심 영역:</b> 질병, 탐식, 언데드<br><b>계율:</b> 죽음 시 언데드가 되라, 언데드를 생성하거나 보호하라, 식욕을 충족시켜라'},
   {id:'zonkuthon',  name_ko:'존-쿠톤',       name_en:'Zon-Kuthon',     weapon:'시미터',     skill:'intimidation',sanctification:['unholy'],        domains:['어둠','파괴','고통','공허'],
    title:'밤의 왕자', desc:'한때 셸린의 오빠였으나 먼 차원에서 돌아온 후 끔찍하게 변형되었습니다. 어둠, 상실, 고통 속에서 즐거움을 찾으며, 추종자들에게도 같은 것을 권합니다.<br><b>관심 영역:</b> 어둠, 상실, 고통<br><b>계율:</b> 고통을 가져오라, 어둠에 자신을 빠뜨려라'},
 ];
+
+// ═══════════════════════════════════════════════
+//  DOMAIN DATABASE — 영역별 초기/고급 집중 주문
+// ═══════════════════════════════════════════════
+
+var DOMAIN_DB = {
+  air:         {name:'공기',   initial:'밀어내는 돌풍',    advanced:'공기로 분산'},
+  ambition:    {name:'야망',   initial:'야심 점화',       advanced:'경쟁심'},
+  cities:      {name:'도시',   initial:'군중 속의 얼굴',  advanced:'문명의 맥박'},
+  confidence:  {name:'자신감', initial:'자신감의 장막',   advanced:'망상적 자만'},
+  creation:    {name:'창조',   initial:'창의적 물감',     advanced:'예술적 장식'},
+  darkness:    {name:'어둠',   advanced:'어둠의 시야'},
+  death:       {name:'죽음',   advanced:'언데드 근절'},
+  destruction: {name:'파괴',   initial:'파괴의 울부짖음', advanced:'파괴적 기운'},
+  dreams:      {name:'꿈',     initial:'달콤한 꿈'},
+  earth:       {name:'대지',   initial:'투석',           advanced:'국지 지진'},
+  family:      {name:'가족',   initial:'달래는 말',       advanced:'가족 회복'},
+  fate:        {name:'운명',   initial:'운명 읽기'},
+  fire:        {name:'화염',   initial:'화염 광선',       advanced:'화염 장벽'},
+  freedom:     {name:'자유',   advanced:'자유의 말씀'},
+  healing:     {name:'치유',   advanced:'죽음의 거부'},
+  indulgence:  {name:'탐닉',   initial:'방종의 풍요',     advanced:'경과 관찰'},
+  knowledge:   {name:'지식',   initial:'지식의 회상'},
+  luck:        {name:'행운',   initial:'행운의 한 조각',  advanced:'행운의 기회'},
+  magic:       {name:'마법',   advanced:'신비의 등대'},
+  might:       {name:'힘',     initial:'운동 돌진'},
+  moon:        {name:'달',     initial:'달빛',           advanced:'달의 접촉'},
+  nature:      {name:'자연'},
+  nightmares:  {name:'악몽',   advanced:'공포의 나선'},
+  pain:        {name:'고통',   initial:'고통 음미',       advanced:'보복의 고통'},
+  passion:     {name:'열정',   advanced:'열정의 유혹'},
+  perfection:  {name:'완벽',   initial:'완벽한 정신',     advanced:'완벽한 몸'},
+  protection:  {name:'보호',   initial:'보호의 수호',     advanced:'에너지 흡수'},
+  secrecy:     {name:'비밀',   initial:'속삭이는 고요',   advanced:'비밀 수호'},
+  soul:        {name:'영혼'},
+  sun:         {name:'태양',   initial:'눈부신 섬광',     advanced:'활력의 빛'},
+  travel:      {name:'여행',   initial:'민첩한 발'},
+  trickery:    {name:'속임수', initial:'돌발 전환'},
+  truth:       {name:'진실',   initial:'진실의 말씀',     advanced:'진실의 일별'},
+  tyranny:     {name:'폭정',   initial:'복종의 접촉'},
+  undeath:     {name:'언데스', initial:'언데드의 접촉',   advanced:'악성 자양분'},
+  void:        {name:'공허',   initial:'몸 뒤섞기'},
+  water:       {name:'물',     initial:'조류 파도',       advanced:'폭포'},
+  wealth:      {name:'부',     advanced:'귀금속'},
+  zeal:        {name:'열의',   initial:'무기 강화',       advanced:'전투 열정'},
+};
 
 // ═══════════════════════════════════════════════
 //  WITCH PATRON → SPELL TRADITION MAPPING

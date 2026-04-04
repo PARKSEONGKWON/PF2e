@@ -653,9 +653,13 @@ function applyClassFeatures() {
   }
 
   // ── Auto-granted feats (class + subclass) ──
-  // Remove old auto feats
+  // Save choices from auto feats before removing
+  const savedAutoChoices = {};
   ['special','class','general','skill','ancestry','other'].forEach(cat => {
     if (!state.feats[cat]) state.feats[cat] = [];
+    state.feats[cat].filter(f => f._auto && f.choice).forEach(f => {
+      savedAutoChoices[f.name + '_' + (f._grantedBy||'')] = f.choice;
+    });
     state.feats[cat] = state.feats[cat].filter(f => !f._auto);
   });
   // Gather all auto feats (CLASS_AUTO_FEATS + SUBCLASS_AUTO_FEATS)
@@ -678,7 +682,10 @@ function applyClassFeatures() {
       const cat = f.category || 'special';
       if (!state.feats[cat]) state.feats[cat] = [];
       if (!state.feats[cat].some(e => e.name === featName)) {
-        state.feats[cat].push({name: featName, level: f.lv, _auto: true});
+        const autoFeat = {name: featName, level: f.lv, _auto: true};
+        const savedChoice = savedAutoChoices[featName + '_'];
+        if (savedChoice) autoFeat.choice = savedChoice;
+        state.feats[cat].push(autoFeat);
       }
     }
   });
