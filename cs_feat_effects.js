@@ -2909,7 +2909,9 @@ function applyFeatEffects() {
 
   const level = getLevel();
 
-  // grant_lore 재구축: 이전 사이클에서 부여한 지식 슬롯 초기화
+  // ═══ 재주 부여 효과 재구축: 이전 사이클 정리 ═══
+
+  // grant_lore: 지식 슬롯 초기화
   (state._featGrantedLores || []).forEach(entry => {
     const nameEl = document.getElementById('lore-name-' + entry.slot);
     const profEl = document.getElementById('sk-prof-' + entry.slot);
@@ -2919,6 +2921,41 @@ function applyFeatEffects() {
     }
   });
   state._featGrantedLores = [];
+
+  // skill_trained: 재주가 부여한 기술 숙련 초기화
+  (state._featGrantedSkills || []).forEach(entry => {
+    const profEl = document.getElementById('sk-prof-' + entry.skill);
+    if (profEl && parseInt(profEl.value || 0) === entry.rank) profEl.value = '0';
+  });
+  state._featGrantedSkills = [];
+
+  // grant_focus_spell: _sourceFeat 있는 집중 주문 제거
+  if (state.spells?.focus) {
+    state.spells.focus = state.spells.focus.filter(s => !s._sourceFeat);
+  }
+
+  // grant_innate_spell: _sourceFeat 있는 선천 주문 제거
+  if (state.spells?.innate) {
+    state.spells.innate = state.spells.innate.filter(s => !s._sourceFeat);
+  }
+
+  // grant_weapon: _fromFeat 있는 무기 제거
+  state.weapons = (state.weapons || []).filter(w => !w._fromFeat);
+
+  // grant_feat: _grantedBy 있는 재주 제거
+  Object.values(state.feats).forEach(arr => {
+    if (!arr) return;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i]?._grantedBy) arr.splice(i, 1);
+    }
+  });
+
+  // vision_upgrade: 재주 부여 시야 초기화 → 혈통/유산 기본값 복원
+  if (state._featVisionUpgrade) {
+    state.vision = state.selectedAncestry?.vision || '없음';
+    if (state.selectedHeritage?.vision) state.vision = state.selectedHeritage.vision;
+    state._featVisionUpgrade = false;
+  }
 
   // 모든 재주 카테고리 순회
   Object.values(state.feats).forEach(arr => {
@@ -2977,6 +3014,11 @@ function _applyOneEffect(fb, eff, feat, level) {
           if (!s) return;
           if (!fb.skills[s]) fb.skills[s] = {min_rank:0, bonus:0};
           fb.skills[s].min_rank = Math.max(fb.skills[s].min_rank, 2);
+          const profEl = document.getElementById('sk-prof-' + s);
+          if (profEl && parseInt(profEl.value || 0) < 2) {
+            state._featGrantedSkills.push({skill: s, rank: 2, feat: feat.name});
+            profEl.value = '2';
+          }
         });
       }
       break;
@@ -3094,6 +3136,7 @@ function _applyOneEffect(fb, eff, feat, level) {
     }
     case 'vision_upgrade': {
       state.vision = eff.vision;
+      state._featVisionUpgrade = true;
       break;
     }
     case 'unburdened_iron': {
