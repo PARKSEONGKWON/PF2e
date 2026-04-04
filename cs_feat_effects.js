@@ -892,7 +892,7 @@ const FEAT_EFFECTS = {
 
   // ── 1레벨 ──
   'Bardic Lore': {
-    effects: [{type:'display_note', text:'바드 지식(Bardic Lore) 숙련. 어떤 주제든 지식 회상 가능. 비학 전설 시 전문가'}]
+    effects: [{type:'grant_lore', name:'바드 지식'}, {type:'display_note', text:'어떤 주제든 지식 회상 가능. 오컬티즘 전설 시 전문가'}]
   },
   'Hymn of Healing': {
     effects: [{type:'grant_focus_spell', spell:'치유의 찬송'}, {type:'grant_action'}]
