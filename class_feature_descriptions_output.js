@@ -77,7 +77,7 @@ const CLASS_FEATURE_DESCRIPTIONS = [
   {name_ko:"평갑 달인", name_en:"Medium Armor Mastery", cat:"feature", class_id:"ranger", feat_level:19, summary:"경갑, 평갑, 비무장 방어 숙련도가 대가로 증가."},
   {name_ko:"신속 사냥감", name_en:"Swift Prey", cat:"feature", class_id:"ranger", feat_level:19, summary:"사냥감 추적을 자유 행동으로 사용할 수 있습니다."},
   {name_ko:"은밀 공격 1d6", name_en:"Sneak Attack 1d6", cat:"feature", class_id:"rogue", feat_level:1, summary:"방심(off-guard) 상태인 생물에 민첩/기교 근접 무기, 민첩/기교 비무장 공격, 원거리 무기/비무장 공격으로 타격 시 추가 1d6 정밀 피해. 투척 근접 무기는 민첩/기교여야 합니다. 5, 11, 17레벨에 피해 주사위가 1개씩 증가."},
-  {name_ko:"기습", name_en:"Surprise Attack", cat:"feature", class_id:"rogue", feat_level:1, summary:"전투에 적보다 빨리 뛰어듭니다. 첫 라운드에 기만이나 은신으로 주도권을 굴렸으면, 아직 행동하지 않은 생물은 당신에게 방심."},
+  {name_ko:"기습", name_en:"Surprise Attack", cat:"feature", class_id:"rogue", feat_level:1, summary:"전투에 적보다 빨리 뛰어듭니다. 첫 라운드에 기만이나 은신으로 우선권을 굴렸으면, 아직 행동하지 않은 생물은 당신에게 방심."},
   {name_ko:"라켓", name_en:"Racket", cat:"feature", class_id:"rogue", feat_level:1, summary:"1레벨에 로그의 라켓을 선택합니다. 라켓은 로그로서의 활동 방식을 나타내며, 추가 기술과 핵심 속성 선택지를 부여합니다. 지략가, 건달, 사기꾼, 도둑 중 하나를 선택합니다."},
   {name_ko:"이점 부정", name_en:"Deny Advantage", cat:"feature", class_id:"rogue", feat_level:3, summary:"빈틈을 이용하는 자로서, 자신에게 그런 틈을 남기지 않습니다. 자신의 레벨 이하인 숨겨진/미탐지/측면 공격하는 생물이나 기습을 사용하는 생물에게 방심이 되지 않습니다(다른 이유로 방심은 여전히 가능). 그러나 그 생물은 아군의 측면 공격에 도움을 줄 수 있습니다."},
   {name_ko:"은밀 공격 2d6", name_en:"Sneak Attack 2d6", cat:"feature", class_id:"rogue", feat_level:5, summary:"은밀 공격 추가 정밀 피해가 2d6으로 증가합니다."},

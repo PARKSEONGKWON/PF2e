@@ -248,7 +248,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'강요 시간 단축 (전문가=3라운드, 달인=1라운드, 전설=1행동)'}]
   },
   'Battle Cry': {
-    effects: [{type:'display_note', text:'전투 시작 시 자유 행동으로 사기 꺾기. 달인=주도권 굴림 후 즉시'}]
+    effects: [{type:'display_note', text:'전투 시작 시 자유 행동으로 사기 꺾기. 달인=우선권 굴림 후 즉시'}]
   },
   'Cat Fall': {
     effects: [{type:'display_note', text:'낙하 피해 감소. 숙련=10피트, 전문가=25피트, 달인=50피트 무시. 전설=추락 면역'}]
@@ -724,7 +724,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'save_bonus', save:'will', value:1, bonus_type:'circumstance', condition:'감정 효과'}]
   },
   'Harmlessly Cute': {
-    effects: [{type:'grant_feat', feat:'뻔뻔한 요청 (Shameless Request)'}, {type:'display_note', text:'기만으로 주도권 굴릴 때 +1 상황 보너스'}]
+    effects: [{type:'grant_feat', feat:'뻔뻔한 요청 (Shameless Request)'}, {type:'display_note', text:'기만으로 우선권 굴릴 때 +1 상황 보너스'}]
   },
   'Leshy Lore': {
     effects: [{type:'skill_trained', skill:'nature'}, {type:'skill_trained', skill:'stealth'}, {type:'grant_lore', name:'레쉬'}]
@@ -1645,13 +1645,13 @@ const FEAT_EFFECTS = {
         {id:'plant-fungus', name:'균류 + 식물'},
       ]
     },
-    effects: [{type:'display_note', text:'선호 사냥감($choice_name): 주도권 시 해당 적 보이면 자유 행동으로 사냥감 추적'}]
+    effects: [{type:'display_note', text:'선호 사냥감($choice_name): 우선권 시 해당 적 보이면 자유 행동으로 사냥감 추적'}]
   },
   'Running Reload': {
     effects: [{type:'display_note', text:'[1행동] 보폭/한 걸음/잠행 후 상호작용으로 재장전'}]
   },
   "Scout's Warning": {
-    effects: [{type:'display_note', text:'[자유] 주도권 굴림 직전 아군 모두 주도권 +1 상황 보너스'}]
+    effects: [{type:'display_note', text:'[자유] 우선권 굴림 직전 아군 모두 우선권 +1 상황 보너스'}]
   },
   'Twin Parry': {
     effects: [{type:'ac_bonus', value:1, bonus_type:'circumstance', condition:'양손 근접 무기'}, {type:'display_note', text:'[1행동] 양손 근접 무기로 AC +1 상황 보너스 (방어 특성 +2). 다음 턴까지'}]
@@ -2228,7 +2228,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'결투 반격 명중 시 대상을 최대 10피트 재배치'}]
   },
   'Opening Stance': {
-    effects: [{type:'display_note', text:'[반응] 주도권 굴림 시 자세 특성 행동 1개를 즉시 사용'}]
+    effects: [{type:'display_note', text:'[반응] 우선권 굴림 시 자세 특성 행동 1개를 즉시 사용'}]
   },
   'Two-Weapon Flurry': {
     effects: [{type:'display_note', text:'[1행동] 각 손의 무기로 1회씩 타격 (이전 모멘텀 활용)'}]
@@ -2363,7 +2363,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[1행동] 지식 회상으로 식별한 적. 다음 은밀 공격에 추가 2d6 정밀 피해 (11레벨 3d6, 17레벨 4d6)'}]
   },
   'Anticipate Ambush': {
-    effects: [{type:'display_note', text:'절반 속도로 경계. 은신으로 주도권 굴리는 모든 적에 -2 상황 페널티'}]
+    effects: [{type:'display_note', text:'절반 속도로 경계. 은신으로 우선권 굴리는 모든 적에 -2 상황 페널티'}]
   },
   'Far Throw': {
     effects: [{type:'display_note', text:'투척 무기의 추가 사거리 증분 페널티가 -2 대신 -1'}]
@@ -2419,7 +2419,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[1행동] 붙잡힌/속박 시 탈출 시도 후 성공하면 도둑질도 시도'}]
   },
   'Tactical Entry': {
-    effects: [{type:'display_note', text:'[1행동] 은신으로 주도권 굴린 첫 턴에 보폭 (반응 유발 안 함)'}]
+    effects: [{type:'display_note', text:'[1행동] 은신으로 우선권 굴린 첫 턴에 보폭 (반응 유발 안 함)'}]
   },
 
   // ── 10레벨 ──
@@ -2538,7 +2538,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'damage_note', scaling:{1:'1d6',5:'2d6',11:'3d6',17:'4d6'}, damage_type:'정밀'}]
   },
   'Surprise Attack': {
-    effects: [{type:'display_note', text:'전투 시작 시 기만/은신으로 주도권 굴림 가능. 적이 아직 행동 안 했으면 방어불가'}]
+    effects: [{type:'display_note', text:'전투 시작 시 기만/은신으로 우선권 굴림 가능. 적이 아직 행동 안 했으면 방어불가'}]
   },
   'Hunt Prey': {
     effects: [{type:'grant_action', action:'hunt-prey'}, {type:'display_note', text:'[1행동] 사냥감 1마리 지정. 지정된 적에 대해 추적/인지 보너스 + 사냥 방식 효과 적용'}]
