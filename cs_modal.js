@@ -1192,9 +1192,14 @@ function renderGrowthPlan() {
       html += growthSignatureCardHTML(lv);
     }
 
-    // Familiar Spellbook (prepared casters — witch 등)
-    if (state.selectedClass?.casting === 'prepared' && typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[state.selectedClass.id]) {
+    // Spellbook/Familiar (prepared+주문서: wizard, witch)
+    if (state.selectedClass?.casting === 'prepared' && typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[state.selectedClass.id]) {
       html += growthFamiliarSpellCardHTML(lv);
+    }
+    // Full tradition access (prepared+전통 전체: cleric, druid)
+    if (state.selectedClass?.casting === 'prepared' && !(typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[state.selectedClass.id])
+        && typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[state.selectedClass.id] && lv === 1) {
+      html += growthFullTraditionCardHTML();
     }
   }
 
@@ -1944,7 +1949,21 @@ function getFamiliarMaxRank(classId, lv) {
   return 0;
 }
 
-// 사역마 주문 습득 카드
+// 전통 전체 접근 안내 카드 (cleric, druid — 성장계획 1레벨에만 표시)
+function growthFullTraditionCardHTML() {
+  const trad = state.selectedClass?.tradition || '';
+  const tradNames = {divine:'신성', primal:'원시', arcane:'비전', occult:'오컬트'};
+  const tradLabel = tradNames[trad] || trad;
+  return `<div class="growth-slot filled" style="flex-wrap:wrap;cursor:default;">
+    <div class="growth-slot-icon">📖</div>
+    <div class="growth-slot-body">
+      <div class="growth-slot-label">준비형 주문시전 Prepared Casting</div>
+      <div class="growth-slot-value" style="font-size:11px;line-height:1.4;">${tradLabel} 전통의 모든 주문에 접근할 수 있습니다.<br>주문 탭의 <strong>📖 주문 기억</strong> 버튼으로 일일 준비하세요.</div>
+    </div>
+  </div>`;
+}
+
+// 주문서/사역마 주문 습득 카드
 function growthFamiliarSpellCardHTML(lv) {
   const cid = state.selectedClass?.id;
   if (!cid) return '';
@@ -1983,10 +2002,13 @@ function growthFamiliarSpellCardHTML(lv) {
 
     let summary = `캔트립 ${cantripFilled}/${init.cantrip}, 1랭크 ${rank1Filled + autoKnown.length}/${init.rank1 + autoKnown.length}`;
 
+    const isWizard = cid === 'wizard';
+    const sbIcon = isWizard ? '📖' : '🐈';
+    const sbLabel = isWizard ? '주문서 Spellbook' : '사역마 주문 Familiar Spells';
     let html = `<div class="growth-slot ${allFilled ? 'filled' : ''}" onclick="toggleGrowthFamiliarExpand(${lv})" style="flex-wrap:wrap;">
-      <div class="growth-slot-icon">🐈</div>
+      <div class="growth-slot-icon">${sbIcon}</div>
       <div class="growth-slot-body">
-        <div class="growth-slot-label">사역마 주문 Familiar Spells</div>
+        <div class="growth-slot-label">${sbLabel}</div>
         <div class="growth-slot-value">${summary}</div>
       </div>
       ${!allFilled ? `<div class="growth-slot-badge">${totalNeeded - cantripFilled - rank1Filled}</div>` : ''}
@@ -2028,10 +2050,13 @@ function growthFamiliarSpellCardHTML(lv) {
       return typeof n === 'string' ? n : `${n.name} (${n.rank}랭크)`;
     }).join(', ');
 
+    const isWiz = cid === 'wizard';
+    const sbIco = isWiz ? '📖' : '🐈';
+    const sbLbl = isWiz ? '주문서 습득 Spellbook Learns' : '사역마 주문 습득 Familiar Learns';
     let html = `<div class="growth-slot ${allFilled ? 'filled' : ''}" onclick="toggleGrowthFamiliarExpand(${lv})" style="flex-wrap:wrap;">
-      <div class="growth-slot-icon">🐈</div>
+      <div class="growth-slot-icon">${sbIco}</div>
       <div class="growth-slot-body">
-        <div class="growth-slot-label">사역마 주문 습득 Familiar Learns</div>
+        <div class="growth-slot-label">${sbLbl}</div>
         <div class="growth-slot-value">${allFilled ? display : filled + '/' + slots._free + ' 선택'}</div>
       </div>
       ${!allFilled ? `<div class="growth-slot-badge">${slots._free - filled}</div>` : ''}
@@ -2373,11 +2398,12 @@ function _memorizeAdvanceSlot(curRank, curIdx) {
 }
 
 function openPrepareSpellForSlot(rank, slotIdx) {
-  // 사역마가 아는 주문 목록에서 선택 → 슬롯에 준비
+  // 주문서/사역마가 아는 주문 목록에서 선택 → 슬롯에 준비
   if (!state.familiarSpells) return;
   const isCantrip = rank === 0;
   const known = isCantrip ? (state.familiarSpells.cantrip || []) : (state.familiarSpells[rank] || []);
-  if (known.length === 0) { alert('사역마가 이 랭크의 주문을 모릅니다. 빌더에서 먼저 주문을 배우세요.'); return; }
+  const isWiz = state.selectedClass?.id === 'wizard';
+  if (known.length === 0) { alert(isWiz ? '주문서에 이 랭크의 주문이 없습니다. 빌더에서 먼저 주문을 배우세요.' : '사역마가 이 랭크의 주문을 모릅니다. 빌더에서 먼저 주문을 배우세요.'); return; }
 
   // 간단한 인라인 모달 — opt-row 목록
   document.getElementById('modal-overlay').classList.remove('hidden');
