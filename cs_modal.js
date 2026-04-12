@@ -2161,11 +2161,13 @@ function growthRemoveFamiliarSpell(lv, idx) {
   save();
 }
 
-// growth → state.familiarSpells 구축
+// growth → state.familiarSpells 구축 (주문서/사역마 보유 클래스만: wizard, witch)
 function syncFamiliarSpellsToState() {
   const cid = state.selectedClass?.id;
   if (!cid || state.selectedClass.casting !== 'prepared') return;
   if (typeof CLASS_SPELL_TABLE === 'undefined' || !CLASS_SPELL_TABLE[cid]) return;
+  // 주문서/사역마가 없는 클래스(cleric, druid 등)는 전통 전체 접근 → familiarSpells 불필요
+  if (typeof FAMILIAR_INIT === 'undefined' || !FAMILIAR_INIT[cid]) { state.familiarSpells = null; return; }
 
   const fs = {cantrip: [], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[]};
   const curLevel = getLevel();
