@@ -887,12 +887,12 @@ function recalcAll() {
 
 function getCondPenalty() {
   const frightened = parseInt(state.conditions['공포'] || 0);
-  const sickened = parseInt(state.conditions['구역질'] || 0);
+  const sickened = parseInt(state.conditions['메스꺼움'] || 0);
   const clumsy = parseInt(state.conditions['둔함'] || 0);
   const enfeebled = parseInt(state.conditions['약화됨'] || 0);
   const stupefied = parseInt(state.conditions['혼미'] || 0);
   return {
-    all: Math.max(frightened, sickened), // 공포/구역질 중 큰 값
+    all: Math.max(frightened, sickened), // 공포/메스꺼움 중 큰 값
     clumsy, enfeebled, stupefied
   };
 }

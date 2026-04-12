@@ -152,10 +152,10 @@
 | Petrified | 석화 |
 | Prone | 넘어뜨려짐 / 엎드려짐 |
 | Quickened | 가속 |
-| Restrained | 억제 |
-| Sickened | 구역질 |
-| Slowed | 느려짐 |
-| Stunned | 멍해짐 |
+| Restrained | 구속 |
+| Sickened | 메스꺼움 |
+| Slowed | 둔화 |
+| Stunned | 기절 |
 | Stupefied | 멍청함 |
 | Unconscious | 무의식 |
 | Undetected | 미탐지 |
@@ -193,7 +193,7 @@
 | Ranger | 레인저 |
 | Rogue | 로그 |
 | Witch | 위치 |
-| Wizard | 위자드 |
+| Wizard | 위저드 |
 
 ## 서브클래스 / 뮤즈 / 교의 등
 

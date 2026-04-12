@@ -2164,7 +2164,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'[반응] 물리 원거리 타격 대상 시 AC +4 상황 보너스로 요격'}]
   },
   'Debilitating Shot': {
-    effects: [{type:'display_note', text:'[2행동] 원거리 타격. 명중+피해 시 대상이 느려짐(slowed) 1'}]
+    effects: [{type:'display_note', text:'[2행동] 원거리 타격. 명중+피해 시 대상이 둔화(slowed) 1'}]
   },
   'Disarming Twist': {
     effects: [{type:'display_note', text:'[1행동] 한 손 무기+빈 손. 타격+무장 해제. 실패 시에도 무방비'}]
@@ -2447,7 +2447,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'추가 쇠약: 3d6 지속 출혈 피해'}]
   },
   'Critical Debilitation': {
-    effects: [{type:'display_note', text:'치명 성공 시 추가 쇠약: 인내 내성 → 느려짐 1~2 또는 마비'}]
+    effects: [{type:'display_note', text:'치명 성공 시 추가 쇠약: 인내 내성 → 둔화 1~2 또는 마비'}]
   },
   'Fantastic Leap': {
     effects: [{type:'display_note', text:'[2행동] 높이/멀리뛰기. 도약 종료 시 근접 타격. 추락 피해 없이 착지'}]
