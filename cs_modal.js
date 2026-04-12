@@ -36,7 +36,7 @@ function openRestModal() {
       </label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
         <input type="checkbox" id="rest-doomed" checked style="accent-color:var(--accent);width:18px;height:18px;">
-        파멸(Doomed)과 쇠약(Drained) 수치 1 감소
+        파멸(Doomed)과 탈진(Drained) 수치 1 감소
       </label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;">
         <input type="checkbox" id="rest-spells" checked style="accent-color:var(--accent);width:18px;height:18px;">
@@ -151,7 +151,7 @@ function applyRest() {
   }
   if (document.getElementById('rest-doomed')?.checked) {
     if (state.conditions['파멸'] > 0) state.conditions['파멸'] = Math.max(0, state.conditions['파멸'] - 1);
-    if (state.conditions['쇠약'] > 0) state.conditions['쇠약'] = Math.max(0, state.conditions['쇠약'] - 1);
+    if (state.conditions['탈진'] > 0) state.conditions['탈진'] = Math.max(0, state.conditions['탈진'] - 1);
   }
   if (document.getElementById('rest-spells')?.checked) {
     // 주문 슬롯 사용 초기화

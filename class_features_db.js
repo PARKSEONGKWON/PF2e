@@ -387,8 +387,8 @@ var SUBCLASS_FEATURE_NAMES = {
   'edge-precision': [{lv:1, name_ko:'첫 타 정밀 피해 +1d8', name_en:'Precision: +1d8'}],
   // ── 로그 전문 ──
   'racket-thief':     [{lv:1, name_ko:'민첩→피해 (기교 무기)', name_en:'DEX to damage (finesse)'}],
-  'racket-scoundrel': [{lv:1, name_ko:'기만/위협→방어불가', name_en:'Feint/Demoralize → Flat-footed'}],
-  'racket-mastermind':[{lv:1, name_ko:'지식 확인→방어불가', name_en:'Recall Knowledge → Flat-footed'}],
+  'racket-scoundrel': [{lv:1, name_ko:'기만/위협→무방비', name_en:'Feint/Demoralize → Flat-footed'}],
+  'racket-mastermind':[{lv:1, name_ko:'지식 확인→무방비', name_en:'Recall Knowledge → Flat-footed'}],
   'racket-acrobat':   [{lv:1, name_ko:'곡예→스닉 어택 기회', name_en:'Acrobatics → Sneak Attack'}],
   'racket-assassin':  [{lv:1, name_ko:'기습 라운드 +2d6', name_en:'Surprise +2d6'}],
   'racket-eldritch-trickster': [{lv:1, name_ko:'주문→스닉 어택', name_en:'Spell → Sneak Attack'}],

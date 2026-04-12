@@ -144,7 +144,8 @@
 | Frightened | 공포 |
 | Grabbed | 잡힘 |
 | Hidden | 숨겨짐 |
-| Immobilized | 이동 불가 |
+| Immobilized | 고정 |
+| Initiative | 우선권 |
 | Invisible | 투명 |
 | Off-Guard | 무방비 |
 | Observed | 발각됨 |

@@ -138,7 +138,7 @@ const FEAT_EFFECTS = {
   },
   'Fast Recovery': {
     effects: [
-      {type:'display_note', text:'휴식 시 HP 회복 2배 (CON×2×레벨). 쇠약/파멸 회복량 +1'},
+      {type:'display_note', text:'휴식 시 HP 회복 2배 (CON×2×레벨). 탈진/파멸 회복량 +1'},
     ]
   },
   'Pet': {
@@ -257,7 +257,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'높이뛰기/넓이뛰기를 1행동으로 사용 가능 (보폭 없이)'}]
   },
   'Steady Balance': {
-    effects: [{type:'display_note', text:'균형 잡기 판정 성공→대성공. 방어불가 상태 아님. 험지에서 보폭 가능'}]
+    effects: [{type:'display_note', text:'균형 잡기 판정 성공→대성공. 무방비 상태 아님. 험지에서 보폭 가능'}]
   },
   'Nimble Crawl': {
     effects: [{type:'display_note', text:'엎드린 채 이동 시 5피트→절반 속도. 전설=전체 속도'}]
@@ -392,7 +392,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'부상 치료를 2명에게 동시 적용. 달인=4명, 전설=8명'}]
   },
   'Legendary Medic': {
-    effects: [{type:'display_note', text:'1시간 치료로 쇠약/실명/귀머거리 등 심각한 상태 치유 가능. 전설 전용'}]
+    effects: [{type:'display_note', text:'1시간 치료로 탈진/실명/귀머거리 등 심각한 상태 치유 가능. 전설 전용'}]
   },
   'Forager': {
     effects: [{type:'display_note', text:'생존으로 Subsist 시 실패→성공. 성공 시 자신+4명 제공. 전문가=+8명'}]
@@ -616,7 +616,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'weapon_familiarity', weapons:['쇼트소드','하플링 투석 지팡이']}]
   },
   'Keen Eyes': {
-    effects: [{type:'display_note', text:'은폐됨 DC 5→3, 숨겨짐 DC 11→9'}]
+    effects: [{type:'display_note', text:'은폐 DC 5→3, 숨겨짐 DC 11→9'}]
   },
   'Sure Feet': {
     effects: [{type:'display_note', text:'균형 잡기(Balance) 성공→대성공'}]
@@ -2538,7 +2538,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'damage_note', scaling:{1:'1d6',5:'2d6',11:'3d6',17:'4d6'}, damage_type:'정밀'}]
   },
   'Surprise Attack': {
-    effects: [{type:'display_note', text:'전투 시작 시 기만/은신으로 우선권 굴림 가능. 적이 아직 행동 안 했으면 방어불가'}]
+    effects: [{type:'display_note', text:'전투 시작 시 기만/은신으로 우선권 굴림 가능. 적이 아직 행동 안 했으면 무방비'}]
   },
   'Hunt Prey': {
     effects: [{type:'grant_action', action:'hunt-prey'}, {type:'display_note', text:'[1행동] 사냥감 1마리 지정. 지정된 적에 대해 추적/인지 보너스 + 사냥 방식 효과 적용'}]
@@ -2840,7 +2840,7 @@ const FEAT_EFFECTS = {
     effects: [{type:'display_note', text:'기술 1개 전문가→달인, 다른 1개 숙련→전문가. 기술 재주 1개. 최대 5회'}]
   },
   'Uncanny Dodge': {
-    effects: [{type:'display_note', text:'이점 부정(Deny Advantage) 획득. 은폐/기습의 방어불가 면역'}]
+    effects: [{type:'display_note', text:'이점 부정(Deny Advantage) 획득. 은폐/기습의 무방비 면역'}]
   },
   'Evasiveness': {
     effects: [{type:'display_note', text:'반사 내성 숙련도 달인으로 증가'}]

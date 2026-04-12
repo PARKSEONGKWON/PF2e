@@ -2791,7 +2791,7 @@ const FAMILIAR_ABILITIES = [
   {id:'tough',name:'강인',en:'Tough',desc:'레벨당 최대 HP가 2 증가합니다.'},
   // 사역마 전용 능력
   {id:'accompanist',name:'반주자',en:'Accompanist',desc:'공연 판정 시 사역마가 함께 연주하여 +1 상황 보너스 (+2 달인 이상).'},
-  {id:'construct',name:'구조체',en:'Construct',desc:'동물 특성 대신 구조체 특성. 사망/질병/쇠약/피로/치유/마비/독/메스꺼움/의식불명/공허 면역. 강인 능력 필요.'},
+  {id:'construct',name:'구조체',en:'Construct',desc:'동물 특성 대신 구조체 특성. 사망/질병/탈진/피로/치유/마비/독/메스꺼움/의식불명/공허 면역. 강인 능력 필요.'},
   {id:'damage-avoid',name:'피해 회피',en:'Damage Avoidance',desc:'내성 유형 1개 선택. 해당 내성에 성공하면 피해를 받지 않음 (다른 효과는 적용).'},
   {id:'dragon',name:'드래곤',en:'Dragon',desc:'동물 특성 대신 드래곤 특성을 얻습니다.'},
   {id:'elemental',name:'원소',en:'Elemental',desc:'동물 특성 대신 원소 특성. 공기/땅/불/금속/물/나무 중 선택. 출혈/마비/독/수면/해당 원소 면역.'},

@@ -888,9 +888,9 @@ function recalcAll() {
 function getCondPenalty() {
   const frightened = parseInt(state.conditions['공포'] || 0);
   const sickened = parseInt(state.conditions['메스꺼움'] || 0);
-  const clumsy = parseInt(state.conditions['둔함'] || 0);
-  const enfeebled = parseInt(state.conditions['약화됨'] || 0);
-  const stupefied = parseInt(state.conditions['혼미'] || 0);
+  const clumsy = parseInt(state.conditions['서투름'] || 0);
+  const enfeebled = parseInt(state.conditions['약화'] || 0);
+  const stupefied = parseInt(state.conditions['현기증'] || 0);
   return {
     all: Math.max(frightened, sickened), // 공포/메스꺼움 중 큰 값
     clumsy, enfeebled, stupefied
@@ -1255,7 +1255,7 @@ function recalcBulk() {
     if (bulkStatus) { bulkStatus.textContent = '⛔ 소지 불가! (한계 ' + maxBulk + ')'; bulkStatus.style.color = '#ff4444'; }
     if (bulkTotal) bulkTotal.style.color = '#ff4444';
   } else if (isEncumbered) {
-    if (bulkStatus) { bulkStatus.textContent = '⚠ 과적 (둔함 1, 속도 -10ft)'; bulkStatus.style.color = '#ffaa00'; }
+    if (bulkStatus) { bulkStatus.textContent = '⚠ 과적 (서투름 1, 속도 -10ft)'; bulkStatus.style.color = '#ffaa00'; }
     if (bulkTotal) bulkTotal.style.color = '#ffaa00';
   } else {
     if (bulkStatus) { bulkStatus.textContent = ''; bulkStatus.style.color = ''; }
@@ -1266,11 +1266,11 @@ function recalcBulk() {
   const wasEncumbered = !!state.conditions['과적'];
   if (isEncumbered && !wasEncumbered) {
     state.conditions['과적'] = true;
-    if ((parseInt(state.conditions['둔함'])||0) < 1) state.conditions['둔함'] = 1;
+    if ((parseInt(state.conditions['서투름'])||0) < 1) state.conditions['서투름'] = 1;
     buildConditions();
   } else if (!isEncumbered && wasEncumbered) {
     state.conditions['과적'] = false;
-    if ((parseInt(state.conditions['둔함'])||0) <= 1) state.conditions['둔함'] = 0;
+    if ((parseInt(state.conditions['서투름'])||0) <= 1) state.conditions['서투름'] = 0;
     buildConditions();
   }
 
