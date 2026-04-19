@@ -1075,26 +1075,7 @@ function renderGrowthPlan() {
           state.selectedHeritage ? state.selectedHeritage.name_ko : null,
           "openModal('heritage')", state.selectedHeritage ? "clearCoreSelection('heritage')" : null);
       }
-      // 언어는 혈통 모달에서 처리
-
-      // ── Class-specific L1 build choices (클래스 모달에서 처리하지 않는 것만) ──
-      if (state.selectedClass) {
-        const cid = state.selectedClass.id;
-
-        // WITCH: Show patron tradition (auto-set, display only)
-        if (cid === 'witch' && state.selectedSubclass && typeof PATRON_TRADITION !== 'undefined') {
-          const trad = PATRON_TRADITION[state.selectedSubclass.id];
-          if (trad) {
-            const tradNames = {arcane:'비전',divine:'신성',occult:'오컬트',primal:'원시'};
-            html += `<div class="growth-slot filled" style="cursor:default;">
-              <div class="growth-slot-icon">🔮</div>
-              <div class="growth-slot-body">
-                <div class="growth-slot-label">후원자 전통 Patron Tradition</div>
-                <div class="growth-slot-value">${tradNames[trad]||trad} (${trad})</div>
-              </div></div>`;
-          }
-        }
-      }
+      // 언어/서브클래스/후원자 전통은 각 모달에서 처리
 
     }
 
