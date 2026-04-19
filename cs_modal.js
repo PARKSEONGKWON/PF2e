@@ -2773,9 +2773,14 @@ function _checkPrereqs(prereqStr) {
   return true;
 }
 
-// 헌신 재주 특수 조건: 기존 헌신이 있으면 해당 원형 비헌신 재주 2개 이상 필요
+// 헌신 재주 특수 조건: 자기 클래스 헌신 불가 + 기존 헌신이 있으면 해당 원형 비헌신 재주 2개 이상 필요
 function canTakeDedication(f) {
   if (!f.traits || !f.traits.includes('헌신')) return true;
+  // 자기 클래스 헌신 차단: "Bard Dedication" → "bard" vs state.selectedClass.id
+  if (f.traits.includes('멀티클래스') && state.selectedClass) {
+    const dedClass = (f.name_en || '').replace(' Dedication','').toLowerCase();
+    if (dedClass === state.selectedClass.id) return false;
+  }
   // 이미 보유한 헌신 재주 목록
   const allFeats = Object.values(state.feats).flat().filter(ff => ff?.name);
   const ownedDedications = allFeats.filter(ff => {
