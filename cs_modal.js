@@ -901,7 +901,9 @@ function openDivineFontPicker() {
   const fbar = document.getElementById('modal-filterbar'); if(fbar) fbar.innerHTML='';
   const searchEl = document.getElementById('modal-search'); if(searchEl) searchEl.style.display='none';
   document.getElementById('modal-options').innerHTML = items;
-  document.getElementById('modal-detail').innerHTML = '<div class="modal-detail-empty"><strong>신성 원천</strong><br>매일 추가 주문 슬롯을 받아 치유 또는 해악 주문만 시전할 수 있습니다.</div>';
+  const _dfDesc = (typeof CLASS_FEATURE_NAMES !== 'undefined' && CLASS_FEATURE_NAMES.cleric)
+    ? (CLASS_FEATURE_NAMES.cleric.find(f => f.name_en === 'Divine Font') || {}).desc || '' : '';
+  document.getElementById('modal-detail').innerHTML = `<div class="modal-detail-empty"><strong>신성 원천</strong> <span style="color:var(--text2);">Divine Font</span><br><div style="margin-top:8px;line-height:1.7;font-size:13px;color:var(--text);">${_dfDesc}</div></div>`;
   const footer = document.querySelector('.modal-footer');
   if(footer) footer.innerHTML = '<button class="btn btn-cancel" onclick="closeModal()">닫기</button>';
   modalType = 'font-pick';

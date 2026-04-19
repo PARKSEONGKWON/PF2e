@@ -1674,8 +1674,20 @@ function renderFeats() {
       div.style.cursor = 'pointer';
       const srcLabel = isAuto ? `Lv ${f.level||1} — 클래스 특성` : `Lv ${f.level||1}`;
       // DB에서 설명 가져오기
-      const featData = (typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(fd => fd && fd.name_ko === f.name.split(' (')[0].trim()) : null;
-      const desc = featData?.desc || featData?.summary || '';
+      const fNameKo = f.name.split(' (')[0].trim();
+      const fNameEn = (f.name.match(/\(([^)]+)\)/)||[])[1] || '';
+      let featData = (typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(fd => fd && fd.name_ko === fNameKo) : null;
+      // 클래스 특성은 CLASS_FEATURE_NAMES / SUBCLASS_FEATURE_NAMES에서 desc 보충
+      let classFeatureDesc = '';
+      if (t === 'special' && typeof CLASS_FEATURE_NAMES !== 'undefined') {
+        const clsId = state.selectedClass?.id;
+        const subId = state.selectedSubclass?.id;
+        const allCF = [...(clsId && CLASS_FEATURE_NAMES[clsId] || []),
+                       ...(subId && typeof SUBCLASS_FEATURE_NAMES !== 'undefined' ? SUBCLASS_FEATURE_NAMES[subId] || [] : [])];
+        const cfMatch = allCF.find(cf => cf.name_ko === fNameKo || cf.name_en === fNameEn);
+        if (cfMatch?.desc) classFeatureDesc = cfMatch.desc;
+      }
+      const desc = featData?.desc || featData?.summary || classFeatureDesc || '';
       // 아코디언 내 메타 + 특성 뱃지
       const catLabels = {ancestry:'혈통',class:'클래스',general:'일반',skill:'기술',archetype:'원형',special:'클래스 특성',other:'기타'};
       const fTraits = (featData?.traits||[]).map(t2 => typeof traitTag==='function' ? traitTag(t2) : `<span class="tag">${t2}</span>`).join(' ');
