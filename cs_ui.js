@@ -1674,6 +1674,11 @@ function renderFeats() {
       const catLabels = {ancestry:'혈통',class:'클래스',general:'일반',skill:'기술',archetype:'원형',special:'클래스 특성',other:'기타'};
       const fTraits = (featData?.traits||[]).map(t2 => typeof traitTag==='function' ? traitTag(t2) : `<span class="tag">${t2}</span>`).join(' ');
       const fMeta = `<span class="tag-meta">${featData?.feat_level||f.level||1}레벨</span> <span class="tag-meta">${catLabels[featData?.category]||catLabels[t]||t}</span>`;
+      // choiceUI가 feat.choice를 초기화할 수 있으므로 먼저 호출
+      const choiceUI = _buildFeatChoiceUI(f, t, i);
+      const choiceBadge = f.choice && typeof _getChoiceDisplayName === 'function' ? _getChoiceDisplayName(f) : '';
+      const hasChoiceIssue = typeof _hasFeatChoiceIssue === 'function' && _hasFeatChoiceIssue(f);
+      const hasPrereqIssue = typeof _hasFeatPrereqIssue === 'function' && _hasFeatPrereqIssue(f);
       let fPrereq = '';
       if (featData?.prerequisites) {
         const prParts = featData.prerequisites.split(/(?<=\.)\s+/);
@@ -1682,11 +1687,6 @@ function renderFeats() {
           ? `<div style="margin-top:4px;background:#ff980020;border:1px solid #ff9800;border-radius:4px;padding:4px 8px;color:#ff9800;font-size:11px;font-weight:600;">⚠ 선행 조건이 충족되지 않았습니다</div><div style="margin-top:4px;"><b style="color:${_pColor};">선행:</b> ${prParts[0].replace(/\.$/,'')}</div>`
           : `<div style="margin-top:4px;"><b style="color:${_pColor};">선행:</b> ${prParts[0].replace(/\.$/,'')}</div>`;
       }
-      // choiceUI가 feat.choice를 초기화할 수 있으므로 먼저 호출
-      const choiceUI = _buildFeatChoiceUI(f, t, i);
-      const choiceBadge = f.choice && typeof _getChoiceDisplayName === 'function' ? _getChoiceDisplayName(f) : '';
-      const hasChoiceIssue = typeof _hasFeatChoiceIssue === 'function' && _hasFeatChoiceIssue(f);
-      const hasPrereqIssue = typeof _hasFeatPrereqIssue === 'function' && _hasFeatPrereqIssue(f);
       const redDot = hasChoiceIssue ? '<span style="font-size:11px;color:#f44336;flex-shrink:0;line-height:1;" title="선택 필요">⚠</span>'
         : hasPrereqIssue ? '<span style="font-size:11px;color:#ff9800;flex-shrink:0;line-height:1;" title="선행 조건 미충족">⚠</span>' : '';
       div.innerHTML = `
