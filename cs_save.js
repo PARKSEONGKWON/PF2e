@@ -417,8 +417,7 @@ function switchTab(id, el) {
 
   // Mobile-only panels that mirror sidebar/center
   if (id === 'growth') {
-    // show the growth panel; on mobile also show sidebar
-    document.getElementById('panel-growth')?.classList.add('active');
+    // 모바일: sidebar만 표시 (panel-growth 미사용 — 중복 방지)
     document.getElementById('sidebar')?.classList.add('mobile-active');
     document.getElementById('center-col')?.classList.remove('mobile-active');
   } else if (id === 'info') {
