@@ -535,10 +535,9 @@ const FEAT_EFFECTS = {
       type:'lore', label:'집착할 지식(Lore) 분야를 입력하세요',
     },
     effects: [
-      {type:'grant_lore', name:'$choice'},
       {type:'grant_feat', feat:'추가 지식 (Additional Lore)'},
       {type:'grant_feat', feat:'확신 (Assurance)'},
-      {type:'display_note', text:'$choice_name 지식에 숙련됨 + 추가 지식/확신 재주 자동 부여. 휴식 1일로 주제 변경 가능'}
+      {type:'display_note', text:'추가 지식/확신 재주 자동 부여. 휴식 1일로 주제 변경 가능'}
     ]
   },
   'Illusion Sense': {
@@ -2659,7 +2658,7 @@ const FEAT_EFFECTS = {
     choice: {
       type:'lore', label:'추가 지식(Lore) 분야를 입력하세요',
     },
-    effects: [{type:'display_note', text:'추가 지식($choice_name) 숙련됨. 레벨 상승 시 자동 증가'}]
+    effects: [{type:'grant_lore', name:'$choice'}, {type:'display_note', text:'추가 지식($choice_name) 숙련됨. 레벨 상승 시 자동 증가'}]
   },
   'Eye for Numbers': {
     effects: [{type:'display_note', text:'숫자/계산을 빠르게 파악. 재정/수학 관련 사회 판정에 +2 상황 보너스'}]
@@ -3958,6 +3957,11 @@ function checkFeatChoice(featName, featType, featIndex) {
   const nameEn = _extractEnName(featName);
   const def = FEAT_EFFECTS[nameEn];
   if (def && def.choice) {
+    const t = def.choice.type;
+    // 인라인 컨트롤이 있는 타입은 팝업 생략 → 재주 탭에서 선택
+    if (t === 'lore' || t === 'skill' || (t === 'custom' && def.choice.options)) {
+      return false;
+    }
     openFeatChoiceModal(featType, featIndex, def.choice);
     return true; // 선택 모달이 열림
   }
