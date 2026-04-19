@@ -435,7 +435,11 @@ const FEAT_EFFECTS = {
     effects: [{type:'grant_innate_spell', spell:'돌과 하나', tradition:'신성', spellType:'spell', uses:'하루 1회'}]
   },
   "Stonemason's Eye": {
-    effects: [{type:'skill_trained', skill:'crafting'}]
+    choice: {type:'skill_fixed', fixedSkill:'crafting', label:'제작에 숙련'},
+    effects: [
+      {type:'skill_trained', skill:'crafting'},
+      {type:'grant_feat_if_trained', skill:'crafting', feat:'전문 제작 (Specialty Crafting)', defaultChoice:'stonemasonry'}
+    ]
   },
   'Dwarven Weapon Familiarity': {
     effects: [{type:'weapon_familiarity', weapons:['전투 도끼','픽','워해머']}]
@@ -3166,6 +3170,25 @@ function _applyOneEffect(fb, eff, feat, level) {
       }
       break;
     }
+    case 'grant_feat_if_trained': {
+      // 지정 기술이 이미 숙련이면 재주 부여 (석공의 눈 등)
+      if (eff.feat && eff.skill) {
+        const profEl = document.getElementById('sk-prof-' + eff.skill);
+        const wasAlreadyTrained = profEl && parseInt(profEl.value || 0) >= 2 &&
+          !(state._featGrantedSkills || []).some(g => g.skill === eff.skill && g.feat === feat.name);
+        if (wasAlreadyTrained) {
+          const grantName = eff.feat;
+          const alreadyHas = Object.values(state.feats).flat().some(f => f && f.name && f.name.includes(grantName.split(' (')[0]));
+          if (!alreadyHas) {
+            if (!state.feats.skill) state.feats.skill = [];
+            const entry = {name: grantName, level: 1, _auto: true, _grantedBy: feat.name};
+            if (eff.defaultChoice) entry.choice = eff.defaultChoice;
+            state.feats.skill.push(entry);
+          }
+        }
+      }
+      break;
+    }
     case 'extra_sense': {
       if (eff.sense && !fb.extraSenses.includes(eff.sense)) fb.extraSenses.push(eff.sense);
       break;
@@ -3326,7 +3349,15 @@ function _buildFeatChoiceUI(feat, featType, featIndex) {
   let html = `<div class="feat-choice-ctrl" style="margin-top:8px;padding:8px;background:var(--bg4);border-radius:6px;border:1px solid var(--border);">`;
   html += `<div style="font-size:11px;color:var(--accent);margin-bottom:6px;font-weight:600;">${ch.label || '선택'}</div>`;
 
-  if (ch.type === 'lore') {
+  if (ch.type === 'skill_fixed') {
+    const skills = typeof SKILLS !== 'undefined' ? SKILLS : [];
+    const fixedId = ch.fixedSkill || '';
+    const fixedName = skills.find(s => s.id === fixedId)?.name || fixedId;
+    html += `<select disabled
+      style="width:100%;padding:6px 8px;font-size:13px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:4px;outline:none;opacity:0.7;">
+      <option selected>${fixedName}</option>
+    </select>`;
+  } else if (ch.type === 'lore') {
     html += `<div style="display:flex;gap:6px;align-items:center;">
       <input id="${uid}" type="text" value="${current}" placeholder="지식 분야 입력"
         style="flex:1;min-width:0;padding:6px 8px;font-size:13px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;outline:none;">
@@ -4013,7 +4044,7 @@ function checkFeatChoice(featName, featType, featIndex) {
   if (def && def.choice) {
     const t = def.choice.type;
     // 인라인 컨트롤이 있는 타입은 팝업 생략 → 재주 탭에서 선택
-    if (t === 'lore' || t === 'skill' || t === 'skill_defaults' || (t === 'custom' && def.choice.options)) {
+    if (t === 'lore' || t === 'skill' || t === 'skill_fixed' || t === 'skill_defaults' || (t === 'custom' && def.choice.options)) {
       return false;
     }
     openFeatChoiceModal(featType, featIndex, def.choice);
