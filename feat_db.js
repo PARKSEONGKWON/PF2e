@@ -1373,3 +1373,12 @@ var FEAT_DB = [
   {name_ko:'전투 등반가', name_en:'Combat Climber', feat_level:1, traits:['일반','기술'], category:'skill', prerequisites:'운동 숙련', summary:'등반 중에도 전투할 수 있습니다. 등반 중 무방비 상태가 되지 않으며, 한 손으로 벽을 잡고 다른 손으로 무기를 사용할 수 있습니다.', desc:'등반 중에도 전투할 수 있습니다. 등반 중 <strong>무방비 상태가 되지 않으며</strong>, 한 손으로 벽을 잡고 다른 손으로 무기를 사용할 수 있습니다.'},
   {name_ko:'동물 훈련', name_en:'Train Animal', feat_level:1, traits:['일반','기술','휴식','조작'], category:'skill', prerequisites:'자연학 숙련', summary:'동물에게 특정 행동을 가르칩니다. 이미 아는 기본 행동이나 새 행동을 훈련시킬 수 있습니다.', desc:'동물에게 특정 행동을 가르칩니다. 이미 알고 있는 기본 행동을 선택하거나 새 기본 행동을 가르칩니다. GM이 DC와 소요 시간을 결정합니다(보통 최소 1주일).<br><strong>성공:</strong> 동물이 행동을 배웁니다.<br><strong>실패:</strong> 동물이 배우지 못합니다.'},
 ];
+// 중복 제거: name_en + category 기준 (같은 영문명+카테고리는 첫 번째만 유지)
+{const _seen = new Set();
+FEAT_DB = FEAT_DB.filter(f => {
+  if (!f) return false;
+  const key = (f.name_en||f.name_ko) + '|' + (f.category||'');
+  if (_seen.has(key)) return false;
+  _seen.add(key);
+  return true;
+});}
