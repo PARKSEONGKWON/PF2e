@@ -1202,12 +1202,20 @@ function renderSpells() {
   // Update breakdown
   updateSpellBreakdown();
 
-  // ── "주문 기억" 버튼 표시/숨김 ──
+  // ── "주문 배우기" / "주문 기억" 버튼 표시/숨김 ──
   const isPrepared = state.selectedClass?.casting === 'prepared';
   const isPreparedCaster = isPrepared && (typeof CLASS_SPELL_TABLE !== 'undefined') && CLASS_SPELL_TABLE[state.selectedClass?.id];
   const isSpontaneous = state.selectedClass?.casting === 'spontaneous';
+  const hasCasting = !!(state.selectedClass?.casting);
   const memBtn = document.getElementById('btn-memorize-spells');
   if (memBtn) memBtn.style.display = isPrepared ? '' : 'none';
+  const learnBtn = document.getElementById('btn-learn-spells');
+  if (learnBtn) learnBtn.style.display = hasCasting ? '' : 'none';
+  // 경고 배지: 배울 수 있는 주문이 남아있으면 표시
+  const learnWarn = document.getElementById('learn-spells-warn');
+  if (learnWarn && hasCasting) {
+    learnWarn.style.display = _hasUnlearnedSpells() ? '' : 'none';
+  }
 
   // ── Cantrips ──
   const cantripHeader = document.getElementById('cantrip-header');
@@ -1856,6 +1864,70 @@ function removeFeat(t, i) {
   state.feats[t].splice(i,1);
   cascadeRemoveFeats();
   recalcAll(); renderFeats(); save();
+}
+
+// ═══════════════════════════════════════════════
+//  LEARN SPELLS — 주문 배우기 (주문 탭에서 직접)
+// ═══════════════════════════════════════════════
+
+function _hasUnlearnedSpells() {
+  if (!state.selectedClass?.casting) return false;
+  const lv = getLevel();
+  const cid = state.selectedClass.id;
+  const spellData = (typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[cid]) ? CLASS_SPELL_TABLE[cid][Math.min(lv,20)] : null;
+  if (!spellData) return false;
+
+  if (state.selectedClass.casting === 'spontaneous') {
+    // 캔트립 체크
+    const cantripMax = (spellData.cantrips || 5) + (state._fb?.cantrip_bonus || 0);
+    const cantripCount = (state.spells.cantrip || []).filter(s => s).length;
+    if (cantripCount < cantripMax) return true;
+    // 각 랭크 주문
+    const slots = spellData.slots || [];
+    for (let r = 1; r <= 10; r++) {
+      const max = slots[r-1] || 0;
+      if (max <= 0) continue;
+      const known = (state.spells.known || []).filter(s => s.rank === r && !s._auto).length;
+      if (known < max) return true;
+    }
+  } else if (state.selectedClass.casting === 'prepared') {
+    // 주문서 캐스터 (wizard/witch): familiarSpells 체크
+    if (typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[cid]) {
+      const init = FAMILIAR_INIT[cid];
+      // 캔트립
+      const cantripMax = init.cantrip || 5;
+      const cantripCount = (state.familiarSpells?.cantrip || []).length;
+      if (cantripCount < cantripMax) return true;
+      // 1랭크 초기 주문
+      const rank1Max = init.rank1 || 5;
+      const rank1Count = (state.familiarSpells?.[1] || []).length;
+      if (rank1Count < rank1Max) return true;
+    }
+  }
+  return false;
+}
+
+function openLearnSpellsPanel() {
+  if (!state.selectedClass?.casting) return;
+  const lv = getLevel();
+
+  if (state.selectedClass.casting === 'spontaneous') {
+    // 바드 등 즉흥형: 레퍼토리 선택 — 빌더의 growthSpellCardHTML 호출
+    // 빌더 탭으로 전환하여 주문 선택 UI 표시
+    if (typeof switchTab === 'function') switchTab('builder');
+    return;
+  }
+  if (state.selectedClass.casting === 'prepared') {
+    const cid = state.selectedClass.id;
+    if (typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[cid]) {
+      // 주문서 캐스터: 빌더 탭으로 전환
+      if (typeof switchTab === 'function') switchTab('builder');
+      return;
+    }
+    // 전통 전체 접근 (클레릭/드루이드): 기억 모달 열기
+    if (typeof openMemorizeModal === 'function') openMemorizeModal();
+    return;
+  }
 }
 
 function updateSlotChecks(rank) {

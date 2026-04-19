@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=424"></script>
-<script src="feat_db.js?v=424"></script>
-<script src="SPELL_DB.js?v=424"></script>
-<script src="class_features_db.js?v=424"></script>
+<script src="equipment_db.js?v=425"></script>
+<script src="feat_db.js?v=425"></script>
+<script src="SPELL_DB.js?v=425"></script>
+<script src="class_features_db.js?v=425"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1252,7 +1252,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v424</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v425</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1544,7 +1544,10 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
         <span class="spell-subtab" id="spell-subtab-focus" onclick="switchSpellSubtab('focus')">집중 주문</span>
         <span class="spell-subtab" id="spell-subtab-innate" onclick="switchSpellSubtab('innate')">선천적 주문</span>
         <span class="spell-subtab" id="spell-subtab-ritual" onclick="switchSpellSubtab('ritual')">의식</span>
-        <span id="btn-memorize-spells" style="display:none;margin-left:auto;"><button onclick="openMemorizeModal()" style="background:var(--accent);color:#000;border:none;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">📖 주문 기억</button></span>
+        <span style="margin-left:auto;display:flex;gap:4px;align-items:center;">
+          <span id="btn-learn-spells" style="display:none;"><button onclick="openLearnSpellsPanel()" style="background:var(--accent);color:#000;border:none;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">📖 주문 배우기</button><span id="learn-spells-warn" style="display:none;color:#f44336;font-size:11px;margin-left:2px;font-weight:700;">⚠</span></span>
+          <span id="btn-memorize-spells" style="display:none;"><button onclick="openMemorizeModal()" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">📋 주문 기억</button></span>
+        </span>
       </div>
 
       <!-- Class spells content -->
@@ -1811,13 +1814,13 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=424"></script>
-<script src="cs_calc.js?v=424"></script>
-<script src="cs_ui.js?v=424"></script>
-<script src="cs_modal.js?v=424"></script>
-<script src="cs_feat_effects.js?v=424"></script>
-<script src="cs_save.js?v=424"></script>
-<script src="cs_dice.js?v=424"></script>
+<script src="cs_data.js?v=425"></script>
+<script src="cs_calc.js?v=425"></script>
+<script src="cs_ui.js?v=425"></script>
+<script src="cs_modal.js?v=425"></script>
+<script src="cs_feat_effects.js?v=425"></script>
+<script src="cs_save.js?v=425"></script>
+<script src="cs_dice.js?v=425"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
