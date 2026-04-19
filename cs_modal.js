@@ -1244,9 +1244,9 @@ function growthFeatSlotHTML(lv, key, icon, label, featType, value) {
   // 선택된 재주의 전제조건 미달 체크
   let prereqWarn = '';
   if (value && typeof _hasFeatPrereqIssue === 'function') {
-    const nameKo = value.split(' (')[0].trim();
-    const _pIssue = _hasFeatPrereqIssue({name: value});
-    if (_pIssue) prereqWarn = '<div style="color:#ff9800;font-size:10px;margin-top:2px;">⚠ 선행 조건 미충족</div>';
+    try {
+      if (_hasFeatPrereqIssue({name: value})) prereqWarn = '<div style="color:#ff9800;font-size:10px;margin-top:2px;">⚠ 선행 조건 미충족</div>';
+    } catch(e) { console.warn('prereq check error:', e); }
   }
   return `<div class="growth-slot ${filled}" onclick="${clickAction}">
     <div class="growth-slot-icon">${icon}</div>
@@ -3040,7 +3040,8 @@ function renderOptions(data) {
     }
 
     // 전제조건 미달 체크
-    const prereqFail = item.feat_level !== undefined && (item.prereqs || item.prerequisites) && !_checkPrereqs(item);
+    let prereqFail = false;
+    try { prereqFail = item.feat_level !== undefined && (item.prereqs || item.prerequisites) && !_checkPrereqs(item); } catch(e) {}
 
     const rClass = `r${Math.min(levelNum, 10)}`;
     row.innerHTML = `
@@ -3129,7 +3130,8 @@ function selectOption(item, row) {
         const mfTraits = (item.traits||[]).map(t2=>traitTag(t2)).join('');
         tags = `<div style="margin-bottom:4px;"><span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${_catKo[item.category]||item.category||''}</span></div>${mfTraits?'<div style="margin-bottom:6px;">'+mfTraits+'</div>':''}`;
         if (item.prerequisites) {
-          const _prereqMet = !(item.prereqs || item.prerequisites) || _checkPrereqs(item);
+          let _prereqMet = true;
+          try { _prereqMet = !(item.prereqs || item.prerequisites) || _checkPrereqs(item); } catch(e) {}
           const parts = item.prerequisites.split(/(?<=\.)\s+/);
           const prereqName = parts[0].replace(/\.$/,'');
           const prereqRest = parts.slice(1).join(' ');
@@ -3293,11 +3295,14 @@ function showItemDetail(item) {
     tags = `<div style="margin-bottom:4px;"><span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${_catKo[item.category]||item.category||''}</span></div>${traitsHtml?'<div style="margin-bottom:6px;">'+traitsHtml+'</div>':''}`;
     // 선행 요소: 첫 문장만 선행으로, 나머지는 본문에 합침
     if (item.prerequisites) {
+      let _prereqMet = true;
+      try { _prereqMet = !(item.prereqs || item.prerequisites) || _checkPrereqs(item); } catch(e) {}
       const parts = item.prerequisites.split(/(?<=\.)\s+/);
       const prereqName = parts[0].replace(/\.$/,'');
       const prereqRest = parts.slice(1).join(' ');
       let descParts = [];
-      descParts.push(`<b style="color:var(--accent);">선행:</b> ${prereqName}`);
+      if (!_prereqMet) descParts.push(`<div style="background:#f4433620;border:1px solid #f44336;border-radius:4px;padding:6px 10px;margin-bottom:6px;color:#f44336;font-size:11px;font-weight:600;">⚠ 선행 조건이 충족되지 않았습니다</div>`);
+      descParts.push(`<b style="color:${_prereqMet ? 'var(--accent)' : '#f44336'};">선행:</b> ${prereqName}`);
       if (prereqRest) descParts.push(prereqRest);
       if (desc) descParts.push(desc);
       desc = descParts.join('<br>');
