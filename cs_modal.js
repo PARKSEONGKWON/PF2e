@@ -3578,6 +3578,15 @@ function _buildClericChoicesUI() {
     <div id="cls-deity-info" style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;"></div>
   </div>`;
 
+  // 성별화
+  _modalChoices.sanctification = '';
+  html += `<div id="cls-sanct-block" style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px;display:none;">
+    <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">✨ 성별화 Sanctification</div>
+    <select id="cls-sanct" onchange="_modalChoices.sanctification=this.value;_validateInitialChoices()" style="${_selStyle}">
+    </select>
+    <div style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;">신격의 성별화에 따라 신성(Holy) 또는 불경(Unholy)을 선택합니다.</div>
+  </div>`;
+
   // 신성 원천
   html += `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px;">
     <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">⛲ 신성 원천 Divine Font</div>
@@ -3605,8 +3614,11 @@ function _onClericDoctrineChange(id) {
 function _onClericDeityChange(id) {
   _modalChoices.deity = id;
   const info = document.getElementById('cls-deity-info');
+  const sanctBlock = document.getElementById('cls-sanct-block');
+  const sanctSel = document.getElementById('cls-sanct');
+  const d = typeof DEITY_DB !== 'undefined' ? DEITY_DB.find(x => x.id === id) : null;
+
   if (info) {
-    const d = typeof DEITY_DB !== 'undefined' ? DEITY_DB.find(x => x.id === id) : null;
     if (d) {
       const sanctLabel = (d.sanctification||[]).map(s => s==='holy'?'신성':'불경').join('/');
       const skillMap = {society:'사회학',deception:'기만',athletics:'운동',acrobatics:'곡예',survival:'생존',
@@ -3619,6 +3631,31 @@ function _onClericDeityChange(id) {
       </div>`;
     } else {
       info.innerHTML = '';
+    }
+  }
+
+  // 성별화 블록 동적 업데이트
+  if (sanctBlock && sanctSel) {
+    const opts = d ? (d.sanctification || []) : [];
+    if (opts.length === 0) {
+      sanctBlock.style.display = 'none';
+      _modalChoices.sanctification = '';
+    } else if (opts.length === 1) {
+      // 선택지 1개: 자동 선택 (disabled)
+      sanctBlock.style.display = '';
+      const label = opts[0] === 'holy' ? '신성 (Holy)' : '불경 (Unholy)';
+      sanctSel.innerHTML = `<option value="${opts[0]}">${label}</option>`;
+      sanctSel.disabled = true;
+      sanctSel.style.opacity = '0.6';
+      _modalChoices.sanctification = opts[0];
+    } else {
+      // 선택지 2개: 유저 선택
+      sanctBlock.style.display = '';
+      sanctSel.innerHTML = `<option value="">— 선택 —</option>` +
+        opts.map(o => `<option value="${o}">${o==='holy'?'신성 (Holy)':'불경 (Unholy)'}</option>`).join('');
+      sanctSel.disabled = false;
+      sanctSel.style.opacity = '';
+      _modalChoices.sanctification = '';
     }
   }
   _validateInitialChoices();
@@ -3885,9 +3922,10 @@ function _validateInitialChoices() {
     if (skills.length < (_modalChoices.trainableBase || 0)) valid = false;
     // 선택형 고정 기술 ("또는" 패턴)
     if ((_modalChoices.chosenFixedSkills || []).some(v => !v)) valid = false;
-    // 클레릭: 교리/신격/신성 원천 필수
+    // 클레릭: 교리/신격/성별화/신성 원천 필수
     if (_modalChoices.doctrine !== undefined && !_modalChoices.doctrine) valid = false;
     if (_modalChoices.deity !== undefined && !_modalChoices.deity) valid = false;
+    if (_modalChoices.sanctification !== undefined && !_modalChoices.sanctification) valid = false;
     if (_modalChoices.divineFont !== undefined && !_modalChoices.divineFont) valid = false;
     // 범용 서브클래스
     if (_modalChoices.subclass !== undefined && !_modalChoices.subclass) valid = false;
@@ -4155,6 +4193,9 @@ function confirmModal() {
     }
     if (_modalChoices.deity) {
       state.deity = _modalChoices.deity;
+    }
+    if (_modalChoices.sanctification) {
+      state.sanctification = _modalChoices.sanctification;
     }
     if (_modalChoices.divineFont) {
       state.divineFont = _modalChoices.divineFont;
