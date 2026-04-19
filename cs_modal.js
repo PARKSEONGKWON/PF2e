@@ -2652,11 +2652,38 @@ function _checkPrereqs(prereqStr) {
       const skillName = skillRankMatch[1];
       const rankMap = {'숙련':2,'전문가':4,'달인':6,'전설':8};
       const reqRank = rankMap[skillRankMatch[2]] || 2;
-      const sk = (typeof SKILLS !== 'undefined') ? SKILLS.find(s => s.name === skillName) : null;
+
+      // 지각(Perception) 체크 — SKILLS 배열에 없고 별도 숙련도
+      if (skillName === '지각') {
+        const percRank = parseInt(document.getElementById('prof-perc')?.value||0);
+        if (percRank < reqRank) return false;
+        continue;
+      }
+
+      // 지식(Lore) 체크 — 아무 지식 기술이 해당 등급 이상이면 충족
+      if (skillName === '지식') {
+        const loreSkills = (typeof SKILLS !== 'undefined') ? SKILLS.filter(s => s.isLore) : [];
+        const anyLore = loreSkills.some(s => {
+          const cur = parseInt(document.getElementById('sk-prof-'+s.id)?.value||0);
+          return cur >= reqRank;
+        });
+        // 재주 부여 지식도 체크
+        if (!anyLore && state._featGrantedLores && state._featGrantedLores.length > 0) {
+          // 부여된 지식은 최소 숙련(2)
+          if (reqRank <= 2) { continue; }
+        }
+        if (!anyLore) return false;
+        continue;
+      }
+
+      // "에" 접미사 제거: "종교에 숙련" → "종교"로 매칭 시도
+      const cleanName = skillName.replace(/에$/, '');
+      const sk = (typeof SKILLS !== 'undefined') ? SKILLS.find(s => s.name === skillName || s.name === cleanName) : null;
       if (sk) {
         const curRank = parseInt(document.getElementById('sk-prof-'+sk.id)?.value||0);
         if (curRank < reqRank) return false;
       }
+      // sk가 null이면 기술이 아닌 숙련도(내성, 무기 등) — 현재 체크 불가, 통과
       continue;
     }
 
