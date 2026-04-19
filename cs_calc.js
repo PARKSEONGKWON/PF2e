@@ -77,6 +77,38 @@ function syncAllProfRanks() {
   if (typeof SKILLS !== 'undefined') {
     SKILLS.forEach(sk => syncProfRankBadge('rank-sk-'+sk.id, 'sk-prof-'+sk.id));
   }
+  // 무기 숙련 요약
+  updateWeaponProfSummary();
+}
+
+function updateWeaponProfSummary() {
+  const el = document.getElementById('weapon-prof-summary');
+  if (!el) return;
+  const rankLabel = {0:'',2:'숙련',4:'전문가',6:'달인',8:'전설'};
+  const cats = [
+    {id:'simple', name:'단순 무기'},
+    {id:'martial', name:'군용 무기'},
+    {id:'advanced', name:'고급 무기'},
+    {id:'unarmed', name:'비무장'}
+  ];
+  const items = [];
+  cats.forEach(c => {
+    const rank = parseInt(document.getElementById('prof-weapon-'+c.id)?.value || 0);
+    if (rank >= 2) items.push(c.name);
+  });
+  // 개별 무기 친숙 (한 카테고리 낮춰 취급)
+  if (state._fb?.familiarWeapons?.length) {
+    state._fb.familiarWeapons.forEach(w => {
+      if (!items.includes(w)) items.push(w);
+    });
+  }
+  // 개별 무기 훈련됨
+  if (state._fb?.trainedWeapons?.length) {
+    state._fb.trainedWeapons.forEach(w => {
+      if (!items.includes(w)) items.push(w);
+    });
+  }
+  el.textContent = items.length ? '숙련: ' + items.join(', ') : '';
 }
 
 // Legacy aliases
