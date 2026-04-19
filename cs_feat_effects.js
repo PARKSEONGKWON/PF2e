@@ -3474,7 +3474,8 @@ function _onFeatChoiceInline(featType, featIndex, choiceType) {
   const el = document.getElementById(uid);
   if (!el) return;
   const val = el.value.trim();
-  if (!val) return;
+  // lore 타입은 빈 값 무시 (확인 버튼 방식), 그 외는 빈 값도 저장 (초기화)
+  if (!val && choiceType === 'lore') return;
   state.feats[featType][featIndex].choice = val;
   renderFeats();
   // 선택한 재주를 다시 펼침
