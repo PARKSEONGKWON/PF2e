@@ -1685,8 +1685,10 @@ function renderFeats() {
       const hasIssue = typeof _hasFeatChoiceIssue === 'function' && _hasFeatChoiceIssue(f);
       const redDot = hasIssue ? '<span style="font-size:11px;color:#f44336;flex-shrink:0;line-height:1;" title="선택 필요">⚠</span>' : '';
       div.innerHTML = `
-        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;width:100%;margin-bottom:2px;">
-          <span style="color:var(--text);font-size:12px;">${f.name || labels[t] + ' 재주'}</span>${choiceBadge ? `<span style="font-size:10px;color:var(--accent);">[${choiceBadge}]</span>` : ''}${redDot}
+        <div style="display:flex;align-items:center;gap:4px;width:100%;margin-bottom:2px;">
+          <span style="color:var(--text);font-size:12px;">${f.name || labels[t] + ' 재주'}</span>${redDot}
+          <span style="flex:1;"></span>
+          ${choiceBadge ? `<span style="font-size:10px;color:var(--accent);flex-shrink:0;">[${choiceBadge}]</span>` : ''}
         </div>
         <div class="feat-src"><span style="color:var(--text2);font-size:10px;">${fMeta}</span></div>
         ${fTraits ? `<div class="feat-traits-row">${fTraits}</div>` : ''}
