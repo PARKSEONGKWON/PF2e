@@ -3503,12 +3503,11 @@ function _buildClassChoicesUI(cls) {
     html += subclassHtml;
   }
 
-  // 1레벨 클래스 특성 블록들
-  lv1Feats.forEach((f, fi) => {
-    const isSub = subFeats.includes(f);
+  // 1레벨 클래스 특성 블록들 (서브클래스 특성은 서브클래스 블록 안에 표시하므로 제외)
+  lv1Feats.filter(f => !subFeats.includes(f)).forEach(f => {
     html += _classFeatureBlock('⚡', f.name_ko, f.name_en, () => {
       return `<div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc || ''}</div>`;
-    }, isSub);
+    }, false);
   });
 
   // === 2레벨 이상 ===
@@ -3568,14 +3567,13 @@ function _refreshClassFeaturesPreview() {
   // 기존 동적 블록 제거 (class-feat-dynamic 클래스)
   container.querySelectorAll('.cfp-dynamic').forEach(el => el.remove());
 
-  // 1레벨 클래스 특성 블록 추가 (기술/서브클래스 뒤에)
-  const lv1Feats = featsByLv[1] || [];
+  // 1레벨 클래스 특성 블록 추가 (서브클래스 특성은 서브클래스 블록 안에 표시하므로 제외)
+  const lv1Feats = (featsByLv[1] || []).filter(f => !subFeats.includes(f) || f.lv !== 1);
   let lv1Html = '';
   lv1Feats.forEach(f => {
-    const isSub = subFeats.includes(f);
     lv1Html += `<div class="cfp-dynamic">${_classFeatureBlock('⚡', f.name_ko, f.name_en, () => {
       return `<div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc || ''}</div>`;
-    }, isSub)}</div>`;
+    }, false)}</div>`;
   });
 
   // 2레벨 이상 블록
@@ -3592,6 +3590,23 @@ function _refreshClassFeaturesPreview() {
   });
 
   container.insertAdjacentHTML('beforeend', lv1Html + otherHtml);
+}
+
+// ── 서브클래스 특성을 서브클래스 블록 안에 렌더링 ──
+function _renderSubclassFeatsInBlock(subId, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  if (!subId || typeof SUBCLASS_FEATURE_NAMES === 'undefined') { container.innerHTML = ''; return; }
+  const feats = (SUBCLASS_FEATURE_NAMES[subId] || []).filter(f => f.lv === 1);
+  if (feats.length === 0) { container.innerHTML = ''; return; }
+  let html = '';
+  feats.forEach(f => {
+    html += `<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:4px;border-left:2px solid var(--accent);">
+      <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">⚡ ${f.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${f.name_en}</span></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc || ''}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
 }
 
 // ── 빌더에서 클래스 특성 클릭 시 → 클래스 모달 열기 + 스크롤 ──
@@ -3628,6 +3643,7 @@ function _buildClericChoicesUI() {
       ${doctrines.map(d => `<option value="${d.id}">${d.name_ko} (${d.name_en})</option>`).join('')}
     </select>
     <div id="cls-doctrine-info" style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;"></div>
+    <div id="cls-doctrine-feats"></div>
   </div>`;
 
   // 신격
@@ -3671,6 +3687,7 @@ function _onClericDoctrineChange(id) {
     const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === id) : null;
     info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.summary || ''}</div>` : '';
   }
+  _renderSubclassFeatsInBlock(id, 'cls-doctrine-feats');
   _refreshClassFeaturesPreview();
   _validateInitialChoices();
 }
@@ -3761,6 +3778,7 @@ function _buildSubclassChoiceUI(classId, label, subs) {
       ${subs.map(s => `<option value="${s.id}">${s.name_ko} (${s.name_en})</option>`).join('')}
     </select>
     <div id="cls-subclass-info" style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;"></div>
+    <div id="cls-subclass-feats"></div>
   </div>`;
   html += `</div>`;
   return html;
@@ -3773,6 +3791,7 @@ function _onSubclassChange(id) {
     const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === id) : null;
     info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.summary || ''}</div>` : '';
   }
+  _renderSubclassFeatsInBlock(id, 'cls-subclass-feats');
   _refreshClassFeaturesPreview();
   _validateInitialChoices();
 }
