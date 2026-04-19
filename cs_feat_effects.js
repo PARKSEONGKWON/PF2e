@@ -3380,6 +3380,7 @@ function _buildFeatChoiceUI(feat, featType, featIndex) {
       <button onclick="_onFeatChoiceInline('${featType}',${featIndex},'lore')"
         style="padding:6px 12px;font-size:12px;background:var(--accent);color:var(--bg);border:none;border-radius:4px;cursor:pointer;white-space:nowrap;font-weight:600;">확인</button>
     </div>`;
+    if (!current) html += `<div style="margin-top:4px;font-size:11px;color:#f44336;">⚠ 선택하지 않은 항목이 있습니다.</div>`;
   } else if (ch.type === 'skill') {
     const skills = typeof SKILLS !== 'undefined' ? SKILLS : [];
     const minRank = ch.filter?.min_rank || 0;
@@ -3393,8 +3394,9 @@ function _buildFeatChoiceUI(feat, featType, featIndex) {
       html += `<option value="${s.id}"${sel}>${s.name}</option>`;
     });
     html += `</select>`;
-    // 이미 선택된 기술이 조건 미달인 경우 경고
-    if (current && minRank > 0) {
+    if (!current) {
+      html += `<div style="margin-top:4px;font-size:11px;color:#f44336;">⚠ 선택하지 않은 항목이 있습니다.</div>`;
+    } else if (minRank > 0) {
       const curRank = parseInt(document.getElementById('sk-prof-' + current)?.value || 0);
       if (curRank < minRank) {
         const curName = skills.find(s => s.id === current)?.name || current;
@@ -3430,6 +3432,7 @@ function _buildFeatChoiceUI(feat, featType, featIndex) {
       html += `<option value="${o.id}"${sel}>${o.name}</option>`;
     });
     html += `</select>`;
+    if (!current) html += `<div style="margin-top:4px;font-size:11px;color:#f44336;">⚠ 선택하지 않은 항목이 있습니다.</div>`;
   } else {
     // 기타 타입 (spell_cantrip 등) — 기존 모달 사용
     const escapedName = feat.name.replace(/'/g, "\\'");
