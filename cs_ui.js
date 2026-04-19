@@ -1666,7 +1666,6 @@ function renderFeats() {
       const div = document.createElement('div');
       div.className = 'feat-entry';
       div.style.cursor = 'pointer';
-      const choiceBadge = f.choice && typeof _getChoiceDisplayName === 'function' ? _getChoiceDisplayName(f) : '';
       const srcLabel = isAuto ? `Lv ${f.level||1} — 클래스 특성` : `Lv ${f.level||1}`;
       // DB에서 설명 가져오기
       const featData = (typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(fd => fd && fd.name_ko === f.name.split(' (')[0].trim()) : null;
@@ -1680,7 +1679,9 @@ function renderFeats() {
         const prParts = featData.prerequisites.split(/(?<=\.)\s+/);
         fPrereq = `<div style="margin-top:4px;"><b style="color:var(--accent);">선행:</b> ${prParts[0].replace(/\.$/,'')}</div>`;
       }
+      // choiceUI가 feat.choice를 초기화할 수 있으므로 먼저 호출
       const choiceUI = _buildFeatChoiceUI(f, t, i);
+      const choiceBadge = f.choice && typeof _getChoiceDisplayName === 'function' ? _getChoiceDisplayName(f) : '';
       const hasIssue = typeof _hasFeatChoiceIssue === 'function' && _hasFeatChoiceIssue(f);
       const redDot = hasIssue ? '<span style="font-size:11px;color:#f44336;flex-shrink:0;line-height:1;" title="선택 필요">⚠</span>' : '';
       div.innerHTML = `
