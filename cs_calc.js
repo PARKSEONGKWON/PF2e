@@ -77,14 +77,23 @@ function syncAllProfRanks() {
   if (typeof SKILLS !== 'undefined') {
     SKILLS.forEach(sk => syncProfRankBadge('rank-sk-'+sk.id, 'sk-prof-'+sk.id));
   }
-  // 무기 숙련 요약
+  // 무기/방어구 숙련 요약
   updateWeaponProfSummary();
+  updateArmorProfSummary();
+}
+
+function _buildProfSummaryHTML(label, items) {
+  if (!items.length) return '';
+  const parts = items.map((it, i) =>
+    (i > 0 ? '<span class="ac-sep">|</span>' : '') +
+    `<span class="ac-part">${it}</span>`
+  ).join('');
+  return `<span class="ac-part" style="margin-right:2px;">${label}</span>${parts}`;
 }
 
 function updateWeaponProfSummary() {
   const el = document.getElementById('weapon-prof-summary');
   if (!el) return;
-  const rankLabel = {0:'',2:'숙련',4:'전문가',6:'달인',8:'전설'};
   const cats = [
     {id:'simple', name:'단순 무기'},
     {id:'martial', name:'군용 무기'},
@@ -96,19 +105,30 @@ function updateWeaponProfSummary() {
     const rank = parseInt(document.getElementById('prof-weapon-'+c.id)?.value || 0);
     if (rank >= 2) items.push(c.name);
   });
-  // 개별 무기 친숙 (한 카테고리 낮춰 취급)
   if (state._fb?.familiarWeapons?.length) {
-    state._fb.familiarWeapons.forEach(w => {
-      if (!items.includes(w)) items.push(w);
-    });
+    state._fb.familiarWeapons.forEach(w => { if (!items.includes(w)) items.push(w); });
   }
-  // 개별 무기 훈련됨
   if (state._fb?.trainedWeapons?.length) {
-    state._fb.trainedWeapons.forEach(w => {
-      if (!items.includes(w)) items.push(w);
-    });
+    state._fb.trainedWeapons.forEach(w => { if (!items.includes(w)) items.push(w); });
   }
-  el.textContent = items.length ? '숙련: ' + items.join(', ') : '';
+  el.innerHTML = _buildProfSummaryHTML('숙련 :', items);
+}
+
+function updateArmorProfSummary() {
+  const el = document.getElementById('armor-prof-summary');
+  if (!el) return;
+  const cats = [
+    {id:'light', name:'경갑'},
+    {id:'medium', name:'평갑'},
+    {id:'heavy', name:'중갑'},
+    {id:'unarmored', name:'비무장'}
+  ];
+  const items = [];
+  cats.forEach(c => {
+    const rank = parseInt(document.getElementById('prof-armor-'+c.id)?.value || 0);
+    if (rank >= 2) items.push(c.name);
+  });
+  el.innerHTML = _buildProfSummaryHTML('숙련 :', items);
 }
 
 // Legacy aliases
