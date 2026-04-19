@@ -3603,6 +3603,7 @@ function _renderSubclassFeatsInBlock(subId, containerId) {
   const _badge = 'font-size:9px;color:var(--accent);background:var(--bg4);padding:1px 5px;border-radius:3px;';
   // 중복 추적용 Set
   const shownNames = new Set();
+  const shownKoNames = new Set();
 
   const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === subId) : null;
   // HTML 태그 제거한 순수 텍스트 (파싱용) — <br>은 구분자 역할이므로 | 로 치환
@@ -3669,9 +3670,6 @@ function _renderSubclassFeatsInBlock(subId, containerId) {
   });
 
   // ── 4) 서브클래스 특성 — 재주/주문과 중복되지 않는 것만 ──
-  // 이미 표시된 항목의 한글명도 수집 (위치/위저드 등 name_en 불일치 대비)
-  const shownKoNames = new Set();
-  autoFeats.forEach(af => shownKoNames.add(af.name_ko));
   autoSpells.forEach(sp => shownKoNames.add(sp.name_ko));
 
   if (typeof SUBCLASS_FEATURE_NAMES !== 'undefined') {
