@@ -1193,10 +1193,24 @@ function renderGrowthPlan() {
       html += growthFeatSlotHTML(lv, 'skillFeat', '📚', '기술 재주 Skill Feat', 'skill', g.skillFeat);
     }
 
-    // 주문 선택은 주문 탭에서 처리 (빌더에서 제거됨)
-    // 시그니처 주문만 빌더에서 유지
+    // Spell Repertoire (spontaneous casters with CLASS_SPELL_TABLE)
+    if (state.selectedClass?.casting === 'spontaneous') {
+      html += growthSpellCardHTML(lv);
+    }
+
+    // Signature Spells (3레벨에 등장, 이후 새 랭크 얻을 때마다)
     if (lv >= 3 && state.selectedClass?.casting === 'spontaneous') {
       html += growthSignatureCardHTML(lv);
+    }
+
+    // Spellbook/Familiar (prepared+주문서: wizard, witch)
+    if (state.selectedClass?.casting === 'prepared' && typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[state.selectedClass.id]) {
+      html += growthFamiliarSpellCardHTML(lv);
+    }
+    // Full tradition access (prepared+전통 전체: cleric, druid)
+    if (state.selectedClass?.casting === 'prepared' && !(typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[state.selectedClass.id])
+        && typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[state.selectedClass.id] && lv === 1) {
+      html += growthFullTraditionCardHTML();
     }
   }
 

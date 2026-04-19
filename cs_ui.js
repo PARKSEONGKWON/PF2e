@@ -1909,22 +1909,34 @@ function _hasUnlearnedSpells() {
 
 function openLearnSpellsPanel() {
   if (!state.selectedClass?.casting) return;
-  const lv = getLevel();
 
   if (state.selectedClass.casting === 'spontaneous') {
-    // 바드 등 즉흥형: 레퍼토리 선택 — 빌더의 growthSpellCardHTML 호출
-    // 빌더 탭으로 전환하여 주문 선택 UI 표시
-    if (typeof switchTab === 'function') switchTab('builder');
+    // 즉흥형: 첫 번째 빈 캔트립 또는 known 슬롯 찾아서 주문 선택 모달 열기
+    const cantripSlots = state.cantripSlots || 5;
+    const cantrips = state.spells.cantrip || [];
+    for (let i = 0; i < cantripSlots; i++) {
+      if (!cantrips[i]) { pickSpellForSlot('cantrip', 0, i); return; }
+    }
+    // 빈 known 슬롯 찾기
+    const lv = getLevel();
+    const cid = state.selectedClass.id;
+    const spellData = (typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[cid]) ? CLASS_SPELL_TABLE[cid][Math.min(lv,20)] : null;
+    if (spellData) {
+      const slots = spellData.slots || [];
+      for (let r = 1; r <= 10; r++) {
+        const max = slots[r-1] || 0;
+        if (max <= 0) continue;
+        const known = (state.spells.known || []).filter(s => s.rank === r && !s._auto);
+        if (known.length < max) {
+          pickSpellForSlot('known', r, known.length);
+          return;
+        }
+      }
+    }
     return;
   }
   if (state.selectedClass.casting === 'prepared') {
-    const cid = state.selectedClass.id;
-    if (typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[cid]) {
-      // 주문서 캐스터: 빌더 탭으로 전환
-      if (typeof switchTab === 'function') switchTab('builder');
-      return;
-    }
-    // 전통 전체 접근 (클레릭/드루이드): 기억 모달 열기
+    // 준비형: 주문 기억 모달 열기
     if (typeof openMemorizeModal === 'function') openMemorizeModal();
     return;
   }
