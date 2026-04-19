@@ -3521,12 +3521,8 @@ function _buildClassChoicesUI(cls) {
       </select>
     </div>`;
   });
-  if (deitySkill) {
-    html += _choiceDropdown('', `신격 기술 (신격 선택 시 자동)`, [{value:'deity', label:'신격 기술'}], true, 'deity');
-  }
-
   // 추가 기술 숙련 (active)
-  html += `<div style="font-size:10px;color:var(--text2);margin:8px 0 4px;">추가 기술 숙련 (기본 ${trainableBase}개, + 버튼으로 추가)</div>`;
+  html += `<div style="font-size:10px;color:var(--text2);margin:8px 0 4px;">추가 기술 숙련 (기본 ${trainableBase}개${deitySkill ? ' + 신격 기술' : ''}, + 버튼으로 추가)</div>`;
   html += `<div id="class-trainable-skills">`;
   for (let i = 0; i < trainableBase; i++) {
     html += _buildTrainableSkillRow(i, fixedSkills);
@@ -3537,7 +3533,124 @@ function _buildClassChoicesUI(cls) {
     <span style="font-size:10px;color:var(--text2);margin-left:6px;">INT 수정치만큼 추가 가능</span>
   </div>`;
   html += `</div>`;
+
+  // ── 클레릭 전용: 교리 / 신격 / 신성 원천 ──
+  if (cls.id === 'cleric') {
+    html += _buildClericChoicesUI();
+  }
+  // ── 서브클래스가 있는 다른 클래스 ──
+  else if (typeof SUBCLASS_DB !== 'undefined') {
+    const subs = SUBCLASS_DB.filter(s => s.class_id === cls.id);
+    if (subs.length > 0) {
+      const subLabel = subs[0].subclass_type || '서브클래스';
+      html += _buildSubclassChoiceUI(cls.id, subLabel, subs);
+    }
+  }
+
   return html;
+}
+
+// ── 클레릭 전용 UI: 교리 + 신격 + 신성 원천 ──
+function _buildClericChoicesUI() {
+  _modalChoices.doctrine = '';
+  _modalChoices.deity = '';
+  _modalChoices.divineFont = '';
+
+  let html = `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px;">`;
+  html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">📿 교리 · 신격 · 신성 원천</div>`;
+
+  // 교리 선택
+  const doctrines = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.filter(s => s.class_id === 'cleric') : [];
+  html += `<div style="margin-bottom:6px;">
+    <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">교리 Doctrine</div>
+    <select id="cls-doctrine" onchange="_onClericDoctrineChange(this.value)" style="${_selStyle}">
+      <option value="">— 선택 —</option>
+      ${doctrines.map(d => `<option value="${d.id}">${d.name_ko} (${d.name_en})</option>`).join('')}
+    </select>
+    <div id="cls-doctrine-info" style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;"></div>
+  </div>`;
+
+  // 신격 선택
+  const deities = typeof DEITY_DB !== 'undefined' ? DEITY_DB : [];
+  html += `<div style="margin-bottom:6px;">
+    <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">신격 Deity</div>
+    <select id="cls-deity" onchange="_onClericDeityChange(this.value)" style="${_selStyle}">
+      <option value="">— 선택 —</option>
+      ${deities.map(d => `<option value="${d.id}">${d.name_ko} (${d.name_en})</option>`).join('')}
+    </select>
+    <div id="cls-deity-info" style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;"></div>
+  </div>`;
+
+  // 신성 원천
+  html += `<div style="margin-bottom:6px;">
+    <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">신성 원천 Divine Font</div>
+    <select id="cls-font" onchange="_modalChoices.divineFont=this.value;_validateInitialChoices()" style="${_selStyle}">
+      <option value="">— 선택 —</option>
+      <option value="heal">💚 치유 (Heal)</option>
+      <option value="harm">💀 해악 (Harm)</option>
+    </select>
+  </div>`;
+
+  html += `</div>`;
+  return html;
+}
+
+function _onClericDoctrineChange(id) {
+  _modalChoices.doctrine = id;
+  const info = document.getElementById('cls-doctrine-info');
+  if (info) {
+    const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === id) : null;
+    info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.summary || ''}</div>` : '';
+  }
+  _validateInitialChoices();
+}
+
+function _onClericDeityChange(id) {
+  _modalChoices.deity = id;
+  const info = document.getElementById('cls-deity-info');
+  if (info) {
+    const d = typeof DEITY_DB !== 'undefined' ? DEITY_DB.find(x => x.id === id) : null;
+    if (d) {
+      const sanctLabel = (d.sanctification||[]).map(s => s==='holy'?'신성':'불경').join('/');
+      const skillMap = {society:'사회학',deception:'기만',athletics:'운동',acrobatics:'곡예',survival:'생존',
+        intimidation:'위협',medicine:'의학',arcana:'주문학',stealth:'은신',crafting:'제작'};
+      info.innerHTML = `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">
+        ${d.title ? `<div style="color:var(--accent);font-style:italic;">${d.title}</div>` : ''}
+        <div><strong>선호 무기:</strong> ${d.weapon} | <strong>신격 기술:</strong> ${skillMap[d.skill]||d.skill}</div>
+        <div><strong>성별화:</strong> ${sanctLabel || '—'} | <strong>영역:</strong> ${(d.domains||[]).join(', ')}</div>
+        ${d.desc ? `<div style="margin-top:4px;">${d.desc}</div>` : ''}
+      </div>`;
+    } else {
+      info.innerHTML = '';
+    }
+  }
+  _validateInitialChoices();
+}
+
+// ── 범용 서브클래스 선택 UI (클레릭 제외) ──
+function _buildSubclassChoiceUI(classId, label, subs) {
+  _modalChoices.subclass = '';
+  let html = `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px;">`;
+  html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">⚙ ${label}</div>`;
+  html += `<div style="margin-bottom:6px;">
+    <select id="cls-subclass" onchange="_onSubclassChange(this.value)" style="${_selStyle}">
+      <option value="">— 선택 —</option>
+      ${subs.map(s => `<option value="${s.id}">${s.name_ko} (${s.name_en})</option>`).join('')}
+    </select>
+    <div id="cls-subclass-info" style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;"></div>
+  </div>`;
+  html += `</div>`;
+  return html;
+}
+
+function _onSubclassChange(id) {
+  _modalChoices.subclass = id;
+  const info = document.getElementById('cls-subclass-info');
+  if (info) {
+    const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === id) : null;
+    info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.summary || ''}</div>` : '';
+  }
+  _validateInitialChoices();
 }
 
 function _buildTrainableSkillRow(index, excludeNames) {
@@ -3750,6 +3863,12 @@ function _validateInitialChoices() {
     if (skills.length < (_modalChoices.trainableBase || 0)) valid = false;
     // 선택형 고정 기술 ("또는" 패턴)
     if ((_modalChoices.chosenFixedSkills || []).some(v => !v)) valid = false;
+    // 클레릭: 교리/신격/신성 원천 필수
+    if (_modalChoices.doctrine !== undefined && !_modalChoices.doctrine) valid = false;
+    if (_modalChoices.deity !== undefined && !_modalChoices.deity) valid = false;
+    if (_modalChoices.divineFont !== undefined && !_modalChoices.divineFont) valid = false;
+    // 범용 서브클래스
+    if (_modalChoices.subclass !== undefined && !_modalChoices.subclass) valid = false;
   } else if (_modalChoices.type === 'background') {
     if (_modalChoices.hasChoiceSkill && !_modalChoices.choiceSkill) valid = false;
   } else if (_modalChoices.type === 'ancestry') {
@@ -4006,6 +4125,23 @@ function confirmModal() {
         const el = document.getElementById('sk-prof-' + id);
         if (el && parseInt(el.value) < 2) el.value = '2';
       });
+    }
+    // 클레릭: 교리/신격/신성 원천 반영
+    if (_modalChoices.doctrine) {
+      const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === _modalChoices.doctrine) : null;
+      if (sub) { state.selectedSubclass = sub; const btn = document.getElementById('btn-subclass'); if (btn) { btn.textContent = `${sub.name_ko} (${sub.name_en})`; btn.classList.add('filled'); } }
+    }
+    if (_modalChoices.deity) {
+      state.deity = _modalChoices.deity;
+    }
+    if (_modalChoices.divineFont) {
+      state.divineFont = _modalChoices.divineFont;
+      state.divineFontUsed = 0;
+    }
+    // 범용 서브클래스
+    if (_modalChoices.subclass) {
+      const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === _modalChoices.subclass) : null;
+      if (sub) { state.selectedSubclass = sub; const btn = document.getElementById('btn-subclass'); if (btn) { btn.textContent = `${sub.name_ko} (${sub.name_en})`; btn.classList.add('filled'); } }
     }
     applyClassFeatures();
   } else if (modalType==='ancestry') {
