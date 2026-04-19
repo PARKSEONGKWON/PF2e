@@ -536,8 +536,8 @@ const FEAT_EFFECTS = {
     },
     effects: [
       {type:'grant_lore', name:'$choice'},
-      {type:'grant_feat', feat:'추가 지식 (Additional Lore)', choiceValue:'$choice'},
-      {type:'grant_feat', feat:'확신 (Assurance)', choiceValue:'$choice'},
+      {type:'grant_feat', feat:'추가 지식 (Additional Lore)'},
+      {type:'grant_feat', feat:'확신 (Assurance)'},
       {type:'display_note', text:'$choice_name 지식에 숙련됨 + 추가 지식/확신 재주 자동 부여. 휴식 1일로 주제 변경 가능'}
     ]
   },
@@ -3140,30 +3140,13 @@ function _applyOneEffect(fb, eff, feat, level) {
       break;
     }
     case 'grant_feat': {
-      // 재주 자동 부여
+      // 재주 자동 부여 — 확신이든 뭐든 동일한 재주 데이터 참조
       if (eff.feat && feat.name) {
         const grantName = eff.feat;
-        const existing = Object.values(state.feats).flat().find(f => f && f.name && f.name.includes(grantName.split(' (')[0]));
-        if (existing) {
-          // choiceValue 동기화: 부모 choice 변경 시 자식도 갱신
-          if (eff.choiceValue && existing._grantedBy === feat.name) {
-            existing.choice = eff.choiceValue === '$choice' ? feat.choice : eff.choiceValue;
-          }
-        } else {
+        const alreadyHas = Object.values(state.feats).flat().some(f => f && f.name && f.name.includes(grantName.split(' (')[0]));
+        if (!alreadyHas) {
           if (!state.feats.general) state.feats.general = [];
-          const grantedEntry = {name: grantName, level: 1, _auto: true, _grantedBy: feat.name};
-          // choiceValue: 부모 재주의 choice를 자식 재주에 미리 지정
-          if (eff.choiceValue) {
-            grantedEntry.choice = eff.choiceValue === '$choice' ? feat.choice : eff.choiceValue;
-          }
-          state.feats.general.push(grantedEntry);
-          // 부여된 재주에 choice가 필요하면 모달 열기
-          // choiceValue가 지정된 경우: 부모 choice에서 상속하므로 팝업 억제
-          const grantedIdx = state.feats.general.length - 1;
-          const grantedFeat = state.feats.general[grantedIdx];
-          if (!grantedFeat.choice && !eff.choiceValue && typeof checkFeatChoice === 'function') {
-            setTimeout(() => checkFeatChoice(grantName, 'general', grantedIdx), 0);
-          }
+          state.feats.general.push({name: grantName, level: 1, _auto: true, _grantedBy: feat.name});
         }
       }
       break;
@@ -3320,12 +3303,6 @@ function _buildFeatChoiceUI(feat, featType, featIndex) {
   if (!nameEn) return '';
   const def = FEAT_EFFECTS[nameEn];
   if (!def || !def.choice) return '';
-  // choiceValue로 부모에서 상속받는 재주는 자체 컨트롤 불필요
-  if (feat._grantedBy) {
-    const parentEn = _extractEnName(feat._grantedBy);
-    const parentDef = FEAT_EFFECTS[parentEn];
-    if (parentDef?.effects?.some(e => e.choiceValue)) return '';
-  }
   const ch = def.choice;
   const uid = `fc-${featType}-${featIndex}`;
   const current = feat.choice || '';
