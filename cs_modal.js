@@ -1241,11 +1241,18 @@ function growthFeatSlotHTML(lv, key, icon, label, featType, value) {
   const filled = value ? 'filled' : '';
   const display = value || '선택 안 됨';
   const clickAction = value ? `showInfo('feat','${(value||'').replace(/'/g,"\\'")}')` : `growthPickFeat(${lv},'${key}','${featType}')`;
+  // 선택된 재주의 전제조건 미달 체크
+  let prereqWarn = '';
+  if (value && typeof _hasFeatPrereqIssue === 'function') {
+    const nameKo = value.split(' (')[0].trim();
+    const _pIssue = _hasFeatPrereqIssue({name: value});
+    if (_pIssue) prereqWarn = '<div style="color:#ff9800;font-size:10px;margin-top:2px;">⚠ 선행 조건 미충족</div>';
+  }
   return `<div class="growth-slot ${filled}" onclick="${clickAction}">
     <div class="growth-slot-icon">${icon}</div>
     <div class="growth-slot-body">
       <div class="growth-slot-label">${label}</div>
-      <div class="growth-slot-value">${display}</div>
+      <div class="growth-slot-value">${display}</div>${prereqWarn}
     </div>
     ${value ? '<span class="spell-del" onclick="event.stopPropagation();growthClearFeat('+lv+',\''+key+'\',\''+featType+'\');" style="color:var(--red);font-size:14px;padding:0 4px;cursor:pointer;">✕</span>' : ''}
   </div>`;
@@ -2860,7 +2867,7 @@ function filterFeats() {
       if (!f) return false;
       if (q && !f.name_ko.includes(q) && !(f.name_en||'').toLowerCase().includes(q) && !(f.summary||'').includes(q)) return false;
       if (f.feat_level > maxLv) return false;
-      if ((f.prereqs || f.prerequisites) && !_checkPrereqs(f)) return false;
+      // 전제조건 미달이어도 목록에 노출 (선택 시 경고 표시)
       // 이미 배운 재주 중복 방지 (repeatable이면 허용)
       if (!f.repeatable) {
         const fullName = f.name_ko + (f.name_en ? ` (${f.name_en})` : '');
@@ -2889,8 +2896,7 @@ function filterFeats() {
   return FEAT_DB.filter(f =>
     (!cat || f.category===cat) &&
     (!lv || f.feat_level<=lv) &&
-    (!q || f.name_ko.includes(q) || (f.name_en||'').toLowerCase().includes(q) || (f.summary||'').includes(q)) &&
-    (!(f.prereqs || f.prerequisites) || _checkPrereqs(f))
+    (!q || f.name_ko.includes(q) || (f.name_en||'').toLowerCase().includes(q) || (f.summary||'').includes(q))
   );
 }
 
@@ -3033,10 +3039,14 @@ function renderOptions(data) {
       else actionsHtml = a;
     }
 
+    // 전제조건 미달 체크
+    const prereqFail = item.feat_level !== undefined && (item.prereqs || item.prerequisites) && !_checkPrereqs(item);
+
     const rClass = `r${Math.min(levelNum, 10)}`;
     row.innerHTML = `
       <div class="opt-row-icon">📄</div>
-      <span class="opt-row-name">${nameKo}</span>
+      <span class="opt-row-name" ${prereqFail ? 'style="opacity:0.5;"' : ''}>${nameKo}</span>
+      ${prereqFail ? '<span style="font-size:10px;color:#f44336;flex-shrink:0;" title="선행 조건 미충족">⚠</span>' : ''}
       ${actionsHtml ? `<span class="opt-row-actions">${actionsHtml}</span>` : ''}
       ${levelText !== '' ? `<span class="opt-row-level ${rClass}">${levelText}</span>` : ''}`;
 
@@ -3119,10 +3129,13 @@ function selectOption(item, row) {
         const mfTraits = (item.traits||[]).map(t2=>traitTag(t2)).join('');
         tags = `<div style="margin-bottom:4px;"><span class="tag-meta">${item.feat_level}레벨</span> <span class="tag-meta">${_catKo[item.category]||item.category||''}</span></div>${mfTraits?'<div style="margin-bottom:6px;">'+mfTraits+'</div>':''}`;
         if (item.prerequisites) {
+          const _prereqMet = !(item.prereqs || item.prerequisites) || _checkPrereqs(item);
           const parts = item.prerequisites.split(/(?<=\.)\s+/);
           const prereqName = parts[0].replace(/\.$/,'');
           const prereqRest = parts.slice(1).join(' ');
-          let dp = [`<b style="color:var(--accent);">선행:</b> ${prereqName}`];
+          let dp = [];
+          if (!_prereqMet) dp.push(`<div style="background:#f4433620;border:1px solid #f44336;border-radius:4px;padding:6px 10px;margin-bottom:6px;color:#f44336;font-size:11px;font-weight:600;">⚠ 선행 조건이 충족되지 않았습니다</div>`);
+          dp.push(`<b style="color:${_prereqMet ? 'var(--accent)' : '#f44336'};">선행:</b> ${prereqName}`);
           if (prereqRest) dp.push(prereqRest);
           if (mDesc) dp.push(mDesc);
           mDesc = dp.join('<br>');

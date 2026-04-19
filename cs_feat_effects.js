@@ -3359,6 +3359,17 @@ function _hasFeatChoiceIssue(feat) {
   return false;
 }
 
+// 이미 선택된 재주의 전제조건이 현재 미달인지 체크
+function _hasFeatPrereqIssue(feat) {
+  if (typeof FEAT_DB === 'undefined' || typeof _checkPrereqs !== 'function') return false;
+  const nameKo = feat.name?.split(' (')[0]?.trim();
+  if (!nameKo) return false;
+  const fd = FEAT_DB.find(f => f && f.name_ko === nameKo);
+  if (!fd) return false;
+  if (!fd.prereqs && !fd.prerequisites) return false;
+  return !_checkPrereqs(fd);
+}
+
 function _buildFeatChoiceUI(feat, featType, featIndex) {
   const nameEn = _extractEnName(feat.name);
   if (!nameEn) return '';
