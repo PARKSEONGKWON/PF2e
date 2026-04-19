@@ -3403,6 +3403,7 @@ function showItemDetail(item) {
 
 function filterOptions() {
   if (modalType === 'equip-browse' || modalType === 'formula-pick') { renderEquipBrowseItems(); return; }
+  if (modalType === 'learn-spells') { if (typeof _refreshLearnSpellsList === 'function') _refreshLearnSpellsList(); return; }
   renderOptions(getOptionsData(modalType));
 }
 
@@ -4121,6 +4122,7 @@ function confirmModal() {
     closeModal();
     return;
   }
+  if (modalType === 'learn-spells') { closeModal(); return; }
   if (!modalSelected) { closeModal(); return; }
   if (modalType==='class') {
     // Cascade reset if changing class

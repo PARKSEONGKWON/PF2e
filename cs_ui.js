@@ -1910,46 +1910,164 @@ function _hasUnlearnedSpells() {
   return false;
 }
 
+var _learnSpellRank = 0; // 현재 선택된 배우기 탭 (0=캔트립)
+
 function openLearnSpellsPanel() {
   if (!state.selectedClass?.casting) return;
   const cid = state.selectedClass.id;
+  const lv = getLevel();
 
-  if (state.selectedClass.casting === 'spontaneous') {
-    // 즉흥형(바드): 첫 번째 빈 캔트립 또는 known 슬롯의 주문 선택 모달 열기
+  // 준비형 주문서 캐스터: 빌더 탭으로 이동 (사역마/주문서 UI)
+  if (state.selectedClass.casting === 'prepared') {
+    if (typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[cid]) {
+      if (typeof switchTab === 'function') switchTab('builder');
+    }
+    return;
+  }
+
+  // 즉흥형: 전용 학습 모달 열기
+  if (state.selectedClass.casting !== 'spontaneous') return;
+
+  const spellData = (typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[cid])
+    ? CLASS_SPELL_TABLE[cid][Math.min(lv,20)] : null;
+  if (!spellData) return;
+
+  // 첫 번째 미완료 랭크 찾기
+  const cantripMax = (spellData.cantrips || 5) + (state._fb?.cantrip_bonus || 0);
+  const cantripCount = (state.spells.cantrip || []).filter(s => s).length;
+  if (cantripCount < cantripMax) { _learnSpellRank = 0; }
+  else {
+    _learnSpellRank = 1;
+    const slots = spellData.slots || [];
+    for (let r = 1; r <= 10; r++) {
+      const max = slots[r-1] || 0;
+      if (max <= 0) continue;
+      const known = (state.spells.known || []).filter(s => s.rank === r && !s._auto).length;
+      if (known < max) { _learnSpellRank = r; break; }
+    }
+  }
+
+  _renderLearnSpellsModal(spellData);
+}
+
+function _renderLearnSpellsModal(spellData) {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  document.getElementById('modal-title').textContent = '주문 배우기';
+  const searchEl = document.getElementById('modal-search');
+  if (searchEl) { searchEl.style.display = ''; searchEl.value = ''; }
+  const fbar = document.getElementById('modal-filterbar');
+  const footer = document.querySelector('.modal-footer');
+  if (footer) footer.style.display = 'none';
+
+  // ── 진행도 탭 바 생성 ──
+  const cantripMax = (spellData.cantrips || 5) + (state._fb?.cantrip_bonus || 0);
+  const cantripCount = (state.spells.cantrip || []).filter(s => s).length;
+  const slots = spellData.slots || [];
+
+  let tabHtml = '';
+  // 캔트립 탭
+  const c0Active = _learnSpellRank === 0 ? 'active' : '';
+  const c0Warn = cantripCount < cantripMax ? ' style="color:#f44336;"' : '';
+  tabHtml += `<span class="spell-subtab ${c0Active}" onclick="_learnSpellRank=0;_refreshLearnSpellsList()">캔트립 <b${c0Warn}>${cantripCount}/${cantripMax}</b></span>`;
+  // 랭크 탭
+  for (let r = 1; r <= 10; r++) {
+    const max = slots[r-1] || 0;
+    if (max <= 0) continue;
+    const known = (state.spells.known || []).filter(s => s.rank === r && !s._auto).length;
+    const active = _learnSpellRank === r ? 'active' : '';
+    const warn = known < max ? ' style="color:#f44336;"' : '';
+    tabHtml += `<span class="spell-subtab ${active}" onclick="_learnSpellRank=${r};_refreshLearnSpellsList()">${r}랭크 <b${warn}>${known}/${max}</b></span>`;
+  }
+
+  if (fbar) fbar.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:2px;padding:4px 0;">${tabHtml}</div>`;
+
+  _refreshLearnSpellsList();
+  modalType = 'learn-spells';
+}
+
+function _refreshLearnSpellsList() {
+  // 탭 active 상태 갱신
+  const fbar = document.getElementById('modal-filterbar');
+  if (fbar) {
+    fbar.querySelectorAll('.spell-subtab').forEach(tab => {
+      const match = tab.textContent.match(/^(\d)랭크/) || tab.textContent.match(/^캔트립/);
+      if (!match) return;
+      const rank = tab.textContent.startsWith('캔트립') ? 0 : parseInt(match[1]);
+      tab.classList.toggle('active', rank === _learnSpellRank);
+    });
+  }
+
+  // 주문 목록 필터링
+  const r = _learnSpellRank;
+  const q = (document.getElementById('modal-search')?.value || '').toLowerCase();
+  let classTrad = state.selectedClass?.tradition || '';
+  if (classTrad === 'any' && state.selectedSubclass && typeof PATRON_TRADITION !== 'undefined') {
+    classTrad = PATRON_TRADITION[state.selectedSubclass.id] || classTrad;
+  }
+
+  const filtered = (typeof SPELL_DB !== 'undefined' ? SPELL_DB : []).filter(sp => {
+    if (classTrad && classTrad !== 'any' && sp.traditions && !sp.traditions.includes(classTrad)) return false;
+    if (r === 0) { if (!sp.is_cantrip) return false; }
+    else { if (sp.is_cantrip || sp.is_focus) return false; if (sp.rank !== r) return false; }
+    if (sp.is_focus) return false;
+    if (q && !sp.name_ko.includes(q) && !sp.name_en.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  // 이미 배운 주문 표시
+  const learnedNames = new Set();
+  if (r === 0) { (state.spells.cantrip || []).forEach(s => { if (s?.name) learnedNames.add(s.name); }); }
+  else { (state.spells.known || []).filter(s => s.rank === r).forEach(s => { if (s?.name) learnedNames.add(s.name); }); }
+
+  const container = document.getElementById('modal-options');
+  if (!container) return;
+  container.innerHTML = '';
+  filtered.forEach(sp => {
+    const isLearned = learnedNames.has(sp.name_ko);
+    const row = document.createElement('div');
+    row.className = 'opt-row' + (isLearned ? ' selected' : '');
+    if (isLearned) row.style.opacity = '0.5';
+    const actions = (typeof getActionIcons === 'function') ? getActionIcons(sp.actions) : '';
+    row.innerHTML = `
+      <span class="opt-row-name" style="flex:1;">${sp.name_ko} <span style="color:var(--text2);font-size:11px;">${sp.name_en}</span></span>
+      ${actions ? `<span style="font-size:11px;color:var(--accent);margin-right:4px;">${actions}</span>` : ''}
+      ${isLearned ? '<span style="font-size:10px;color:var(--accent);">습득됨</span>' : ''}`;
+    row.onclick = () => {
+      if (isLearned) { showItemDetail(sp); return; }
+      _learnSpellFromModal(sp, r);
+    };
+    container.appendChild(row);
+  });
+
+  // 상세 패널 초기화
+  const detail = document.getElementById('modal-detail');
+  if (detail) detail.innerHTML = '<div class="modal-detail-empty">주문을 선택하면 상세 정보가 표시됩니다.<br>클릭하여 배울 수 있습니다.</div>';
+}
+
+function _learnSpellFromModal(sp, rank) {
+  if (rank === 0) {
+    // 캔트립 추가
     const cantripSlots = state.cantripSlots || 5;
     const cantrips = state.spells.cantrip || [];
-    for (let i = 0; i < cantripSlots; i++) {
-      if (!cantrips[i]) { pickSpellForSlot('cantrip', 0, i); return; }
-    }
-    const lv = getLevel();
-    const spellData = (typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[cid]) ? CLASS_SPELL_TABLE[cid][Math.min(lv,20)] : null;
-    if (spellData) {
-      const slots = spellData.slots || [];
-      for (let r = 1; r <= 10; r++) {
-        const max = slots[r-1] || 0;
-        if (max <= 0) continue;
-        const known = (state.spells.known || []).filter(s => s.rank === r && !s._auto);
-        if (known.length < max) { pickSpellForSlot('known', r, known.length); return; }
-      }
-    }
-    return;
+    // 빈 슬롯 찾기
+    let idx = cantrips.findIndex(s => !s);
+    if (idx < 0 && cantrips.length < cantripSlots) idx = cantrips.length;
+    if (idx < 0) return; // 슬롯 없음
+    state.spells.cantrip[idx] = {name: sp.name_ko, rank: 0};
+  } else {
+    // known 주문 추가
+    if (!state.spells.known) state.spells.known = [];
+    state.spells.known.push({name: sp.name_ko, rank: rank});
   }
-  if (state.selectedClass.casting === 'prepared') {
-    // 주문서 캐스터(위저드/위치): 주문서에 주문 추가
-    if (typeof FAMILIAR_INIT !== 'undefined' && FAMILIAR_INIT[cid]) {
-      const lv = getLevel();
-      const maxRank = Math.min(10, Math.ceil(lv / 2));
-      // 빈 초기 슬롯이 있으면 그걸 먼저, 아니면 자유 습득 슬롯
-      const freeSpells = state.familiarSpells?.free || (state.growth[lv]?.familiarSpells?.free || []);
-      const nextIdx = freeSpells.length;
-      if (typeof openGrowthFamiliarFreePicker === 'function') {
-        openGrowthFamiliarFreePicker(lv, nextIdx, maxRank);
-      }
-      return;
-    }
-    // 전통 전체 접근(클레릭/드루이드): "배우기" 불필요 — 버튼이 숨겨져야 하지만 혹시 눌리면 무시
-    return;
-  }
+  renderSpells();
+  save();
+  // 모달 새로고침 — 진행도 업데이트를 위해 spellData 다시 계산
+  const cid = state.selectedClass.id;
+  const lv = getLevel();
+  const spellData = (typeof CLASS_SPELL_TABLE !== 'undefined' && CLASS_SPELL_TABLE[cid])
+    ? CLASS_SPELL_TABLE[cid][Math.min(lv,20)] : null;
+  if (spellData) _renderLearnSpellsModal(spellData);
 }
 
 function updateSlotChecks(rank) {
