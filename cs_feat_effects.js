@@ -3313,6 +3313,76 @@ function _getChoiceDisplayName(feat) {
   return feat.choice;
 }
 
+// ── 재주 탭 인라인 choice 컨트롤 ──
+
+function _buildFeatChoiceUI(feat, featType, featIndex) {
+  const nameEn = _extractEnName(feat.name);
+  if (!nameEn) return '';
+  const def = FEAT_EFFECTS[nameEn];
+  if (!def || !def.choice) return '';
+  // choiceValue로 부모에서 상속받는 재주는 자체 컨트롤 불필요
+  if (feat._grantedBy) {
+    const parentEn = _extractEnName(feat._grantedBy);
+    const parentDef = FEAT_EFFECTS[parentEn];
+    if (parentDef?.effects?.some(e => e.choiceValue)) return '';
+  }
+  const ch = def.choice;
+  const uid = `fc-${featType}-${featIndex}`;
+  const current = feat.choice || '';
+  const displayName = _getChoiceDisplayName(feat);
+
+  let html = `<div class="feat-choice-ctrl" style="margin-top:8px;padding:8px;background:var(--bg4);border-radius:6px;border:1px solid var(--border);">`;
+  html += `<div style="font-size:11px;color:var(--accent);margin-bottom:6px;font-weight:600;">${ch.label || '선택'}</div>`;
+
+  if (ch.type === 'lore') {
+    html += `<div style="display:flex;gap:6px;align-items:center;">
+      <input id="${uid}" type="text" value="${current}" placeholder="지식 분야 입력"
+        style="flex:1;min-width:0;padding:6px 8px;font-size:13px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;outline:none;">
+      <button onclick="_onFeatChoiceInline('${featType}',${featIndex},'lore')"
+        style="padding:6px 12px;font-size:12px;background:var(--accent);color:var(--bg);border:none;border-radius:4px;cursor:pointer;white-space:nowrap;font-weight:600;">확인</button>
+    </div>`;
+  } else if (ch.type === 'skill') {
+    const skills = typeof SKILLS !== 'undefined' ? SKILLS : [];
+    html += `<select id="${uid}" onchange="_onFeatChoiceInline('${featType}',${featIndex},'skill')"
+      style="width:100%;padding:6px 8px;font-size:13px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;outline:none;">
+      <option value="">— 선택 —</option>`;
+    skills.forEach(s => {
+      const sel = s.id === current ? ' selected' : '';
+      html += `<option value="${s.id}"${sel}>${s.name}</option>`;
+    });
+    html += `</select>`;
+  } else if (ch.type === 'custom' && ch.options) {
+    html += `<select id="${uid}" onchange="_onFeatChoiceInline('${featType}',${featIndex},'custom')"
+      style="width:100%;padding:6px 8px;font-size:13px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;outline:none;">
+      <option value="">— 선택 —</option>`;
+    ch.options.forEach(o => {
+      const sel = o.id === current ? ' selected' : '';
+      html += `<option value="${o.id}"${sel}>${o.name}</option>`;
+    });
+    html += `</select>`;
+  } else {
+    // 기타 타입 (spell_cantrip 등) — 기존 모달 사용
+    const escapedName = feat.name.replace(/'/g, "\\'");
+    html += `<button onclick="checkFeatChoice('${escapedName}','${featType}',${featIndex})"
+      style="width:100%;padding:6px 8px;font-size:12px;background:var(--bg2);color:var(--accent);border:1px solid var(--accent);border-radius:4px;cursor:pointer;">
+      ${displayName || '선택하기'}</button>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+function _onFeatChoiceInline(featType, featIndex, choiceType) {
+  const uid = `fc-${featType}-${featIndex}`;
+  const el = document.getElementById(uid);
+  if (!el) return;
+  const val = el.value.trim();
+  if (!val) return;
+  state.feats[featType][featIndex].choice = val;
+  renderFeats();
+  try { recalcAll(); } catch(e) { console.error(e); }
+  save();
+}
+
 // ── 선택 모달 ──
 
 function openFeatChoiceModal(featType, featIndex, choiceDef) {
