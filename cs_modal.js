@@ -3644,11 +3644,13 @@ function _renderSubclassFeatsInBlock(subId, containerId) {
 
   autoFeats.forEach(af => {
     shownNames.add(af.name_en);
+    if (af.name_ko) shownKoNames.add(af.name_ko);
     const feat = typeof FEAT_DB !== 'undefined'
       ? FEAT_DB.find(f => f.name_en === af.name_en || f.name_ko === af.name_ko) : null;
+    const descHtml = feat?.desc || feat?.summary || '';
     html += `<div style="${_cs}">
       <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">🎖 ${af.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${af.name_en}</span> <span style="${_badge}">재주</span></div>
-      <div style="font-size:11px;color:var(--text2);line-height:1.6;">${feat?.desc || feat?.summary || ''}</div>
+      ${descHtml ? `<div style="font-size:11px;color:var(--text2);line-height:1.6;">${descHtml}</div>` : `<div style="font-size:10px;color:var(--text2);font-style:italic;">Player Core 2 재주 — 상세 설명 미등록</div>`}
     </div>`;
   });
 

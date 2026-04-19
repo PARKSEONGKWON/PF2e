@@ -69,14 +69,14 @@ const SUBCLASS_DB = [
   // ── 드루이드 교단 ──
   {id:'order-animal', class_id:'druid', subclass_type:'교단', name_ko:'동물', name_en:'Animal',
    summary:'야수와 강한 유대가 있어 항상 그들을 이해한다고(그들도 당신을) 느꼈습니다. 자연의 동물을 대변하며, 강력한 동물 동료가 곁에 있습니다.<br><strong>결사 기술:</strong> 운동 | <strong>드루이드 재주:</strong> 동물 동료 | <strong>결사 주문:</strong> <em>동물 치유(heal animal)</em><br>'},
-  {id:'order-flame',  class_id:'druid', subclass_type:'교단', name_ko:'불꽃', name_en:'Flame',
-   summary:'자연의 불꽃을 다루며 불의 정화력을 숭배합니다.<br><br><b>결사 기술:</b> 위협<br><b>드루이드 재주:</b> 불꽃 도약<br><b>결사 주문:</b> <em>불꽃 씨앗(Fire Ray)</em><br><b>금기:</b> 불을 끄거나 자연 화재를 방해.'},
+  // order-flame: Player Core 2 출처 — 재주/주문 데이터 미등록으로 비활성
+  // {id:'order-flame',  class_id:'druid', subclass_type:'교단', name_ko:'불꽃', name_en:'Flame', ...},
   {id:'order-leaf',   class_id:'druid', subclass_type:'교단', name_ko:'잎',   name_en:'Leaf',
    summary:'자연의 풍요를 숭배하며 야생의 정원사이자 관리인 역할을 합니다. 레시 사역마와 함께 재난이나 무분별한 확장 후 지역이 다시 자라도록 돕고, 식물을 남용하는 자에게 돌려씁니다.<br><strong>결사 기술:</strong> 외교 | <strong>드루이드 재주:</strong> 레시 사역마 | <strong>결사 주문:</strong> <em>풍요의 뿔(cornucopia)</em><br>'},
   {id:'order-storm',  class_id:'druid', subclass_type:'교단', name_ko:'폭풍', name_en:'Storm',
    summary:'폭풍 아래 태어났든 맑은 하늘의 번개에서 살아남았든, 이제 심장에 폭풍의 분노를 담고 천둥을 무시무시한 파괴력으로 전달하며 바람을 타고 하늘을 날아갑니다.<br><strong>결사 기술:</strong> 곡예 | <strong>드루이드 재주:</strong> 폭풍 태생 | <strong>결사 주문:</strong> <em>폭풍 급습(tempest surge)</em><br>'},
-  {id:'order-wave',   class_id:'druid', subclass_type:'교단', name_ko:'물결', name_en:'Wave',
-   summary:'물과 얼음의 힘을 다루며 해류와 조류의 수호자입니다.<br><br><b>결사 기술:</b> 자연<br><b>드루이드 재주:</b> 수중 호흡<br><b>결사 주문:</b> <em>물의 채찍(Tidal Surge)</em><br><b>금기:</b> 수원 오염이나 수생 생물에 대한 무자비한 행위.'},
+  // order-wave: Player Core 2 출처 — 재주/주문 데이터 미등록으로 비활성
+  // {id:'order-wave',   class_id:'druid', subclass_type:'교단', name_ko:'물결', name_en:'Wave', ...},
   {id:'order-wild',   class_id:'druid', subclass_type:'교단', name_ko:'야생', name_en:'Untamed',
    summary:'자연 세계의 통제할 수 없는 부름이 몸을 관통합니다. 야생 동물에 의해 자랐거나, 도시에서 자란 후 도시의 인위를 거부했을 수 있습니다. 원시 마법이 야생 생물의 형태를 입을 능력을 부여합니다.<br><strong>결사 기술:</strong> 위협 | <strong>드루이드 재주:</strong> 야생 형태 | <strong>결사 주문:</strong> <em>야생 변이(untamed shift)</em><br>'},
 
