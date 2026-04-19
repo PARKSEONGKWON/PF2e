@@ -3155,28 +3155,19 @@ function selectOption(item, row) {
             : `<button class="btn-give" onclick="equipBrowseGive()" style="flex:1;padding:8px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);cursor:pointer;">획득</button>
                <button class="btn-buy" onclick="equipBrowseBuy()" style="flex:1;padding:8px;background:var(--accent-bg);border:1px solid var(--accent);border-radius:4px;color:var(--accent);cursor:pointer;">구매</button>`}
         </div>`;
-    } else if (modalType === 'background') {
-      const bg = item;
-      const descText = (bg.desc || bg.summary || '').replace(/\s*속성 부스트:.*$/, '');
-      let html = `<div style="font-size:12px;line-height:1.8;">`;
-      html += `<div style="margin-bottom:8px;">${descText}</div>`;
-      html += `<div><strong>능력치 부스트:</strong> ${bg.boosts || '—'}</div>`;
-      html += `<div><strong>기술:</strong> ${bg.skills || '—'}</div>`;
-      html += `<div><strong>기술 재주:</strong> ${bg.feat || '—'}</div>`;
-      // 기술 재주 설명 추가
-      if (bg.feat && typeof FEAT_DB !== 'undefined') {
-        const featName = bg.feat.trim();
-        const fd = FEAT_DB.find(f => f && f.name_ko === featName);
-        if (fd) {
-          const fdDesc = (fd.desc || fd.summary || '').replace(/<strong>전제조건:<\/strong>[^<]*<br>/i, '');
-          html += `<div style="margin-top:8px;padding:8px 10px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);">`;
-          html += `<div style="font-weight:600;margin-bottom:4px;">${fd.name_ko} <span style="color:var(--text2);font-weight:400;">${fd.name_en||''}</span></div>`;
-          html += `<div style="font-size:11px;line-height:1.6;">${fdDesc}</div>`;
-          html += `</div>`;
-        }
+    } else if ((modalType === 'class' || modalType === 'background' || modalType === 'ancestry') && _buildInitialChoicesUI) {
+      const choicesHtml = _buildInitialChoicesUI(modalType, item);
+      if (choicesHtml) {
+        const shortDesc = modalType === 'background'
+          ? (item.desc || '').replace(/\s*속성 부스트:.*$/, '')
+          : (item.desc || '').split('<br><strong>')[0];
+        detailHtml = `<div style="font-size:12px;line-height:1.7;color:var(--text2);margin-bottom:8px;">${shortDesc}</div>
+          ${choicesHtml}
+          <button id="modal-confirm-choice" onclick="confirmModal()" disabled
+            style="width:100%;margin-top:10px;padding:10px;background:var(--bg4);color:var(--text2);border:1px solid var(--border);border-radius:4px;font-size:13px;font-weight:600;cursor:not-allowed;">
+            모든 항목을 선택하세요
+          </button>`;
       }
-      html += `</div>`;
-      detailHtml = html;
     } else {
       const nameKo = item.name || item.name_ko || '';
       let mDesc = item.desc || item.summary || '';
@@ -3216,8 +3207,11 @@ function selectOption(item, row) {
       }
       detailDiv.innerHTML = detailHtml;
       detailDiv.classList.add('open');
-      // Confirm button for non-equip modals
-      if (modalType !== 'equip-browse' && modalType !== 'deity-pick' && modalType !== 'sanct-pick' && modalType !== 'font-pick') {
+      // 초기 선택 UI 버튼 검증 트리거
+      if (typeof _validateInitialChoices === 'function') setTimeout(_validateInitialChoices, 0);
+      // Confirm button for non-equip modals (초기 선택 UI가 있으면 자체 버튼 사용)
+      const hasInitChoices = document.getElementById('modal-confirm-choice');
+      if (!hasInitChoices && modalType !== 'equip-browse' && modalType !== 'deity-pick' && modalType !== 'sanct-pick' && modalType !== 'font-pick') {
         const confirmBtn = document.createElement('button');
         confirmBtn.textContent = '선택';
         confirmBtn.style.cssText = 'width:100%;margin-top:8px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;';
@@ -3404,34 +3398,28 @@ function showItemDetail(item) {
     tags = `<span class="tag hl">${item.subclass_type}</span>`;
   }
 
-  // 배경 전용 상세 패널
-  if (modalType === 'background' && item.skills) {
-    const bg = item;
-    const descText = (bg.desc || bg.summary || '').replace(/\s*속성 부스트:.*$/, '');
-    let bgHtml = `<div style="font-size:12px;line-height:1.8;">`;
-    bgHtml += `<div style="margin-bottom:8px;">${descText}</div>`;
-    bgHtml += `<div><strong>능력치 부스트:</strong> ${bg.boosts || '—'}</div>`;
-    bgHtml += `<div><strong>기술:</strong> ${bg.skills || '—'}</div>`;
-    bgHtml += `<div><strong>기술 재주:</strong> ${bg.feat || '—'}</div>`;
-    if (bg.feat && typeof FEAT_DB !== 'undefined') {
-      const featName = bg.feat.trim();
-      const fd = FEAT_DB.find(f => f && f.name_ko === featName);
-      if (fd) {
-        const fdDesc = (fd.desc || fd.summary || '').replace(/<strong>전제조건:<\/strong>[^<]*<br>/i, '');
-        bgHtml += `<div style="margin-top:8px;padding:8px 10px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);">`;
-        bgHtml += `<div style="font-weight:600;margin-bottom:4px;">${fd.name_ko} <span style="color:var(--text2);font-weight:400;">${fd.name_en||''}</span></div>`;
-        bgHtml += `<div style="font-size:11px;line-height:1.6;">${fdDesc}</div>`;
-        bgHtml += `</div>`;
-      }
+  // ── 클래스/배경/혈통: 초기 선택 UI 포함 상세 패널 ──
+  if ((modalType === 'class' || modalType === 'background' || modalType === 'ancestry') && _buildInitialChoicesUI) {
+    const choicesHtml = _buildInitialChoicesUI(modalType, item);
+    if (choicesHtml) {
+      const shortDesc = modalType === 'background'
+        ? (item.desc || '').replace(/\s*속성 부스트:.*$/, '')
+        : (item.desc || '').split('<br><strong>')[0]; // 첫 단락만
+      detail.innerHTML = `
+        <div class="modal-detail-back" onclick="document.getElementById('modal-body').classList.remove('detail-open')">← 목록으로</div>
+        <div class="modal-detail-title">${nameKo}</div>
+        <div class="modal-detail-en">${nameEn}</div>
+        <div class="modal-detail-tags">${tags}</div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:0 0 10px 0;">
+        <div style="font-size:12px;line-height:1.7;color:var(--text2);margin-bottom:10px;">${shortDesc}</div>
+        ${choicesHtml}
+        <button id="modal-confirm-choice" onclick="confirmModal()" disabled
+          style="width:100%;margin-top:14px;padding:10px;background:var(--bg4);color:var(--text2);border:1px solid var(--border);border-radius:4px;font-size:13px;font-weight:600;cursor:not-allowed;">
+          모든 항목을 선택하세요
+        </button>`;
+      _validateInitialChoices();
+      return;
     }
-    bgHtml += `</div>`;
-    detail.innerHTML = `
-      <div class="modal-detail-back" onclick="document.getElementById('modal-body').classList.remove('detail-open')">← 목록으로</div>
-      <div class="modal-detail-title">${nameKo}</div>
-      <div class="modal-detail-en">${nameEn}</div>
-      <hr style="border:none;border-top:1px solid var(--border);margin:0 0 10px 0;">
-      <div class="modal-detail-desc">${bgHtml}</div>`;
-    return;
   }
 
   // 주문에 재주 효과 노트 추가
@@ -3451,6 +3439,318 @@ function filterOptions() {
 }
 
 // ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+//  INITIAL CHOICES UI (class/background/ancestry 모달 내 선택)
+// ═══════════════════════════════════════════════
+
+// 임시 저장: 모달 내 선택값 (confirmModal 시 state에 반영)
+var _modalChoices = {};
+
+function _buildInitialChoicesUI(type, item) {
+  _modalChoices = {};
+  if (type === 'class') return _buildClassChoicesUI(item);
+  if (type === 'background') return _buildBackgroundChoicesUI(item);
+  if (type === 'ancestry') return _buildAncestryChoicesUI(item);
+  return '';
+}
+
+// ── 드롭다운 빌더 헬퍼 ──
+function _choiceDropdown(id, label, options, disabled, selected) {
+  const dis = disabled ? 'disabled style="opacity:0.7;background:var(--bg3);"' : '';
+  let html = `<select id="${id}" ${dis} onchange="_onInitialChoiceChange()" style="width:100%;padding:6px 8px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;font-size:12px;">`;
+  if (!disabled && !selected) html += `<option value="">— 선택 —</option>`;
+  options.forEach(o => {
+    const val = typeof o === 'object' ? o.value : o;
+    const lbl = typeof o === 'object' ? o.label : o;
+    const sel = (selected === val || (disabled && options.length === 1)) ? ' selected' : '';
+    html += `<option value="${val}"${sel}>${lbl}</option>`;
+  });
+  html += `</select>`;
+  return `<div style="margin-bottom:6px;">
+    <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">${label}</div>
+    ${html}
+  </div>`;
+}
+
+// ── 클래스 모달: 기술 선택 ──
+function _buildClassChoicesUI(cls) {
+  const skillParts = (cls.skills || '').split(' + ');
+  const fixedSkills = [];
+  let trainableBase = 0;
+  let deitySkill = false;
+
+  skillParts.forEach(p => {
+    const m = p.match(/(\d+)\+INT개/);
+    if (m) { trainableBase = parseInt(m[1]); return; }
+    if (p.trim() === '신격기술') { deitySkill = true; return; }
+    p.split(',').forEach(s => {
+      const name = s.trim();
+      if (name) fixedSkills.push(name);
+    });
+  });
+
+  _modalChoices = { type: 'class', fixedSkills, trainableBase, deitySkill, trainableSkills: [] };
+
+  let html = `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:6px;">`;
+  html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">📖 기술 숙련</div>`;
+
+  // 고정 기술 (disabled)
+  fixedSkills.forEach(name => {
+    html += _choiceDropdown('', `고정 기술`, [{value: name, label: name}], true, name);
+  });
+  if (deitySkill) {
+    html += _choiceDropdown('', `신격 기술 (신격 선택 시 자동)`, [{value:'deity', label:'신격 기술'}], true, 'deity');
+  }
+
+  // 추가 기술 숙련 (active)
+  html += `<div style="font-size:10px;color:var(--text2);margin:8px 0 4px;">추가 기술 숙련 (기본 ${trainableBase}개, + 버튼으로 추가)</div>`;
+  html += `<div id="class-trainable-skills">`;
+  for (let i = 0; i < trainableBase; i++) {
+    html += _buildTrainableSkillRow(i, fixedSkills);
+  }
+  html += `</div>`;
+  html += `<div style="text-align:center;margin-top:4px;">
+    <button onclick="_addTrainableSkill()" style="padding:4px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--accent);cursor:pointer;font-size:12px;">＋ 추가</button>
+    <span style="font-size:10px;color:var(--text2);margin-left:6px;">INT 수정치만큼 추가 가능</span>
+  </div>`;
+  html += `</div>`;
+  return html;
+}
+
+function _buildTrainableSkillRow(index, excludeNames) {
+  const allSkills = typeof SKILLS !== 'undefined' ? SKILLS.filter(s => !s.isLore) : [];
+  const exclude = new Set((excludeNames || []).map(n => skillNameToId(n)).filter(Boolean));
+  // 이미 선택된 기술도 제외
+  (_modalChoices.trainableSkills || []).forEach((v, i) => { if (v && i !== index) exclude.add(v); });
+  const options = allSkills.filter(s => !exclude.has(s.id)).map(s => ({value: s.id, label: `${s.name} (${s.en})`}));
+  const curVal = (_modalChoices.trainableSkills || [])[index] || '';
+  return `<div class="trainable-skill-row" data-index="${index}" style="display:flex;gap:4px;align-items:center;margin-bottom:4px;">
+    <select onchange="_onTrainableSkillChange(${index}, this.value)" style="flex:1;padding:6px 8px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;font-size:12px;">
+      <option value="">— 선택 —</option>
+      ${options.map(o => `<option value="${o.value}"${o.value === curVal ? ' selected' : ''}>${o.label}</option>`).join('')}
+    </select>
+    ${index >= (_modalChoices.trainableBase || 0) ? `<button onclick="_removeTrainableSkill(${index})" style="padding:2px 6px;background:none;border:1px solid var(--red);border-radius:4px;color:var(--red);cursor:pointer;font-size:11px;">✕</button>` : ''}
+  </div>`;
+}
+
+function _onTrainableSkillChange(index, value) {
+  if (!_modalChoices.trainableSkills) _modalChoices.trainableSkills = [];
+  _modalChoices.trainableSkills[index] = value || '';
+  // 다른 드롭다운 옵션 갱신 (이미 선택된 기술 제외)
+  _rebuildTrainableSkillDropdowns();
+  _validateInitialChoices();
+}
+
+function _addTrainableSkill() {
+  if (!_modalChoices.trainableSkills) _modalChoices.trainableSkills = [];
+  _modalChoices.trainableSkills.push('');
+  _rebuildTrainableSkillDropdowns();
+  _validateInitialChoices();
+}
+
+function _removeTrainableSkill(index) {
+  if (!_modalChoices.trainableSkills) return;
+  _modalChoices.trainableSkills.splice(index, 1);
+  _rebuildTrainableSkillDropdowns();
+  _validateInitialChoices();
+}
+
+function _rebuildTrainableSkillDropdowns() {
+  const container = document.getElementById('class-trainable-skills');
+  if (!container) return;
+  const excludeNames = _modalChoices.fixedSkills || [];
+  let html = '';
+  (_modalChoices.trainableSkills || []).forEach((v, i) => {
+    html += _buildTrainableSkillRow(i, excludeNames);
+  });
+  container.innerHTML = html;
+}
+
+// ── 배경 모달: 기술 + 재주 ──
+function _buildBackgroundChoicesUI(bg) {
+  _modalChoices = { type: 'background', skills: {}, choiceSkill: null, loreName: '' };
+  const descText = (bg.desc || '').replace(/\s*속성 부스트:.*$/, '');
+
+  let html = `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:6px;">`;
+  html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">📋 배경 혜택</div>`;
+  html += `<div style="font-size:11px;color:var(--text2);margin-bottom:6px;"><strong>능력치 부스트:</strong> ${bg.boosts || '—'}</div>`;
+
+  // 기술 파싱
+  const skillParts = (bg.skills || '').split(', ');
+  let hasChoice = false;
+  skillParts.forEach((s, i) => {
+    const name = s.trim();
+    if (!name) return;
+    if (name.includes('또는') || name.includes('/') || name.includes('중 선택')) {
+      // 선택 기술
+      hasChoice = true;
+      const choices = name.replace(/\s*중 선택/, '').split(/\s*[\/또는]\s*/).map(c => c.trim()).filter(Boolean);
+      const options = choices.map(c => {
+        const id = skillNameToId(c);
+        return {value: id || c, label: c};
+      });
+      html += `<div style="margin-bottom:6px;">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">기술 (선택)</div>
+        <select id="bg-choice-skill" onchange="_modalChoices.choiceSkill=this.value;_validateInitialChoices()" style="width:100%;padding:6px 8px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;font-size:12px;">
+          <option value="">— 선택 —</option>
+          ${options.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
+        </select>
+      </div>`;
+    } else if (name.endsWith(' 지식') || name.includes('지식')) {
+      // 지식 — 고정이면 disabled, 이름 입력 필요하면 텍스트
+      const loreName = name.replace(' 지식', '').trim();
+      _modalChoices.loreName = loreName;
+      html += _choiceDropdown('', `지식 기술`, [{value: loreName, label: name}], true, loreName);
+    } else {
+      // 고정 기술
+      html += _choiceDropdown('', `기술`, [{value: name, label: name}], true, name);
+    }
+  });
+  _modalChoices.hasChoiceSkill = hasChoice;
+
+  // 기술 재주
+  if (bg.feat) {
+    html += `<div style="margin-top:4px;">`;
+    html += _choiceDropdown('', `기술 재주`, [{value: bg.feat, label: bg.feat}], true, bg.feat);
+    // 재주 설명 카드
+    if (typeof FEAT_DB !== 'undefined') {
+      const fd = FEAT_DB.find(f => f && f.name_ko === bg.feat.trim());
+      if (fd) {
+        const fdDesc = (fd.desc || fd.summary || '').replace(/<strong>전제조건:<\/strong>[^<]*<br>/i, '');
+        html += `<div style="padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);margin-top:4px;">
+          <div style="font-weight:600;font-size:11px;margin-bottom:2px;">${fd.name_ko} <span style="color:var(--text2);font-weight:400;">${fd.name_en||''}</span></div>
+          <div style="font-size:10px;line-height:1.5;color:var(--text2);">${fdDesc}</div>
+        </div>`;
+      }
+    }
+    html += `</div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+// ── 혈통 모달: 언어 선택 ──
+function _buildAncestryChoicesUI(anc) {
+  const fixedLangs = anc.languages || ['공통어'];
+  const bonusBase = anc.bonusLangs || 0;
+  _modalChoices = { type: 'ancestry', fixedLangs, bonusBase, bonusLangs: [] };
+
+  let html = `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:6px;">`;
+  html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">🗣 언어</div>`;
+
+  // 고정 언어 (disabled)
+  fixedLangs.forEach(lang => {
+    html += _choiceDropdown('', `기본 언어`, [{value: lang, label: lang}], true, lang);
+  });
+
+  // 추가 언어 (active + "+" 버튼)
+  html += `<div style="font-size:10px;color:var(--text2);margin:8px 0 4px;">추가 언어 (기본 ${bonusBase}개, + 버튼으로 추가)</div>`;
+  html += `<div id="anc-bonus-langs">`;
+  for (let i = 0; i < bonusBase; i++) {
+    html += _buildBonusLangRow(i, fixedLangs);
+  }
+  html += `</div>`;
+  html += `<div style="text-align:center;margin-top:4px;">
+    <button onclick="_addBonusLang()" style="padding:4px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--accent);cursor:pointer;font-size:12px;">＋ 추가</button>
+    <span style="font-size:10px;color:var(--text2);margin-left:6px;">INT 수정치만큼 추가 가능</span>
+  </div>`;
+
+  // 시야/크기/속도 정보 표시
+  html += `<div style="margin-top:10px;font-size:11px;color:var(--text2);line-height:1.7;">`;
+  html += `<div><strong>크기:</strong> ${anc.size} | <strong>속도:</strong> ${anc.speed}피트</div>`;
+  html += `<div><strong>시야:</strong> ${anc.vision || '없음'}</div>`;
+  if (anc.specials?.length) html += `<div><strong>특수:</strong> ${anc.specials.join(', ')}</div>`;
+  html += `</div>`;
+
+  html += `</div>`;
+  return html;
+}
+
+function _buildBonusLangRow(index, excludeLangs) {
+  const allLangs = typeof LANGUAGES !== 'undefined' ? LANGUAGES : [];
+  const exclude = new Set(excludeLangs || []);
+  (_modalChoices.bonusLangs || []).forEach((v, i) => { if (v && i !== index) exclude.add(v); });
+  const options = allLangs.filter(l => !exclude.has(l)).map(l => ({value: l, label: l}));
+  const curVal = (_modalChoices.bonusLangs || [])[index] || '';
+  return `<div style="display:flex;gap:4px;align-items:center;margin-bottom:4px;">
+    <select onchange="_onBonusLangChange(${index}, this.value)" style="flex:1;padding:6px 8px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;font-size:12px;">
+      <option value="">— 선택 —</option>
+      ${options.map(o => `<option value="${o.value}"${o.value === curVal ? ' selected' : ''}>${o.label}</option>`).join('')}
+    </select>
+    ${index >= (_modalChoices.bonusBase || 0) ? `<button onclick="_removeBonusLang(${index})" style="padding:2px 6px;background:none;border:1px solid var(--red);border-radius:4px;color:var(--red);cursor:pointer;font-size:11px;">✕</button>` : ''}
+  </div>`;
+}
+
+function _onBonusLangChange(index, value) {
+  if (!_modalChoices.bonusLangs) _modalChoices.bonusLangs = [];
+  _modalChoices.bonusLangs[index] = value || '';
+  _rebuildBonusLangDropdowns();
+  _validateInitialChoices();
+}
+
+function _addBonusLang() {
+  if (!_modalChoices.bonusLangs) _modalChoices.bonusLangs = [];
+  _modalChoices.bonusLangs.push('');
+  _rebuildBonusLangDropdowns();
+  _validateInitialChoices();
+}
+
+function _removeBonusLang(index) {
+  if (!_modalChoices.bonusLangs) return;
+  _modalChoices.bonusLangs.splice(index, 1);
+  _rebuildBonusLangDropdowns();
+  _validateInitialChoices();
+}
+
+function _rebuildBonusLangDropdowns() {
+  const container = document.getElementById('anc-bonus-langs');
+  if (!container) return;
+  let html = '';
+  (_modalChoices.bonusLangs || []).forEach((v, i) => {
+    html += _buildBonusLangRow(i, _modalChoices.fixedLangs || []);
+  });
+  container.innerHTML = html;
+}
+
+// ── 공통: 유효성 검증 + 확인 버튼 활성화 ──
+function _onInitialChoiceChange() { _validateInitialChoices(); }
+
+function _validateInitialChoices() {
+  const btn = document.getElementById('modal-confirm-choice');
+  if (!btn) return;
+  let valid = true;
+
+  if (_modalChoices.type === 'class') {
+    const skills = _modalChoices.trainableSkills || [];
+    // 모든 드롭다운이 선택되어야 함
+    if (skills.some(v => !v)) valid = false;
+    // 최소 base 개수
+    if (skills.length < (_modalChoices.trainableBase || 0)) valid = false;
+  } else if (_modalChoices.type === 'background') {
+    if (_modalChoices.hasChoiceSkill && !_modalChoices.choiceSkill) valid = false;
+  } else if (_modalChoices.type === 'ancestry') {
+    const langs = _modalChoices.bonusLangs || [];
+    if (langs.some(v => !v)) valid = false;
+    if (langs.length < (_modalChoices.bonusBase || 0)) valid = false;
+  }
+
+  if (valid) {
+    btn.disabled = false;
+    btn.style.background = 'var(--accent)';
+    btn.style.color = '#fff';
+    btn.style.cursor = 'pointer';
+    btn.style.border = 'none';
+    btn.textContent = '선택 확정';
+  } else {
+    btn.disabled = true;
+    btn.style.background = 'var(--bg4)';
+    btn.style.color = 'var(--text2)';
+    btn.style.cursor = 'not-allowed';
+    btn.style.border = '1px solid var(--border)';
+    btn.textContent = '모든 항목을 선택하세요';
+  }
+}
+
 //  CASCADE RESET FUNCTIONS
 // ═══════════════════════════════════════════════
 
@@ -3665,6 +3965,17 @@ function confirmModal() {
     const btnC = document.getElementById('btn-class');
     if (btnC) { btnC.textContent = `${modalSelected.name} (${modalSelected.en})`; btnC.classList.add('filled'); }
     applyClassDefaults(modalSelected);
+    // 모달 내 기술 선택 반영
+    if (_modalChoices.type === 'class' && _modalChoices.trainableSkills) {
+      const skills = _modalChoices.trainableSkills.filter(v => v);
+      state.trainableSkillSlots = skills.length;
+      if (!state.growth[1]) state.growth[1] = {};
+      state.growth[1].skillTraining = skills;
+      skills.forEach(id => {
+        const el = document.getElementById('sk-prof-' + id);
+        if (el && parseInt(el.value) < 2) el.value = '2';
+      });
+    }
     applyClassFeatures();
   } else if (modalType==='ancestry') {
     // Cascade reset if changing ancestry
@@ -3676,6 +3987,21 @@ function confirmModal() {
     const btnA = document.getElementById('btn-ancestry');
     if (btnA) { btnA.textContent = `${modalSelected.name} (${modalSelected.en})`; btnA.classList.add('filled'); }
     applyAncestryDefaults(modalSelected);
+    // 모달 내 언어 선택 반영
+    if (_modalChoices.type === 'ancestry') {
+      const allLangs = [...(_modalChoices.fixedLangs || []), ...(_modalChoices.bonusLangs || []).filter(v => v)];
+      if (!state.languages) state.languages = [];
+      state.languages = allLangs;
+      const langEl = document.getElementById('f-languages');
+      if (langEl) {
+        const traits = modalSelected.traits ? `특성: ${modalSelected.traits.join(', ')}` : '';
+        const size = `크기: ${modalSelected.size || '중형'}`;
+        const vision = `시야: ${modalSelected.vision || '없음'}`;
+        const specials = (modalSelected.specials||[]).join('\n');
+        const langLine = `언어: ${allLangs.join(', ')}`;
+        langEl.value = [traits, size, vision, langLine, specials].filter(Boolean).join('\n');
+      }
+    }
   } else if (modalType==='background') {
     // Cascade reset if changing background
     if (state.selectedBackground && state.selectedBackground.id !== modalSelected.id) {
@@ -3685,7 +4011,18 @@ function confirmModal() {
     state.selectedBackground = modalSelected;
     const btnB = document.getElementById('btn-background');
     if (btnB) { btnB.textContent = `${modalSelected.name} (${modalSelected.en})`; btnB.classList.add('filled'); }
-    applyBackgroundInfo(modalSelected);
+    // 모달 내 선택 기술 반영 (선택형 기술을 bg 객체에 임시 주입)
+    if (_modalChoices.type === 'background' && _modalChoices.choiceSkill) {
+      // 원래 skills 문자열에서 선택형 부분을 선택된 기술로 교체
+      const chosenId = _modalChoices.choiceSkill;
+      const sk = SKILLS.find(s => s.id === chosenId);
+      const chosenName = sk ? sk.name : chosenId;
+      const bgCopy = Object.assign({}, modalSelected);
+      bgCopy.skills = (bgCopy.skills || '').replace(/[^,]+(?:또는|\/)[^,]+(?:\s*중 선택)?/, chosenName);
+      applyBackgroundInfo(bgCopy);
+    } else {
+      applyBackgroundInfo(modalSelected);
+    }
   } else if (modalType==='feat') {
     const type = modalContext || 'other';
     const featName = modalSelected.name_ko + (modalSelected.name_en?` (${modalSelected.name_en})`:'');
