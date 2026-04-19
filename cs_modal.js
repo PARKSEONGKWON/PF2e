@@ -3596,16 +3596,81 @@ function _refreshClassFeaturesPreview() {
 function _renderSubclassFeatsInBlock(subId, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  if (!subId || typeof SUBCLASS_FEATURE_NAMES === 'undefined') { container.innerHTML = ''; return; }
-  const feats = (SUBCLASS_FEATURE_NAMES[subId] || []).filter(f => f.lv === 1);
-  if (feats.length === 0) { container.innerHTML = ''; return; }
+  if (!subId) { container.innerHTML = ''; return; }
+
   let html = '';
-  feats.forEach(f => {
-    html += `<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:4px;border-left:2px solid var(--accent);">
-      <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">⚡ ${f.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${f.name_en}</span></div>
-      <div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc || ''}</div>
+  const _cardStyle = 'margin-top:8px;padding:8px;background:var(--bg3);border-radius:4px;border-left:2px solid var(--accent);';
+
+  // 1) 기술 — SUBCLASS_DB summary에서 추출
+  const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === subId) : null;
+  if (sub && sub.summary) {
+    // "결사 기술:" / "기술:" 패턴에서 기술명 추출
+    const skillMatch = sub.summary.match(/(?:결사 기술|기술)\s*[:：]\s*([^|<\n]+)/);
+    if (skillMatch) {
+      const skillNames = skillMatch[1].trim().replace(/\s*[.。]\s*$/, '').split(/[,、]\s*/);
+      html += `<div style="${_cardStyle}">`;
+      html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">📖 기술 숙련</div>`;
+      skillNames.forEach(name => {
+        const n = name.trim();
+        if (n) html += `<div style="margin-bottom:4px;"><select disabled style="${_selStyle}opacity:0.6;"><option>${n}</option></select></div>`;
+      });
+      html += `</div>`;
+    }
+  }
+
+  // 2) 자동 부여 재주 — SUBCLASS_AUTO_FEATS + summary에서 추출
+  const autoFeats = typeof SUBCLASS_AUTO_FEATS !== 'undefined' ? (SUBCLASS_AUTO_FEATS[subId] || []).filter(f => f.lv === 1) : [];
+  const autoFeatNames = new Set(autoFeats.map(f => f.name_en));
+
+  // summary에서 "뮤즈 재주:", "드루이드 재주:" 등의 패턴으로 재주명 추출
+  if (sub && sub.summary) {
+    const featMatch = sub.summary.match(/(?:뮤즈 재주|드루이드 재주|재주)[^:]*[：:]\s*<\/(?:strong|b)>\s*([^|<\n]+)/);
+    if (featMatch) {
+      const rawName = featMatch[1].trim();
+      // "동물 동료" 또는 "바드 지식(Bardic Lore)" 형태
+      const koName = rawName.replace(/\(.*\)/, '').trim();
+      const enMatch = rawName.match(/\(([^)]+)\)/);
+      const enName = enMatch ? enMatch[1] : '';
+      // SUBCLASS_AUTO_FEATS에 이미 있으면 스킵 (중복 방지)
+      if (!autoFeatNames.has(enName)) {
+        autoFeats.push({ lv: 1, name_ko: koName, name_en: enName });
+        if (enName) autoFeatNames.add(enName);
+      }
+    }
+  }
+
+  autoFeats.forEach(af => {
+    const feat = typeof FEAT_DB !== 'undefined'
+      ? FEAT_DB.find(f => f.name_en === af.name_en || f.name_ko === af.name_ko)
+      : null;
+    html += `<div style="${_cardStyle}">
+      <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">🎖 ${af.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${af.name_en}</span> <span style="font-size:9px;color:var(--accent);background:var(--bg4);padding:1px 5px;border-radius:3px;">재주</span></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6;">${feat?.desc || feat?.summary || ''}</div>
     </div>`;
   });
+
+  // 3) 자동 부여 주문 — SUBCLASS_AUTO_SPELLS
+  const autoSpells = typeof SUBCLASS_AUTO_SPELLS !== 'undefined' ? (SUBCLASS_AUTO_SPELLS[subId] || []).filter(s => s.lv === 1) : [];
+  autoSpells.forEach(sp => {
+    const spellData = typeof SPELL_DB !== 'undefined' ? SPELL_DB.find(s => s.name_en === sp.name_en || s.name_ko === sp.name_ko) : null;
+    const typeLabel = sp.type === 'focus' ? '집중 주문' : sp.type === 'cantrip' ? '캔트립' : `${sp.rank || 1}랭크 주문`;
+    html += `<div style="${_cardStyle}">
+      <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">✨ ${sp.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${sp.name_en}</span> <span style="font-size:9px;color:var(--accent);background:var(--bg4);padding:1px 5px;border-radius:3px;">${typeLabel}</span></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6;">${spellData?.desc || spellData?.summary || ''}</div>
+    </div>`;
+  });
+
+  // 4) 서브클래스 특성 (SUBCLASS_FEATURE_NAMES) — 위 항목과 중복되지 않는 것만
+  if (typeof SUBCLASS_FEATURE_NAMES !== 'undefined') {
+    const subFeats = (SUBCLASS_FEATURE_NAMES[subId] || []).filter(f => f.lv === 1);
+    subFeats.forEach(f => {
+      html += `<div style="${_cardStyle}">
+        <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">⚡ ${f.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${f.name_en}</span></div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc || ''}</div>
+      </div>`;
+    });
+  }
+
   container.innerHTML = html;
 }
 
