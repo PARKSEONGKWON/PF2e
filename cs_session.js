@@ -612,9 +612,12 @@ function _buildPlayerTabBar() {
     uids.map(uid => {
       const p = players[uid];
       const active = uid === _gmActiveTab;
-      return '<button class="gm-tab' + (active ? ' gm-tab-active' : '') + '" onclick="gmSwitchTab(\'' + uid + '\')">' +
-        (p.displayName || '???') +
-      '</button>';
+      return '<span class="gm-tab-wrap">' +
+        '<button class="gm-tab' + (active ? ' gm-tab-active' : '') + '" onclick="gmSwitchTab(\'' + uid + '\')">' +
+          (p.displayName || '???') +
+        '</button>' +
+        '<button class="gm-tab-kick" onclick="event.stopPropagation();gmKickPlayer(\'' + uid + '\',\'' + (p.displayName || '???').replace(/'/g, "\\'") + '\')" title="추방">×</button>' +
+      '</span>';
     }).join('') +
     '<a href="GMSheet.html" style="margin-left:auto;color:#888;font-size:11px;padding:0 12px;text-decoration:none;align-self:center;">← 로비</a>';
 
@@ -667,6 +670,35 @@ function _startGMCharListener(uid) {
         _loadComplete = prev;
       }
     });
+}
+
+// GM이 탭 바에서 플레이어 추방
+async function gmKickPlayer(uid, name) {
+  if (!_currentSession) return;
+  if (!confirm('"' + name + '"을(를) 추방하시겠습니까?\n해당 플레이어의 세션 캐릭터도 삭제됩니다.')) return;
+  try {
+    const playerField = 'players.' + uid;
+    await db.collection('sessions').doc(_currentSession.id).update({
+      [playerField]: firebase.firestore.FieldValue.delete()
+    });
+    await db.collection('sessions').doc(_currentSession.id)
+      .collection('characters').doc(uid).delete();
+    // 추방된 플레이어가 현재 보고 있는 탭이면 다른 탭으로 전환
+    if (_gmActiveTab === uid) {
+      _gmActiveTab = null;
+      _gmEditTarget = null;
+      if (_charDocUnsub) { _charDocUnsub(); _charDocUnsub = null; }
+      const remaining = Object.keys(_currentSession.players).filter(u => u !== uid);
+      if (remaining.length > 0) {
+        gmSwitchTab(remaining[0]);
+      } else {
+        _showEmptyPartyMessage();
+      }
+    }
+  } catch(e) {
+    console.error('[gmKickPlayer]', e);
+    alert('추방 실패: ' + e.message);
+  }
 }
 
 function _showEmptyPartyMessage() {

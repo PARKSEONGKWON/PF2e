@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=453"></script>
-<script src="feat_db.js?v=453"></script>
-<script src="SPELL_DB.js?v=453"></script>
-<script src="class_features_db.js?v=453"></script>
+<script src="equipment_db.js?v=454"></script>
+<script src="feat_db.js?v=454"></script>
+<script src="SPELL_DB.js?v=454"></script>
+<script src="class_features_db.js?v=454"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1253,6 +1253,9 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 .gm-tab{background:#222;color:#aaa;border:1px solid #444;padding:6px 16px;border-radius:4px 4px 0 0;cursor:pointer;font-size:12px;font-weight:700;transition:all .15s;}
 .gm-tab:hover{background:#2a2a2a;color:#fff;}
 .gm-tab-active{background:#1a1a1a;color:#f5c518;border-color:#f5c518;border-bottom-color:#1a1a1a;}
+.gm-tab-wrap{display:inline-flex;align-items:stretch;position:relative;}
+.gm-tab-kick{background:#c0392b;color:#fff;border:none;padding:0 6px;font-size:13px;cursor:pointer;border-radius:0 4px 0 0;opacity:.5;transition:opacity .15s;}
+.gm-tab-kick:hover{opacity:1;}
 </style>
 </head>
 <body>
@@ -1262,7 +1265,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v453</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v454</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1825,14 +1828,14 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=453"></script>
-<script src="cs_calc.js?v=453"></script>
-<script src="cs_ui.js?v=453"></script>
-<script src="cs_modal.js?v=453"></script>
-<script src="cs_feat_effects.js?v=453"></script>
-<script src="cs_save.js?v=453"></script>
-<script src="cs_session.js?v=453"></script>
-<script src="cs_dice.js?v=453"></script>
+<script src="cs_data.js?v=454"></script>
+<script src="cs_calc.js?v=454"></script>
+<script src="cs_ui.js?v=454"></script>
+<script src="cs_modal.js?v=454"></script>
+<script src="cs_feat_effects.js?v=454"></script>
+<script src="cs_save.js?v=454"></script>
+<script src="cs_session.js?v=454"></script>
+<script src="cs_dice.js?v=454"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
