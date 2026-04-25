@@ -8,7 +8,8 @@ function save() {
   const st = document.getElementById('save-status');
   if (st) { st.textContent = '미저장'; st.style.color = '#f5c518'; }
   if (_autoSaveDebounce) clearTimeout(_autoSaveDebounce);
-  _autoSaveDebounce = setTimeout(() => { autoSaveNow(); }, 2000);
+  var delay = (typeof _sessionMode !== 'undefined' && _sessionMode) ? 500 : 2000;
+  _autoSaveDebounce = setTimeout(() => { autoSaveNow(); }, delay);
 }
 
 function autoSaveNow() {
