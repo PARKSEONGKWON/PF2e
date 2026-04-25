@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=451"></script>
-<script src="feat_db.js?v=451"></script>
-<script src="SPELL_DB.js?v=451"></script>
-<script src="class_features_db.js?v=451"></script>
+<script src="equipment_db.js?v=452"></script>
+<script src="feat_db.js?v=452"></script>
+<script src="SPELL_DB.js?v=452"></script>
+<script src="class_features_db.js?v=452"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1249,23 +1249,6 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 .session-overlay.hidden{display:none;}
 .session-modal{background:#1a1a1a;border:1px solid #f5c518;border-radius:8px;padding:24px;min-width:300px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,.6);}
 #session-bar{display:none;background:#1a1a1a;border-bottom:1px solid #333;padding:6px 16px;font-size:12px;align-items:center;gap:8px;}
-.fullpage-center{display:flex;align-items:center;justify-content:center;min-height:80vh;padding:20px;}
-.mode-select-box{text-align:center;max-width:500px;width:90vw;}
-.mode-cards{display:flex;gap:16px;justify-content:center;}
-.mode-card{display:flex;flex-direction:column;align-items:center;gap:8px;background:#1a1a1a;border:2px solid #333;border-radius:12px;padding:32px 28px;cursor:pointer;transition:all .2s;width:200px;}
-.mode-card:hover{border-color:#f5c518;background:#222;transform:translateY(-2px);}
-.mode-card-gm{border-color:#444;}
-.mode-card-gm:hover{border-color:#3498db;}
-.mode-icon{font-size:48px;line-height:1;}
-.mode-title{font-size:18px;font-weight:700;color:#fff;}
-.mode-desc{font-size:12px;color:#888;line-height:1.4;}
-.gm-big-btn{width:100%;padding:14px;border:none;border-radius:6px;cursor:pointer;font-size:16px;font-weight:700;}
-.gm-player-card{background:#222;border:1px solid #444;border-radius:6px;padding:12px 16px;margin-bottom:6px;display:flex;flex-direction:column;gap:4px;}
-.gm-player-clickable{cursor:pointer;transition:border-color .2s;}
-.gm-player-clickable:hover{border-color:#f5c518;background:#2a2a2a;}
-#gm-edit-banner{display:none;background:#2c3e50;color:#fff;padding:8px 16px;font-size:13px;align-items:center;justify-content:space-between;gap:8px;}
-#gm-edit-banner button{background:#f5c518;color:#000;border:none;padding:5px 14px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;}
-@media(max-width:600px){.mode-cards{flex-direction:column;align-items:center;}.mode-card{width:80vw;padding:24px 20px;}}
 </style>
 </head>
 <body>
@@ -1275,7 +1258,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v451</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v452</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1838,14 +1821,14 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=451"></script>
-<script src="cs_calc.js?v=451"></script>
-<script src="cs_ui.js?v=451"></script>
-<script src="cs_modal.js?v=451"></script>
-<script src="cs_feat_effects.js?v=451"></script>
-<script src="cs_save.js?v=451"></script>
-<script src="cs_session.js?v=451"></script>
-<script src="cs_dice.js?v=451"></script>
+<script src="cs_data.js?v=452"></script>
+<script src="cs_calc.js?v=452"></script>
+<script src="cs_ui.js?v=452"></script>
+<script src="cs_modal.js?v=452"></script>
+<script src="cs_feat_effects.js?v=452"></script>
+<script src="cs_save.js?v=452"></script>
+<script src="cs_session.js?v=452"></script>
+<script src="cs_dice.js?v=452"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
@@ -1863,19 +1846,20 @@ function updateAuthUI(user) {
   if (user) {
     currentUser = user;
     area.innerHTML = '<span style="color:#aaa;margin-right:8px;">' + (user.displayName || user.email) + '</span>' +
+      '<button onclick="loadFromCloud()" style="background:#27ae60;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">불러오기</button>' +
+      '<button onclick="saveToCloud()" style="background:#2980b9;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">저장</button>' +
+      '<button onclick="if(typeof openJoinSessionModal===\'function\')openJoinSessionModal()" style="background:#3498db;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:700;margin-right:4px;">세션 참가</button>' +
       '<button onclick="googleLogout()" style="background:#555;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;">로그아웃</button>';
+    slotBar.style.display = 'flex';
+    updateSlotBar();
+    loadSlotNames(user.uid);
+    loadFromCloud();
     startAutoSave();
-    // 항상 모드 선택 화면부터
-    showModeSelection();
   } else {
     currentUser = null;
     area.innerHTML = '<button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>';
     slotBar.style.display = 'none';
-    // 모드 선택/세션 오버레이 숨기기
-    var modeOv = document.getElementById('mode-select-overlay');
-    if (modeOv) modeOv.style.display = 'none';
     if (typeof closeSessionModal === 'function') closeSessionModal();
-    // 세션 리스너 정리
     if (typeof stopSessionListeners === 'function') stopSessionListeners();
     if (typeof _sessionMode !== 'undefined' && _sessionMode) {
       _sessionMode = false; _currentSession = null; _isGM = false;
@@ -1883,7 +1867,6 @@ function updateAuthUI(user) {
       if (sBar) sBar.style.display = 'none';
     }
     stopAutoSave();
-    // 로그인 안 됨 → 클라우드 로드 불필요
     _cloudResolved = true; _checkReady();
   }
 }
@@ -2033,262 +2016,6 @@ window.addEventListener('beforeunload', function() {
 });
 
 // ── Mobile bottom nav tab switching ──
-// ═══════════════════════════════════════════════
-//  MODE SELECTION — 플레이어 / 게임마스터 모드
-// ═══════════════════════════════════════════════
-// ── 앱 표시/숨기기 (시트 전체) ──
-var _appElements = ['header','slot-bar','session-bar','app-layout','mobile-bottom-nav'];
-function _hideApp() {
-  _appElements.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
-}
-function _showApp() {
-  document.getElementById('header').style.display = '';
-  document.getElementById('app-layout').style.display = '';
-  document.getElementById('mobile-bottom-nav').style.display = '';
-}
-
-function _setAuthArea(buttons) {
-  // auth-area를 [이름] + buttons + [로그아웃] 으로 재구성
-  var area = document.getElementById('auth-area');
-  if (!area || !currentUser) return;
-  area.innerHTML = '';
-  var name = document.createElement('span');
-  name.style.cssText = 'color:#aaa;margin-right:8px;';
-  name.textContent = currentUser.displayName || currentUser.email;
-  area.appendChild(name);
-  buttons.forEach(function(b) { area.appendChild(b); });
-  var logout = document.createElement('button');
-  logout.textContent = '로그아웃';
-  logout.style.cssText = 'background:#555;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;';
-  logout.onclick = googleLogout;
-  area.appendChild(logout);
-}
-
-function _makeBtn(text, bg, onclick, extra) {
-  var b = document.createElement('button');
-  b.textContent = text;
-  b.style.cssText = 'border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;color:#fff;background:' + bg + ';' + (extra||'');
-  b.onclick = onclick;
-  return b;
-}
-
-// ═══════════════════════════════════════════════
-//  모드 선택 — 전체 페이지
-// ═══════════════════════════════════════════════
-function showModeSelection() {
-  _hideApp();
-  document.getElementById('auth-bar').style.display = 'none';
-  // GM 모드 화면도 숨기기
-  var gmPage = document.getElementById('gm-page');
-  if (gmPage) gmPage.style.display = 'none';
-
-  var page = document.getElementById('mode-select-page');
-  if (!page) {
-    page = document.createElement('div');
-    page.id = 'mode-select-page';
-    document.body.appendChild(page);
-  }
-  page.style.display = 'flex';
-  page.className = 'fullpage-center';
-  page.innerHTML =
-    '<div class="mode-select-box">' +
-      '<h2 style="color:#f5c518;margin:0 0 4px;font-size:22px;">PF2e 캐릭터 시트</h2>' +
-      '<p style="color:#888;font-size:13px;margin:0 0 32px;">' + (currentUser ? currentUser.displayName || currentUser.email : '') + '</p>' +
-      '<div class="mode-cards">' +
-        '<button class="mode-card" onclick="selectMode(\'player\')">' +
-          '<span class="mode-icon">🎭</span>' +
-          '<span class="mode-title">플레이어</span>' +
-          '<span class="mode-desc">캐릭터를 만들고 관리합니다</span>' +
-        '</button>' +
-        '<button class="mode-card mode-card-gm" onclick="selectMode(\'gm\')">' +
-          '<span class="mode-icon">📜</span>' +
-          '<span class="mode-title">게임마스터</span>' +
-          '<span class="mode-desc">세션을 만들고 파티를 관리합니다</span>' +
-        '</button>' +
-      '</div>' +
-      '<div style="margin-top:24px;"><button onclick="googleLogout()" style="background:none;border:none;color:#666;cursor:pointer;font-size:12px;">로그아웃</button></div>' +
-    '</div>';
-}
-
-function selectMode(mode) {
-  var page = document.getElementById('mode-select-page');
-  if (page) page.style.display = 'none';
-  document.getElementById('auth-bar').style.display = '';
-  if (mode === 'player') {
-    localStorage.setItem('pf2e_appMode', 'player');
-    enterPlayerMode();
-  } else {
-    localStorage.setItem('pf2e_appMode', 'gm');
-    enterGMMode();
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  플레이어 모드
-// ═══════════════════════════════════════════════
-function enterPlayerMode() {
-  _showApp();
-  document.getElementById('slot-bar').style.display = 'flex';
-  updateSlotBar();
-  loadSlotNames(currentUser.uid);
-  loadFromCloud();
-  _setAuthArea([
-    _makeBtn('불러오기', '#27ae60', loadFromCloud),
-    _makeBtn('저장', '#2980b9', saveToCloud),
-    _makeBtn('세션 참가', '#3498db', function() { if (typeof openJoinSessionModal === 'function') openJoinSessionModal(); }, 'font-weight:700;'),
-    _makeBtn('←', '#444', function() { localStorage.removeItem('pf2e_appMode'); showModeSelection(); }, 'color:#ccc;')
-  ]);
-}
-
-// ═══════════════════════════════════════════════
-//  게임마스터 모드 — 전용 화면
-// ═══════════════════════════════════════════════
-function enterGMMode() {
-  _hideApp();
-  _setAuthArea([
-    _makeBtn('←', '#444', function() {
-      localStorage.removeItem('pf2e_appMode');
-      if (typeof _sessionMode !== 'undefined' && _sessionMode) {
-        if (typeof stopSessionListeners === 'function') stopSessionListeners();
-        _sessionMode = false; _currentSession = null; _isGM = false;
-        clearSessionStorage();
-      }
-      showModeSelection();
-    }, 'color:#ccc;')
-  ]);
-  // GM 전용 페이지 표시
-  var gmPage = document.getElementById('gm-page');
-  if (!gmPage) {
-    gmPage = document.createElement('div');
-    gmPage.id = 'gm-page';
-    document.body.appendChild(gmPage);
-  }
-  gmPage.style.display = 'flex';
-  gmPage.className = 'fullpage-center';
-  // 세션이 이미 있으면 세션 대시보드, 없으면 세션 만들기
-  if (typeof _sessionMode !== 'undefined' && _sessionMode && _currentSession) {
-    renderGMDashboard();
-  } else {
-    gmPage.innerHTML =
-      '<div class="mode-select-box">' +
-        '<h2 style="color:#f5c518;margin:0 0 24px;font-size:20px;">📜 게임마스터</h2>' +
-        '<button onclick="if(typeof openCreateSessionModal===\'function\')openCreateSessionModal();" class="gm-big-btn" style="background:#f5c518;color:#000;">새 세션 만들기</button>' +
-        '<p style="color:#666;font-size:11px;margin-top:16px;">세션을 만들면 플레이어들에게 참가 코드를 공유할 수 있습니다.</p>' +
-      '</div>';
-  }
-}
-
-function renderGMDashboard() {
-  var gmPage = document.getElementById('gm-page');
-  if (!gmPage || !_currentSession) return;
-  var players = _currentSession.players || {};
-  var playerCount = Object.keys(players).length;
-  var playerList = '';
-  Object.keys(players).forEach(function(uid) {
-    var p = players[uid];
-    playerList += '<div class="gm-player-card gm-player-clickable" onclick="gmViewCharacter(\'' + uid + '\',\'' + (p.displayName || '???').replace(/'/g,'\\\'') + '\')">' +
-      '<span style="color:#fff;font-weight:700;">' + (p.displayName || '???') + '</span>' +
-      '<span class="gm-card-charinfo" id="gm-card-' + uid + '" style="color:#888;font-size:11px;"></span>' +
-      '<span style="color:#f5c518;font-size:11px;">클릭하여 시트 보기 →</span>' +
-    '</div>';
-  });
-  if (!playerList) playerList = '<p style="color:#666;">아직 참가한 플레이어가 없습니다.</p>';
-
-  gmPage.innerHTML =
-    '<div style="width:90vw;max-width:600px;">' +
-      '<div style="text-align:center;margin-bottom:24px;">' +
-        '<h2 style="color:#f5c518;margin:0 0 8px;">' + (_currentSession.name || '세션') + '</h2>' +
-        '<div style="font-size:14px;color:#888;">참가 코드: <strong style="color:#fff;font-family:monospace;font-size:24px;letter-spacing:4px;">' + _currentSession.joinCode + '</strong>' +
-          '<button onclick="navigator.clipboard.writeText(\'' + _currentSession.joinCode + '\').then(function(){alert(\'복사됨!\')});" style="background:none;border:none;color:#f5c518;cursor:pointer;font-size:14px;margin-left:8px;">📋</button></div>' +
-        '<p style="color:#666;font-size:12px;margin:4px 0;">참가자 ' + playerCount + '명</p>' +
-      '</div>' +
-      '<div style="margin-bottom:24px;">' +
-        '<h3 style="color:#ccc;font-size:14px;margin:0 0 8px;">파티원</h3>' +
-        playerList +
-      '</div>' +
-      '<div style="text-align:center;">' +
-        '<button onclick="leaveSession()" style="background:#c0392b;color:#fff;border:none;padding:8px 20px;border-radius:4px;cursor:pointer;font-size:13px;">세션 삭제</button>' +
-      '</div>' +
-    '</div>';
-  // 각 카드에 캐릭터 요약 정보 로드
-  _loadGMCardInfos();
-}
-
-function _loadGMCardInfos() {
-  if (!_currentSession) return;
-  var players = _currentSession.players || {};
-  Object.keys(players).forEach(function(uid) {
-    db.collection('sessions').doc(_currentSession.id)
-      .collection('characters').doc(uid).get().then(function(doc) {
-        var el = document.getElementById('gm-card-' + uid);
-        if (!el) return;
-        if (doc.exists && doc.data().data) {
-          try {
-            var d = JSON.parse(doc.data().data);
-            var cls = d.selectedClass || '';
-            var lv = d.level || 1;
-            var name = d.name || '이름 없음';
-            el.textContent = name + ' — ' + cls + ' Lv.' + lv;
-          } catch(e) { el.textContent = '데이터 로드 실패'; }
-        } else {
-          el.textContent = '캐릭터 미생성';
-        }
-      });
-  });
-}
-
-// GM이 플레이어 캐릭터 시트 열기
-function gmViewCharacter(uid, playerName) {
-  if (!_currentSession) return;
-  _gmEditTarget = uid;
-  // GM 대시보드 숨기고 캐릭터 시트 표시
-  var gmPage = document.getElementById('gm-page');
-  if (gmPage) gmPage.style.display = 'none';
-  _showApp();
-  // GM 편집 배너
-  var banner = document.getElementById('gm-edit-banner');
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'gm-edit-banner';
-    document.getElementById('auth-bar').after(banner);
-  }
-  banner.style.display = 'flex';
-  banner.innerHTML =
-    '<span>🎮 <strong>' + playerName + '</strong>의 캐릭터를 편집 중</span>' +
-    '<button onclick="gmBackToDashboard()">← 대시보드로 돌아가기</button>';
-  // auth-bar 버튼을 GM 편집용으로 갱신
-  _setAuthArea([
-    _makeBtn('저장', '#2980b9', saveToCloud),
-    _makeBtn('← 대시보드', '#444', gmBackToDashboard, 'color:#ccc;')
-  ]);
-  // 해당 플레이어 캐릭터 로드
-  if (typeof loadSessionCharacter === 'function') loadSessionCharacter(uid);
-}
-
-function gmBackToDashboard() {
-  _gmEditTarget = null;
-  // 배너 숨기기
-  var banner = document.getElementById('gm-edit-banner');
-  if (banner) banner.style.display = 'none';
-  // 시트 숨기고 대시보드 복귀
-  _hideApp();
-  var gmPage = document.getElementById('gm-page');
-  if (gmPage) gmPage.style.display = 'flex';
-  renderGMDashboard();
-  // auth-area 복귀
-  _setAuthArea([
-    _makeBtn('←', '#444', function() {
-      localStorage.removeItem('pf2e_appMode');
-      if (typeof _sessionMode !== 'undefined' && _sessionMode) {
-        if (typeof stopSessionListeners === 'function') stopSessionListeners();
-        _sessionMode = false; _currentSession = null; _isGM = false;
-        clearSessionStorage();
-      }
-      showModeSelection();
-    }, 'color:#ccc;')
-  ]);
-}
-
 function mobileNavSwitch(id) {
   // Close any open modal
   if (!document.getElementById('modal-overlay')?.classList.contains('hidden')) closeModal();
