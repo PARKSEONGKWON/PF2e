@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=454"></script>
-<script src="feat_db.js?v=454"></script>
-<script src="SPELL_DB.js?v=454"></script>
-<script src="class_features_db.js?v=454"></script>
+<script src="equipment_db.js?v=455"></script>
+<script src="feat_db.js?v=455"></script>
+<script src="SPELL_DB.js?v=455"></script>
+<script src="class_features_db.js?v=455"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1265,7 +1265,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v454</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v455</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1828,14 +1828,14 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=454"></script>
-<script src="cs_calc.js?v=454"></script>
-<script src="cs_ui.js?v=454"></script>
-<script src="cs_modal.js?v=454"></script>
-<script src="cs_feat_effects.js?v=454"></script>
-<script src="cs_save.js?v=454"></script>
-<script src="cs_session.js?v=454"></script>
-<script src="cs_dice.js?v=454"></script>
+<script src="cs_data.js?v=455"></script>
+<script src="cs_calc.js?v=455"></script>
+<script src="cs_ui.js?v=455"></script>
+<script src="cs_modal.js?v=455"></script>
+<script src="cs_feat_effects.js?v=455"></script>
+<script src="cs_save.js?v=455"></script>
+<script src="cs_session.js?v=455"></script>
+<script src="cs_dice.js?v=455"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
@@ -1862,7 +1862,7 @@ function updateAuthUI(user) {
       enterGMSessionMode(gmSessionId);
       return;
     }
-    // 일반 플레이어 모드
+    // 플레이어 모드 — 세션 복귀 시도
     area.innerHTML = '<span style="color:#aaa;margin-right:8px;">' + (user.displayName || user.email) + '</span>' +
       '<button onclick="loadFromCloud()" style="background:#27ae60;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">불러오기</button>' +
       '<button onclick="saveToCloud()" style="background:#2980b9;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">저장</button>' +
@@ -1871,7 +1871,12 @@ function updateAuthUI(user) {
     slotBar.style.display = 'flex';
     updateSlotBar();
     loadSlotNames(user.uid);
-    loadFromCloud();
+    // 이전 세션이 있으면 복귀, 없으면 일반 로드
+    if (typeof restoreSession === 'function' && localStorage.getItem('pf2e_sessionId')) {
+      restoreSession().then(function(ok) { if (!ok) loadFromCloud(); });
+    } else {
+      loadFromCloud();
+    }
   } else {
     currentUser = null;
     area.innerHTML = '<button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>';

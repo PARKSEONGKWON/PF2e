@@ -386,25 +386,45 @@ function stopSessionListeners() {
 // ═════════════════════════════════════════��═════
 function enterSessionUI() {
   if (_isGM) {
-    // GM: 전용 대시보드 갱신
     if (typeof renderGMDashboard === 'function') renderGMDashboard();
   } else {
-    // 플레이어: 세션 바 표시 + 캐릭터 시트
+    // 플레이어: 세션 바 표시 + 슬롯 바 숨김
     const slotBar = document.getElementById('slot-bar');
     if (slotBar) slotBar.style.display = 'none';
     let bar = document.getElementById('session-bar');
     if (bar) bar.style.display = 'flex';
     updateSessionBar();
+    // auth-area에서 "세션 참가" → "세션 나가기"로 변경
+    const area = document.getElementById('auth-area');
+    if (area) {
+      area.innerHTML = '<span style="color:#aaa;margin-right:8px;">' + (currentUser.displayName || currentUser.email) + '</span>' +
+        '<button onclick="saveToCloud()" style="background:#2980b9;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">저장</button>' +
+        '<button onclick="leaveSession()" style="background:#c0392b;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:700;margin-right:4px;">세션 나가기</button>' +
+        '<button onclick="googleLogout()" style="background:#555;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;">로그아웃</button>';
+    }
   }
 }
 
 function exitSessionUI() {
   const bar = document.getElementById('session-bar');
   if (bar) bar.style.display = 'none';
-  const gmPage = document.getElementById('gm-page');
-  if (gmPage) gmPage.style.display = 'none';
-  // 모드 선택 화면으로 돌아가기
-  if (typeof showModeSelection === 'function') showModeSelection();
+  // 일반 플레이어 모드로 복귀
+  if (currentUser) {
+    const slotBar = document.getElementById('slot-bar');
+    if (slotBar) slotBar.style.display = 'flex';
+    updateSlotBar();
+    loadSlotNames(currentUser.uid);
+    loadFromCloud();
+    // auth-area 복원
+    const area = document.getElementById('auth-area');
+    if (area) {
+      area.innerHTML = '<span style="color:#aaa;margin-right:8px;">' + (currentUser.displayName || currentUser.email) + '</span>' +
+        '<button onclick="loadFromCloud()" style="background:#27ae60;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">불러오기</button>' +
+        '<button onclick="saveToCloud()" style="background:#2980b9;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:4px;">저장</button>' +
+        '<button onclick="if(typeof openJoinSessionModal===\'function\')openJoinSessionModal()" style="background:#3498db;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:700;margin-right:4px;">세션 참가</button>' +
+        '<button onclick="googleLogout()" style="background:#555;color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;">로그아웃</button>';
+    }
+  }
 }
 
 function updateSessionBar() {
