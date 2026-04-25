@@ -989,6 +989,10 @@ function onLevelChange() {
   if (typeof syncFamiliarSpellsToState === 'function') syncFamiliarSpellsToState();
   renderGrowthPlan();
   updateSpellSlotsForClass();
+  // 클래스 모달이 열려 있으면 레벨별 특성 갱신
+  if (modalType === 'class' && document.getElementById('class-level-ui')) {
+    _refreshClassFeaturesPreview();
+  }
   save();
 }
 

@@ -13,6 +13,7 @@ let _sessionDocUnsub = null;
 let _charDocUnsub = null;
 let _partyUnsub = null;
 let _rollsUnsub = null;
+let _rollsReady = false; // 초기 스냅샷 스킵용
 
 /* ── 상수 ── */
 const SESSION_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // I,O,0,1 제외
@@ -170,8 +171,10 @@ async function leaveSession() {
     // 캐릭터 + 롤 서브컬렉션 삭제는 클라이언트에서 일일이 해야 함
     try {
       const charSnap = await db.collection('sessions').doc(_currentSession.id).collection('characters').get();
+      const rollSnap = await db.collection('sessions').doc(_currentSession.id).collection('rolls').get();
       const batch = db.batch();
       charSnap.forEach(d => batch.delete(d.ref));
+      rollSnap.forEach(d => batch.delete(d.ref));
       batch.delete(db.collection('sessions').doc(_currentSession.id));
       await batch.commit();
     } catch (e) {
@@ -329,6 +332,26 @@ async function copySlotToSession(slotId) {
 // ══════════��═════════════════════��══════════════
 function startSessionListeners() {
   if (!_currentSession) return;
+
+  // ── 주사위 공유 콜백 설정 ──
+  if (typeof DiceRoller !== 'undefined' && DiceRoller.onRoll) {
+    DiceRoller.onRoll(function(entry) {
+      if (!_sessionMode || !_currentSession || !currentUser) return;
+      var charName = (typeof state !== 'undefined' && state.name) || currentUser.displayName || '???';
+      db.collection('sessions').doc(_currentSession.id).collection('rolls').add({
+        uid: currentUser.uid,
+        characterName: charName,
+        label: entry.label,
+        dice: entry.dice,
+        modifier: entry.modifier || 0,
+        total: entry.total,
+        isNat20: !!entry.isNat20,
+        isNat1: !!entry.isNat1,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(e) { console.warn('[sessionRoll]', e); });
+    });
+  }
+
   // 세션 문서 실시간 감시 (players 변경 등)
   _sessionDocUnsub = db.collection('sessions').doc(_currentSession.id)
     .onSnapshot(doc => {
@@ -369,9 +392,26 @@ function startSessionListeners() {
           _rebuildAllUI();
           recalcAll();
           _loadComplete = prev;
+          _flashSyncIndicator();
         }
       });
   }
+
+  // ── 주사위 공유 리스너 ──
+  _rollsReady = false;
+  _rollsUnsub = db.collection('sessions').doc(_currentSession.id)
+    .collection('rolls').orderBy('createdAt')
+    .onSnapshot(function(snap) {
+      if (!_rollsReady) { _rollsReady = true; return; }
+      snap.docChanges().forEach(function(change) {
+        if (change.type === 'added') {
+          var data = change.doc.data();
+          if (data.uid !== currentUser.uid && typeof DiceRoller !== 'undefined') {
+            DiceRoller.showRemoteToast(data);
+          }
+        }
+      });
+    });
 }
 
 function stopSessionListeners() {
@@ -379,6 +419,11 @@ function stopSessionListeners() {
   if (_charDocUnsub) { _charDocUnsub(); _charDocUnsub = null; }
   if (_partyUnsub) { _partyUnsub(); _partyUnsub = null; }
   if (_rollsUnsub) { _rollsUnsub(); _rollsUnsub = null; }
+  _rollsReady = false;
+  // 주사위 콜백 해제
+  if (typeof DiceRoller !== 'undefined' && DiceRoller.onRoll) {
+    DiceRoller.onRoll(null);
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -600,6 +645,34 @@ async function enterGMSessionMode(sessionId) {
         _buildPlayerTabBar();
       });
 
+    // 주사위 공유 콜백 + 리스너 (GM도 주사위 공유 수신)
+    if (typeof DiceRoller !== 'undefined' && DiceRoller.onRoll) {
+      DiceRoller.onRoll(function(entry) {
+        if (!_sessionMode || !_currentSession || !currentUser) return;
+        var charName = 'GM';
+        db.collection('sessions').doc(_currentSession.id).collection('rolls').add({
+          uid: currentUser.uid, characterName: charName,
+          label: entry.label, dice: entry.dice, modifier: entry.modifier || 0,
+          total: entry.total, isNat20: !!entry.isNat20, isNat1: !!entry.isNat1,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).catch(function(e) { console.warn('[gmSessionRoll]', e); });
+      });
+    }
+    _rollsReady = false;
+    _rollsUnsub = db.collection('sessions').doc(sessionId)
+      .collection('rolls').orderBy('createdAt')
+      .onSnapshot(function(snap) {
+        if (!_rollsReady) { _rollsReady = true; return; }
+        snap.docChanges().forEach(function(change) {
+          if (change.type === 'added') {
+            var d2 = change.doc.data();
+            if (d2.uid !== currentUser.uid && typeof DiceRoller !== 'undefined') {
+              DiceRoller.showRemoteToast(d2);
+            }
+          }
+        });
+      });
+
     // 첫 번째 플레이어 탭 자동 선택
     const uids = Object.keys(_currentSession.players);
     if (uids.length > 0) {
@@ -688,8 +761,21 @@ function _startGMCharListener(uid) {
         _rebuildAllUI();
         recalcAll();
         _loadComplete = prev;
+        _flashSyncIndicator();
       }
     });
+}
+
+// ── 동기화 인디케이터 ──
+function _flashSyncIndicator() {
+  const st = document.getElementById('save-status');
+  if (st) {
+    st.textContent = '🔄 동기화됨';
+    st.style.color = '#3498db';
+    setTimeout(function() {
+      if (st.textContent === '🔄 동기화됨') { st.textContent = ''; }
+    }, 2000);
+  }
 }
 
 // GM이 탭 바에서 플레이어 추방

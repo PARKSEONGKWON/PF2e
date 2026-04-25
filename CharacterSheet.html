@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=457"></script>
-<script src="feat_db.js?v=457"></script>
-<script src="SPELL_DB.js?v=457"></script>
-<script src="class_features_db.js?v=457"></script>
+<script src="equipment_db.js?v=458"></script>
+<script src="feat_db.js?v=458"></script>
+<script src="SPELL_DB.js?v=458"></script>
+<script src="class_features_db.js?v=458"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -1195,6 +1195,12 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 .dice-result-chip{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:700;color:#fff;}
 .dice-result-chip.dice-max{box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);}
 .dice-result-chip.dice-min{opacity:.6;}
+/* 원격 주사위 토스트 (세션 공유) */
+.dice-toast-remote{border-left:3px solid #3498db;}
+.dice-toast-remote .dice-toast-total{color:#3498db;}
+.dice-toast-remote.nat20 .dice-toast-total{color:#f1c40f;}
+.dice-toast-remote.nat1 .dice-toast-total{color:#e74c3c;}
+.dice-toast-who{font-size:10px;font-weight:700;color:#3498db;margin-bottom:2px;}
 
 /* 3D 애니메이션 오버레이 */
 #dice-anim-overlay{position:fixed;inset:0;z-index:9020;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;}
@@ -1265,7 +1271,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v457</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v458</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1828,14 +1834,14 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=457"></script>
-<script src="cs_calc.js?v=457"></script>
-<script src="cs_ui.js?v=457"></script>
-<script src="cs_modal.js?v=457"></script>
-<script src="cs_feat_effects.js?v=457"></script>
-<script src="cs_save.js?v=457"></script>
-<script src="cs_session.js?v=457"></script>
-<script src="cs_dice.js?v=457"></script>
+<script src="cs_data.js?v=458"></script>
+<script src="cs_calc.js?v=458"></script>
+<script src="cs_ui.js?v=458"></script>
+<script src="cs_modal.js?v=458"></script>
+<script src="cs_feat_effects.js?v=458"></script>
+<script src="cs_save.js?v=458"></script>
+<script src="cs_session.js?v=458"></script>
+<script src="cs_dice.js?v=458"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

@@ -17,6 +17,7 @@ const DiceRoller = (() => {
   let rollLog = [];       // 굴림 기록
   let trayOpen = false;
   let logOpen = false;
+  let _rollCallback = null; // 세션 주사위 공유용 콜백
 
   // ── 유틸 ──
   function roll(sides) { return Math.floor(Math.random() * sides) + 1; }
@@ -71,6 +72,7 @@ const DiceRoller = (() => {
     if (rollLog.length > MAX_LOG) rollLog.pop();
 
     showRollAnimation(entry, () => showToast(entry));
+    if (_rollCallback) try { _rollCallback(entry); } catch(e) { console.warn('[DiceRoller] onRoll error', e); }
     clearPool();
     if (logOpen) renderLog();
     return entry;
@@ -253,6 +255,7 @@ const DiceRoller = (() => {
         };
         rollLog.unshift(entry); if (rollLog.length > MAX_LOG) rollLog.pop();
         showRollAnimation(entry, () => showToast(entry));
+        if (_rollCallback) try { _rollCallback(entry); } catch(e) {}
         if (logOpen) renderLog();
       };
     }
@@ -420,10 +423,45 @@ const DiceRoller = (() => {
     init();
   }
 
+  // ── 콜백 설정 ──
+  function onRoll(cb) { _rollCallback = cb; }
+
+  // ── 원격 주사위 토스트 (세션 공유용) ──
+  function showRemoteToast(data) {
+    const container = getToastContainer();
+    const toast = document.createElement('div');
+    toast.className = 'dice-toast dice-toast-remote' + (data.isNat20 ? ' nat20' : '') + (data.isNat1 ? ' nat1' : '');
+
+    const diceStr = (data.dice || []).map(d => {
+      const cls = d.value === d.sides ? 'dice-max' : d.value === 1 ? 'dice-min' : '';
+      return `<span class="dice-result-chip ${cls}" style="background:${DICE_COLORS[d.sides]||'#666'}">d${d.sides}:${d.value}</span>`;
+    }).join(' ');
+
+    const modStr = data.modifier ? ` ${fmtMod(data.modifier)}` : '';
+
+    toast.innerHTML = `
+      <div class="dice-toast-who">🎲 ${data.characterName || '???'}</div>
+      <div class="dice-toast-header">
+        <span class="dice-toast-label">${data.label || ''}</span>
+        <span class="dice-toast-total">${data.total}</span>
+      </div>
+      <div class="dice-toast-detail">${diceStr}${modStr}</div>
+    `;
+
+    container.prepend(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+      toast.classList.remove('show');
+      toast.classList.add('hide');
+      setTimeout(() => toast.remove(), 400);
+    }, 5000);
+  }
+
   // ── Public API ──
   return {
     addToPool, removeFromPool, clearPool,
     rollPool, rollQuick, rollCheck,
     toggleTray, toggleLog, clearLog,
+    onRoll, showRemoteToast,
   };
 })();

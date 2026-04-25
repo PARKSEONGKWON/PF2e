@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── 개인 캐릭터 (5���롯) ──
+    match /users/{userId}/characters/{slotId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ── 세션 ──
+    match /sessions/{sessionId} {
+      // 누구나 읽기 가능 (참가 코드 검증용)
+      allow read: if request.auth != null;
+      // GM만 생성
+      allow create: if request.auth != null;
+      // GM만 수정/삭제
+      allow update, delete: if request.auth != null
+        && resource.data.gmUid == request.auth.uid;
+
+      // ── 세션 캐릭터 ──
+      match /characters/{charUid} {
+        // GM 또는 캐릭터 소유자��� 읽기/쓰기
+        allow read: if request.auth != null
+          && (request.auth.uid == charUid
+              || request.auth.uid == get(/databases/$(database)/documents/sessions/$(sessionId)).data.gmUid);
+        allow write: if request.auth != null
+          && (request.auth.uid == charUid
+              || request.auth.uid == get(/databases/$(database)/documents/sessions/$(sessionId)).data.gmUid);
+      }
+
+      // ── 주사위 굴림 ──
+      match /rolls/{rollId} {
+        // 세션 참가자면 읽기 가능
+        allow read: if request.auth != null;
+        // 로그인한 사용자가 자기 uid로만 생성 가능
+        allow create: if request.auth != null
+          && request.resource.data.uid == request.auth.uid;
+        // GM만 삭제 (정리용)
+        allow delete: if request.auth != null
+          && request.auth.uid == get(/databases/$(database)/documents/sessions/$(sessionId)).data.gmUid;
+      }
+    }
+  }
+}
