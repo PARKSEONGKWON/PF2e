@@ -2481,6 +2481,25 @@ function openModal(type, ctx) {
   if (footer) footer.style.display = ['class','ancestry','background'].includes(type) ? 'none' : '';
 
   renderOptions(getOptionsData(type));
+
+  // ── 이미 선택된 항목이 있으면 자동 선택 + 상세 패널 표시 ──
+  let preselected = null;
+  if (type === 'class' && state.selectedClass) preselected = state.selectedClass;
+  else if (type === 'ancestry' && state.selectedAncestry) preselected = state.selectedAncestry;
+  else if (type === 'background' && state.selectedBackground) preselected = state.selectedBackground;
+  else if (type === 'heritage' && state.selectedHeritage) preselected = state.selectedHeritage;
+  if (preselected) {
+    const rows = document.querySelectorAll('#modal-options .opt-row');
+    for (const row of rows) {
+      const nameEl = row.querySelector('.opt-row-name');
+      const name = nameEl ? nameEl.textContent.trim() : '';
+      const matchName = preselected.name || preselected.name_ko || '';
+      if (name === matchName) {
+        row.click();
+        break;
+      }
+    }
+  }
 }
 
 function _searchFilter(arr) {
