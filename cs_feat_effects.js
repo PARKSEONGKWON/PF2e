@@ -2993,7 +2993,17 @@ function applyFeatEffects() {
   // vision_upgrade: 재주 부여 시야 초기화 → 혈통/유산 기본값 복원
   if (state._featVisionUpgrade) {
     state.vision = state.selectedAncestry?.vision || '없음';
-    if (state.selectedHeritage?.vision) state.vision = state.selectedHeritage.vision;
+    if (state.selectedHeritage?.vision) {
+      const hv = state.selectedHeritage.vision;
+      if (hv === 'upgrade') {
+        // 저광 시야 부여, 이미 저광이면 암시야로 업그레이드
+        if (state.vision === '저광 시야') state.vision = '암시야';
+        else if (state.vision !== '암시야') state.vision = '저광 시야';
+      } else {
+        const vr = {'암시야':2,'저광 시야':1,'없음':0};
+        if ((vr[hv]||0) > (vr[state.vision]||0)) state.vision = hv;
+      }
+    }
     state._featVisionUpgrade = false;
   }
 
