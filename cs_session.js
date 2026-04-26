@@ -230,8 +230,9 @@ function sessionSaveNow() {
   if (!targetSlot) return;
 
   var jsonData = JSON.stringify(data);
-  // 자기 저장 데이터 기록 — onSnapshot에서 자기 반응 스킵용
+  // 저장 데이터 기록 — onSnapshot에서 자기 반응 스킵용
   if (targetUid === currentUser.uid) _lastSavedData = jsonData;
+  else if (_isGM) _gmLastSavedData = jsonData;
 
   db.collection('users').doc(targetUid)
     .collection('characters').doc(targetSlot).set({
@@ -406,6 +407,8 @@ function startSessionListeners() {
       }
       updateSessionBar();
       if (_isGM && typeof renderGMDashboard === 'function') renderGMDashboard();
+    }, function(err) {
+      console.error('[sessionDocListener]', err);
     });
 
   // 플레이어: 자기 캐릭터 문서 감시 (GM 편집 반영)
@@ -429,6 +432,8 @@ function startSessionListeners() {
           // GM 편집 수신 후 플레이어 측에서도 저장 (정본 유지)
           save();
         }
+      }, function(err) {
+        console.error('[charDocListener]', err);
       });
   }
 
@@ -455,6 +460,9 @@ function stopSessionListeners() {
   if (_partyUnsub) { _partyUnsub(); _partyUnsub = null; }
   if (_rollsUnsub) { _rollsUnsub(); _rollsUnsub = null; }
   _rollsReady = false;
+  _leavingSession = false;
+  _lastSavedData = null;
+  _gmLastSavedData = null;
   // 주사위 콜백 해제
   if (typeof DiceRoller !== 'undefined' && DiceRoller.onRoll) {
     DiceRoller.onRoll(null);
@@ -652,7 +660,6 @@ autoSaveNow = function() {
 //  GM 세션 모드 (?gmsession=ID 파라미터)
 // ═══════════════════════════════════════════════
 let _gmPlayerTabs = [];       // [{uid, displayName}]
-let _gmCharUnsubs = {};       // uid → onSnapshot unsub
 let _gmActiveTab = null;      // 현재 보고 있는 플레이어 uid
 
 function checkGMSessionParam() {
@@ -809,6 +816,7 @@ function gmSwitchTab(uid) {
 
 let _gmSyncTimeout = null;
 let _gmPendingData = null;
+let _gmLastSavedData = null; // GM이 플레이어에 저장한 데이터 — onSnapshot 자기 반응 스킵용
 
 function _startGMCharListener(uid) {
   // 기존 리스너 + 디바운스 타이머 해제
@@ -824,6 +832,8 @@ function _startGMCharListener(uid) {
     .onSnapshot(doc => {
       if (!doc.exists || !doc.data().data) return;
       const remoteData = doc.data().data;
+      // GM이 방금 저장한 데이터면 스킵 (자기 반응 방지)
+      if (remoteData === _gmLastSavedData) return;
       const localData = JSON.stringify(collectData());
       if (remoteData !== localData && _gmActiveTab === uid) {
         // 3초 디바운스 — 플레이어가 편집을 멈출 때까지 대기

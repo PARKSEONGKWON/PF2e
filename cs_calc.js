@@ -350,15 +350,23 @@ function showInfo(type, name) {
     if (item.hardness !== undefined) item.summary = (item.summary||'') + '<br><br><strong style="color:var(--red-light);">⚠ 파손됨:</strong> 방패 올리기로 AC 보너스를 받을 수 없습니다.';
   }
 
-  // DB에 없으면 임시 카드
+  // DB에 없으면 커스텀 장비 데이터 확인 후 임시 카드
   if (!item) {
     const nameEn = (name.match(/\(([^)]+)\)/) || [])[1] || '';
-    item = {
-      name_ko: nameKo, name_en: nameEn,
-      summary: 'DB에 상세 정보가 없습니다.',
-      ...(type === 'feat' ? {feat_level:'?', category:'-', traits:[], prerequisites:''} : {}),
-      ...(type === 'spell' ? {rank:0, is_cantrip:false, is_focus:false, traditions:[], traits:[], actions:''} : {}),
-    };
+    // 커스텀 장비: state.equip에서 _data 또는 _desc 활용
+    const eqMatch = state.equip?.find(e => e.name === nameKo);
+    if (eqMatch && eqMatch._data) {
+      item = {...eqMatch._data, name_ko: eqMatch._data.name_ko || nameKo, name_en: eqMatch._data.name_en || nameEn};
+    } else if (eqMatch && eqMatch._desc) {
+      item = {name_ko: nameKo, name_en: nameEn, summary: eqMatch._desc};
+    } else {
+      item = {
+        name_ko: nameKo, name_en: nameEn,
+        summary: 'DB에 상세 정보가 없습니다.',
+        ...(type === 'feat' ? {feat_level:'?', category:'-', traits:[], prerequisites:''} : {}),
+        ...(type === 'spell' ? {rank:0, is_cantrip:false, is_focus:false, traditions:[], traits:[], actions:''} : {}),
+      };
+    }
   }
 
   const titleMap = {spell:'주문 정보', feat:'재주 정보', heritage:'유산 정보', weapon:'무기 정보', armor:'방어구 정보', shield:'방패 정보', gear:'장비 정보'};

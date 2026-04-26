@@ -3395,13 +3395,14 @@ function _buildClassProgressionTable(cls) {
   if (!cls || typeof CLASS_FEATURE_NAMES === 'undefined') return '';
   const cfn = CLASS_FEATURE_NAMES[cls.id] || [];
   const gt = GROWTH_TABLE;
+  const curLv = state.level || 1;
 
   let rows = '';
   for (let lv = 1; lv <= 20; lv++) {
     const plan = gt[lv] || {};
     const parts = [];
 
-    // 클래스 특성
+    // 클래��� 특성
     const feats = cfn.filter(f => f.lv === lv);
     feats.forEach(f => parts.push(f.name_ko));
 
@@ -3414,14 +3415,17 @@ function _buildClassProgressionTable(cls) {
     if (plan.boosts) parts.push('능력치 부스트');
     if (lv === 1) { parts.push('혈통과 배경'); parts.push('초기 숙련도'); }
 
-    const rowBg = lv % 2 === 0 ? 'var(--bg3)' : 'transparent';
-    rows += `<tr style="background:${rowBg};">
-      <td style="padding:3px 6px;text-align:center;font-weight:600;color:var(--accent);border-right:1px solid var(--border);white-space:nowrap;">${lv}</td>
+    const isFuture = lv > curLv;
+    const rowBg = lv === curLv ? 'rgba(245,197,24,0.12)' : (lv % 2 === 0 ? 'var(--bg3)' : 'transparent');
+    const dimStyle = isFuture ? 'opacity:0.4;' : '';
+    const lvColor = lv === curLv ? '#f5c518' : (isFuture ? 'var(--text2)' : 'var(--accent)');
+    rows += `<tr style="background:${rowBg};${dimStyle}">
+      <td style="padding:3px 6px;text-align:center;font-weight:600;color:${lvColor};border-right:1px solid var(--border);white-space:nowrap;">${lv}</td>
       <td style="padding:3px 6px;font-size:11px;line-height:1.5;">${parts.join(', ')}</td>
     </tr>`;
   }
 
-  return `<div style="margin:10px 0;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+  return `<div id="class-progression-table" style="margin:10px 0;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
     <div style="font-size:11px;font-weight:600;color:var(--accent);padding:8px 10px;background:var(--bg3);border-bottom:1px solid var(--border);">📋 ${cls.name} 발전 표</div>
     <div>
     <table style="width:100%;border-collapse:collapse;font-size:11px;color:var(--text1);">
@@ -3569,8 +3573,13 @@ function _buildClassChoicesUI(cls) {
 
 // ── 레벨 헤더 ──
 function _classLevelHeader(lv) {
-  return `<div id="class-lv-${lv}" style="display:flex;align-items:center;gap:8px;margin:${lv === 1 ? '6' : '16'}px 0 8px;">
-    <div style="font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;">${lv}레벨</div>
+  const curLv = state.level || 1;
+  const isCurrent = lv === curLv;
+  const isFuture = lv > curLv;
+  const lvColor = isCurrent ? '#f5c518' : (isFuture ? 'var(--text2)' : 'var(--accent)');
+  const dimStyle = isFuture ? 'opacity:0.45;' : '';
+  return `<div id="class-lv-${lv}" style="display:flex;align-items:center;gap:8px;margin:${lv === 1 ? '6' : '16'}px 0 8px;${dimStyle}">
+    <div style="font-size:13px;font-weight:700;color:${lvColor};white-space:nowrap;">${lv}레벨</div>
     <div style="flex:1;height:1px;background:var(--border);"></div>
   </div>`;
 }
@@ -3603,6 +3612,12 @@ function _refreshClassFeaturesPreview() {
   const allFeats = [...classFeats, ...subFeats].sort((a, b) => a.lv - b.lv || a.name_ko.localeCompare(b.name_ko));
   const featsByLv = {};
   allFeats.forEach(f => { (featsByLv[f.lv] = featsByLv[f.lv] || []).push(f); });
+
+  // 발전 �� 갱신 (레벨 변경 시 미래 레벨 시각 구분 반영)
+  const progTable = document.getElementById('class-progression-table');
+  if (progTable && cls) {
+    progTable.outerHTML = _buildClassProgressionTable(cls);
+  }
 
   // 기존 동적 블록 제거 (class-feat-dynamic 클래스)
   container.querySelectorAll('.cfp-dynamic').forEach(el => el.remove());
