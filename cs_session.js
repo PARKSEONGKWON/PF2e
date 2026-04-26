@@ -911,16 +911,16 @@ function _showEmptyPartyMessage() {
   // 기존 메시지가 있으면 제거
   var old = document.getElementById('gm-empty-msg');
   if (old) old.remove();
-  // 시트 본문 숨기기
+  // 시트 전체 숨기기
   var header = document.getElementById('header');
   if (header) header.style.display = 'none';
-  var rightTabs = document.getElementById('right-tabs');
-  if (rightTabs) rightTabs.style.display = 'none';
-  document.querySelectorAll('.tab-content').forEach(function(el) { el.style.display = 'none'; });
+  var appLayout = document.getElementById('app-layout');
+  if (appLayout) appLayout.style.display = 'none';
   // 안내 메시지
   var bar = document.getElementById('gm-tab-bar');
-  if (bar) {
-    bar.insertAdjacentHTML('afterend',
+  var anchor = bar || document.getElementById('session-bar') || document.getElementById('slot-bar');
+  if (anchor) {
+    anchor.insertAdjacentHTML('afterend',
       '<div id="gm-empty-msg" style="text-align:center;padding:80px 20px;color:#666;">' +
         '<p style="font-size:16px;margin-bottom:8px;">아직 참가한 플레이어가 없습니다.</p>' +
         '<p style="font-size:13px;">참가 코드: <strong style="color:#f5c518;font-family:monospace;font-size:18px;letter-spacing:3px;">' + _currentSession.joinCode + '</strong></p>' +
@@ -935,8 +935,8 @@ function _hideEmptyPartyMessage() {
   if (msg) msg.remove();
   var header = document.getElementById('header');
   if (header) header.style.display = '';
-  var rightTabs = document.getElementById('right-tabs');
-  if (rightTabs) rightTabs.style.display = '';
+  var appLayout = document.getElementById('app-layout');
+  if (appLayout) appLayout.style.display = '';
 }
 
 // ═══════════════════════════════════════════════
