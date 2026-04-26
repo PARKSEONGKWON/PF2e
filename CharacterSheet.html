@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=476"></script>
-<script src="feat_db.js?v=476"></script>
-<script src="SPELL_DB.js?v=476"></script>
-<script src="class_features_db.js?v=476"></script>
+<script src="equipment_db.js?v=477"></script>
+<script src="feat_db.js?v=477"></script>
+<script src="SPELL_DB.js?v=477"></script>
+<script src="class_features_db.js?v=477"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -494,40 +494,8 @@ body{
 }
 .defense-conditions{padding:8px 10px;}
 
-/* ══════════════════════════════════
-   HAND SLOTS
-   ══════════════════════════════════ */
-.hand-slots-container{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px 8px 6px;}
-.hand-slots-container.two-hand-mode{grid-template-columns:1fr;}
-.hand-slot{
-  display:flex;flex-direction:column;align-items:center;
-  padding:6px 8px;
-  border:1px solid var(--border);border-radius:6px;
-  background:var(--bg3);font-size:11px;min-height:54px;
-  justify-content:center;
-}
-.hand-slot-two{border-color:var(--accent);background:rgba(212,175,55,.08);}
-.hand-slot-header{display:flex;align-items:center;gap:4px;width:100%;}
-.hand-slot-icon{font-size:13px;flex-shrink:0;}
-.hand-slot-label{color:var(--text2);font-size:9px;font-weight:600;text-transform:uppercase;}
-.hand-slot-name{font-size:11px;font-weight:600;color:var(--text1);margin-top:2px;text-align:center;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
-.hand-slot-name.empty{font-weight:400;color:var(--text2);font-style:italic;}
-.hand-slot-actions{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;justify-content:center;}
-.hand-slot-btn{
-  background:var(--bg2);border:1px solid var(--border2);color:var(--text2);
-  padding:2px 6px;border-radius:3px;cursor:pointer;font-size:9px;line-height:1.3;
-}
-.hand-slot-btn:hover{background:var(--bg4);color:var(--text1);}
-.hand-slot-btn.accent{border-color:var(--accent);color:var(--accent);}
-.hand-slot-btn.accent:hover{background:rgba(212,175,55,.15);}
-.hand-slot-btn.free{color:var(--green-light,#6c6);border-color:var(--green-light,#6c6);}
-.hand-slot-cost{font-size:8px;color:var(--text2);margin-left:1px;}
-.weapon-btn.held,.defense-btn.held{
-  background:transparent;border:none;color:var(--accent);
-  font-size:13px;padding:0 4px;cursor:default;
-}
 .weapon-card.dropped{opacity:.35;border-style:dotted;border-color:var(--red-light,#c66);}
+.weapon-btn.action-cost{font-size:8px;color:var(--text2);margin-left:1px;}
 
 /* ══════════════════════════════════
    WEAPON CARDS
@@ -1322,7 +1290,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v476</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v477</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1549,7 +1517,6 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
           <select id="prof-weapon-unarmed" style="display:none;"><option value="0"></option><option value="2"></option><option value="4"></option><option value="6"></option><option value="8"></option></select>
       </div>
       <div id="weapon-prof-summary" class="ac-breakdown" style="min-height:0;border-top:1px solid var(--border);display:none;"></div>
-      <div id="hand-slots" class="hand-slots-container"></div>
       <div class="box">
         <div class="box-title">공격 Strikes</div>
         <div id="weapons-list"></div>
@@ -1886,14 +1853,14 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=476"></script>
-<script src="cs_calc.js?v=476"></script>
-<script src="cs_ui.js?v=476"></script>
-<script src="cs_modal.js?v=476"></script>
-<script src="cs_feat_effects.js?v=476"></script>
-<script src="cs_save.js?v=476"></script>
-<script src="cs_session.js?v=476"></script>
-<script src="cs_dice.js?v=476"></script>
+<script src="cs_data.js?v=477"></script>
+<script src="cs_calc.js?v=477"></script>
+<script src="cs_ui.js?v=477"></script>
+<script src="cs_modal.js?v=477"></script>
+<script src="cs_feat_effects.js?v=477"></script>
+<script src="cs_save.js?v=477"></script>
+<script src="cs_session.js?v=477"></script>
+<script src="cs_dice.js?v=477"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->

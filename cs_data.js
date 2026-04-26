@@ -748,7 +748,6 @@ let state = {
     lv20:     [],
   },
   weapons: [],
-  handSlots: [null, null],
   equip: [],
   spells: {cantrip:[], known:[], focus:[], innate:[]},
   cantripSlots: 5,
