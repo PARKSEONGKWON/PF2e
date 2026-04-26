@@ -2691,9 +2691,9 @@ function showEquipDetail(item) {
     <div class="equip-give-buy">
       ${modalType === 'formula-pick'
         ? `<button class="btn-give" onclick="recordFormula('${nameKo.replace(/'/g,"\\'")}')">📜 제조법 기록</button>`
-        : `<label style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;color:var(--text2);margin-bottom:8px;cursor:pointer;"><input type="checkbox" id="equip-broken-check"> 파손 상태로 획득</label>
-           <div style="display:flex;gap:6px;"><button class="btn-give" onclick="equipBrowseGive()" style="flex:1;">획득</button>
-           <button class="btn-buy" onclick="equipBrowseBuy()" style="flex:1;">구매</button></div>`}
+        : `<label style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;color:var(--text2);margin-bottom:6px;cursor:pointer;"><input type="checkbox" id="equip-broken-check"> 파손 상태로 획득</label>
+           <button class="btn-give" onclick="equipBrowseGive()">획득</button>
+           <button class="btn-buy" onclick="equipBrowseBuy()">구매</button>`}
     </div>`;
 }
 
