@@ -3154,7 +3154,8 @@ function _buildFeatActionCard(item) {
   const costKey = costMap[costMatch[1]] || '1';
   const costIcon = (typeof getActionCostIcon==='function') ? getActionCostIcon(costKey) : costMatch[0];
   const traits = (item.traits||[]).map(t => typeof traitTag==='function' ? traitTag(t) : `<span class="tag">${t}</span>`).join(' ');
-  const desc = (item.desc||item.summary||'').replace(/^\[(?:반응|1행동|2행동|3행동|자유 행동)\]\s*/, '');
+  const rawDesc = (item.desc||item.summary||'').replace(/^\[(?:반응|1행동|2행동|3행동|자유 행동)\]\s*/, '');
+  const desc = typeof resolveDescRefs==='function' ? resolveDescRefs(rawDesc) : rawDesc;
   return `<div class="action-card" style="margin:8px 0;max-width:320px;">
     <div class="action-card-head">
       <span class="action-cost">${costIcon}</span>
@@ -5224,7 +5225,7 @@ function renderActions() {
           </div>
         </div>
         ${traitsHtml ? `<div class="action-traits">${traitsHtml}</div>` : ''}
-        <div class="action-summary">${a.summary}</div>
+        <div class="action-summary">${typeof resolveDescRefs==='function'?resolveDescRefs(a.summary):a.summary}</div>
         ${sourceHtml}${reqHtml}
       </div>`;
     });
