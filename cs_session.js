@@ -416,6 +416,8 @@ function startSessionListeners() {
           _rebuildAllUI();
           recalcAll();
           _loadComplete = prev;
+          // GM 편집 수신 후 플레이어 측에서도 저장 (정본 유지)
+          save();
           _flashSyncIndicator();
         }
       });
@@ -770,6 +772,10 @@ function gmSwitchTab(uid) {
   _gmActiveTab = uid;
   _gmEditTarget = uid;
 
+  // 동기화 상태 초기화
+  var syncEl = document.getElementById('gm-sync-status');
+  if (syncEl) syncEl.textContent = '';
+
   // 탭 바 활성 상태 갱신
   document.querySelectorAll('.gm-tab').forEach(btn => btn.classList.remove('gm-tab-active'));
   const activeBtn = document.querySelector('.gm-tab[onclick*="' + uid + '"]');
@@ -806,6 +812,7 @@ function _startGMCharListener(uid) {
       if (remoteData !== localData && _gmActiveTab === uid) {
         // 3초 디바운스 — 플레이어가 편집을 멈출 때까지 대기
         _gmPendingData = remoteData;
+        _showGMSyncStatus('pending');
         if (_gmSyncTimeout) clearTimeout(_gmSyncTimeout);
         _gmSyncTimeout = setTimeout(function() {
           if (_gmPendingData && _gmActiveTab === uid) {
@@ -816,6 +823,7 @@ function _startGMCharListener(uid) {
             recalcAll();
             _loadComplete = prev;
             _flashSyncIndicator();
+            _showGMSyncStatus('done');
             _gmPendingData = null;
           }
         }, 3000);
@@ -832,6 +840,31 @@ function _flashSyncIndicator() {
     setTimeout(function() {
       if (st.textContent === '🔄 동기화됨') { st.textContent = ''; }
     }, 2000);
+  }
+}
+
+// GM 전용: 동기화 상태 표시 (탭 바 옆)
+function _showGMSyncStatus(status) {
+  var el = document.getElementById('gm-sync-status');
+  if (!el) {
+    el = document.createElement('span');
+    el.id = 'gm-sync-status';
+    el.style.cssText = 'font-size:11px;padding:0 8px;align-self:center;';
+    var bar = document.getElementById('gm-tab-bar');
+    if (bar) {
+      var lobby = bar.querySelector('a[href="GMSheet.html"]');
+      if (lobby) bar.insertBefore(el, lobby);
+      else bar.appendChild(el);
+    }
+  }
+  if (status === 'pending') {
+    el.textContent = '⏳ 동기화 대기...';
+    el.style.color = '#f5c518';
+  } else if (status === 'done') {
+    var now = new Date();
+    var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
+    el.textContent = '✓ ' + time + ' 동기화됨';
+    el.style.color = '#27ae60';
   }
 }
 
