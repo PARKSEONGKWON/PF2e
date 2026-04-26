@@ -3549,21 +3549,22 @@ function _buildClassChoicesUI(cls) {
 
   // 1레벨 클래스 특성 블록들 (서브클래스 특성은 서브클래스 블록 안에 표시하므로 제외)
   lv1Feats.filter(f => !subFeats.includes(f)).forEach(f => {
-    html += _classFeatureBlock('⚡', f.name_ko, f.name_en, () => {
+    html += `<div class="cfp-dynamic">${_classFeatureBlock('⚡', f.name_ko, f.name_en, () => {
       return `<div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc || ''}</div>`;
-    }, false);
+    }, false)}</div>`;
   });
 
   // === 2레벨 이상 ===
   const otherLevels = Object.keys(featsByLv).map(Number).filter(lv => lv > 1).sort((a, b) => a - b);
   otherLevels.forEach(lv => {
-    html += _classLevelHeader(lv);
+    html += `<div class="cfp-dynamic">${_classLevelHeader(lv)}`;
     featsByLv[lv].forEach((f, fi) => {
       const isSub = subFeats.includes(f);
       html += _classFeatureBlock('⚡', f.name_ko, f.name_en, () => {
         return `<div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc || ''}</div>`;
       }, isSub);
     });
+    html += `</div>`;
   });
 
   // 동적 갱신용 컨테이너 ID
