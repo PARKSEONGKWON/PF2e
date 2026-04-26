@@ -11,6 +11,7 @@ function addWeapon(data) {
   if (d._propertyRunes === undefined) d._propertyRunes = [];
   if (d._stowed === undefined) d._stowed = false;
   if (d._twoHand === undefined) d._twoHand = false;
+  if (d._dropped === undefined) d._dropped = false;
   state.weapons.push({id,...d});
   renderWeapons();
 }
@@ -425,61 +426,17 @@ function closeRunePopupOutside(e) {
   }
 }
 
-// ── Options popup (two-hand toggle) ──
-function toggleTwoHand(idx, checked) {
-  const w = state.weapons[idx];
-  if (!w) return;
-  if (checked && _isHeld('weapon', w.id)) {
-    // 한손→양손: 빈 손 1개 더 필요
-    if (_freeHandCount() < 1) {
-      alert('양손으로 사용하려면 다른 손이 비어 있어야 합니다.');
-      closeRunePopup();
-      return;
-    }
-  }
-  w._twoHand = checked;
-  // 양손 해제 시 별도 처리 불필요 (손 하나 여유 생김)
-  renderHandSlots();
-  renderWeapons();
-  save();
-}
-
-function showWeaponOptions(idx, btnEl) {
-  closeRunePopup();
-  const w = state.weapons[idx];
-  if (!w) return;
-  const traits = getWeaponTraits(w);
-  const hasTwoHand = traits.some(t => t.includes('양손') || t.toLowerCase().includes('two-hand'));
-  if (!hasTwoHand) return; // no options if no two-hand trait
-  const popup = document.createElement('div');
-  popup.className = 'weapon-rune-popup';
-  popup.id = 'rune-popup-active';
-  popup.innerHTML = `
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
-      <input type="checkbox" ${w._twoHand?'checked':''} onchange="toggleTwoHand(${idx},this.checked)">
-      양손 사용 (Two-Hand)
-    </label>
-    <button class="weapon-btn" onclick="closeRunePopup()" style="width:100%;margin-top:6px;">닫기</button>
-  `;
-  const rect = btnEl.getBoundingClientRect();
-  popup.style.position = 'fixed';
-  popup.style.top = (rect.bottom + 4) + 'px';
-  popup.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
-  document.body.appendChild(popup);
-  activeRunePopup = popup;
-  setTimeout(() => {
-    document.addEventListener('click', closeRunePopupOutside, {once:true,capture:true});
-  }, 50);
-}
-
 // ── Stow toggle ──
 function toggleWeaponStow(idx) {
   const w = state.weapons[idx];
   if (!w) return;
   w._stowed = !w._stowed;
-  if (w._stowed) _clearHandSlotFor('weapon', w.id);
-  renderHandSlots();
-  renderWeapons();
+  if (w._stowed) {
+    _clearHandSlotFor('weapon', w.id);
+    w._dropped = false;
+    w._twoHand = false;
+  }
+  _refreshHandUI();
   save();
 }
 
@@ -487,14 +444,25 @@ function toggleWeaponStow(idx) {
 //  HAND SLOTS
 // ═══════════════════════════════════════════════
 
-function getHandsNeeded(w) {
-  if (w._twoHand) return 2;
+function _weaponHandsBase(w) {
+  // DB 기준 기본 손 수 (그립 무관)
   const h = w._dbData?.hands;
   if (h === 2) return 2;
   return 1;
 }
 
+function getHandsNeeded(w) {
+  if (w._twoHand) return 2;
+  return _weaponHandsBase(w);
+}
+
+function _hasTwoHandTrait(w) {
+  const traits = getWeaponTraits(w);
+  return traits.some(t => t.includes('양손') || t.toLowerCase().includes('two-hand'));
+}
+
 function _freeHandCount() {
+  if (!state.handSlots) state.handSlots = [null, null];
   let free = 2;
   for (const s of state.handSlots) {
     if (!s) continue;
@@ -508,54 +476,8 @@ function _freeHandCount() {
 }
 
 function _isHeld(type, weaponId) {
+  if (!state.handSlots) return false;
   return state.handSlots.some(s => s && s.type === type && (type === 'shield' || s.weaponId === weaponId));
-}
-
-function holdInHand(type, weaponId) {
-  if (!state.handSlots) state.handSlots = [null, null];
-  if (_isHeld(type, weaponId)) return;
-
-  let needed = 1;
-  if (type === 'weapon') {
-    const w = state.weapons.find(x => x.id === weaponId);
-    if (!w) return;
-    needed = getHandsNeeded(w);
-  }
-
-  if (_freeHandCount() < needed) {
-    alert(needed === 2 ? '빈 손이 2개 필요합니다. 먼저 손에 든 것을 놓아주세요.' : '빈 손이 없습니다. 먼저 손에 든 것을 놓아주세요.');
-    return;
-  }
-
-  const entry = type === 'shield' ? {type:'shield'} : {type:'weapon', weaponId};
-
-  if (needed === 2) {
-    // 양손: 슬롯 0에 저장, 슬롯 1은 null로 유지 (렌더에서 합쳐 표시)
-    state.handSlots[0] = entry;
-    state.handSlots[1] = null;
-  } else {
-    const idx = state.handSlots[0] === null ? 0 : 1;
-    state.handSlots[idx] = entry;
-  }
-
-  renderHandSlots();
-  renderWeapons();
-  renderShieldCard();
-  save();
-}
-
-function releaseHand(slotIdx) {
-  if (!state.handSlots) return;
-  const slot = state.handSlots[slotIdx];
-  if (!slot) return;
-
-  // 양손 무기: 슬롯 0 해제하면 끝
-  state.handSlots[slotIdx] = null;
-
-  renderHandSlots();
-  renderWeapons();
-  renderShieldCard();
-  save();
 }
 
 function _clearHandSlotFor(type, weaponId) {
@@ -569,67 +491,308 @@ function _clearHandSlotFor(type, weaponId) {
   }
 }
 
+function _refreshHandUI() {
+  renderHandSlots();
+  renderWeapons();
+  renderShieldCard();
+}
+
+// ── 들기: 손에 장비를 든다 (행동 1) ──
+function holdInHand(type, weaponId) {
+  if (!state.handSlots) state.handSlots = [null, null];
+  if (_isHeld(type, weaponId)) return;
+
+  let needed = 1;
+  if (type === 'weapon') {
+    const w = state.weapons.find(x => x.id === weaponId);
+    if (!w) return;
+    if (w._dropped) w._dropped = false;     // 주운 것 — 줍기 행동
+    if (w._stowed) w._stowed = false;       // 꺼내면서 들기
+    // 양손 전용(hands:2)이면 자동으로 양손 그립 + 양손 성능 적용
+    if (_weaponHandsBase(w) === 2) w._twoHand = true;
+    needed = getHandsNeeded(w);
+  }
+
+  if (_freeHandCount() < needed) {
+    alert(needed === 2 ? '빈 손이 2개 필요합니다.' : '빈 손이 없습니다.');
+    return;
+  }
+
+  const entry = type === 'shield' ? {type:'shield'} : {type:'weapon', weaponId};
+
+  if (needed === 2) {
+    state.handSlots = [entry, null];
+  } else {
+    const idx = state.handSlots[0] === null ? 0 : 1;
+    state.handSlots[idx] = entry;
+  }
+
+  _refreshHandUI();
+  save();
+}
+
+// ── 넣기: 손에서 해제하고 보관 (행동 1) ──
+function stowFromHand(slotIdx) {
+  if (!state.handSlots) return;
+  const s = state.handSlots[slotIdx];
+  if (!s) return;
+
+  if (s.type === 'weapon') {
+    const w = state.weapons.find(x => x.id === s.weaponId);
+    if (w) { w._stowed = true; w._twoHand = false; }
+  } else if (s.type === 'shield') {
+    state.shieldStowed = true;
+  }
+
+  state.handSlots[slotIdx] = null;
+  _refreshHandUI();
+  save();
+}
+
+// ── 떨어뜨리기: 손에서 해제, 바닥에 (자유 행동) ──
+function dropFromHand(slotIdx) {
+  if (!state.handSlots) return;
+  const s = state.handSlots[slotIdx];
+  if (!s) return;
+
+  if (s.type === 'weapon') {
+    const w = state.weapons.find(x => x.id === s.weaponId);
+    if (w) { w._stowed = false; w._dropped = true; w._twoHand = false; }
+  }
+  // 방패 떨어뜨리기 — 보관 상태로 처리
+  if (s.type === 'shield') {
+    state.shieldStowed = true;
+  }
+
+  state.handSlots[slotIdx] = null;
+  _refreshHandUI();
+  save();
+}
+
+// ── 교체하기: 현재 손의 장비를 넣고 다른 것을 든다 (행동 1) ──
+function swapHandItem(slotIdx) {
+  if (!state.handSlots) return;
+  const cur = state.handSlots[slotIdx];
+
+  // 현재 든 것을 넣기
+  if (cur) {
+    if (cur.type === 'weapon') {
+      const w = state.weapons.find(x => x.id === cur.weaponId);
+      if (w) w._stowed = true;
+    } else if (cur.type === 'shield') {
+      state.shieldStowed = true;
+    }
+    state.handSlots[slotIdx] = null;
+  }
+
+  // 교체 대상 선택 팝업
+  _showSwapPicker(slotIdx);
+}
+
+function _showSwapPicker(slotIdx) {
+  closeRunePopup();
+  const popup = document.createElement('div');
+  popup.className = 'weapon-rune-popup';
+  popup.id = 'rune-popup-active';
+  popup.style.maxHeight = '200px';
+  popup.style.overflowY = 'auto';
+
+  let items = '';
+  // 소지 중(stowed)이거나 떨어뜨린 무기 중 손에 없는 것
+  state.weapons.forEach(w => {
+    if (_isHeld('weapon', w.id)) return;
+    const needs = getHandsNeeded(w);
+    const label = w.name || '무기';
+    const tag = w._dropped ? ' (바닥)' : w._stowed ? ' (보관)' : '';
+    items += `<button class="weapon-btn" style="display:block;width:100%;text-align:left;margin:2px 0;padding:3px 6px;" onclick="pickSwapItem(${slotIdx},'weapon','${w.id}')">\u2694 ${label}${tag}</button>`;
+  });
+  // 방패
+  const shName = document.getElementById('shield-name')?.value;
+  if (shName && !_isHeld('shield')) {
+    items += `<button class="weapon-btn" style="display:block;width:100%;text-align:left;margin:2px 0;padding:3px 6px;" onclick="pickSwapItem(${slotIdx},'shield')">\uD83D\uDEE1 ${shName}</button>`;
+  }
+
+  if (!items) items = '<div style="font-size:10px;color:var(--text2);padding:4px;">교체할 장비가 없습니다</div>';
+  popup.innerHTML = `<div style="font-size:10px;color:var(--text2);margin-bottom:4px;">교체할 장비 선택:</div>${items}`;
+
+  // 손 슬롯 엘리먼트 기준 위치
+  const el = document.getElementById('hand-slots');
+  if (el) {
+    const rect = el.getBoundingClientRect();
+    popup.style.position = 'fixed';
+    popup.style.top = (rect.bottom + 4) + 'px';
+    popup.style.left = Math.min(rect.left + slotIdx * 100, window.innerWidth - 220) + 'px';
+  }
+  document.body.appendChild(popup);
+  activeRunePopup = popup;
+  setTimeout(() => {
+    document.addEventListener('click', closeRunePopupOutside, {once:true, capture:true});
+  }, 50);
+}
+
+function pickSwapItem(slotIdx, type, weaponId) {
+  closeRunePopup();
+  if (type === 'weapon') {
+    const w = state.weapons.find(x => x.id === weaponId);
+    if (w) { w._stowed = false; w._dropped = false; }
+    // 양손 무기 교체 시 다른 손도 비워야
+    if (w && getHandsNeeded(w) === 2) {
+      const otherIdx = slotIdx === 0 ? 1 : 0;
+      const otherS = state.handSlots[otherIdx];
+      if (otherS) {
+        // 다른 손 것도 넣기
+        if (otherS.type === 'weapon') {
+          const ow = state.weapons.find(x => x.id === otherS.weaponId);
+          if (ow) ow._stowed = true;
+        } else if (otherS.type === 'shield') {
+          state.shieldStowed = true;
+        }
+        state.handSlots[otherIdx] = null;
+      }
+      state.handSlots[0] = {type:'weapon', weaponId};
+      state.handSlots[1] = null;
+    } else {
+      state.handSlots[slotIdx] = {type:'weapon', weaponId};
+    }
+  } else if (type === 'shield') {
+    state.shieldStowed = false;
+    state.handSlots[slotIdx] = {type:'shield'};
+  }
+  _refreshHandUI();
+  save();
+}
+
+// ── 그립 변경: 한손↔양손 (양손 전환=행동1, 한손 전환=자유행동) ──
+function toggleGrip(weaponId) {
+  const w = state.weapons.find(x => x.id === weaponId);
+  if (!w) return;
+
+  if (w._twoHand) {
+    // 양손→한손: 자유 행동
+    w._twoHand = false;
+    _refreshHandUI();
+    save();
+  } else {
+    // 한손→양손: 행동 1, 빈 손 1개 필요
+    if (_freeHandCount() < 1) {
+      alert('양손으로 쥐려면 다른 손이 비어 있어야 합니다.');
+      return;
+    }
+    w._twoHand = true;
+    // 슬롯 정리: 해당 무기를 슬롯0으로, 슬롯1 비움
+    _clearHandSlotFor('weapon', weaponId);
+    state.handSlots[0] = {type:'weapon', weaponId};
+    state.handSlots[1] = null;
+    _refreshHandUI();
+    save();
+  }
+}
+
+// ── 줍기: 바닥의 무기를 손에 든다 (행동 1) ──
+function pickUpWeapon(weaponId) {
+  holdInHand('weapon', weaponId);
+}
+
+// ── renderHandSlots: 좌우 2열 레이아웃 ──
 function renderHandSlots() {
   const el = document.getElementById('hand-slots');
   if (!el) return;
   if (!state.handSlots) state.handSlots = [null, null];
 
-  // 양손 무기 감지
+  // 양손 모드 감지
   const s0 = state.handSlots[0];
   let isTwoHand = false;
-  let twoHandName = '';
+  let twoHandWeapon = null;
   if (s0 && s0.type === 'weapon') {
     const w = state.weapons.find(x => x.id === s0.weaponId);
     if (w && getHandsNeeded(w) === 2) {
       isTwoHand = true;
-      twoHandName = w.name || '무기';
+      twoHandWeapon = w;
     }
   }
 
-  if (isTwoHand) {
+  if (isTwoHand && twoHandWeapon) {
+    const name = twoHandWeapon.name || '무기';
+    const canOneHand = _weaponHandsBase(twoHandWeapon) === 1; // 1+ 무기만 한손 전환 가능
+    el.className = 'hand-slots-container two-hand-mode';
     el.innerHTML = `
       <div class="hand-slot hand-slot-two">
-        <span class="hand-slot-icon">\u270B</span>
-        <span class="hand-slot-label">양손</span>
-        <span class="hand-slot-name">${twoHandName}</span>
-        <button class="hand-slot-btn" onclick="releaseHand(0)">놓기</button>
+        <div class="hand-slot-header">
+          <span class="hand-slot-icon">\u270B\u270B</span>
+          <span class="hand-slot-label">양손</span>
+        </div>
+        <div class="hand-slot-name">\u2694 ${name}</div>
+        <div class="hand-slot-actions">
+          <button class="hand-slot-btn" onclick="stowFromHand(0)">넣기<span class="hand-slot-cost">\u25C6</span></button>
+          <button class="hand-slot-btn free" onclick="dropFromHand(0)">떨어뜨리기<span class="hand-slot-cost">\u25C7</span></button>
+          <button class="hand-slot-btn" onclick="swapHandItem(0)">교체<span class="hand-slot-cost">\u25C6</span></button>
+          ${canOneHand ? `<button class="hand-slot-btn free accent" onclick="toggleGrip('${twoHandWeapon.id}')">한손 전환<span class="hand-slot-cost">\u25C7</span></button>` : ''}
+        </div>
       </div>`;
     return;
   }
 
+  el.className = 'hand-slots-container';
   let html = '';
   for (let i = 0; i < 2; i++) {
     const s = state.handSlots[i];
     if (!s) {
       html += `
         <div class="hand-slot hand-slot-empty">
-          <span class="hand-slot-icon">\u270B</span>
-          <span class="hand-slot-label">손 ${i+1}</span>
-          <span class="hand-slot-name empty">비어있음</span>
+          <div class="hand-slot-header">
+            <span class="hand-slot-icon">\u270B</span>
+            <span class="hand-slot-label">손 ${i+1}</span>
+          </div>
+          <div class="hand-slot-name empty">비어있음</div>
         </div>`;
     } else if (s.type === 'weapon') {
       const w = state.weapons.find(x => x.id === s.weaponId);
-      const name = w ? (w.name || '무기') : '(없음)';
-      if (!w) { state.handSlots[i] = null; continue; }
+      if (!w) { state.handSlots[i] = null; html += _emptySlotHtml(i); continue; }
+      const name = w.name || '무기';
+      const canTwoHand = _hasTwoHandTrait(w) && !w._twoHand;
       html += `
         <div class="hand-slot">
-          <span class="hand-slot-icon">\u2694</span>
-          <span class="hand-slot-label">손 ${i+1}</span>
-          <span class="hand-slot-name">${name}</span>
-          <button class="hand-slot-btn" onclick="releaseHand(${i})">놓기</button>
+          <div class="hand-slot-header">
+            <span class="hand-slot-icon">\u2694</span>
+            <span class="hand-slot-label">손 ${i+1}</span>
+          </div>
+          <div class="hand-slot-name">${name}</div>
+          <div class="hand-slot-actions">
+            <button class="hand-slot-btn" onclick="stowFromHand(${i})">넣기<span class="hand-slot-cost">\u25C6</span></button>
+            <button class="hand-slot-btn free" onclick="dropFromHand(${i})">떨굼<span class="hand-slot-cost">\u25C7</span></button>
+            <button class="hand-slot-btn" onclick="swapHandItem(${i})">교체<span class="hand-slot-cost">\u25C6</span></button>
+            ${canTwoHand ? `<button class="hand-slot-btn accent" onclick="toggleGrip('${w.id}')">양손<span class="hand-slot-cost">\u25C6</span></button>` : ''}
+          </div>
         </div>`;
     } else if (s.type === 'shield') {
       const shName = document.getElementById('shield-name')?.value || '방패';
       html += `
         <div class="hand-slot">
-          <span class="hand-slot-icon">\uD83D\uDEE1</span>
-          <span class="hand-slot-label">손 ${i+1}</span>
-          <span class="hand-slot-name">${shName}</span>
-          <button class="hand-slot-btn" onclick="releaseHand(${i})">놓기</button>
+          <div class="hand-slot-header">
+            <span class="hand-slot-icon">\uD83D\uDEE1</span>
+            <span class="hand-slot-label">손 ${i+1}</span>
+          </div>
+          <div class="hand-slot-name">${shName}</div>
+          <div class="hand-slot-actions">
+            <button class="hand-slot-btn" onclick="stowFromHand(${i})">넣기<span class="hand-slot-cost">\u25C6</span></button>
+            <button class="hand-slot-btn free" onclick="dropFromHand(${i})">떨굼<span class="hand-slot-cost">\u25C7</span></button>
+            <button class="hand-slot-btn" onclick="swapHandItem(${i})">교체<span class="hand-slot-cost">\u25C6</span></button>
+          </div>
         </div>`;
     }
   }
   el.innerHTML = html;
+}
+
+function _emptySlotHtml(i) {
+  return `
+    <div class="hand-slot hand-slot-empty">
+      <div class="hand-slot-header">
+        <span class="hand-slot-icon">\u270B</span>
+        <span class="hand-slot-label">손 ${i+1}</span>
+      </div>
+      <div class="hand-slot-name empty">비어있음</div>
+    </div>`;
 }
 
 function renderWeapons() {
@@ -638,12 +801,12 @@ function renderWeapons() {
   list.innerHTML = '';
   state.weapons.forEach((w,i) => {
     const card = document.createElement('div');
-    card.className = 'weapon-card' + (w._stowed ? ' stowed' : '');
+    const isDropped = w._dropped || false;
+    card.className = 'weapon-card' + (w._stowed ? ' stowed' : '') + (isDropped ? ' dropped' : '');
 
     const escapedName = (w.name||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
     const traits = getWeaponTraits(w);
     const traitHtml = traits.map(t=>traitTag(t)).join(' ');
-    const hasTwoHandTrait = traits.some(t => t.includes('양손') || t.toLowerCase().includes('two-hand'));
 
     // Calculate hit and damage
     const hitMod = calcWeaponHit(w);
@@ -681,23 +844,35 @@ function renderWeapons() {
     const wpCatLabel = {simple:'단순',martial:'군용',advanced:'고급',unarmed:'비무장'}[wpCat]||wpCat;
 
     const wHeld = _isHeld('weapon', w.id);
-    const holdBtn = w._stowed ? '' : (wHeld
-      ? `<button class="weapon-btn held" disabled title="손에 들고 있음">\u270B</button>`
-      : `<button class="weapon-btn" onclick="holdInHand('weapon','${w.id}')" title="손에 들기">들기</button>`);
+    const handsBase = _weaponHandsBase(w);
+    // 상태별 버튼 결정
+    let statusBtn = '';
+    if (wHeld) {
+      statusBtn = `<button class="weapon-btn held" disabled title="손에 들고 있음">\u270B</button>`;
+    } else if (isDropped) {
+      statusBtn = `<button class="weapon-btn" onclick="pickUpWeapon('${w.id}')" title="줍기 (행동 1)">줍기</button>`;
+    } else if (w._stowed) {
+      statusBtn = `<button class="weapon-btn" onclick="holdInHand('weapon','${w.id}')" title="꺼내서 들기 (행동 1)">들기</button>`;
+    } else {
+      // 장착되어 있지만 손에 안 든 상태
+      if (handsBase === 2) {
+        statusBtn = `<button class="weapon-btn" onclick="holdInHand('weapon','${w.id}')" title="양손에 들기 (행동 1)">양손 들기</button>`;
+      } else {
+        statusBtn = `<button class="weapon-btn" onclick="holdInHand('weapon','${w.id}')" title="손에 들기 (행동 1)">들기</button>`;
+      }
+    }
 
     card.innerHTML = `
       <div class="weapon-card-header">
-        ${holdBtn}
-        ${hasTwoHandTrait ? `<button class="weapon-btn" onclick="showWeaponOptions(${i},this)" title="옵션">옵션</button>` : ''}
+        ${statusBtn}
         <button class="weapon-btn" onclick="showRunePopup(${i},this)" title="룬 설정">룬</button>
-        <button class="weapon-btn" onclick="toggleWeaponStow(${i})" title="${w._stowed?'꺼내기':'넣기'}">${w._stowed?'꺼내기':'넣기'}</button>
         <span style="flex:1;"></span>
         <button class="weapon-btn danger" onclick="removeWeapon(${i})" title="삭제">삭제</button>
       </div>
       <div class="weapon-card-body">
         <div class="weapon-card-stats">
           <div class="weapon-card-name" onclick="showInfo('weapon','${escapedName}')">
-            \u2694 ${w._broken?'<span style="color:var(--red-light);">파손된 </span>':''}${w.name||'무기'}${runeInfo}
+            \u2694 ${w._broken?'<span style="color:var(--red-light);">파손된 </span>':''}${w.name||'무기'}${runeInfo}${isDropped ? '<span style="font-size:9px;color:var(--red-light,#c66);margin-left:4px;">[바닥]</span>' : ''}${w._twoHand ? '<span style="font-size:9px;color:var(--accent);margin-left:4px;">[양손]</span>' : ''}
           </div>
           ${wpProfVal > 0 ? `<div style="font-size:9px;color:var(--text2);margin-top:-2px;margin-bottom:2px;"><span class="weapon-prof-badge ${wpProfCls}" style="font-size:7px;width:12px;height:12px;display:inline-flex;align-items:center;justify-content:center;">${wpTemlLetter}</span> ${wpCatLabel} 무기 ${wpProfName}</div>` : `<div style="font-size:9px;color:var(--red-light);margin-top:-2px;margin-bottom:2px;">⚠ ${wpCatLabel} 무기 미숙련</div>`}
           <div class="weapon-stat">
