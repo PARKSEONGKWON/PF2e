@@ -20,10 +20,10 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
-<script src="equipment_db.js?v=479"></script>
-<script src="feat_db.js?v=479"></script>
-<script src="SPELL_DB.js?v=479"></script>
-<script src="class_features_db.js?v=479"></script>
+<script src="equipment_db.js?v=480"></script>
+<script src="feat_db.js?v=480"></script>
+<script src="SPELL_DB.js?v=480"></script>
+<script src="class_features_db.js?v=480"></script>
 <script>
 // Verify class_features_db loaded
 if (typeof CLASS_AUTO_FEATS === 'undefined') {
@@ -497,6 +497,14 @@ body{
 .weapon-card.dropped{opacity:.35;border-style:dotted;border-color:var(--red-light,#c66);}
 .weapon-btn.action-cost{font-size:8px;color:var(--text2);margin-left:1px;}
 /* Rune drag-and-drop */
+.equip-cat-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 8px 3px;margin-top:6px;
+  font-size:11px;font-weight:700;color:var(--accent);
+  border-bottom:1px solid rgba(212,175,55,.25);
+}
+.equip-cat-header:first-child{margin-top:0;}
+.equip-cat-count{font-size:9px;font-weight:400;color:var(--text2);background:var(--bg4);padding:1px 6px;border-radius:8px;}
 .equip-rune-row{cursor:grab;background:rgba(212,175,55,.05);}
 .equip-rune-row:active{cursor:grabbing;}
 .equip-rune-attached{background:rgba(212,175,55,.04);border-bottom:1px solid rgba(212,175,55,.15);}
@@ -1308,7 +1316,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="brand"></span>
     <span id="save-status"></span>
-    <span style="font-size:9px;color:#555;margin-left:8px;">v479</span>
+    <span style="font-size:9px;color:#555;margin-left:8px;">v480</span>
   </div>
   <div id="auth-area" style="display:flex;align-items:center;gap:6px;">
     <button onclick="googleLogin()" style="background:#4285f4;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;">Google 로그인</button>
@@ -1871,14 +1879,14 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:6px 0;}
 
 
 <!-- App code (split from inline JS) -->
-<script src="cs_data.js?v=479"></script>
-<script src="cs_calc.js?v=479"></script>
-<script src="cs_ui.js?v=479"></script>
-<script src="cs_modal.js?v=479"></script>
-<script src="cs_feat_effects.js?v=479"></script>
-<script src="cs_save.js?v=479"></script>
-<script src="cs_session.js?v=479"></script>
-<script src="cs_dice.js?v=479"></script>
+<script src="cs_data.js?v=480"></script>
+<script src="cs_calc.js?v=480"></script>
+<script src="cs_ui.js?v=480"></script>
+<script src="cs_modal.js?v=480"></script>
+<script src="cs_feat_effects.js?v=480"></script>
+<script src="cs_save.js?v=480"></script>
+<script src="cs_session.js?v=480"></script>
+<script src="cs_dice.js?v=480"></script>
 
 
 <!-- Firebase Auth + Cloud Save -->
