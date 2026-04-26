@@ -2235,6 +2235,9 @@ function switchEquipTab(tab) {
     return;
   }
 
+  // 커스텀 폼 숨기고 목록 구조 복원
+  _hideCustomEquipForm();
+
   // 검색 바 표시 (다른 탭 복귀 시)
   const searchEl = document.getElementById('modal-search');
   if (searchEl) searchEl.style.display = '';
@@ -2420,12 +2423,40 @@ function equipBrowseBuy() {
 
 let _customEquipType = 'gear'; // 현재 선택된 커스텀 타입
 
+function _hideCustomEquipForm() {
+  const container = document.getElementById('custom-equip-form');
+  if (container) container.style.display = 'none';
+  const body = document.getElementById('modal-body');
+  if (!body) return;
+  const list = body.querySelector('.modal-list');
+  const detail = body.querySelector('.modal-detail');
+  if (list) list.style.display = '';
+  if (detail) detail.style.display = '';
+}
+
 function _renderCustomEquipForm() {
   _customEquipType = 'gear';
   const body = document.getElementById('modal-body');
   if (!body) return;
+
+  // modal-list, modal-detail 숨기기
+  const list = body.querySelector('.modal-list');
+  const detail = body.querySelector('.modal-detail');
+  if (list) list.style.display = 'none';
+  if (detail) detail.style.display = 'none';
+
+  // 커스텀 폼 컨테이너 생성 (이미 있으면 재사용)
+  let container = document.getElementById('custom-equip-form');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'custom-equip-form';
+    container.style.cssText = 'flex:1;overflow-y:auto;';
+    body.appendChild(container);
+  }
+  container.style.display = '';
+
   const s = 'width:100%;padding:8px 10px;font-size:13px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:4px;outline:none;box-sizing:border-box;';
-  body.innerHTML = `
+  container.innerHTML = `
     <div style="padding:12px;overflow-y:auto;flex:1;">
       <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:10px;">커스텀 아이템 추가</div>
 

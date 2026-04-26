@@ -4704,6 +4704,7 @@ function closeModal() {
   // Clean up equip-browse
   const eqTabs = document.getElementById('equip-tab-container');
   if (eqTabs) eqTabs.style.display = 'none';
+  if (typeof _hideCustomEquipForm === 'function') _hideCustomEquipForm();
   // footer 버튼 항상 초기화
   if (footer) {
     footer.innerHTML = '<button class="btn btn-cancel" onclick="closeModal()">닫기</button><button class="btn btn-confirm" onclick="confirmModal()">선택</button>';
