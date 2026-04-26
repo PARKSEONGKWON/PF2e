@@ -14,6 +14,7 @@ let _charDocUnsub = null;
 let _partyUnsub = null;
 let _rollsUnsub = null;
 let _rollsReady = false; // 초기 스냅샷 스킵용
+let _lastSavedData = null; // 자기 저장 데이터 — onSnapshot 자기 반응 스킵용
 
 /* ── 상수 ── */
 const SESSION_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // I,O,0,1 제외
@@ -226,9 +227,13 @@ function sessionSaveNow() {
   }
   if (!targetSlot) return;
 
+  var jsonData = JSON.stringify(data);
+  // 자기 저장 데이터 기록 — onSnapshot에서 자기 반응 스킵용
+  if (targetUid === currentUser.uid) _lastSavedData = jsonData;
+
   db.collection('users').doc(targetUid)
     .collection('characters').doc(targetSlot).set({
-      data: JSON.stringify(data),
+      data: jsonData,
       name: data.name || '이름 없음',
       sessionId: _currentSession.id,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -408,6 +413,8 @@ function startSessionListeners() {
       .onSnapshot(doc => {
         if (!doc.exists || !doc.data().data) return;
         const remoteData = doc.data().data;
+        // 자기가 방금 저장한 데이터면 스킵 (무한 루프 방지)
+        if (remoteData === _lastSavedData) return;
         const localData = JSON.stringify(collectData());
         if (remoteData !== localData) {
           const prev = _loadComplete;
@@ -503,12 +510,16 @@ function updateSessionBar() {
   if (!bar || !_currentSession) return;
   const playerCount = Object.keys(_currentSession.players || {}).length;
   const roleLabel = _isGM ? '<span style="color:#f5c518;font-weight:700;">GM</span>' : '<span style="color:#3498db;">플레이어</span>';
+  // GM: 참가 코드 표시, 플레이어: 세션 이름만 표시
+  var midInfo = _isGM
+    ? '<span style="color:#888;font-size:11px;">참가 코드: <strong style="color:#fff;font-family:monospace;letter-spacing:2px;">' + _currentSession.joinCode + '</strong>' +
+        '<button onclick="navigator.clipboard.writeText(\'' + _currentSession.joinCode + '\').then(()=>this.textContent=\'✓\').catch(()=>{})" style="background:none;border:none;color:#f5c518;cursor:pointer;font-size:11px;margin-left:4px;" title="코드 복사">📋</button></span>'
+    : '';
   bar.innerHTML =
     '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;width:100%;">' +
       '<span style="color:#f5c518;font-weight:700;">🎮 ' + (_currentSession.name || '세션') + '</span>' +
       roleLabel +
-      '<span style="color:#888;font-size:11px;">참가 코드: <strong style="color:#fff;font-family:monospace;letter-spacing:2px;">' + _currentSession.joinCode + '</strong>' +
-        '<button onclick="navigator.clipboard.writeText(\'' + _currentSession.joinCode + '\').then(()=>this.textContent=\'✓\').catch(()=>{})" style="background:none;border:none;color:#f5c518;cursor:pointer;font-size:11px;margin-left:4px;" title="코드 복사">📋</button></span>' +
+      midInfo +
       '<span style="color:#888;font-size:11px;">참가자 ' + playerCount + '명</span>' +
       '<button onclick="leaveSession()" style="background:#c0392b;color:#fff;border:none;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;margin-left:auto;">' + (_isGM ? '세션 삭제' : '세션 나가기') + '</button>' +
     '</div>';
