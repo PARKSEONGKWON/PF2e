@@ -1543,10 +1543,30 @@ function renderSpells() {
     }
   } catch(e) { console.warn('innate render error:', e); }
 
-  // Update sub-tab label with class name
+  // Update sub-tab label with class name + 비시전 클래스 숨김
   const subtabClass = document.getElementById('spell-subtab-class');
+  const hasCastingClass = !!(state.selectedClass?.casting);
   if (subtabClass) {
     subtabClass.textContent = state.selectedClass ? state.selectedClass.name : '주문';
+    subtabClass.style.display = hasCastingClass ? '' : 'none';
+  }
+  const classContent = document.getElementById('spell-content-class');
+
+  // 집중 주문 탭: 집중 주문이 없으면 숨김
+  const focusTab = document.getElementById('spell-subtab-focus');
+  const focusArr = state.spells?.focus || [];
+  if (focusTab) focusTab.style.display = focusArr.length > 0 ? '' : 'none';
+
+  // 현재 활성 탭이 숨겨지면 첫 번째 보이는 탭으로 전환
+  const allSubtabs = ['class','focus','innate','ritual'];
+  const activeTab = allSubtabs.find(t => document.getElementById('spell-subtab-'+t)?.classList.contains('active'));
+  const activeHidden = activeTab && document.getElementById('spell-subtab-'+activeTab)?.style.display === 'none';
+  if (activeHidden || (!hasCastingClass && activeTab === 'class')) {
+    const firstVisible = allSubtabs.find(t => {
+      const el = document.getElementById('spell-subtab-'+t);
+      return el && el.style.display !== 'none';
+    });
+    if (firstVisible) switchSpellSubtab(firstVisible);
   }
 
   // Update TEML badges
