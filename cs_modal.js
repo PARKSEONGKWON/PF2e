@@ -3395,7 +3395,7 @@ function _buildClassProgressionTable(cls) {
   if (!cls || typeof CLASS_FEATURE_NAMES === 'undefined') return '';
   const cfn = CLASS_FEATURE_NAMES[cls.id] || [];
   const gt = GROWTH_TABLE;
-  const curLv = state.level || 1;
+  const curLv = getLevel();
 
   let rows = '';
   for (let lv = 1; lv <= 20; lv++) {
@@ -3481,7 +3481,7 @@ function _buildClassChoicesUI(cls) {
   }
 
   // ── 클래스 특성 수집 ──
-  const maxLv = state.level || 1;
+  const maxLv = getLevel();
   const classFeats = typeof CLASS_FEATURE_NAMES !== 'undefined' ? (CLASS_FEATURE_NAMES[cls.id] || []).filter(f => f.lv <= maxLv) : [];
   const subId = state.selectedSubclass?.id;
   const subFeats = subId && typeof SUBCLASS_FEATURE_NAMES !== 'undefined'
@@ -3573,7 +3573,7 @@ function _buildClassChoicesUI(cls) {
 
 // ── 레벨 헤더 ──
 function _classLevelHeader(lv) {
-  const curLv = state.level || 1;
+  const curLv = getLevel();
   const isCurrent = lv === curLv;
   const isFuture = lv > curLv;
   const lvColor = isCurrent ? '#f5c518' : (isFuture ? 'var(--text2)' : 'var(--accent)');
@@ -3602,7 +3602,7 @@ function _refreshClassFeaturesPreview() {
   // 전체 UI를 다시 빌드하면 _modalChoices가 초기화되므로
   // 서브클래스 변경 시에는 클래스 특성 부분만 갱신
   // → 레벨 2+ 섹션을 다시 렌더링
-  const maxLv = state.level || 1;
+  const maxLv = getLevel();
   const classFeats = typeof CLASS_FEATURE_NAMES !== 'undefined' ? (CLASS_FEATURE_NAMES[cls.id] || []).filter(f => f.lv <= maxLv) : [];
   const subId = _modalChoices?.doctrine || _modalChoices?.subclass || (state.selectedSubclass?.id);
   const subFeats = subId && typeof SUBCLASS_FEATURE_NAMES !== 'undefined'
