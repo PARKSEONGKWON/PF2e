@@ -154,8 +154,8 @@ const RUNE_DB = [
   {name_ko:'최상위 탄력 룬', name_en:'Major Resilient', price:'49,440gp', level:20, bulk:'—', attachTo:'armor', runeType:'resilient', runeValue:3,
    traits:['마법'], desc:'착용자의 내성 굴림에 +3 아이템 보너스를 부여합니다.'},
   // ── 방패 부착물 ──
-  {name_ko:'방패 보스', name_en:'Shield Boss', price:'1gp', level:0, bulk:'—', attachTo:'shield', runeType:'boss', runeValue:1,
-   traits:['부착'], desc:'방패 중앙에 부착하는 금속 돌출부입니다. 방패로 타격(Strike) 공격을 할 수 있으며, 1d6 B(타격) 피해를 입힙니다. 방패 보스에는 무기 룬을 새길 수 있습니다.'},
-  {name_ko:'방패 스파이크', name_en:'Shield Spikes', price:'5sp', level:0, bulk:'—', attachTo:'shield', runeType:'spikes', runeValue:1,
-   traits:['부착'], desc:'방패 표면에 부착하는 뾰족한 금속 가시입니다. 방패로 타격(Strike) 공격을 할 수 있으며, 1d6 P(관통) 피해를 입힙니다. 방패 스파이크에는 무기 룬을 새길 수 있습니다.'},
+  {name_ko:'방패 보스', name_en:'Shield Boss', price:'5sp', level:0, bulk:'—', attachTo:'shield', runeType:'boss', runeValue:1,
+   traits:['부착'], desc:'방패 중앙에 부착하는 금속 돌출부입니다. 방패로 타격(Strike) 공격을 할 수 있으며, 1d6 B(타격) 피해를 입힙니다. 방패 보스는 일반 무기처럼 작동하며 무기 룬을 새길 수 있습니다.'},
+  {name_ko:'방패 가시', name_en:'Shield Spikes', price:'5sp', level:0, bulk:'—', attachTo:'shield', runeType:'spikes', runeValue:1,
+   traits:['부착'], desc:'방패 표면에 부착하는 뾰족한 금속 가시입니다. 방패로 타격(Strike) 공격을 할 수 있으며, 1d6 P(관통) 피해를 입힙니다. 방패 가시는 일반 무기처럼 작동하며 무기 룬을 새길 수 있습니다.'},
 ];
