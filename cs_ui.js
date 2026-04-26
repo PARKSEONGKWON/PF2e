@@ -435,17 +435,25 @@ function _hasTwoHandTrait(w) {
   return traits.some(t => t.includes('양손') || t.toLowerCase().includes('two-hand'));
 }
 
-// 무기 상태: _stowed=false, _dropped=false → 손에 든 상태 (held)
-// _stowed=true → 보관 중, _dropped=true → 바닥에 떨어짐
+// 무기탭 → 장비탭 동기화 헬퍼
+function _syncEquipHoldMode(w, mode) {
+  if (w._fromEquip !== undefined) {
+    const eq = state.equip[w._fromEquip];
+    if (eq) {
+      eq._holdMode = mode;
+      eq._equipped = mode === 'one' || mode === 'two' || mode === 'worn';
+    }
+  }
+}
 
 function drawWeapon(idx) {
   const w = state.weapons[idx];
   if (!w) return;
   w._stowed = false;
   w._dropped = false;
-  // 양손 전용(hands:2) 무기는 자동으로 양손 그립
   if ((w._dbData?.hands) === 2) w._twoHand = true;
-  renderWeapons(); save();
+  _syncEquipHoldMode(w, w._twoHand ? 'two' : 'one');
+  renderWeapons(); renderEquip(); save();
 }
 
 function stowWeapon(idx) {
@@ -454,7 +462,8 @@ function stowWeapon(idx) {
   w._stowed = true;
   w._dropped = false;
   w._twoHand = false;
-  renderWeapons(); save();
+  _syncEquipHoldMode(w, 'stowed');
+  renderWeapons(); renderEquip(); save();
 }
 
 function dropWeapon(idx) {
@@ -463,18 +472,20 @@ function dropWeapon(idx) {
   w._stowed = false;
   w._dropped = true;
   w._twoHand = false;
-  renderWeapons(); save();
+  _syncEquipHoldMode(w, 'dropped');
+  renderWeapons(); renderEquip(); save();
 }
 
 function pickUpWeapon(idx) {
-  drawWeapon(idx); // 줍기 = 들기와 같은 결과
+  drawWeapon(idx);
 }
 
 function toggleGrip(idx) {
   const w = state.weapons[idx];
   if (!w) return;
   w._twoHand = !w._twoHand;
-  renderWeapons(); save();
+  _syncEquipHoldMode(w, w._twoHand ? 'two' : 'one');
+  renderWeapons(); renderEquip(); save();
 }
 
 function renderWeapons() {
@@ -527,7 +538,7 @@ function renderWeapons() {
 
     // 상태별 행동 버튼
     const isHeld = !w._stowed && !isDropped;
-    const canGrip = isHeld && _hasTwoHandTrait(w);
+    const canGrip = isHeld && (w._dbData?.hands) !== 2 && !w._isShield;
     let actionBtns = '';
     if (isDropped) {
       actionBtns = `<button class="weapon-btn" onclick="pickUpWeapon(${i})" title="줍기 (행동 1)">줍기<span class="weapon-btn action-cost">\u25C6</span></button>`;
@@ -597,24 +608,26 @@ function renderEquip() {
   const header = document.createElement('div');
   header.className = 'equip-row';
   header.style.cssText = 'font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);padding:2px 4px;';
-  header.innerHTML = `<span style="flex:1;">아이템</span><span style="width:30px;text-align:center;">부피</span><span style="width:70px;text-align:center;">수량</span><span style="width:60px;text-align:center;">장착</span><span style="width:40px;text-align:center;">상태</span><span style="width:28px;"></span>`;
+  header.innerHTML = `<span style="flex:1;">아이템</span><span style="width:30px;text-align:center;">부피</span><span style="width:70px;text-align:center;">수량</span><span style="width:80px;text-align:center;">상태</span><span style="width:40px;text-align:center;">파손</span><span style="width:28px;"></span>`;
   list.appendChild(header);
 
   state.equip.forEach((e,i) => {
     const row = document.createElement('div');
     row.className = 'equip-row';
-    const isEquippable = e._type === 'weapon' || e._type === 'armor' || e._type === 'shield';
-    const equipped = e._equipped;
     const eqType = e._type === 'weapon' ? 'weapon' : (e._type === 'armor' ? 'armor' : (e._type === 'shield' ? 'shield' : 'gear'));
     const eqEscName = (e.name||'').replace(/'/g,"\\'");
     const bulkDisplay = e.bulk === 'L' ? 'L' : (e.bulk || '—');
+    const hm = e._holdMode || 'stowed';
+    const isArmor = e._type === 'armor';
+    const isTwoOnly = e._type === 'weapon' && e._data && e._data.hands === 2;
 
-    let equipBtnHtml = '';
-    if (isEquippable) {
-      equipBtnHtml = equipped
-        ? `<button class="equip-toggle equipped" onclick="event.stopPropagation();toggleEquip(${i})">해제</button>`
-        : `<button class="equip-toggle" onclick="event.stopPropagation();toggleEquip(${i})">장착</button>`;
-    }
+    let holdSelectHtml = `<select class="equip-hold-select${hm!=='stowed'?' active':''}" onchange="event.stopPropagation();changeHoldMode(${i},this.value)">
+      <option value="stowed"${hm==='stowed'?' selected':''}>보관</option>
+      ${!isTwoOnly ? `<option value="one"${hm==='one'?' selected':''}>한손 들기</option>` : ''}
+      <option value="two"${hm==='two'?' selected':''}>두손 들기</option>
+      ${isArmor ? `<option value="worn"${hm==='worn'?' selected':''}>장착</option>` : ''}
+      <option value="dropped"${hm==='dropped'?' selected':''}>떨구기</option>
+    </select>`;
 
     const hasContainers = state.containers && state.containers.length > 0;
 
@@ -626,7 +639,7 @@ function renderEquip() {
         <span style="min-width:16px;text-align:center;font-size:13px;font-weight:600;color:var(--text);">${e.qty||1}</span>
         <button class="qty-btn" onclick="event.stopPropagation();changeQty(${i},1)">+</button>
       </span>
-      <span style="width:60px;text-align:center;">${equipBtnHtml}</span>
+      <span style="width:80px;text-align:center;">${holdSelectHtml}</span>
       <span style="width:40px;text-align:center;">
         <button class="${e._broken ? 'equip-toggle equipped' : 'equip-toggle'}" onclick="event.stopPropagation();toggleBroken(${i})" style="font-size:9px;padding:2px 4px;${e._broken?'background:var(--red-bg);color:var(--red-light);border-color:var(--red);':''}">${e._broken ? '파손' : '정상'}</button>
       </span>
@@ -708,93 +721,166 @@ function changeQty(i, delta) {
   save();
 }
 
-function toggleEquip(i) {
+// ── 장비 상태 변경 (5가지: stowed/one/two/worn/dropped) ──
+function changeHoldMode(i, newMode) {
   const item = state.equip[i];
   if (!item) return;
-  item._equipped = !item._equipped;
+  const oldMode = item._holdMode || 'stowed';
+  if (oldMode === newMode) return;
 
-  if (item._equipped && item._type === 'weapon' && item._data) {
-    const w = item._data;
-    addWeapon({name: w.name_ko, dmg: w.damage||'', traits: (w.traits||[]).join(', '), _dbData: w, category: w.category, range: w.range, _fromEquip:i, _broken: item._broken||false});
-  } else if (item._equipped && item._type === 'armor' && item._data) {
-    const a = item._data;
-    const nameEl = document.getElementById('armor-name');
-    const acEl = document.getElementById('armor-ac');
-    const dexEl = document.getElementById('armor-dex');
-    if (nameEl) nameEl.value = a.name_ko;
-    if (acEl) acEl.value = a.ac_bonus||0;
-    if (dexEl) dexEl.value = a.dex_cap!==null && a.dex_cap!==undefined ? a.dex_cap : '-';
-    const cpEl = document.getElementById('armor-check-pen');
-    const spEl = document.getElementById('armor-speed-pen');
-    const srEl = document.getElementById('armor-str-req');
-    if (cpEl) cpEl.value = a.check_penalty||0;
-    if (spEl) spEl.value = a.speed_penalty||0;
-    if (srEl) srEl.value = a.strength||0;
-    state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
-    renderArmorCard();
-    recalcAC();
-  } else if (!item._equipped && item._type === 'weapon') {
-    // 전투 탭에서 해당 무기 제거
-    const wIdx = state.weapons.findIndex(w => w._fromEquip === i);
-    if (wIdx >= 0) { state.weapons.splice(wIdx, 1); renderWeapons(); }
-  } else if (item._equipped && item._type === 'shield' && item._data) {
-    const s = item._data;
-    const nameEl = document.getElementById('shield-name');
-    const acEl = document.getElementById('shield-ac');
-    const hardEl = document.getElementById('shield-hard');
-    const hpEl = document.getElementById('shield-hp');
-    const hpCurEl = document.getElementById('shield-hp-cur');
-    if (nameEl) nameEl.value = s.name_ko;
-    if (acEl) acEl.value = s.ac_bonus||0;
-    if (hardEl) hardEl.value = s.hardness||0;
-    if (hpEl) hpEl.value = s.hp||0;
-    if (hpCurEl) hpCurEl.value = s.hp||0;
-    state.shieldStowed = false;
-    renderShieldCard();
-    updateShieldGauge();
-  } else if (!item._equipped && item._type === 'armor') {
-    const nameEl = document.getElementById('armor-name');
-    const acEl = document.getElementById('armor-ac');
-    const dexEl = document.getElementById('armor-dex');
-    if (nameEl) nameEl.value = '';
-    if (acEl) acEl.value = 0;
-    const cpEl = document.getElementById('armor-check-pen');
-    const spEl = document.getElementById('armor-speed-pen');
-    const srEl = document.getElementById('armor-str-req');
-    if (cpEl) cpEl.value = 0;
-    if (spEl) spEl.value = 0;
-    if (srEl) srEl.value = 0;
-    if (dexEl) dexEl.value = '-';
-    state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
-    renderArmorCard();
-    recalcAC();
-  } else if (!item._equipped && item._type === 'shield') {
-    const nameEl = document.getElementById('shield-name');
-    const acEl = document.getElementById('shield-ac');
-    const hardEl = document.getElementById('shield-hard');
-    const hpEl = document.getElementById('shield-hp');
-    const hpCurEl = document.getElementById('shield-hp-cur');
-    if (nameEl) nameEl.value = '';
-    if (acEl) acEl.value = 0;
-    if (hardEl) hardEl.value = 0;
-    if (hpEl) hpEl.value = 0;
-    if (hpCurEl) hpCurEl.value = 0;
-    state.shieldStowed = false;
-    renderShieldCard();
-    updateShieldGauge();
+  const wasHeld = oldMode === 'one' || oldMode === 'two';
+  const willHold = newMode === 'one' || newMode === 'two';
+  const wasWorn = oldMode === 'worn';
+  const willWear = newMode === 'worn';
+
+  // ── 이전 상태 해제 ──
+  if (wasHeld && !willHold) {
+    _unequipFromWeaponTab(item, i);
+  }
+  if (wasWorn && !willWear) {
+    _unwearArmor(item);
+  }
+  if (wasHeld && item._type === 'shield' && !willHold) {
+    _unequipShield();
+  }
+
+  // ── 새 상태 적용 ──
+  item._holdMode = newMode;
+  // 하위 호환
+  item._equipped = willHold || willWear;
+
+  if (willHold) {
+    const isTwoHand = newMode === 'two';
+    if (item._type === 'weapon' && item._data) {
+      // 기존 무기탭 카드가 이미 있으면 그립만 변경
+      const existW = state.weapons.find(w => w._fromEquip === i);
+      if (existW) {
+        existW._twoHand = isTwoHand;
+        existW._stowed = false;
+        existW._dropped = false;
+      } else {
+        const w = item._data;
+        addWeapon({name: w.name_ko, dmg: w.damage||'', traits: (w.traits||[]).join(', '), _dbData: w, category: w.category, range: w.range, _fromEquip:i, _broken: item._broken||false, _twoHand: isTwoHand});
+      }
+    }
+    if (item._type === 'shield' && item._data) {
+      _equipShield(item._data);
+      // 방패도 무기탭에 카드 추가
+      const existS = state.weapons.find(w => w._fromEquip === i);
+      if (!existS) {
+        const s = item._data;
+        addWeapon({name: s.name_ko, dmg: '', traits:'', _dbData: null, _isShield: true, category:'shield', _fromEquip:i, _broken: item._broken||false, _twoHand: isTwoHand});
+      } else {
+        existS._twoHand = isTwoHand;
+        existS._stowed = false;
+        existS._dropped = false;
+      }
+    }
+  }
+
+  if (willWear && item._type === 'armor' && item._data) {
+    _wearArmor(item._data);
   }
 
   renderEquip();
+  renderWeapons();
   recalcAll();
   save();
 }
 
+function _equipShield(s) {
+  const nameEl = document.getElementById('shield-name');
+  const acEl = document.getElementById('shield-ac');
+  const hardEl = document.getElementById('shield-hard');
+  const hpEl = document.getElementById('shield-hp');
+  const hpCurEl = document.getElementById('shield-hp-cur');
+  if (nameEl) nameEl.value = s.name_ko;
+  if (acEl) acEl.value = s.ac_bonus||0;
+  if (hardEl) hardEl.value = s.hardness||0;
+  if (hpEl) hpEl.value = s.hp||0;
+  if (hpCurEl) hpCurEl.value = s.hp||0;
+  state.shieldStowed = false;
+  renderShieldCard();
+  updateShieldGauge();
+}
+
+function _unequipShield() {
+  const nameEl = document.getElementById('shield-name');
+  const acEl = document.getElementById('shield-ac');
+  const hardEl = document.getElementById('shield-hard');
+  const hpEl = document.getElementById('shield-hp');
+  const hpCurEl = document.getElementById('shield-hp-cur');
+  if (nameEl) nameEl.value = '';
+  if (acEl) acEl.value = 0;
+  if (hardEl) hardEl.value = 0;
+  if (hpEl) hpEl.value = 0;
+  if (hpCurEl) hpCurEl.value = 0;
+  state.shieldStowed = false;
+  renderShieldCard();
+  updateShieldGauge();
+}
+
+function _wearArmor(a) {
+  const nameEl = document.getElementById('armor-name');
+  const acEl = document.getElementById('armor-ac');
+  const dexEl = document.getElementById('armor-dex');
+  if (nameEl) nameEl.value = a.name_ko;
+  if (acEl) acEl.value = a.ac_bonus||0;
+  if (dexEl) dexEl.value = a.dex_cap!==null && a.dex_cap!==undefined ? a.dex_cap : '-';
+  const cpEl = document.getElementById('armor-check-pen');
+  const spEl = document.getElementById('armor-speed-pen');
+  const srEl = document.getElementById('armor-str-req');
+  if (cpEl) cpEl.value = a.check_penalty||0;
+  if (spEl) spEl.value = a.speed_penalty||0;
+  if (srEl) srEl.value = a.strength||0;
+  state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
+  renderArmorCard();
+  recalcAC();
+}
+
+function _unwearArmor() {
+  const nameEl = document.getElementById('armor-name');
+  const acEl = document.getElementById('armor-ac');
+  const dexEl = document.getElementById('armor-dex');
+  if (nameEl) nameEl.value = '';
+  if (acEl) acEl.value = 0;
+  const cpEl = document.getElementById('armor-check-pen');
+  const spEl = document.getElementById('armor-speed-pen');
+  const srEl = document.getElementById('armor-str-req');
+  if (cpEl) cpEl.value = 0;
+  if (spEl) spEl.value = 0;
+  if (srEl) srEl.value = 0;
+  if (dexEl) dexEl.value = '-';
+  state.armorPotency = 0; state.armorResilient = 0; state.armorStowed = false;
+  renderArmorCard();
+  recalcAC();
+}
+
+function _unequipFromWeaponTab(item, equipIdx) {
+  const wIdx = state.weapons.findIndex(w => w._fromEquip === equipIdx);
+  if (wIdx >= 0) { state.weapons.splice(wIdx, 1); renderWeapons(); }
+}
+
+// 하위호환: 기존 toggleEquip 호출 → changeHoldMode 으로 위임
+function toggleEquip(i) {
+  const item = state.equip[i];
+  if (!item) return;
+  const cur = item._holdMode || 'stowed';
+  if (cur === 'stowed') {
+    // 기본 장착: 무기/방패→한손 들기, 갑옷→장착
+    if (item._type === 'armor') changeHoldMode(i, 'worn');
+    else changeHoldMode(i, 'one');
+  } else {
+    changeHoldMode(i, 'stowed');
+  }
+}
+
 function removeEquip(i) {
   const item = state.equip[i];
-  // 장착된 아이템이면 먼저 해제
-  if (item?._equipped) {
-    item._equipped = true; // toggleEquip이 반전시키므로
-    toggleEquip(i);
+  // 들고 있거나 장착 중이면 먼저 해제
+  if (item) {
+    const hm = item._holdMode || 'stowed';
+    if (hm !== 'stowed' && hm !== 'dropped') changeHoldMode(i, 'stowed');
   }
   state.equip.splice(i,1);
   // 무기의 _fromEquip 인덱스 재정렬
