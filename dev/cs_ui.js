@@ -2000,11 +2000,14 @@ function addFeat(type) {
   if (!name) return;
   // DB에서 영문명 매칭
   let fullName = name;
-  if (typeof FEAT_DB !== 'undefined' && !name.includes('(')) {
-    const found = getFeat(name.trim());
-    if (found?.name_en) fullName = `${found.name_ko} (${found.name_en})`;
+  let _fd = null;
+  if (!name.includes('(')) {
+    _fd = getFeat(name.trim());
+    if (_fd?.name_en) fullName = `${_fd.name_ko} (${_fd.name_en})`;
+  } else {
+    _fd = getFeat(name) || getFeat(name.split(' (')[0].trim());
   }
-  state.feats[type].push({name: fullName, level:getLevel()});
+  state.feats[type].push({id: _fd?.id || null, name: fullName, level:getLevel()});
   // 선택이 필요한 재주면 선택 모달 열기
   if (typeof checkFeatChoice === 'function' && checkFeatChoice(fullName, type, state.feats[type].length - 1)) {
     recalcAll();

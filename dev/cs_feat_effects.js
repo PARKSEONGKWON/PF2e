@@ -3226,7 +3226,9 @@ function _applyOneEffect(fb, eff, feat, level) {
         if (!state.spells.innate) state.spells.innate = [];
         const existing = state.spells.innate.find(s => s._sourceFeat === feat.name && s.name === eff.spell);
         if (!existing) {
+          const _sp = getSpell(eff.spell);
           state.spells.innate.push({
+            id: _sp?.id || null,
             name: eff.spell, tradition: eff.tradition || '', type: eff.spellType || 'spell',
             uses: eff.uses || '하루 1회', _sourceFeat: feat.name, _source: feat.name
           });
@@ -3236,18 +3238,23 @@ function _applyOneEffect(fb, eff, feat, level) {
     }
     case 'grant_focus_spell': {
       let spellName = eff.spell;
+      let spellId = null;
       if (spellName === '$domain_initial' || spellName === '$domain_advanced') {
         const dom = feat.choice && typeof DOMAIN_DB !== 'undefined' ? DOMAIN_DB[feat.choice] : null;
         const id = dom ? (spellName === '$domain_initial' ? dom.initial : dom.advanced) : null;
-        // DOMAIN_DB는 SPELL_DB.id 외래키로 정규화됨 → SPELL_DB lookup으로 한글명 추출
-        const sp = id && typeof SPELL_DB !== 'undefined' ? SPELL_DB.find(x => x.id === id) : null;
+        // DOMAIN_DB는 SPELL_DB.id 외래키로 정규화됨 → id로 직접 lookup
+        const sp = id ? getSpell(id) : null;
         spellName = sp ? sp.name_ko : '';
+        spellId = sp?.id || null;
+      } else {
+        const _sp = getSpell(spellName);
+        spellId = _sp?.id || null;
       }
       if (spellName && !spellName.startsWith('$') && feat.name) {
         if (!state.spells.focus) state.spells.focus = [];
         const existing = state.spells.focus.find(s => s._sourceFeat === feat.name && s.name === spellName);
         if (!existing) {
-          state.spells.focus.push({name: spellName, _auto: true, _sourceFeat: feat.name, _source: feat.name.split(' (')[0].trim()});
+          state.spells.focus.push({id: spellId, name: spellName, _auto: true, _sourceFeat: feat.name, _source: feat.name.split(' (')[0].trim()});
         }
       }
       break;
@@ -4048,7 +4055,8 @@ function _applyFeatChoice(choiceId) {
     const grantTo = choiceDef.grantTo || 'general';
     const grantedBy = choiceDef._grantedBy || (state.feats[featType]?.[featIndex]?.name || '');
     if (!state.feats[grantTo]) state.feats[grantTo] = [];
-    state.feats[grantTo].push({name: choiceId, level: 1, _grantedBy: grantedBy});
+    const _fdC = getFeat(choiceId.split(' (')[0].trim());
+    state.feats[grantTo].push({id: _fdC?.id || null, name: choiceId, level: 1, _grantedBy: grantedBy});
     const newIdx = state.feats[grantTo].length - 1;
     renderFeats();
     try { recalcAll(); } catch(e) { console.error(e); }
@@ -4074,7 +4082,8 @@ function _applyFeatChoice(choiceId) {
     // 새 선천 주문 추가
     const spType = choiceDef.type === 'spell_rank' ? 'spell' : 'cantrip';
     const spUses = choiceDef.type === 'spell_rank' ? '하루 1회' : '자유';
-    state.spells.innate.push({name: choiceId, tradition: tradKo, type: spType, uses: spUses, _sourceFeat: featName, _source: featName});
+    const _spCh = getSpell(choiceId);
+    state.spells.innate.push({id: _spCh?.id || null, name: choiceId, tradition: tradKo, type: spType, uses: spUses, _sourceFeat: featName, _source: featName});
     if (typeof renderSpells === 'function') renderSpells();
     // 선천적 주문 탭으로 자동 전환
     if (typeof switchSpellSubtab === 'function') switchSpellSubtab('innate');

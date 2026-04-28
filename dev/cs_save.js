@@ -358,6 +358,14 @@ function loadData(d) {
       if (!state.spells.known) state.spells.known = [];
       if (!state.spells.focus) state.spells.focus = [];
       if (!state.spells.innate) state.spells.innate = [];
+      // v524~: id 마이그레이션 (id 없는 항목에 SPELL_DB lookup으로 자동 부여)
+      for (const k of ['cantrip','known','focus','innate']) {
+        for (const it of state.spells[k]) {
+          if (!it || it.id || !it.name) continue;
+          const sp = (typeof getSpell === 'function') ? getSpell(it.name) : null;
+          if (sp) it.id = sp.id;
+        }
+      }
     }
     if (d.spellSlots) {
       state.spellSlots = {};
@@ -406,6 +414,20 @@ function loadData(d) {
           const key = f.name + '|' + (f.level||1) + '|' + (f._grantedBy||'');
           if (seen.has(key)) { arr.splice(i, 1); continue; }
           seen.add(key);
+        }
+      });
+      // v524~: id 마이그레이션 (id 없는 항목에 FEAT_DB lookup으로 자동 부여)
+      // archetype 재주는 name_ko가 "한글 (English)" 형식이라 전체 매칭 우선,
+      // 일반 카테고리는 한글만 들어있어 split 후 매칭으로 폴백
+      Object.keys(state.feats).forEach(cat => {
+        for (const it of state.feats[cat]) {
+          if (!it || it.id || !it.name) continue;
+          let fd = (typeof getFeat === 'function') ? getFeat(it.name) : null;
+          if (!fd && typeof getFeat === 'function') {
+            const nameKo = it.name.split(' (')[0].trim();
+            fd = getFeat(nameKo);
+          }
+          if (fd) it.id = fd.id;
         }
       });
       renderFeats();

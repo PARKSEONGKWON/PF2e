@@ -689,7 +689,8 @@ function applyClassFeatures() {
       const cat = f.category || 'special';
       if (!state.feats[cat]) state.feats[cat] = [];
       if (!state.feats[cat].some(e => e.name === featName)) {
-        const autoFeat = {name: featName, level: f.lv, _auto: true};
+        const _fd = f.id ? null : (getFeat(f.name_en) || getFeat(f.name_ko));
+        const autoFeat = {id: f.id || _fd?.id || null, name: featName, level: f.lv, _auto: true};
         const savedChoice = savedAutoChoices[featName + '_'];
         if (savedChoice) autoFeat.choice = savedChoice;
         state.feats[cat].push(autoFeat);
@@ -724,20 +725,22 @@ function applyClassFeatures() {
   allAutoSpells.forEach(s => {
     if (s.lv <= level) {
       const spellName = s.name_ko;
+      const _sp = getSpell(spellName) || (s.name_en ? getSpell(s.name_en) : null);
+      const _id = _sp?.id || null;
       // 출처: 서브클래스 주문이면 서브클래스명, 아니면 클래스명
       const src = _subAutoSp.includes(s)
         ? (state.selectedSubclass?.name_ko || cls.name) : cls.name;
       if (s.type === 'cantrip') {
         if (!state.spells.cantrip.some(sp => sp?.name === spellName)) {
-          state.spells.cantrip.push({name: spellName, rank:0, _auto: true, _source: src});
+          state.spells.cantrip.push({id: _id, name: spellName, rank:0, _auto: true, _source: src});
         }
       } else if (s.type === 'focus') {
         if (!state.spells.focus.some(sp => sp?.name === spellName)) {
-          state.spells.focus.push({name: spellName, _auto: true, _source: src});
+          state.spells.focus.push({id: _id, name: spellName, _auto: true, _source: src});
         }
       } else {
         if (!state.spells.known.some(sp => sp?.name === spellName)) {
-          state.spells.known.push({name: spellName, rank: s.rank||1, _auto: true, _source: src});
+          state.spells.known.push({id: _id, name: spellName, rank: s.rank||1, _auto: true, _source: src});
         }
       }
     }
@@ -1860,7 +1863,8 @@ function syncGrowthSpellsToState() {
     if (gs.cantrip) {
       gs.cantrip.forEach(name => {
         if (name && !(state.spells.cantrip||[]).find(c => c?.name === name)) {
-          state.spells.cantrip.push({name, rank: 0});
+          const _sp = getSpell(name);
+          state.spells.cantrip.push({id: _sp?.id || null, name, rank: 0});
         }
       });
     }
@@ -1870,7 +1874,8 @@ function syncGrowthSpellsToState() {
       if (!arr) continue;
       arr.forEach(name => {
         if (name && !(state.spells.known||[]).find(k => k.name === name && k.rank === r)) {
-          state.spells.known.push({name, rank: r});
+          const _sp = getSpell(name);
+          state.spells.known.push({id: _sp?.id || null, name, rank: r});
         }
       });
     }
@@ -4547,7 +4552,8 @@ function confirmModal() {
         if (typeof cascadeRemoveFeats === 'function') cascadeRemoveFeats();
       }
       state.growth[gLv][gKey] = featName;
-      state.feats[type].push({name: featName, level: gLv});
+      const _fdG = getFeat(featName) || getFeat(featName.split(' (')[0].trim());
+      state.feats[type].push({id: _fdG?.id || null, name: featName, level: gLv});
       growthPendingLevel = null;
       growthPendingKey = null;
       growthPendingFeatType = null;
@@ -4561,7 +4567,8 @@ function confirmModal() {
       }
       renderGrowthPlan();
     } else {
-      state.feats[type].push({name: featName, level: featLevel});
+      const _fdN = getFeat(featName) || getFeat(featName.split(' (')[0].trim());
+      state.feats[type].push({id: _fdN?.id || null, name: featName, level: featLevel});
       // 선택이 필요한 재주면 선택 모달 열기
       if (typeof checkFeatChoice === 'function' && checkFeatChoice(featName, type, state.feats[type].length - 1)) {
         recalcAll();

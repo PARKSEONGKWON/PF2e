@@ -1202,12 +1202,12 @@ function rebuildCoreEffects() {
     heritage.grantFeats.forEach(entry => {
       const featId = typeof entry === 'string' ? entry : entry.id;
       const presetChoice = typeof entry === 'object' ? entry.choice : undefined;
-      const fd = typeof FEAT_DB !== 'undefined' ? FEAT_DB.find(f => f && f.id === featId) : null;
+      const fd = getFeat(featId);
       const cat = fd?.category === 'general' ? 'general' : 'skill';
       if (!state.feats[cat]) state.feats[cat] = [];
       // savedHeritageChoices는 표시용 이름 키 → fd 있으면 정식 이름 키 사용, 없으면 id 키
       const featName = fd ? `${fd.name_ko} (${fd.name_en})` : featId;
-      const feat = {name: featName, _featId: featId, level: 1, _fromHeritage: true};
+      const feat = {id: fd?.id || featId, name: featName, _featId: featId, level: 1, _fromHeritage: true};
       if (savedHeritageChoices[featName]) feat.choice = savedHeritageChoices[featName];
       else if (savedHeritageChoices[featId]) feat.choice = savedHeritageChoices[featId];
       else if (presetChoice) feat.choice = presetChoice;
@@ -1230,7 +1230,8 @@ function rebuildCoreEffects() {
     heritage.innateSpells.forEach(sp => {
       const needsChoice = sp.tradition === '원시' || sp.tradition === '선택';
       if (!needsChoice) {
-        state.spells.innate.push({name: sp.name, tradition: sp.tradition, type: sp.type, uses: sp.uses, _heritage: true, _source: heritage.name_ko});
+        const _sp = getSpell(sp.name);
+        state.spells.innate.push({id: _sp?.id || null, name: sp.name, tradition: sp.tradition, type: sp.type, uses: sp.uses, _heritage: true, _source: heritage.name_ko});
       }
     });
   }
