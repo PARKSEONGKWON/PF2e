@@ -1161,47 +1161,44 @@ function rebuildCoreEffects() {
     });
   }
 
-  // 배경 기술 + 지식
-  if (bg?.skills) {
-    let loreUsed = 0;
-    bg.skills.split(', ').forEach(skillName => {
-      const s = skillName.trim();
-      if (s.includes('또는') || s.includes('/') || s.includes('중 선택')) return;
-      if (s.endsWith(' 지식') || s === '필사 지식' || s.includes('지식')) {
-        const loreName = s.replace(' 지식', '').trim();
-        const slot = loreUsed === 0 ? 'lore1' : 'lore2';
-        const nameEl = document.getElementById('lore-name-' + slot);
-        const profEl = document.getElementById('sk-prof-' + slot);
-        if (nameEl && profEl) {
-          const prevName = nameEl.value === loreName ? loreName : nameEl.value;
-          const prevRank = parseInt(profEl.value || 0);
-          state._bgGrantedLores.push({slot, name: loreName, prevName: prevRank < 2 ? '' : prevName, prevRank: prevRank < 2 ? 0 : prevRank});
-          if (!nameEl.value || nameEl.value === loreName) nameEl.value = loreName;
-          if (prevRank < 2) profEl.value = '2';
-        }
-        loreUsed++;
-      } else {
-        const id = skillNameToId(s);
-        if (!id) return;
-        const el = document.getElementById('sk-prof-' + id);
-        if (!el) return;
-        const cur = parseInt(el.value || 0);
-        if (cur < 2) {
-          state._bgGrantedSkills.push({skill: id, rank: 2, prevRank: cur});
-          el.value = '2';
-        } else {
-          state._bgGrantedSkills.push({skill: id, rank: 2, prevRank: cur});
-        }
+  // 배경 기술 — 고정 (choice_skill_groups는 모달에서 별도 처리)
+  if (bg && Array.isArray(bg.fixed_skills)) {
+    bg.fixed_skills.forEach(id => {
+      const el = document.getElementById('sk-prof-' + id);
+      if (!el) return;
+      const cur = parseInt(el.value || 0);
+      state._bgGrantedSkills.push({skill: id, rank: 2, prevRank: cur});
+      if (cur < 2) el.value = '2';
+    });
+  }
+
+  // 배경 지식 (lore) — 한국어 이름 그대로 (외래 DB 없음)
+  if (bg && Array.isArray(bg.fixed_lores)) {
+    bg.fixed_lores.forEach((loreName, i) => {
+      const slot = i === 0 ? 'lore1' : 'lore2';
+      const nameEl = document.getElementById('lore-name-' + slot);
+      const profEl = document.getElementById('sk-prof-' + slot);
+      if (nameEl && profEl) {
+        const prevName = nameEl.value === loreName ? loreName : nameEl.value;
+        const prevRank = parseInt(profEl.value || 0);
+        state._bgGrantedLores.push({slot, name: loreName, prevName: prevRank < 2 ? '' : prevName, prevRank: prevRank < 2 ? 0 : prevRank});
+        if (!nameEl.value || nameEl.value === loreName) nameEl.value = loreName;
+        if (prevRank < 2) profEl.value = '2';
       }
     });
   }
 
-  // 배경 재주
-  if (bg?.feat) {
-    const featName = bg.feat.trim();
-    if (featName && !featName.includes('/') && !featName.includes('또는')) {
+  // 배경 재주 — feat_id 기반
+  if (bg?.feat_id && typeof FEAT_DB !== 'undefined') {
+    const fd = FEAT_DB.find(f => f && f.id === bg.feat_id);
+    if (fd) {
       if (!state.feats.skill) state.feats.skill = [];
-      state.feats.skill.push({name: featName, level: 1, _fromBackground: true});
+      state.feats.skill.push({
+        name: `${fd.name_ko} (${fd.name_en})`,
+        _featId: fd.id,
+        level: 1,
+        _fromBackground: true
+      });
     }
   }
 }

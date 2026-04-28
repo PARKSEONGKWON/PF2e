@@ -3976,11 +3976,10 @@ function _rebuildTrainableSkillDropdowns() {
 function _buildBackgroundChoicesUI(bg) {
   const _savedBgChoice = (state.selectedBackground?.id === bg.id) ? (state.initialChoices?.background?.choiceSkill || null) : null;
   _modalChoices = { type: 'background', skills: {}, choiceSkill: _savedBgChoice, loreName: '' };
-  const descText = (bg.desc || '').replace(/\s*속성 부스트:.*$/, '');
 
   let html = `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:6px;">`;
   html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">📋 배경 혜택</div>`;
-  // 능력치 부스트 표시 (정규화된 boosts/boost_choices/free_boosts → 한글)
+  // 능력치 부스트 표시
   const bgBoostKo = [
     ...(bg.boosts || []).map(k => ATTR_KO[k]),
     ...(bg.boost_choices || []).map(g => g.map(k => ATTR_KO[k]).join(' 또는 ')),
@@ -3988,53 +3987,56 @@ function _buildBackgroundChoicesUI(bg) {
   ].join(', ') || '—';
   html += `<div style="font-size:11px;color:var(--text2);margin-bottom:6px;"><strong>능력치 부스트:</strong> ${bgBoostKo}</div>`;
 
-  // 기술 파싱
-  const skillParts = (bg.skills || '').split(', ');
+  // 고정 기술
+  (bg.fixed_skills || []).forEach(id => {
+    const skill = (typeof SKILLS !== 'undefined') ? SKILLS.find(s => s.id === id) : null;
+    const label = skill ? skill.name : id;
+    html += _choiceDropdown('', `기술`, [{value: id, label}], true, id);
+  });
+
+  // 선택 기술 그룹 (그룹당 1택)
   let hasChoice = false;
-  skillParts.forEach((s, i) => {
-    const name = s.trim();
-    if (!name) return;
-    if (name.includes('또는') || name.includes('/') || name.includes('중 선택')) {
-      // 선택 기술
-      hasChoice = true;
-      const choices = name.replace(/\s*중 선택/, '').split(/\s*[\/또는]\s*/).map(c => c.trim()).filter(Boolean);
-      const options = choices.map(c => {
-        const id = skillNameToId(c);
-        return {value: id || c, label: c};
-      });
-      html += `<div style="margin-bottom:6px;">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">기술 (선택)</div>
-        <select id="bg-choice-skill" onchange="_modalChoices.choiceSkill=this.value;_validateInitialChoices()" style="${_selStyle}">
-          <option value="">— 선택 —</option>
-          ${options.map(o => `<option value="${o.value}"${o.value === _savedBgChoice ? ' selected' : ''}>${o.label}</option>`).join('')}
-        </select>
-      </div>`;
-    } else if (name.endsWith(' 지식') || name.includes('지식')) {
-      // 지식 — 고정이면 disabled, 이름 입력 필요하면 텍스트
-      const loreName = name.replace(' 지식', '').trim();
-      _modalChoices.loreName = loreName;
-      html += _choiceDropdown('', `지식 기술`, [{value: loreName, label: name}], true, loreName);
-    } else {
-      // 고정 기술
-      html += _choiceDropdown('', `기술`, [{value: name, label: name}], true, name);
-    }
+  (bg.choice_skill_groups || []).forEach((group, gi) => {
+    hasChoice = true;
+    const options = group.map(id => {
+      const skill = (typeof SKILLS !== 'undefined') ? SKILLS.find(s => s.id === id) : null;
+      return { value: id, label: skill ? skill.name : id };
+    });
+    html += `<div style="margin-bottom:6px;">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">기술 (선택)</div>
+      <select id="bg-choice-skill${gi||''}" onchange="_modalChoices.choiceSkill=this.value;_validateInitialChoices()" style="${_selStyle}">
+        <option value="">— 선택 —</option>
+        ${options.map(o => `<option value="${o.value}"${o.value === _savedBgChoice ? ' selected' : ''}>${o.label}</option>`).join('')}
+      </select>
+    </div>`;
   });
   _modalChoices.hasChoiceSkill = hasChoice;
 
+  // 고정 지식 (lore) — 한국어 그대로
+  (bg.fixed_lores || []).forEach(loreName => {
+    _modalChoices.loreName = loreName;
+    html += _choiceDropdown('', `지식 기술`, [{value: loreName, label: loreName + ' 지식'}], true, loreName);
+  });
+
+  // 신격 기술/지식 마커 (raised-by-belief)
+  if (bg.deity_skill || bg.deity_lore) {
+    html += `<div style="font-size:10px;color:var(--text2);margin:4px 0;">※ 신격 선택 후 자동 부여 (신격 기술${bg.deity_lore ? ' + 신격 지식' : ''})</div>`;
+  }
+
   // 기술 재주
-  if (bg.feat) {
+  if (bg.feat_id && typeof FEAT_DB !== 'undefined') {
+    const fd = FEAT_DB.find(f => f && f.id === bg.feat_id);
+    const featLabel = fd ? fd.name_ko : bg.feat_id;
     html += `<div style="margin-top:4px;">`;
-    html += _choiceDropdown('', `기술 재주`, [{value: bg.feat, label: bg.feat}], true, bg.feat);
-    // 재주 설명 카드
-    if (typeof FEAT_DB !== 'undefined') {
-      const fd = FEAT_DB.find(f => f && f.name_ko === bg.feat.trim());
-      if (fd) {
-        const fdDesc = (fd.desc || fd.summary || '').replace(/<strong>전제조건:<\/strong>[^<]*<br>/i, '');
-        html += `<div style="padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);margin-top:4px;">
-          <div style="font-weight:600;font-size:11px;margin-bottom:2px;">${fd.name_ko} <span style="color:var(--text2);font-weight:400;">${fd.name_en||''}</span></div>
-          <div style="font-size:10px;line-height:1.5;color:var(--text2);">${resolveDescRefs(fdDesc)}</div>
-        </div>`;
-      }
+    html += _choiceDropdown('', `기술 재주`, [{value: bg.feat_id, label: featLabel}], true, bg.feat_id);
+    if (fd) {
+      const fdDesc = (fd.desc || fd.summary || '').replace(/<strong>전제조건:<\/strong>[^<]*<br>/i, '');
+      html += `<div style="padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);margin-top:4px;">
+        <div style="font-weight:600;font-size:11px;margin-bottom:2px;">${fd.name_ko} <span style="color:var(--text2);font-weight:400;">${fd.name_en||''}</span></div>
+        <div style="font-size:10px;line-height:1.5;color:var(--text2);">${resolveDescRefs(fdDesc)}</div>
+      </div>`;
+    } else {
+      html += `<div style="padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--text2);margin-top:4px;font-size:10px;color:var(--text2);">※ FEAT_DB 미등재 (${bg.feat_id})</div>`;
     }
     html += `</div>`;
   }
@@ -4906,14 +4908,21 @@ function applyBackgroundInfo(bg) {
       ...(bg.boost_choices || []).map(g => g.map(k => ATTR_KO[k]).join(' 또는 ')),
       ...Array(bg.free_boosts || 0).fill('자유'),
     ].join(', ');
-    notesEl.value = `[배경: ${bg.name}]\n속성 부스트: ${boostKo}\n기술: ${bg.skills}\n기술 재주: ${bg.feat}`;
+    const skillsKo = [
+      ...(bg.fixed_skills || []).map(id => (typeof SKILLS !== 'undefined' ? (SKILLS.find(s=>s.id===id)?.name || id) : id)),
+      ...(bg.choice_skill_groups || []).map(g => g.map(id => (typeof SKILLS !== 'undefined' ? (SKILLS.find(s=>s.id===id)?.name || id) : id)).join(' 또는 ')),
+      ...(bg.fixed_lores || []).map(l => l + ' 지식'),
+    ].join(', ');
+    const fd = (bg.feat_id && typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(f => f && f.id === bg.feat_id) : null;
+    const featKo = fd ? fd.name_ko : (bg.feat_id || '—');
+    notesEl.value = `[배경: ${bg.name}]\n속성 부스트: ${boostKo}\n기술: ${skillsKo}\n기술 재주: ${featKo}`;
   }
-  // growth plan에 배경 재주 저장 (1회성)
-  if (bg.feat) {
-    const featName = bg.feat.trim();
-    if (featName && !featName.includes('/') && !featName.includes('또는')) {
+  // growth plan에 배경 재주 저장 (1회성, feat_id 기반)
+  if (bg.feat_id && typeof FEAT_DB !== 'undefined') {
+    const fd = FEAT_DB.find(f => f && f.id === bg.feat_id);
+    if (fd) {
       if (!state.growth[1]) state.growth[1] = {};
-      state.growth[1].bgSkillFeat = featName;
+      state.growth[1].bgSkillFeat = `${fd.name_ko} (${fd.name_en})`;
     }
   }
   // 기술/지식/재주 적용은 rebuildCoreEffects()가 매 recalcAll마다 재파생
