@@ -57,6 +57,23 @@ function serializeCell(v) {
   return JSON.stringify(v);
 }
 
+// ── 시트 레이아웃 (v525~) ──
+//   행 1: 한국어 설명 (사용자 가독성용 — import에서는 무시)
+//   행 2: 영문 헤더 (실제 키)
+//   행 3+: 데이터
+//   import 측은 sheet_to_json에 range:1을 넘겨 행 2를 헤더로 인식.
+function buildSheetWithKoHeader(sheetName, shape, headers, dataRows) {
+  const koDescs = headers.map(h => getDescription(sheetName, h, shape) || '');
+  const aoa = [koDescs, headers, ...dataRows];
+  const sheet = XLSX.utils.aoa_to_sheet(aoa);
+  // 영문 헤더 행을 frozen pane으로 (행 2까지 고정 → 데이터 row 스크롤해도 헤더 보임)
+  sheet['!freeze'] = { ySplit: 2 };
+  // 한국어 설명 행 강조: 행 높이 약간 키움
+  sheet['!rows'] = sheet['!rows'] || [];
+  sheet['!rows'][0] = { hpx: 22 };
+  return sheet;
+}
+
 // ── 3. 배열형 DB → 시트 (행=요소, 열=키 합집합) ──
 //   원소가 모두 원시값이면 단일 'value' 컬럼 사용
 function arrayToSheet(arr, sheetName) {
@@ -66,8 +83,8 @@ function arrayToSheet(arr, sheetName) {
   }
   const allPrim = arr.every(x => x === null || typeof x !== 'object');
   if (allPrim) {
-    const rows = arr.map(x => ({ value: serializeCell(x) }));
-    return XLSX.utils.json_to_sheet(rows, { header: ['value'] });
+    const dataRows = arr.map(x => [serializeCell(x)]);
+    return buildSheetWithKoHeader(sheetName, 'array', ['value'], dataRows);
   }
   // 키 순서: 등장 순
   const seen = new Set();
@@ -79,17 +96,17 @@ function arrayToSheet(arr, sheetName) {
       if (!seen.has(k)) { seen.add(k); keys.push(k); }
     }
   }
-  const rows = arr.map(obj => {
-    if (obj === null || obj === undefined) return {};
-    if (typeof obj !== 'object') return { value: serializeCell(obj) };
-    const row = {};
-    for (const k of keys) {
-      const cell = serializeCell(obj[k]);
-      if (cell !== undefined) row[k] = cell;
+  const dataRows = arr.map(obj => {
+    if (obj === null || obj === undefined) return keys.map(_ => undefined);
+    if (typeof obj !== 'object') {
+      const row = keys.map(_ => undefined);
+      const valueIdx = keys.indexOf('value');
+      if (valueIdx >= 0) row[valueIdx] = serializeCell(obj);
+      return row;
     }
-    return row;
+    return keys.map(k => serializeCell(obj[k]));
   });
-  return XLSX.utils.json_to_sheet(rows, { header: keys });
+  return buildSheetWithKoHeader(sheetName, 'array', keys, dataRows);
 }
 
 // ── 4. kv-json DB → 시트 (key, value_json 두 컬럼) ──
@@ -98,11 +115,11 @@ function kvJsonToSheet(obj, sheetName) {
     console.error(`[error] ${sheetName} is not an object (got ${typeof obj})`);
     return null;
   }
-  const rows = [];
+  const dataRows = [];
   for (const [k, v] of Object.entries(obj)) {
-    rows.push({ key: k, value_json: serializeCell(v) });
+    dataRows.push([k, serializeCell(v)]);
   }
-  return XLSX.utils.json_to_sheet(rows, { header: ['key', 'value_json'] });
+  return buildSheetWithKoHeader(sheetName, 'kv-json', ['key', 'value_json'], dataRows);
 }
 
 // ── 5. 메인 ──
@@ -111,15 +128,15 @@ function main() {
   const ctx = loadAllDBs();
   const wb = XLSX.utils.book_new();
 
-  // 메타데이터 시트 (제일 앞)
-  const metaRows = DB_DEFS.map(d => ({
-    sheet: d.sheet,
-    var: d.var,
-    file: d.file,
-    keyword: d.keyword,
-    shape: d.shape,
-  }));
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(metaRows), '_META');
+  // 메타데이터 시트 (제일 앞) — v525~ 한국어 설명 행 포함
+  {
+    const headers = ['sheet','var','file','keyword','shape'];
+    const koLabels = ['시트명','JS 변수명','정의 파일','선언 키워드','시트 형태(array/kv-json)'];
+    const dataRows = DB_DEFS.map(d => [d.sheet, d.var, d.file, d.keyword, d.shape]);
+    const metaSheet = XLSX.utils.aoa_to_sheet([koLabels, headers, ...dataRows]);
+    metaSheet['!freeze'] = { ySplit: 2 };
+    XLSX.utils.book_append_sheet(wb, metaSheet, '_META');
+  }
 
   // 컬럼 사전 시트 (_DICT) — export 끝에 빌드. 모든 시트의 헤더 자동 수집 + 사전 매핑.
   const dictRows = [];
@@ -151,13 +168,13 @@ function main() {
       console.log(`  ${def.sheet.padEnd(22)} ${String(n).padStart(5)} ${def.shape === 'array' ? 'rows' : 'keys'}`);
       okCount++;
       totalRows += n;
-      // 컬럼명 수집 (사전 빌드용)
+      // 컬럼명 수집 (사전 빌드용) — 헤더는 행 2 (인덱스 1)
       const ref = sheet['!ref'];
       if (ref) {
         const range = XLSX.utils.decode_range(ref);
         const cols = [];
         for (let C = range.s.c; C <= range.e.c; C++) {
-          const cell = sheet[XLSX.utils.encode_cell({ r: 0, c: C })];
+          const cell = sheet[XLSX.utils.encode_cell({ r: 1, c: C })];
           if (cell && cell.v) cols.push(String(cell.v));
         }
         sheetColumns[def.sheet] = { cols, shape: def.shape };
@@ -165,20 +182,22 @@ function main() {
     }
   }
 
-  // _DICT 시트 빌드 — 모든 시트의 (시트, 컬럼, 설명) 행
+  // _DICT 시트 빌드 — 모든 시트의 (시트, 컬럼, 설명) 행 (v525~ 한국어 설명 행 포함)
   for (const def of DB_DEFS) {
     const info = sheetColumns[def.sheet];
     if (!info) continue;
     for (const col of info.cols) {
-      dictRows.push({
-        sheet: def.sheet,
-        column: col,
-        description: getDescription(def.sheet, col, info.shape),
-      });
+      dictRows.push([def.sheet, col, getDescription(def.sheet, col, info.shape) || '']);
     }
   }
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dictRows), '_DICT');
-  const filledCount = dictRows.filter(r => r.description).length;
+  {
+    const headers = ['sheet','column','description'];
+    const koLabels = ['시트명','컬럼명','한국어 설명'];
+    const dictSheet = XLSX.utils.aoa_to_sheet([koLabels, headers, ...dictRows]);
+    dictSheet['!freeze'] = { ySplit: 2 };
+    XLSX.utils.book_append_sheet(wb, dictSheet, '_DICT');
+  }
+  const filledCount = dictRows.filter(r => r[2]).length;
   console.log(`\n  _DICT sheet: ${dictRows.length} columns total, ${filledCount} described, ${dictRows.length - filledCount} blank (사용자 채움 가능)`);
 
   XLSX.writeFile(wb, OUT_PATH);

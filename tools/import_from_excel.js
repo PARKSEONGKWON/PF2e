@@ -42,8 +42,29 @@ function deserializeCell(v) {
 
 // ── 2. 시트 → 객체 복원 ──
 //   defval 없이 sheet_to_json: 빈 셀은 row에 키 없음 → 원본 객체에 키 없음 (의미 보존)
+//
+//   v525~: 행 1=한국어 설명, 행 2=영문 헤더, 행 3+=데이터.
+//   구버전 호환: 행 2의 셀이 영문/snake_case로 보이면 v525 형식, 그렇지 않으면 v524 이전 형식(행 1=헤더).
+function detectHeaderRow(sheet) {
+  const ref = sheet['!ref'];
+  if (!ref) return 0;
+  const range = XLSX.utils.decode_range(ref);
+  // 행 2 (인덱스 1)의 첫 비어있지 않은 셀 검사
+  for (let C = range.s.c; C <= range.e.c; C++) {
+    const cell = sheet[XLSX.utils.encode_cell({ r: 1, c: C })];
+    if (!cell || cell.v === undefined || cell.v === null || cell.v === '') continue;
+    const v = String(cell.v);
+    // 영문/언더스코어/숫자만 → 헤더 (v525 형식: 행 2가 헤더)
+    if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(v)) return 1;
+    return 0;
+  }
+  return 0;
+}
+
 function sheetToArray(sheet) {
-  const rows = XLSX.utils.sheet_to_json(sheet, { raw: true });
+  // v525~: 행 1=한국어 설명, 행 2=헤더, 행 3+=데이터 → range:1로 행 2를 헤더로 인식
+  // 구버전(헤더가 행 1) 호환: 행 2의 첫 셀이 비어있거나 알려진 헤더 키와 다르면 range:0 폴백
+  const rows = XLSX.utils.sheet_to_json(sheet, { raw: true, range: detectHeaderRow(sheet) });
   // 'value' 단일 컬럼만 있으면 원시값 배열 (LANGUAGES, CONDITIONS 등)
   const allValueOnly = rows.length > 0 && rows.every(r => {
     const ks = Object.keys(r);
@@ -63,7 +84,7 @@ function sheetToArray(sheet) {
 }
 
 function sheetToKvJson(sheet) {
-  const rows = XLSX.utils.sheet_to_json(sheet, { raw: true });
+  const rows = XLSX.utils.sheet_to_json(sheet, { raw: true, range: detectHeaderRow(sheet) });
   const obj = {};
   for (const row of rows) {
     const k = row.key;
