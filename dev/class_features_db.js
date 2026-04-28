@@ -97,33 +97,6 @@ var CLASS_PROF_TABLE = {
 //  Entries REPLACE (not merge) the class entry for that target
 // ═══════════════════════════════════════════════
 
-var SUBCLASS_PROF_TABLE = {
-  // ── 클레릭 교리 ──
-  'doctrine-cloistered': {
-    fort:{1:2, 3:4, 9:6},             // L3 2차교리 Fort→E, L9 확고한신앙 Fort→M
-    spatk:{1:2, 3:4, 15:6, 19:8},    // L3 주문→E, L15→M, L19→L
-    ref:{1:2, 11:4},                   // L11 4차교리 번개반사 Ref→E
-    will:{1:4, 9:6, 17:8},            // L9→M, L17 6차교의→L
-    'armor-light':{1:2},
-    'armor-unarmored':{1:2},
-  },
-  'doctrine-warpriest': {
-    fort:{1:2, 3:4, 9:6},             // L3 2차교리 Fort→E, L9→M
-    spatk:{1:2, 7:4, 15:6},           // L7 3차교리 주문→E, L15→M (no L)
-    ref:{1:2, 3:4},                    // L3 2차교리 Ref→E
-    will:{1:4, 9:6},                   // L9→M (no L)
-    'weapon-martial':{1:2, 7:4},      // 군용 무기 훈련, L7 3차교리→E
-    'armor-light':{1:2, 13:4, 17:6},
-    'armor-medium':{1:2, 13:4, 17:6},
-    'armor-heavy':{1:2},
-    'armor-unarmored':{1:2, 13:4, 17:6},
-  },
-  // ── 바드 뮤즈 ──
-  'muse-warrior': {
-    'weapon-martial':{1:2},           // 군용 무기 훈련 추가
-  },
-};
-
 // ═══════════════════════════════════════════════
 //  CLASS FEATURE NAMES — for display in growth plan
 //  Each entry: {lv, name_ko, name_en, type?}
@@ -300,14 +273,6 @@ var CLASS_AUTO_FEATS = {
 };
 
 // Subclass auto-granted feats
-var SUBCLASS_AUTO_FEATS = {
-  'muse-maestro': [{lv:1, name_ko:'잔향 작곡', name_en:'Lingering Composition', category:'special'}],
-  'muse-enigma':  [{lv:1, name_ko:'바드 지식', name_en:'Bardic Lore', category:'special'}],
-  'muse-warrior': [{lv:1, name_ko:'무예 공연', name_en:'Martial Performance', category:'special'}],
-  'muse-polymath': [{lv:1, name_ko:'다재다능한 공연', name_en:'Versatile Performance', category:'special'}],
-  'doctrine-cloistered': [{lv:1, name_ko:'영역 입문', name_en:'Domain Initiate', category:'class'}],
-};
-
 // ═══════════════════════════════════════════════
 //  AUTO-GRANTED SPELLS — added to spell tab
 //  type: 'cantrip' | 'focus' | 'known'
@@ -321,95 +286,9 @@ var CLASS_AUTO_SPELLS = {
   ],
 };
 
-var SUBCLASS_AUTO_SPELLS = {
-  // ── 바드 뮤즈: 뮤즈 주문만 자동 부여 (집중 주문은 재주 선택 시 습득) ──
-  'muse-maestro': [{lv:1, type:'known', rank:1, name_ko:'위로', name_en:'Soothe'}],
-  'muse-enigma':  [{lv:1, type:'known', rank:1, name_ko:'확실한 타격', name_en:'Sure Strike'}],
-  'muse-warrior': [{lv:1, type:'known', rank:1, name_ko:'공포', name_en:'Fear'}],
-  'muse-polymath': [{lv:1, type:'known', rank:1, name_ko:'환영 하수인', name_en:'Phantasmal Minion'}],
-  // ── 드루이드 교단 (DB 매칭) ──
-  // order-flame: Player Core 2 — 비활성
-  // 'order-flame':  [{lv:1, type:'focus', name_ko:'화염 광선', name_en:'Fire Ray'}],
-  'order-leaf':   [{lv:1, type:'focus', name_ko:'축제의 뿔피리', name_en:'Cornucopia'}],
-  'order-storm':  [{lv:1, type:'focus', name_ko:'폭풍 군주', name_en:'Tempest Surge'}],
-  // order-wave: Player Core 2 — 비활성
-  // 'order-wave':   [{lv:1, type:'focus', name_ko:'조류 파도', name_en:'Tidal Surge'}],
-  'order-wild':   [{lv:1, type:'focus', name_ko:'야생 변이', name_en:'Untamed Shift'}],
-  'order-animal': [{lv:1, type:'focus', name_ko:'동물 치유', name_en:'Heal Animal'}],
-  // ── 위저드 비전 학파 (Remaster) ──
-  'school-ars-grammatica': [{lv:1, type:'focus', name_ko:'보호의 결계', name_en:'Protective Wards'}],
-  'school-battle-magic':   [{lv:1, type:'focus', name_ko:'힘의 화살', name_en:'Force Bolt'}],
-  'school-boundary':       [{lv:1, type:'focus', name_ko:'소환 강화', name_en:'Fortify Summoning'}],
-  'school-civic-wizardry': [{lv:1, type:'focus', name_ko:'대지 공사', name_en:'Earthworks'}],
-  'school-mentalism':      [{lv:1, type:'focus', name_ko:'매혹의 밀침', name_en:'Charming Push'}],
-  'school-protean-form':   [{lv:1, type:'focus', name_ko:'몸 뒤섞기', name_en:'Scramble Body'}],
-  // school-unified: 학파 주문 없음 (통합 이론)
-  // ── 위치 후원자 (DB 매칭) ──
-  'patron-curse':  [{lv:1, type:'focus', name_ko:'사악한 눈', name_en:'Evil Eye'}],
-  'patron-fate':   [{lv:1, type:'focus', name_ko:'운명 조정', name_en:'Nudge Fate'}],
-  'patron-fervor': [{lv:1, type:'focus', name_ko:'심장 격려', name_en:'Stoke the Heart'}],
-  'patron-night':  [{lv:1, type:'focus', name_ko:'밤의 장막', name_en:'Shroud of Night'}],
-  'patron-rune':   [{lv:1, type:'focus', name_ko:'비밀 간파', name_en:'Discern Secrets'}],
-  // patron-wild: 야생의 말 DB에 없음 (Wilding Word)
-};
-
 // ═══════════════════════════════════════════════
 //  SUBCLASS FEATURE NAMES — for display
 // ═══════════════════════════════════════════════
-
-var SUBCLASS_FEATURE_NAMES = {
-  // ── 바드 뮤즈 ──
-  'muse-enigma':  [{lv:1, name_ko:'바드 지식 (자유 지식 기술)', name_en:'Bardic Lore', desc:'수수께끼 뮤즈가 온갖 신비로운 지식을 속삭여 줍니다. 바드 지식(Bardic Lore)이라는 특수 지식 기술에 숙련됩니다. 모든 지식 회상 시 바드 지식을 사용할 수 있으며, 다른 지식 기술 대신 이 하나의 기술로 판정합니다.'}],
-  'muse-maestro': [{lv:1, name_ko:'잔향 작곡', name_en:'Lingering Composition', desc:'작곡 캔트립의 효과를 유지하는 집중 주문을 습득합니다. 잔향 작곡(Lingering Composition) 재주를 얻어, 1 집중 포인트를 소비하여 작곡 캔트립의 지속 시간을 3라운드로 연장합니다.'}],
-  'muse-warrior': [{lv:1, name_ko:'군용 무기 훈련', name_en:'Martial Weapon Training', desc:'전사 뮤즈의 영감으로 군용 무기에 훈련됩니다. 군용 무기 숙련도가 훈련(Trained)으로 증가합니다.'}],
-  'muse-polymath': [{lv:1, name_ko:'다재다능한 공연', name_en:'Versatile Performance', desc:'박학다식한 뮤즈의 영향으로 공연 기술로 다른 기술을 대체할 수 있습니다. 다재다능한 공연(Versatile Performance) 재주를 얻어, 공연(Performance)으로 기만, 외교, 위협 판정을 대체합니다.'}],
-  // ── 클레릭 교리 ──
-  'doctrine-cloistered': [
-    // 영역 입문(Domain Initiate) 재주는 SUBCLASS_AUTO_FEATS에서 부여 — 여기서는 제거 (중복)
-    {lv:3, name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster', desc:'주문 시전 능력이 한 단계 더 발전했습니다. 주문 명중과 주문 DC의 숙련도가 전문가로 증가합니다.'},
-    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster', desc:'주문 시전에 대한 달인급 숙달을 달성했습니다. 주문 명중과 주문 DC의 숙련도가 달인으로 증가합니다.'},
-    {lv:19, name_ko:'전설 주문시전자', name_en:'Legendary Spellcaster', desc:'마법의 완벽한 숙달을 이루었습니다. 주문 명중과 주문 DC의 숙련도가 전설로 증가합니다.'},
-  ],
-  'doctrine-warpriest': [
-    {lv:1,  name_ko:'군용 무기/평갑 훈련', name_en:'Martial & Medium Armor', desc:'전쟁사제 교리를 따르는 클레릭으로서 전투 훈련을 받습니다. 군용 무기에 훈련되며, 평갑(중갑)에 훈련됩니다. 인내 내성 숙련도가 전문가로 증가합니다.'},
-    {lv:3,  name_ko:'반사 전문가', name_en:'Expert Reflex', desc:'전투 경험을 통해 반사신경이 향상됩니다. 반사 내성 숙련도가 전문가로 증가합니다.'},
-    {lv:7, name_ko:'전문가 주문시전자', name_en:'Expert Spellcaster', desc:'주문 시전 능력이 한 단계 더 발전했습니다. 주문 명중과 주문 DC의 숙련도가 전문가로 증가합니다.'},
-    {lv:15, name_ko:'달인 주문시전자', name_en:'Master Spellcaster', desc:'주문 시전에 대한 달인급 숙달을 달성했습니다. 주문 명중과 주문 DC의 숙련도가 달인으로 증가합니다.'},
-  ],
-  // ── 드루이드 교단 ──
-  'order-animal': [{lv:1, name_ko:'동물 친구 습득', name_en:'Animal Companion', desc:'동물 결사에 가입하여 동물 친구(Animal Companion)를 얻습니다. 자연학에 훈련되며, 동물 친구가 전투와 탐험에서 함께합니다.'}],
-  // 'order-flame': Player Core 2 — 비활성
-  'order-leaf':   [{lv:1, name_ko:'집중 주문: 축제의 뿔피리', name_en:'Cornucopia', desc:'잎 결사에 가입하여 축제의 뿔피리(Cornucopia) 집중 주문을 습득합니다. 외교에 훈련됩니다.'}],
-  'order-storm':  [{lv:1, name_ko:'집중 주문: 폭풍 쇄도', name_en:'Tempest Surge', desc:'폭풍 결사에 가입하여 폭풍 쇄도(Tempest Surge) 집중 주문을 습득합니다. 곡예에 훈련됩니다.'}],
-  // 'order-wave': Player Core 2 — 비활성
-  'order-wild':   [{lv:1, name_ko:'집중 주문: 야생 해방', name_en:'Untamed Form', desc:'야생 결사에 가입하여 야생 해방(Untamed Form) 집중 주문을 습득합니다. 위협에 훈련됩니다.'}],
-  // ── 레인저 사냥 방식 ──
-  'edge-flurry':    [{lv:1, name_ko:'다중 공격 페널티 감소', name_en:'Flurry', desc:'사냥감에 대한 연속 공격에 능숙합니다. 사냥감에 대한 다중 공격 페널티가 -4/-8로 감소합니다(일반 -5/-10). 민첩 무기 사용 시 -3/-6으로 감소합니다.'}],
-  'edge-outwit':    [{lv:1, name_ko:'사냥 목표 AC +1', name_en:'Outwit', desc:'사냥감의 약점을 간파합니다. 사냥감의 공격에 대해 AC에 +1 상황 보너스를 받고, 사냥감에 대한 기만, 위협, 은신, 지식 회상 판정에 +2 상황 보너스를 받습니다.'}],
-  'edge-precision': [{lv:1, name_ko:'첫 타 정밀 피해 +1d8', name_en:'Precision', desc:'사냥감의 치명적 약점을 노립니다. 매 라운드 사냥감에 대한 첫 번째 명중 시 추가 1d8 정밀 피해를 입힙니다. 11레벨에 2d8, 19레벨에 3d8으로 증가합니다.'}],
-  // ── 로그 전문 ──
-  'racket-thief':     [{lv:1, name_ko:'민첩→피해 (기교 무기)', name_en:'Thief', desc:'도적 라켓: 은밀 공격 피해에 기교(Finesse) 무기 사용 시 민첩 수정치를 피해에 추가합니다. 도적질(Thievery)에 훈련됩니다.'}],
-  'racket-scoundrel': [{lv:1, name_ko:'기만/위협→무방비', name_en:'Scoundrel', desc:'사기꾼 라켓: 기만(Feint) 성공 시 대상이 다음 턴 시작까지 무방비 상태가 됩니다. 기만과 외교에 훈련됩니다.'}],
-  'racket-mastermind':[{lv:1, name_ko:'지식 확인→무방비', name_en:'Mastermind', desc:'두뇌파 라켓: 지식 회상(Recall Knowledge)으로 대상을 식별하면, 해당 대상은 다음 턴 시작까지 무방비 상태가 됩니다. 사회(Society)에 훈련되며, 하나의 지식 기술에 추가 훈련됩니다.'}],
-  'racket-acrobat':   [{lv:1, name_ko:'곡예→스닉 어택 기회', name_en:'Acrobat', desc:'곡예사 라켓: 곡예(Tumble Through) 성공 시 대상이 턴 끝까지 무방비 상태가 됩니다. 곡예에 훈련됩니다.'}],
-  'racket-assassin':  [{lv:1, name_ko:'기습 라운드 +2d6', name_en:'Assassin', desc:'암살자 라켓: 첫 라운드에 행동하지 않은 적에게 은밀 공격 시 추가 피해 주사위를 1d6 더 굴립니다. 은신과 기만에 훈련됩니다.'}],
-  'racket-eldritch-trickster': [{lv:1, name_ko:'주문→스닉 어택', name_en:'Eldritch Trickster', desc:'비전 사기꾼 라켓: 헌신 아키타입 재주를 통해 다중 클래스 주문시전을 습득합니다. 주문으로 무방비 상태를 만들어 은밀 공격을 연계할 수 있습니다.'}],
-  // ── 위치 후원자 ──
-  'patron-curse':  [{lv:1, name_ko:'오컬트 전통 / 주술: 사악한 눈', name_en:'Curse', desc:'저주 후원자가 오컬트 전통의 주문시전 능력을 부여합니다. 사악한 눈(Evil Eye) 주술 집중 주문을 습득합니다.'}],
-  'patron-fate':   [{lv:1, name_ko:'오컬트 전통 / 주술: 운명 조정', name_en:'Fate', desc:'운명 후원자가 오컬트 전통의 주문시전 능력을 부여합니다. 운명 조정(Nudge Fate) 주술 집중 주문을 습득합니다.'}],
-  'patron-fervor': [{lv:1, name_ko:'신성 전통 / 주술: 심장 격려', name_en:'Fervor', desc:'열정 후원자가 신성 전통의 주문시전 능력을 부여합니다. 심장 격려(Stoke the Heart) 주술 집중 주문을 습득합니다.'}],
-  'patron-night':  [{lv:1, name_ko:'오컬트 전통 / 주술: 밤의 장막', name_en:'Night', desc:'밤 후원자가 오컬트 전통의 주문시전 능력을 부여합니다. 밤의 장막(Shroud of Night) 주술 집중 주문을 습득합니다.'}],
-  'patron-rune':   [{lv:1, name_ko:'비전 전통 / 주술: 비밀 간파', name_en:'Rune', desc:'룬 후원자가 비전 전통의 주문시전 능력을 부여합니다. 비밀 간파(Discern Secrets) 주술 집중 주문을 습득합니다.'}],
-  'patron-wild':   [{lv:1, name_ko:'원시 전통 / 주술: 야생의 말', name_en:'Wild', desc:'야생 후원자가 원시 전통의 주문시전 능력을 부여합니다. 야생의 말(Wilding Word) 주술 집중 주문을 습득합니다.'}],
-  // ── 위저드 비전 학파 (Remaster) ──
-  'school-ars-grammatica': [{lv:1, name_ko:'학파 주문: 보호의 결계', name_en:'Ars Grammatica', desc:'문법학파(Ars Grammatica)를 선택합니다. 보호의 결계(Protective Wards) 학파 집중 주문을 습득하고, 추가 교과과정 주문 슬롯을 얻습니다.'}],
-  'school-battle-magic':   [{lv:1, name_ko:'학파 주문: 힘의 화살', name_en:'Battle Magic', desc:'전투마법학파(Battle Magic)를 선택합니다. 힘의 화살(Force Bolt) 학파 집중 주문을 습득하고, 추가 교과과정 주문 슬롯을 얻습니다.'}],
-  'school-boundary':       [{lv:1, name_ko:'학파 주문: 소환 강화', name_en:'Boundary', desc:'경계학파(Boundary)를 선택합니다. 소환 강화(Fortify Summoning) 학파 집중 주문을 습득하고, 추가 교과과정 주문 슬롯을 얻습니다.'}],
-  'school-civic-wizardry': [{lv:1, name_ko:'학파 주문: 대지 공사', name_en:'Civic Wizardry', desc:'시민마법학파(Civic Wizardry)를 선택합니다. 대지 공사(Earthworks) 학파 집중 주문을 습득하고, 추가 교과과정 주문 슬롯을 얻습니다.'}],
-  'school-mentalism':      [{lv:1, name_ko:'학파 주문: 매혹의 밀침', name_en:'Mentalism', desc:'정신학파(Mentalism)를 선택합니다. 매혹의 밀침(Charming Push) 학파 집중 주문을 습득하고, 추가 교과과정 주문 슬롯을 얻습니다.'}],
-  'school-protean-form':   [{lv:1, name_ko:'학파 주문: 몸 뒤섞기', name_en:'Protean Form', desc:'변형학파(Protean Form)를 선택합니다. 몸 뒤섞기(Scramble Body) 학파 집중 주문을 습득하고, 추가 교과과정 주문 슬롯을 얻습니다.'}],
-  'school-unified':        [{lv:1, name_ko:'통합 이론: 유연한 주문', name_en:'Unified Theory', desc:'통합이론학파(Unified Theory)를 선택합니다. 학파 주문 대신 추가 교과과정 주문 슬롯과 유연한 주문 준비 이점을 얻습니다.'}],
-};
 
 // ═══════════════════════════════════════════════
 //  DEITY DATABASE — PF2e Player Core

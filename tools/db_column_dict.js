@@ -41,8 +41,13 @@ const PER_SHEET = {
     deity_skill:         '신격이 추가 기술 1개 부여하는지 여부 (클레릭 전용 플래그)',
   },
   SUBCLASS_DB: {
-    class_id:       '소속 클래스 id',
-    subclass_type:  '서브클래스 타입 (뮤즈/교리/교단/연구분야 등)',
+    class_id:        '소속 클래스 id',
+    subclass_type:   '서브클래스 타입 (뮤즈/교리/교단/연구분야 등)',
+    granted_skills:  '자동 부여 기술 ID 배열 (SKILLS.id)',
+    granted_feats:   '자동 부여 재주 ID 배열 (FEAT_DB.id, 모두 lv 1 적용)',
+    granted_spells:  '자동 부여 주문 객체 배열 [{lv, type, rank?, spell_id}]',
+    features:        '서브클래스 특성 객체 배열 [{lv, name_ko, name_en, desc}]',
+    prof_changes:    '숙련도 변경 객체 {target: {level: rank}} (예: 클레릭 교리)',
   },
   ANCESTRIES: {
     hp:             '혈통 HP (클래스 HP에 더해짐)',

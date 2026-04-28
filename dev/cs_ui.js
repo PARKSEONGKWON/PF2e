@@ -2060,13 +2060,12 @@ function renderFeats() {
       const fNameKo = f.name.split(' (')[0].trim();
       const fNameEn = (f.name.match(/\(([^)]+)\)/)||[])[1] || '';
       let featData = (typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(fd => fd && fd.name_ko === fNameKo) : null;
-      // 클래스 특성은 CLASS_FEATURE_NAMES / SUBCLASS_FEATURE_NAMES에서 desc 보충
+      // 클래스 특성은 CLASS_FEATURE_NAMES / SUBCLASS_DB.features에서 desc 보충
       let classFeatureDesc = '';
       if (t === 'special' && typeof CLASS_FEATURE_NAMES !== 'undefined') {
         const clsId = state.selectedClass?.id;
-        const subId = state.selectedSubclass?.id;
         const allCF = [...(clsId && CLASS_FEATURE_NAMES[clsId] || []),
-                       ...(subId && typeof SUBCLASS_FEATURE_NAMES !== 'undefined' ? SUBCLASS_FEATURE_NAMES[subId] || [] : [])];
+                       ...(state.selectedSubclass?.features || [])];
         const cfMatch = allCF.find(cf => cf.name_ko === fNameKo || cf.name_en === fNameEn);
         if (cfMatch?.desc) classFeatureDesc = cfMatch.desc;
       }

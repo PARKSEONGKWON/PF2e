@@ -1206,6 +1206,27 @@ function rebuildCoreEffects() {
   }
 }
 
+// ── 서브클래스 효과 헬퍼 (SUBCLASS_DB.granted_*에서 호환 형태로 변환) ──
+function getSubclassAutoFeats(sub) {
+  if (!sub || !Array.isArray(sub.granted_feats)) return [];
+  return sub.granted_feats.map(fid => {
+    const f = (typeof FEAT_DB !== 'undefined') ? FEAT_DB.find(x => x.id === fid) : null;
+    return f ? { lv: 1, name_ko: f.name_ko, name_en: f.name_en, category: f.category } : null;
+  }).filter(Boolean);
+}
+function getSubclassAutoSpells(sub) {
+  if (!sub || !Array.isArray(sub.granted_spells)) return [];
+  return sub.granted_spells.map(g => {
+    const sp = (typeof SPELL_DB !== 'undefined') ? SPELL_DB.find(x => x.id === g.spell_id) : null;
+    if (!sp) return null;
+    const r = { lv: g.lv, type: g.type, name_ko: sp.name_ko, name_en: sp.name_en };
+    if (g.rank !== undefined) r.rank = g.rank;
+    return r;
+  }).filter(Boolean);
+}
+function getSubclassFeatures(sub) { return (sub && sub.features) || []; }
+function getSubclassProfChanges(sub) { return (sub && sub.prof_changes) || {}; }
+
 function recalcAll() {
   // 빌더 핵심 선택 재파생 (유산/배경)
   rebuildCoreEffects();

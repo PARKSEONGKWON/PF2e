@@ -628,8 +628,8 @@ function applyClassFeatures() {
   const cp = typeof CLASS_PROF_TABLE !== 'undefined' ? CLASS_PROF_TABLE[cls.id] : null;
   if (cp) { for (const [t, p] of Object.entries(cp)) profs[t] = {...p}; }
 
-  if (state.selectedSubclass && typeof SUBCLASS_PROF_TABLE !== 'undefined') {
-    const sp = SUBCLASS_PROF_TABLE[state.selectedSubclass.id];
+  if (state.selectedSubclass && (state.selectedSubclass && state.selectedSubclass.prof_changes)) {
+    const sp = state.selectedSubclass.prof_changes;
     if (sp) { for (const [t, p] of Object.entries(sp)) profs[t] = {...p}; } // REPLACE
   }
 
@@ -662,14 +662,14 @@ function applyClassFeatures() {
     });
     state.feats[cat] = state.feats[cat].filter(f => !f._auto);
   });
-  // Gather all auto feats (CLASS_AUTO_FEATS + SUBCLASS_AUTO_FEATS)
+  // Gather all auto feats (CLASS_AUTO_FEATS + SUBCLASS_DB.granted_feats)
   const classFeats = CLASS_AUTO_FEATS?.[cls.id] || [];
-  const subFeats = (state.selectedSubclass && SUBCLASS_AUTO_FEATS) ? (SUBCLASS_AUTO_FEATS[state.selectedSubclass.id]||[]) : [];
+  const subFeats = getSubclassAutoFeats(state.selectedSubclass);
   const allAutoFeats = [...classFeats, ...subFeats];
   // Also add CLASS_FEATURE_NAMES as auto-display items in special category
   const featureNames = (typeof CLASS_FEATURE_NAMES !== 'undefined' ? CLASS_FEATURE_NAMES[cls.id] : null) || [];
-  const subFeatureNames = (state.selectedSubclass && typeof SUBCLASS_FEATURE_NAMES !== 'undefined')
-    ? (SUBCLASS_FEATURE_NAMES[state.selectedSubclass.id]||[]) : [];
+  const subFeatureNames = (state.selectedSubclass && true)
+    ? (state.selectedSubclass.features || []) : [];
   [...featureNames, ...subFeatureNames].forEach(f => {
     if (f.lv <= level && !allAutoFeats.some(a => a.name_ko === f.name_ko || a.name_en === f.name_en)) {
       allAutoFeats.push({lv: f.lv, name_ko: f.name_ko, name_en: f.name_en, category: 'special'});
@@ -712,7 +712,7 @@ function applyClassFeatures() {
   state.spells.known = (state.spells.known||[]).filter(s => !s?._auto);
   // Gather all auto spells
   const _classAutoSp = (typeof CLASS_AUTO_SPELLS!=='undefined' ? (CLASS_AUTO_SPELLS[cls.id]||[]) : []);
-  const _subAutoSp = (state.selectedSubclass && typeof SUBCLASS_AUTO_SPELLS!=='undefined' ? (SUBCLASS_AUTO_SPELLS[state.selectedSubclass.id]||[]) : []);
+  const _subAutoSp = (state.selectedSubclass && getSubclassAutoSpells(state.selectedSubclass));
   const allAutoSpells = [..._classAutoSp, ..._subAutoSp];
   allAutoSpells.forEach(s => {
     if (s.lv <= level) {
@@ -1057,8 +1057,8 @@ function renderGrowthPlan() {
     // Class features at this level (auto-display)
     if (state.selectedClass && typeof CLASS_FEATURE_NAMES !== 'undefined') {
       const classFeats = (CLASS_FEATURE_NAMES[state.selectedClass.id]||[]).filter(f => f.lv === lv);
-      const subFeats = state.selectedSubclass && typeof SUBCLASS_FEATURE_NAMES !== 'undefined'
-        ? (SUBCLASS_FEATURE_NAMES[state.selectedSubclass.id]||[]).filter(f => f.lv === lv) : [];
+      const subFeats = state.selectedSubclass && true
+        ? (state.selectedSubclass.features || []).filter(f => f.lv === lv) : [];
       const allFeats = [...classFeats, ...subFeats];
       if (allFeats.length > 0) {
         html += `<div class="growth-slot" onclick="openClassModalAtLevel(${lv})" style="cursor:pointer;opacity:0.85;border-left:2px solid var(--accent);background:var(--accent-bg);">
@@ -1556,8 +1556,8 @@ function getAutoKnownAtLevel(lv) {
       if (s.lv === lv && s.type === 'known') result.push({name: s.name_ko, rank: s.rank || 1});
     });
   }
-  if (typeof SUBCLASS_AUTO_SPELLS !== 'undefined' && sid && SUBCLASS_AUTO_SPELLS[sid]) {
-    SUBCLASS_AUTO_SPELLS[sid].forEach(s => {
+  if (sid && getSubclassAutoSpells(SUBCLASS_DB.find(s => s.id === sid)).length > 0) {
+    getSubclassAutoSpells(SUBCLASS_DB.find(s => s.id === sid)).forEach(s => {
       if (s.lv === lv && s.type === 'known') result.push({name: s.name_ko, rank: s.rank || 1});
     });
   }
@@ -1567,8 +1567,8 @@ function getAutoKnownAtLevel(lv) {
       if (s.lv === lv && s.type === 'cantrip') result.push({name: s.name_ko, rank: 0, isCantrip: true});
     });
   }
-  if (typeof SUBCLASS_AUTO_SPELLS !== 'undefined' && sid && SUBCLASS_AUTO_SPELLS[sid]) {
-    SUBCLASS_AUTO_SPELLS[sid].forEach(s => {
+  if (sid && getSubclassAutoSpells(SUBCLASS_DB.find(s => s.id === sid)).length > 0) {
+    getSubclassAutoSpells(SUBCLASS_DB.find(s => s.id === sid)).forEach(s => {
       if (s.lv === lv && s.type === 'cantrip') result.push({name: s.name_ko, rank: 0, isCantrip: true});
     });
   }
@@ -3480,8 +3480,8 @@ function _buildClassChoicesUI(cls) {
   const maxLv = getLevel();
   const classFeats = typeof CLASS_FEATURE_NAMES !== 'undefined' ? (CLASS_FEATURE_NAMES[cls.id] || []).filter(f => f.lv <= maxLv) : [];
   const subId = state.selectedSubclass?.id;
-  const subFeats = subId && typeof SUBCLASS_FEATURE_NAMES !== 'undefined'
-    ? (SUBCLASS_FEATURE_NAMES[subId] || []).filter(f => f.lv <= maxLv) : [];
+  const subFeats = subId && true
+    ? (SUBCLASS_DB.find(s => s.id === subId)?.features || []).filter(f => f.lv <= maxLv) : [];
   const allFeats = [...classFeats, ...subFeats].sort((a, b) => a.lv - b.lv || a.name_ko.localeCompare(b.name_ko));
   const featsByLv = {};
   allFeats.forEach(f => { (featsByLv[f.lv] = featsByLv[f.lv] || []).push(f); });
@@ -3602,8 +3602,8 @@ function _refreshClassFeaturesPreview() {
   const maxLv = getLevel();
   const classFeats = typeof CLASS_FEATURE_NAMES !== 'undefined' ? (CLASS_FEATURE_NAMES[cls.id] || []).filter(f => f.lv <= maxLv) : [];
   const subId = _modalChoices?.doctrine || _modalChoices?.subclass || (state.selectedSubclass?.id);
-  const subFeats = subId && typeof SUBCLASS_FEATURE_NAMES !== 'undefined'
-    ? (SUBCLASS_FEATURE_NAMES[subId] || []).filter(f => f.lv <= maxLv) : [];
+  const subFeats = subId && true
+    ? (SUBCLASS_DB.find(s => s.id === subId)?.features || []).filter(f => f.lv <= maxLv) : [];
 
   // 1레벨 클래스 특성 + 2레벨 이상 전체를 다시 생성
   const allFeats = [...classFeats, ...subFeats].sort((a, b) => a.lv - b.lv || a.name_ko.localeCompare(b.name_ko));
@@ -3644,57 +3644,36 @@ function _refreshClassFeaturesPreview() {
   container.insertAdjacentHTML('beforeend', lv1Html + otherHtml);
 }
 
-// ── 서브클래스 특성을 서브클래스 블록 안에 렌더링 ──
+// ── 서브클래스 특성을 서브클래스 블록 안에 렌더링 (정규화된 SUBCLASS_DB.granted_*) ──
 function _renderSubclassFeatsInBlock(subId, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
   if (!subId) { container.innerHTML = ''; return; }
 
+  const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === subId) : null;
+  if (!sub) { container.innerHTML = ''; return; }
+
   let html = '';
   const _cs = 'margin-top:8px;padding:8px;background:var(--bg3);border-radius:4px;border-left:2px solid var(--accent);';
   const _badge = 'font-size:9px;color:var(--accent);background:var(--bg4);padding:1px 5px;border-radius:3px;';
-  // 중복 추적용 Set
   const shownNames = new Set();
   const shownKoNames = new Set();
+  const skillNameById = {};
+  if (typeof SKILLS !== 'undefined') SKILLS.forEach(s => { skillNameById[s.id] = s.name; });
 
-  const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === subId) : null;
-  // HTML 태그 제거한 순수 텍스트 (파싱용) — <br>은 구분자 역할이므로 | 로 치환
-  const plainSummary = sub ? (sub.summary || '').replace(/<br\s*\/?>/gi, ' | ').replace(/<[^>]+>/g, '') : '';
-
-  // ── 1) 기술 — summary에서 추출 ──
-  if (plainSummary) {
-    const skillMatch = plainSummary.match(/(?:결사 기술|기술)\s*[：:]\s*([^|.\n]+)/);
-    if (skillMatch) {
-      const skillNames = skillMatch[1].trim().split(/[,、，]\s*/);
-      html += `<div style="${_cs}">`;
-      html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">📖 기술 숙련</div>`;
-      skillNames.forEach(name => {
-        const n = name.trim();
-        if (n) html += `<div style="margin-bottom:4px;"><select disabled style="${_selStyle}opacity:0.6;"><option>${n}</option></select></div>`;
-      });
-      html += `</div>`;
-    }
+  // ── 1) 기술 숙련 ──
+  if (Array.isArray(sub.granted_skills) && sub.granted_skills.length) {
+    html += `<div style="${_cs}">`;
+    html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">📖 기술 숙련</div>`;
+    sub.granted_skills.forEach(sid => {
+      const ko = skillNameById[sid] || sid;
+      html += `<div style="margin-bottom:4px;"><select disabled style="${_selStyle}opacity:0.6;"><option>${ko}</option></select></div>`;
+    });
+    html += `</div>`;
   }
 
-  // ── 2) 자동 부여 재주 — SUBCLASS_AUTO_FEATS + summary 파싱 ──
-  const autoFeats = typeof SUBCLASS_AUTO_FEATS !== 'undefined'
-    ? [...(SUBCLASS_AUTO_FEATS[subId] || []).filter(f => f.lv === 1)] : [];
-
-  // summary에서 "뮤즈 재주:", "드루이드 재주:" 패턴으로 재주명 추출
-  if (plainSummary) {
-    const featMatch = plainSummary.match(/(?:뮤즈 재주|드루이드 재주)\s*[：:]\s*([^|.\n]+)/);
-    if (featMatch) {
-      const rawName = featMatch[1].trim();
-      const koName = rawName.replace(/\([^)]*\)/, '').trim();
-      const enMatch = rawName.match(/\(([^)]+)\)/);
-      const enName = enMatch ? enMatch[1] : '';
-      // SUBCLASS_AUTO_FEATS에 이미 있으면 스킵
-      if (!autoFeats.some(af => af.name_en === enName || af.name_ko === koName)) {
-        autoFeats.push({ lv: 1, name_ko: koName, name_en: enName });
-      }
-    }
-  }
-
+  // ── 2) 자동 부여 재주 (lv=1만 모달 표시) ──
+  const autoFeats = getSubclassAutoFeats(sub).filter(f => f.lv === 1);
   autoFeats.forEach(af => {
     shownNames.add(af.name_en);
     if (af.name_ko) shownKoNames.add(af.name_ko);
@@ -3707,11 +3686,11 @@ function _renderSubclassFeatsInBlock(subId, containerId) {
     </div>`;
   });
 
-  // ── 3) 자동 부여 주문 — SUBCLASS_AUTO_SPELLS ──
-  const autoSpells = typeof SUBCLASS_AUTO_SPELLS !== 'undefined'
-    ? (SUBCLASS_AUTO_SPELLS[subId] || []).filter(s => s.lv === 1) : [];
+  // ── 3) 자동 부여 주문 ──
+  const autoSpells = getSubclassAutoSpells(sub).filter(s => s.lv === 1);
   autoSpells.forEach(sp => {
     shownNames.add(sp.name_en);
+    shownKoNames.add(sp.name_ko);
     const spellData = typeof SPELL_DB !== 'undefined'
       ? SPELL_DB.find(s => s.name_en === sp.name_en || s.name_ko === sp.name_ko) : null;
     const typeLabel = sp.type === 'focus' ? '집중 주문' : sp.type === 'cantrip' ? '캔트립' : `${sp.rank || 1}랭크 주문`;
@@ -3721,21 +3700,15 @@ function _renderSubclassFeatsInBlock(subId, containerId) {
     </div>`;
   });
 
-  // ── 4) 서브클래스 특성 — 재주/주문과 중복되지 않는 것만 ──
-  autoSpells.forEach(sp => shownKoNames.add(sp.name_ko));
-
-  if (typeof SUBCLASS_FEATURE_NAMES !== 'undefined') {
-    (SUBCLASS_FEATURE_NAMES[subId] || []).filter(f => f.lv === 1).forEach(f => {
-      // name_en 직접 일치
-      if (shownNames.has(f.name_en)) return;
-      // name_ko에 이미 표시된 재주/주문 이름이 포함되면 스킵
-      for (const ko of shownKoNames) { if (ko && f.name_ko.includes(ko)) return; }
-      html += `<div style="${_cs}">
-        <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">⚡ ${f.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${f.name_en}</span></div>
-        <div style="font-size:11px;color:var(--text2);line-height:1.6;">${resolveDescRefs(f.desc||'')}</div>
-      </div>`;
-    });
-  }
+  // ── 4) 서브클래스 특성 (재주/주문과 중복되지 않는 것만) ──
+  (sub.features || []).filter(f => f.lv === 1).forEach(f => {
+    if (shownNames.has(f.name_en)) return;
+    for (const ko of shownKoNames) { if (ko && f.name_ko.includes(ko)) return; }
+    html += `<div style="${_cs}">
+      <div style="font-size:11px;font-weight:600;color:var(--text1);margin-bottom:4px;">⚡ ${f.name_ko} <span style="color:var(--text2);font-weight:400;font-size:10px;">${f.name_en}</span></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6;">${resolveDescRefs(f.desc||'')}</div>
+    </div>`;
+  });
 
   container.innerHTML = html;
 }
@@ -3819,7 +3792,7 @@ function _onClericDoctrineChange(id) {
   const info = document.getElementById('cls-doctrine-info');
   if (info) {
     const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === id) : null;
-    info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.summary || ''}</div>` : '';
+    info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.desc || ''}</div>` : '';
   }
   _renderSubclassFeatsInBlock(id, 'cls-doctrine-feats');
   _refreshClassFeaturesPreview();
@@ -3944,7 +3917,7 @@ function _onSubclassChange(id) {
   const info = document.getElementById('cls-subclass-info');
   if (info) {
     const sub = typeof SUBCLASS_DB !== 'undefined' ? SUBCLASS_DB.find(s => s.id === id) : null;
-    info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.summary || ''}</div>` : '';
+    info.innerHTML = sub ? `<div style="margin-top:4px;padding:6px 8px;background:var(--bg4);border-radius:4px;border-left:2px solid var(--accent);line-height:1.6;">${sub.desc || ''}</div>` : '';
   }
   _renderSubclassFeatsInBlock(id, 'cls-subclass-feats');
   _refreshClassFeaturesPreview();
@@ -4647,8 +4620,8 @@ function confirmModal() {
     state.selectedSubclass = modalSelected;
     const btn = document.getElementById('btn-subclass');
     if (btn) { btn.textContent = `${modalSelected.subclass_type}: ${modalSelected.name_ko}`; btn.classList.add('filled'); }
-    const _dbgSub = typeof SUBCLASS_AUTO_FEATS !== 'undefined' ? SUBCLASS_AUTO_FEATS[modalSelected.id] : 'UNDEF';
-    const _dbgSpell = typeof SUBCLASS_AUTO_SPELLS !== 'undefined' ? SUBCLASS_AUTO_SPELLS[modalSelected.id] : 'UNDEF';
+    const _dbgSub = getSubclassAutoFeats(modalSelected);
+    const _dbgSpell = getSubclassAutoSpells(modalSelected);
     applyClassFeatures();
     renderFeats();
     renderSpells();

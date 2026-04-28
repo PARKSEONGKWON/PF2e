@@ -30,13 +30,9 @@ const DB_DEFS = [
   // class_features_db.js
   { sheet:'DEITY_DB',           var:'DEITY_DB',           file:'class_features_db.js', keyword:'var', shape:'array' },
   { sheet:'CLASS_PROF_TABLE',   var:'CLASS_PROF_TABLE',   file:'class_features_db.js', keyword:'var', shape:'kv-json' },
-  { sheet:'SUBCLASS_PROF_TABLE',var:'SUBCLASS_PROF_TABLE',file:'class_features_db.js', keyword:'var', shape:'kv-json' },
   { sheet:'CLASS_FEATURE_NAMES',var:'CLASS_FEATURE_NAMES',file:'class_features_db.js', keyword:'var', shape:'kv-json' },
   { sheet:'CLASS_AUTO_FEATS',   var:'CLASS_AUTO_FEATS',   file:'class_features_db.js', keyword:'var', shape:'kv-json' },
-  { sheet:'SUBCLASS_AUTO_FEATS',var:'SUBCLASS_AUTO_FEATS',file:'class_features_db.js', keyword:'var', shape:'kv-json' },
   { sheet:'CLASS_AUTO_SPELLS',  var:'CLASS_AUTO_SPELLS',  file:'class_features_db.js', keyword:'var', shape:'kv-json' },
-  { sheet:'SUBCLASS_AUTO_SPELLS',var:'SUBCLASS_AUTO_SPELLS',file:'class_features_db.js', keyword:'var', shape:'kv-json' },
-  { sheet:'SUBCLASS_FEAT_NAMES',var:'SUBCLASS_FEATURE_NAMES',file:'class_features_db.js', keyword:'var', shape:'kv-json' },
   { sheet:'DOMAIN_DB',          var:'DOMAIN_DB',          file:'class_features_db.js', keyword:'var', shape:'kv-json' },
   { sheet:'PATRON_TRADITION',   var:'PATRON_TRADITION',   file:'class_features_db.js', keyword:'var', shape:'kv-json' },
   { sheet:'DIVINE_FONT_SLOTS',  var:'DIVINE_FONT_SLOTS',  file:'class_features_db.js', keyword:'var', shape:'kv-json' },
