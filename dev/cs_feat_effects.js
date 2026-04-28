@@ -3875,8 +3875,8 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
             <div class="modal-detail-en">${anc.en}</div>
             <div style="margin:12px 0;font-size:13px;line-height:1.7;">
               <div><b>HP:</b> ${anc.hp} | <b>크기:</b> ${anc.size} | <b>속도:</b> ${anc.speed}피트</div>
-              <div><b>부스트:</b> ${anc.boosts.join(', ')}</div>
-              ${anc.flaws.length ? '<div><b>결함:</b> '+anc.flaws.join(', ')+'</div>' : ''}
+              <div><b>부스트:</b> ${[...(anc.boosts||[]).map(k=>ATTR_KO[k]), ...(anc.boost_choices||[]).map(g=>g.map(k=>ATTR_KO[k]).join('/')), ...Array(anc.free_boosts||0).fill('자유')].join(', ')}</div>
+              ${(anc.flaws||[]).length ? '<div><b>결함:</b> '+anc.flaws.map(k=>ATTR_KO[k]).join(', ')+'</div>' : ''}
               <div><b>특성:</b> ${anc.traits.join(', ')}</div>
             </div>
             <button onclick="_applyFeatChoice(modalContext._selectedSpell)" style="width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">이 혈통 선택</button>`;

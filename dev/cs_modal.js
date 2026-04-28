@@ -3304,13 +3304,20 @@ function showItemDetail(item) {
             ${item.hp!==undefined&&item.bt!==undefined?`<span class="tag-meta">HP: ${item.hp} (BT: ${item.bt})</span>`:''}
             ${item.speed_penalty?`<span class="tag-meta" style="color:var(--red-light);">속도: ${item.speed_penalty}</span>`:''}
             <span class="tag-meta">가격: ${item.price||'-'}</span></div>`;
-  } else if (item.hp !== undefined && item.keyAttr !== undefined) {
-    tags = `<span class="tag-meta">HP ${item.hp}+CON</span> <span class="tag-meta">${item.keyAttr}</span>
+  } else if (item.hp !== undefined && item.key_attrs !== undefined) {
+    const keyKo = (item.key_attrs || []).map(k => ATTR_KO[k]).join(' 또는 ');
+    tags = `<span class="tag-meta">HP ${item.hp}+CON</span> <span class="tag-meta">${keyKo}</span>
             ${item.tradition?`<span class="tag">${item.tradition} 주문</span>`:''}`;
-  } else if (item.boosts && item.flaws) {
+  } else if (item.boosts !== undefined && item.flaws !== undefined && item.size !== undefined) {
+    // ANCESTRIES (혈통)
+    const boostKo = [
+      ...(item.boosts || []).map(k => ATTR_KO[k]),
+      ...(item.boost_choices || []).map(g => g.map(k => ATTR_KO[k]).join('/')),
+      ...Array(item.free_boosts || 0).fill('자유'),
+    ];
     tags = `<span class="tag hl">HP ${item.hp}</span>
             <span class="tag">${item.size}/${item.speed}피트</span>
-            ${item.boosts.map(b=>`<span class="tag hl">${b}</span>`).join('')}`;
+            ${boostKo.map(b=>`<span class="tag hl">${b}</span>`).join('')}`;
   } else if (item.subclass_type) {
     tags = `<span class="tag hl">${item.subclass_type}</span>`;
   }
@@ -4001,7 +4008,13 @@ function _buildBackgroundChoicesUI(bg) {
 
   let html = `<div style="border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:6px;">`;
   html += `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;">📋 배경 혜택</div>`;
-  html += `<div style="font-size:11px;color:var(--text2);margin-bottom:6px;"><strong>능력치 부스트:</strong> ${bg.boosts || '—'}</div>`;
+  // 능력치 부스트 표시 (정규화된 boosts/boost_choices/free_boosts → 한글)
+  const bgBoostKo = [
+    ...(bg.boosts || []).map(k => ATTR_KO[k]),
+    ...(bg.boost_choices || []).map(g => g.map(k => ATTR_KO[k]).join(' 또는 ')),
+    ...Array(bg.free_boosts || 0).fill('자유'),
+  ].join(', ') || '—';
+  html += `<div style="font-size:11px;color:var(--text2);margin-bottom:6px;"><strong>능력치 부스트:</strong> ${bgBoostKo}</div>`;
 
   // 기술 파싱
   const skillParts = (bg.skills || '').split(', ');
@@ -4854,9 +4867,10 @@ function applyClassDefaults(cls) {
   initArmorProfBadges();
   renderArmorCard();
 
-  // Auto-set class key attribute boost
-  const key = parseAttrKey(cls.keyAttr);
-  if (key) state.boosts.cls = key;
+  // 핵심 능력치: 단일 고정이면 자동 설정, OR이면 사용자 선택 대기 (모달에서 setClassKey)
+  const keys = cls.key_attrs || [];
+  if (keys.length === 1) state.boosts.cls = keys[0];
+  // 길이 2+ (OR)는 기존 선택 보존 또는 빈 상태로 둠 (renderBoostModal에서 사용자 선택)
   // Auto-set fixed class skill proficiencies (정규화된 fixed_skills 사용)
   (cls.fixed_skills || []).forEach(id => setSkillTrained(id));
   state.trainableSkillSlots = cls.free_skill_count || 0;
@@ -4875,18 +4889,9 @@ function applyAncestryDefaults(anc) {
   if (langEl && !langEl.value) {
     langEl.value = `특성: ${anc.traits.join(', ')}\n크기: ${anc.size}\n감각: ${anc.vision}\n${anc.specials.join('\n')}`;
   }
-  // Parse ancestry boosts/flaws from format like ['건강(CON)','지혜(WIS)','자유']
-  const fixed = [], flaws = [];
-  for (const b of anc.boosts) {
-    const k = parseAttrKey(b);
-    if (k) fixed.push(k);
-  }
-  for (const f of anc.flaws) {
-    const k = parseAttrKey(f);
-    if (k) flaws.push(k);
-  }
-  state.boosts.ancFixed = fixed;
-  state.boosts.ancFlaw = flaws;
+  // 정규화된 enum 직접 사용 (boosts=고정, flaws=고정, boost_choices/free_boosts는 모달에서 처리)
+  state.boosts.ancFixed = [...(anc.boosts || [])];
+  state.boosts.ancFlaw = [...(anc.flaws || [])];
   state.boosts.ancFree = []; // reset free boost
   updateHP();
 }
@@ -4924,7 +4929,12 @@ function applyBackgroundInfo(bg) {
   // 노트에 배경 정보 표시 (1회성 UI)
   const notesEl = document.getElementById('f-notes');
   if (notesEl && !notesEl.value) {
-    notesEl.value = `[배경: ${bg.name}]\n속성 부스트: ${bg.boosts}\n기술: ${bg.skills}\n기술 재주: ${bg.feat}`;
+    const boostKo = [
+      ...(bg.boosts || []).map(k => ATTR_KO[k]),
+      ...(bg.boost_choices || []).map(g => g.map(k => ATTR_KO[k]).join(' 또는 ')),
+      ...Array(bg.free_boosts || 0).fill('자유'),
+    ].join(', ');
+    notesEl.value = `[배경: ${bg.name}]\n속성 부스트: ${boostKo}\n기술: ${bg.skills}\n기술 재주: ${bg.feat}`;
   }
   // growth plan에 배경 재주 저장 (1회성)
   if (bg.feat) {

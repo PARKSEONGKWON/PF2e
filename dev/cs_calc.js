@@ -739,12 +739,6 @@ function calcMod(a) {
 function getMod(a) { return calcMod(a).mod; }
 function getAttr(a) { return getMod(a); } // 호환성 유지
 
-// Parse attribute key from Korean/English mixed strings like '건강(CON)' -> 'con'
-function parseAttrKey(str) {
-  const m = str.match(/\b(STR|DEX|CON|INT|WIS|CHA)\b/i);
-  return m ? m[1].toLowerCase() : null;
-}
-
 // ─── 부스트 팝업 모달 ───
 function openBoostModal() {
   document.getElementById('modal-title').textContent = '능력치 부스트 배분';
@@ -758,8 +752,7 @@ function openBoostModal() {
 }
 
 function renderBoostModal() {
-  const ATTRS = ['str','dex','con','int','wis','cha'];
-  const ATTR_KO = {str:'근력',dex:'민첩',con:'건강',int:'지능',wis:'지혜',cha:'매력'};
+  const ATTRS = ATTRIBUTES;  // cs_data.js 전역
   const container = document.getElementById('modal-options');
   container.innerHTML = '';
 
@@ -785,7 +778,7 @@ function renderBoostModal() {
     const anc = state.selectedAncestry;
     const fixedKeys = state.boosts.ancFixed;
     const flawKeys = state.boosts.ancFlaw;
-    const freeCount = anc.boosts.filter(b=>b.includes('자유')).length;
+    const freeCount = anc.free_boosts || 0;
     const unavailForFree = [...fixedKeys, ...flawKeys];
 
     const desc = `고정: ${fixedKeys.map(k=>ATTR_KO[k]).join(', ')||'없음'}
@@ -809,40 +802,41 @@ function renderBoostModal() {
       s.innerHTML = '<div class="boost-section-title">배경 부스트</div><div class="boost-section-desc" style="color:var(--text2);">배경을 먼저 선택하세요.</div>';
       container.appendChild(s);
     } else {
-      const KO_TO_ID = {'근력':'str','민첩':'dex','건강':'con','지능':'int','지혜':'wis','매력':'cha'};
-      const boostStr = bg.boosts || '';
-      const fixedPart = boostStr.split(',').map(s=>s.trim()).find(p => p.includes('또는'));
+      // 정규화된 boost_choices/free_boosts 사용
+      const choices = bg.boost_choices || [];
+      const freeCount = bg.free_boosts || 0;
+      const choiceGroup = choices[0];  // 보통 그룹 1개
 
-      if (fixedPart) {
-        // "A 또는 B, 자유" → 고정 + 자유 분리
-        const fixedOptions = fixedPart.split('또는').map(s => KO_TO_ID[s.trim().replace(/\(.*\)/,'').trim()] || '').filter(Boolean);
+      if (choiceGroup && choiceGroup.length > 0) {
         if (!state.boosts.bgFixed) state.boosts.bgFixed = [];
         if (!state.boosts.bgFree) state.boosts.bgFree = [];
-        // bgFixed/bgFree → bg 자동 동기화
         state.boosts.bg = [...state.boosts.bgFixed, ...state.boosts.bgFree];
 
-        // 고정 부스트 (1개)
+        const groupLabel = choiceGroup.map(k => ATTR_KO[k]).join(' 또는 ');
         container.appendChild(makeBoostSection(
-          `배경 고정 부스트 — ${fixedPart}`, `배경: ${bg.name}`,
-          'bgFixed', 1, fixedOptions, state.boosts.bgFixed));
+          `배경 고정 부스트 — ${groupLabel}`, `배경: ${bg.name}`,
+          'bgFixed', 1, choiceGroup, state.boosts.bgFixed));
 
-        // 자유 부스트 (1개, 고정 선택과 다른 속성)
-        const freeAvail = ATTRS.filter(a => !state.boosts.bgFixed.includes(a));
-        container.appendChild(makeBoostSection(
-          '배경 자유 부스트 (다른 속성 1개)', '고정 부스트와 다른 속성을 선택하세요.',
-          'bgFree', 1, freeAvail, state.boosts.bgFree));
-      } else {
-        // "자유, 자유" — 기존 로직
-        container.appendChild(makeBoostSection('배경 부스트 (자유 2개, 서로 다른 속성)',
-          `배경: ${bg.name}`, 'bg', 2, ATTRS, state.boosts.bg));
+        if (freeCount > 0) {
+          const freeAvail = ATTRS.filter(a => !state.boosts.bgFixed.includes(a));
+          container.appendChild(makeBoostSection(
+            `배경 자유 부스트 (다른 속성 ${freeCount}개)`, '고정 부스트와 다른 속성을 선택하세요.',
+            'bgFree', freeCount, freeAvail, state.boosts.bgFree));
+        }
+      } else if (freeCount > 0) {
+        // 선택 그룹 없이 자유만 (예: 자유 2개)
+        container.appendChild(makeBoostSection(`배경 부스트 (자유 ${freeCount}개, 서로 다른 속성)`,
+          `배경: ${bg.name}`, 'bg', freeCount, ATTRS, state.boosts.bg));
       }
     }
   }
 
   // 클래스 섹션
   {
-    const clsDesc = state.selectedClass
-      ? `클래스: ${state.selectedClass.name} — 핵심 속성: ${state.selectedClass.keyAttr}`
+    const cls = state.selectedClass;
+    const keyAttrsKo = cls ? (cls.key_attrs || []).map(k => ATTR_KO[k]).join(' 또는 ') : '';
+    const clsDesc = cls
+      ? `클래스: ${cls.name} — 핵심 속성: ${keyAttrsKo}`
       : '클래스를 선택하면 자동 설정됩니다.';
     const clsKey = state.boosts.cls;
     const sec = document.createElement('div');
@@ -855,13 +849,11 @@ function renderBoostModal() {
         </label>`).join('')}
       </div>`;
     // 클래스 선택 가능하면 (근력/민첩 선택형)
-    if (state.selectedClass) {
-      const keys = [];
-      const m = state.selectedClass.keyAttr.match(/\b(STR|DEX|CON|INT|WIS|CHA)\b/gi);
-      if (m) m.forEach(k=>keys.push(k.toLowerCase()));
+    if (cls) {
+      const keys = cls.key_attrs || [];
       if (keys.length > 1) {
         sec.innerHTML = `<div class="boost-section-title">클래스 핵심 속성 선택</div>
-          <div class="boost-section-desc">${state.selectedClass.name}: ${state.selectedClass.keyAttr} 중 선택</div>
+          <div class="boost-section-desc">${cls.name}: ${keyAttrsKo} 중 선택</div>
           <div class="boost-radio-group">${keys.map(a=>`
             <label class="${state.boosts.cls===a?'selected':''}" onclick="setClassKey('${a}')">
               ${ATTR_KO[a]}${state.boosts.cls===a?' ✓':''}
@@ -884,7 +876,6 @@ function renderBoostModal() {
 }
 
 function makeBoostSection(title, desc, stateKey, maxCount, allowedAttrs, currentArr) {
-  const ATTR_KO = {str:'근력',dex:'민첩',con:'건강',int:'지능',wis:'지혜',cha:'매력'};
   const sec = document.createElement('div');
   sec.className = 'boost-section';
   const chosen = currentArr.filter(a=>allowedAttrs.includes(a)).length;
@@ -976,9 +967,7 @@ function renderBoostGrid() {
   // ancFree는 혈통 고정과 같은 묶음이므로 이미 선택된 것 제외
   const ancUsed = [...state.boosts.ancFixed];
   // 혈통 자유: 혈통마다 다른 개수 (대부분 1개, 인간/오크는 2개)
-  const ancFreeMax = state.selectedAncestry
-    ? state.selectedAncestry.boosts.filter(b => b.includes('자유')).length
-    : 1;
+  const ancFreeMax = state.selectedAncestry ? (state.selectedAncestry.free_boosts || 0) : 1;
   // 자유 부스트 선택 시 이미 고정된 속성 제외
   {
     const srcDiv = document.createElement('div');
@@ -1348,10 +1337,10 @@ function recalcPerc() {
 }
 
 function getClassKeyAttr() {
-  if (state.selectedClass) {
-    const k = parseAttrKey(state.selectedClass.keyAttr);
-    if (k) return k;
-  }
+  // 사용자 선택값(state.boosts.cls) 우선, 없으면 첫 번째 key_attrs
+  if (state.boosts.cls) return state.boosts.cls;
+  const keys = state.selectedClass?.key_attrs;
+  if (Array.isArray(keys) && keys.length) return keys[0];
   return 'wis';
 }
 
