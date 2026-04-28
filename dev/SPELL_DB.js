@@ -8837,5 +8837,43 @@ const SPELL_DB = [
     "duration": "유지(최대 1분)",
     "summary": "영역 내 죽은 생물과 살아있는 생물에게 적용합니다. 살아있는 대상은 10d8+40 HP를 회복합니다. 죽은 대상은 부활(Raise Dead)과 같은 효과/제한으로 일시적으로 되살아나며, 부여된 HP와 동일한 임시 HP를 받습니다. 다른 방법으로 HP 회복이나 임시 HP 획득 불가. 부흥이 끝나면 모든 임시 HP를 잃고 사망합니다. 언데드나 붕괴/죽음 ...",
     "desc": "<strong>사거리:</strong> 30피트<br><strong>지속 시간:</strong> 유지(최대 1분)<br>영역 내 죽은 생물과 살아있는 생물에게 적용합니다. 살아있는 대상은 <strong>10d8+40 HP</strong>를 회복합니다. 죽은 대상은 부활(Raise Dead)과 같은 효과/제한으로 일시적으로 되살아나며, 부여된 HP와 동일한 임시 HP를 받습니다. 다른 방법으로 HP 회복이나 임시 HP 획득 불가. 부흥이 끝나면 모든 임시 HP를 잃고 사망합니다. 언데드나 붕괴/죽음 효과로 죽은 생물은 부활 불가."
+  },
+  {
+    "id": "protector-sacrifice",
+    "name_ko": "수호자의 희생",
+    "name_en": "Protector's Sacrifice",
+    "rank": 1,
+    "is_cantrip": false,
+    "is_focus": true,
+    "traditions": [],
+    "actions": "반응",
+    "traits": [
+      "클레릭",
+      "조작"
+    ],
+    "trigger": "30피트 내 아군이 피해를 받음",
+    "range": "30피트",
+    "summary": "아군 대신 고통받아 보호합니다. 아군이 받을 피해를 3 감소시키고, 그만큼 자신에게 재지정합니다. 자신의 면역/약점/저항은 적용되지 않으며, 부수 효과에도 영향받지 않습니다.",
+    "desc": "<strong>유발 조건:</strong> 30피트 내 아군이 피해를 받음<br><strong>사거리:</strong> 30피트<br>아군 대신 고통받아 보호합니다. 아군이 받을 피해를 <strong>3 감소</strong>시키고, 그만큼 자신에게 재지정합니다. 자신의 면역/약점/저항 등은 적용되지 않습니다. 그 피해의 부수 효과(예: 독사의 독)에는 면역이지만, 아군은 여전히 그 효과의 영향을 받습니다.<br><strong>강화(+1):</strong> 재지정 피해가 3 증가합니다."
+  },
+  {
+    "id": "protector-sphere",
+    "name_ko": "보호의 권능",
+    "name_en": "Protector's Sphere",
+    "rank": 4,
+    "is_cantrip": false,
+    "is_focus": true,
+    "traditions": [],
+    "actions": "2행동",
+    "traits": [
+      "오라",
+      "클레릭",
+      "집중",
+      "조작"
+    ],
+    "area": "15피트 발산",
+    "duration": "유지(최대 1분)",
+    "summary": "보호의 오라를 발산하여 자신과 아군을 보호합니다. 모든 피해에 저항 3을 얻고, 영역 내 아군도 동일한 저항을 얻습니다.",
+    "desc": "<strong>영역:</strong> 15피트 발산<br><strong>지속 시간:</strong> 유지(최대 1분)<br>보호의 오라를 발산하여 자신과 아군을 안전하게 합니다. 모든 피해에 <strong>저항 3</strong>을 얻고, 영역 내 아군도 동일한 저항을 얻습니다.<br><strong>강화(+1):</strong> 저항이 1 증가합니다."
   }
 ];

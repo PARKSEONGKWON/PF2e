@@ -3236,12 +3236,12 @@ function _applyOneEffect(fb, eff, feat, level) {
     }
     case 'grant_focus_spell': {
       let spellName = eff.spell;
-      if (spellName === '$domain_initial') {
+      if (spellName === '$domain_initial' || spellName === '$domain_advanced') {
         const dom = feat.choice && typeof DOMAIN_DB !== 'undefined' ? DOMAIN_DB[feat.choice] : null;
-        spellName = dom && dom.initial ? dom.initial : '';
-      } else if (spellName === '$domain_advanced') {
-        const dom = feat.choice && typeof DOMAIN_DB !== 'undefined' ? DOMAIN_DB[feat.choice] : null;
-        spellName = dom && dom.advanced ? dom.advanced : '';
+        const id = dom ? (spellName === '$domain_initial' ? dom.initial : dom.advanced) : null;
+        // DOMAIN_DB는 SPELL_DB.id 외래키로 정규화됨 → SPELL_DB lookup으로 한글명 추출
+        const sp = id && typeof SPELL_DB !== 'undefined' ? SPELL_DB.find(x => x.id === id) : null;
+        spellName = sp ? sp.name_ko : '';
       }
       if (spellName && !spellName.startsWith('$') && feat.name) {
         if (!state.spells.focus) state.spells.focus = [];
@@ -3739,8 +3739,10 @@ function openFeatChoiceModal(featType, featIndex, choiceDef) {
           row.style.background = 'var(--accent,#c9a84c)'; row.style.color = '#000';
           const dom = DOMAIN_DB[opt.id];
           const isAdvanced = !!choiceDef.filterByInitiated;
-          const spellName = dom ? (isAdvanced ? dom.advanced : dom.initial) : null;
-          const spell = spellName && typeof SPELL_DB !== 'undefined' ? SPELL_DB.find(s => s.name_ko === spellName) : null;
+          // DOMAIN_DB는 SPELL_DB.id 외래키 → SPELL_DB lookup
+          const spellId = dom ? (isAdvanced ? dom.advanced : dom.initial) : null;
+          const spell = spellId && typeof SPELL_DB !== 'undefined' ? SPELL_DB.find(s => s.id === spellId) : null;
+          const spellName = spell ? spell.name_ko : null;
           if (detail2) {
             if (spell) {
               detail2.innerHTML = `<div style="padding:16px;"><div style="font-size:16px;font-weight:bold;color:var(--accent,#c9a84c);margin-bottom:8px;">${spell.name_ko} <span style="font-size:11px;color:#888;">${spell.name_en}</span></div>`

@@ -343,45 +343,197 @@ var DEITY_DB = [
 // ═══════════════════════════════════════════════
 
 var DOMAIN_DB = {
-  air:         {name:'공기',   initial:'밀어내는 돌풍',    advanced:'공기로 분산'},
-  ambition:    {name:'야망',   initial:'야심 점화',       advanced:'경쟁심'},
-  cities:      {name:'도시',   initial:'군중 속의 얼굴',  advanced:'문명의 맥박'},
-  confidence:  {name:'자신감', initial:'자신감의 장막',   advanced:'망상적 자만'},
-  creation:    {name:'창조',   initial:'창의적 물감',     advanced:'예술적 장식'},
-  darkness:    {name:'어둠',   initial:'어둠의 망토',    advanced:'어둠의 시야'},
-  death:       {name:'죽음',   initial:'죽음의 부름',    advanced:'언데드 근절'},
-  destruction: {name:'파괴',   initial:'파괴의 울부짖음', advanced:'파괴적 기운'},
-  dreams:      {name:'꿈',     initial:'달콤한 꿈',      advanced:'꿈꾸는 자의 부름'},
-  earth:       {name:'대지',   initial:'투석',           advanced:'국지 지진'},
-  family:      {name:'가족',   initial:'달래는 말',       advanced:'가족 회복'},
-  fate:        {name:'운명',   initial:'운명 읽기',      advanced:'운명 시험'},
-  fire:        {name:'화염',   initial:'화염 광선',       advanced:'화염 장벽'},
-  freedom:     {name:'자유',   initial:'방해 없는 보폭', advanced:'자유의 말씀'},
-  healing:     {name:'치유',   initial:'치유사의 축복',   advanced:'죽음의 거부'},
-  indulgence:  {name:'탐닉',   initial:'방종의 풍요',     advanced:'경과 관찰'},
-  knowledge:   {name:'지식',   initial:'지식의 회상',     advanced:'적 파악'},
-  luck:        {name:'행운',   initial:'행운의 한 조각',  advanced:'행운의 기회'},
-  magic:       {name:'마법',   initial:'마법의 그릇',     advanced:'신비의 등대'},
-  might:       {name:'힘',     initial:'운동 돌진',      advanced:'지속하는 힘'},
-  moon:        {name:'달',     initial:'달빛',           advanced:'달의 접촉'},
-  nature:      {name:'자연',   initial:'활기찬 가시',    advanced:'자연의 선물'},
-  nightmares:  {name:'악몽',   initial:'깨어난 악몽',    advanced:'공유된 악몽'},
-  pain:        {name:'고통',   initial:'고통 음미',       advanced:'보복의 고통'},
-  passion:     {name:'열정',   initial:'매혹의 손길',    advanced:'열정의 유혹'},
-  perfection:  {name:'완벽',   initial:'완벽한 정신',     advanced:'완벽한 몸'},
-  protection:  {name:'보호',   initial:'보호의 수호',     advanced:'에너지 흡수'},
-  secrecy:     {name:'비밀',   initial:'속삭이는 고요',   advanced:'비밀 수호'},
-  soul:        {name:'영혼'},
-  sun:         {name:'태양',   initial:'눈부신 섬광',     advanced:'활력의 빛'},
-  travel:      {name:'여행',   initial:'민첩한 발',      advanced:'여행자의 통과'},
-  trickery:    {name:'속임수', initial:'돌발 전환',      advanced:'속임수꾼의 분신'},
-  truth:       {name:'진실',   initial:'진실의 말씀',     advanced:'진실의 일별'},
-  tyranny:     {name:'폭정',   initial:'복종의 접촉',    advanced:'명령의 채찍'},
-  undeath:     {name:'언데스', initial:'언데드의 접촉',   advanced:'악성 자양분'},
-  void:        {name:'공허',   initial:'몸 뒤섞기'},
-  water:       {name:'물',     initial:'조류 파도',       advanced:'폭포'},
-  wealth:      {name:'부',     advanced:'귀금속'},
-  zeal:        {name:'열의',   initial:'무기 강화',       advanced:'전투 열정'},
+  "air": {
+    "name": "공기",
+    "initial": "pushing-gust",
+    "advanced": "disperse-into-air"
+  },
+  "ambition": {
+    "name": "야망",
+    "initial": "ignite-ambition",
+    "advanced": "competitive-edge"
+  },
+  "cities": {
+    "name": "도시",
+    "initial": "face-in-the-crowd",
+    "advanced": "pulse-of-civilization"
+  },
+  "confidence": {
+    "name": "자신감",
+    "initial": "veil-of-confidence",
+    "advanced": "delusional-pride"
+  },
+  "creation": {
+    "name": "창조",
+    "initial": "creative-splash",
+    "advanced": "artistic-flourish"
+  },
+  "darkness": {
+    "name": "어둠",
+    "initial": "cloak-of-shadow",
+    "advanced": "darkened-sight"
+  },
+  "death": {
+    "name": "죽음",
+    "initial": "deaths-call",
+    "advanced": "eradicate-undeath"
+  },
+  "destruction": {
+    "name": "파괴",
+    "initial": "cry-of-destruction",
+    "advanced": "destructive-aura"
+  },
+  "dreams": {
+    "name": "꿈",
+    "initial": "sweet-dream",
+    "advanced": "dreamers-call"
+  },
+  "earth": {
+    "name": "대지",
+    "initial": "hurtling-stone",
+    "advanced": "localized-quake"
+  },
+  "family": {
+    "name": "가족",
+    "initial": "soothing-words",
+    "advanced": "community-restoration"
+  },
+  "fate": {
+    "name": "운명",
+    "initial": "read-fate",
+    "advanced": "tempt-fate"
+  },
+  "fire": {
+    "name": "화염",
+    "initial": "fire-ray",
+    "advanced": "flame-barrier"
+  },
+  "freedom": {
+    "name": "자유",
+    "initial": "unimpeded-stride",
+    "advanced": "word-of-freedom"
+  },
+  "healing": {
+    "name": "치유",
+    "initial": "healers-blessing",
+    "advanced": "rebuke-death"
+  },
+  "indulgence": {
+    "name": "탐닉",
+    "initial": "overstuff",
+    "advanced": "take-its-course"
+  },
+  "knowledge": {
+    "name": "지식",
+    "initial": "scholarly-recollection",
+    "advanced": "know-the-enemy"
+  },
+  "luck": {
+    "name": "행운",
+    "initial": "bit-of-luck",
+    "advanced": "lucky-break"
+  },
+  "magic": {
+    "name": "마법",
+    "initial": "magics-vessel",
+    "advanced": "mystic-beacon"
+  },
+  "might": {
+    "name": "힘",
+    "initial": "athletic-rush",
+    "advanced": "enduring-might"
+  },
+  "moon": {
+    "name": "달",
+    "initial": "moonbeam",
+    "advanced": "touch-of-the-moon"
+  },
+  "nature": {
+    "name": "자연",
+    "initial": "vibrant-thorns",
+    "advanced": "natures-bounty"
+  },
+  "nightmares": {
+    "name": "악몽",
+    "initial": "waking-nightmare",
+    "advanced": "shared-nightmare"
+  },
+  "pain": {
+    "name": "고통",
+    "initial": "savor-the-sting",
+    "advanced": "retributive-pain"
+  },
+  "passion": {
+    "name": "열정",
+    "initial": "charming-touch",
+    "advanced": "captivating-adoration"
+  },
+  "perfection": {
+    "name": "완벽",
+    "initial": "perfected-mind",
+    "advanced": "perfected-body"
+  },
+  "protection": {
+    "name": "보호",
+    "initial": "protector-sacrifice",
+    "advanced": "protector-sphere"
+  },
+  "secrecy": {
+    "name": "비밀",
+    "initial": "whispering-quiet",
+    "advanced": "safeguard-secret"
+  },
+  "soul": {
+    "name": "영혼"
+  },
+  "sun": {
+    "name": "태양",
+    "initial": "dazzling-flash",
+    "advanced": "vital-luminance"
+  },
+  "travel": {
+    "name": "여행",
+    "initial": "agile-feet",
+    "advanced": "travelers-transit"
+  },
+  "trickery": {
+    "name": "속임수",
+    "initial": "sudden-shift",
+    "advanced": "tricksters-twin"
+  },
+  "truth": {
+    "name": "진실",
+    "initial": "word-of-truth",
+    "advanced": "glimpse-the-truth"
+  },
+  "tyranny": {
+    "name": "폭정",
+    "initial": "touch-of-obedience",
+    "advanced": "commanding-lash"
+  },
+  "undeath": {
+    "name": "언데스",
+    "initial": "touch-of-undeath",
+    "advanced": "malignant-sustenance"
+  },
+  "void": {
+    "name": "공허",
+    "initial": "scramble-body"
+  },
+  "water": {
+    "name": "물",
+    "initial": "tidal-surge",
+    "advanced": "downpour"
+  },
+  "wealth": {
+    "name": "부",
+    "advanced": "precious-metals"
+  },
+  "zeal": {
+    "name": "열의",
+    "initial": "weapon-surge",
+    "advanced": "zeal-for-battle"
+  }
 };
 
 // ═══════════════════════════════════════════════
